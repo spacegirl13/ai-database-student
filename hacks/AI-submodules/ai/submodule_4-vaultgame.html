@@ -1,0 +1,648 @@
+---
+layout: post
+title: "Mini-Game"
+description: "AI Mini-Game that tests knowledge from all three levels"
+permalink: /digital-famine/ai/submodule_4/
+microblog: true
+parent: "AI Usage"
+team: "Debuggers"
+submodule: 4
+categories: [CSP, Submodule, AIUsage]
+tags: [ai, debuggers, mini-game]
+author: "Debuggers Team - Lillian Wu, Ruchika Kench"
+date: 2025-10-21
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vault Quiz Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .game-container {
+            background: #1e293b;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 32px;
+            max-width: 800px;
+            width: 100%;
+            border: 4px solid #374151;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .title {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .roadblock-counter {
+            color: #fbbf24;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .progress-bar {
+            background: #374151;
+            height: 12px;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        
+        .progress-fill {
+            background: #fbbf24;
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        
+        .emoji-container {
+            background: #374151;
+            border: 4px solid #fbbf24;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 96px;
+        }
+        
+        .question {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            background: #374151;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            border: 2px solid #4b5563;
+            background: #374151;
+            color: white;
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .option-btn:hover:not(:disabled) {
+            background: #4b5563;
+            border-color: #6b7280;
+        }
+        
+        .option-btn.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+        
+        .option-btn.correct {
+            background: #16a34a;
+            border-color: #4ade80;
+        }
+        
+        .option-btn.incorrect {
+            background: #dc2626;
+            border-color: #f87171;
+        }
+        
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .drop-zones {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .drop-zone {
+            background: #374151;
+            border: 3px dashed #4b5563;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 200px;
+            transition: all 0.3s;
+        }
+
+        .drop-zone.drag-over {
+            background: #4b5563;
+            border-color: #fbbf24;
+        }
+
+        .drop-zone-title {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4b5563;
+        }
+
+        .drop-zone.true-zone .drop-zone-title {
+            color: #4ade80;
+        }
+
+        .drop-zone.false-zone .drop-zone-title {
+            color: #f87171;
+        }
+
+        .dropped-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dropped-item {
+            width: 100%;
+            text-align: left;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            border: 2px solid #4b5563;
+            background: #374151;
+            color: white;
+        }
+        
+        .feedback {
+            padding: 16px;
+            border-radius: 8px;
+            border: 2px solid;
+            margin-bottom: 24px;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .feedback.correct {
+            background: #14532d;
+            border-color: #4ade80;
+        }
+        
+        .feedback.incorrect {
+            background: #7f1d1d;
+            border-color: #f87171;
+        }
+        
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .action-btn.next {
+            background: #16a34a;
+            color: white;
+        }
+        
+        .action-btn.next:hover {
+            background: #15803d;
+        }
+        
+        .action-btn.retry {
+            background: #ca8a04;
+            color: white;
+        }
+        
+        .action-btn.retry:hover {
+            background: #a16207;
+        }
+
+        .action-btn:disabled {
+            background: #4b5563;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .roadblock-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: pulse 1s infinite;
+        }
+        
+        .roadblock-text {
+            background: #dc2626;
+            border: 4px solid #fbbf24;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 600px;
+            text-align: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .victory-screen {
+            text-align: center;
+        }
+        
+        .victory-emoji {
+            font-size: 96px;
+            margin-bottom: 24px;
+            animation: bounce 1s infinite;
+        }
+        
+        .victory-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4ade80;
+            margin-bottom: 16px;
+        }
+        
+        .victory-text {
+            font-size: 20px;
+            color: #d1d5db;
+            margin-bottom: 24px;
+        }
+        
+        .treasure-box {
+            background: #fef3c7;
+            border: 4px solid #fbbf24;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .treasure-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #92400e;
+        }
+        
+        .play-again-btn {
+            background: #16a34a;
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .play-again-btn:hover {
+            background: #15803d;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="roadblock-overlay" class="roadblock-overlay hidden">
+        <div class="roadblock-text" id="roadblock-text"></div>
+    </div>
+
+    <div class="game-container">
+        <div id="game-screen">
+            <div class="header">
+                <div class="title">
+                    <span>🔒</span>
+                    <span>Vault Challenge</span>
+                </div>
+                <div class="roadblock-counter" id="counter">Roadblock 1 / 3</div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            
+            <div class="emoji-container" id="emoji">🚪</div>
+            
+            <div class="question" id="question"></div>
+            
+            <div class="options" id="options"></div>
+
+            <div class="drop-zones">
+                <div class="drop-zone true-zone" id="true-zone" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                    <div class="drop-zone-title">✅ TRUE</div>
+                    <div class="dropped-items" id="true-items"></div>
+                </div>
+                <div class="drop-zone false-zone" id="false-zone" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                    <div class="drop-zone-title">❌ FALSE</div>
+                    <div class="dropped-items" id="false-items"></div>
+                </div>
+            </div>
+            
+            <div id="feedback" class="hidden"></div>
+            
+            <div id="action-button"></div>
+        </div>
+        
+        <div id="victory-screen" class="victory-screen hidden">
+            <div class="victory-emoji">🔓</div>
+            <h1 class="victory-title">🎉 VAULT UNLOCKED! 🎉</h1>
+            <p class="victory-text">Congratulations! You've successfully navigated through all roadblocks and opened the vault!</p>
+            <div class="treasure-box">
+                <p class="treasure-text">💎 TREASURE ACQUIRED 💎</p>
+            </div>
+            <button class="play-again-btn" onclick="proceedForward()">Vault Unlocked, Proceed Forward!</button>
+        </div>
+    </div>
+
+    <script>
+        const roadblocks = [
+            {
+                id: 1,
+                emoji: '🚪',
+                question: "A company develops an AI that can diagnose diseases using medical images. It can outperform human doctors in this one task, but cannot drive a car or play chess. Drag each statement to TRUE or FALSE:",
+                hint: "Think about whether the AI is specialized in only one area or capable of doing many human tasks",
+                options: [
+                    { id: 'a', text: "This AI is specialized in a single task (medical diagnosis)", correct: true },
+                    { id: 'b', text: "This AI has human-level intelligence across all domains", correct: false },
+                    { id: 'c', text: "This AI cannot perform tasks outside its training area", correct: true },
+                    { id: 'd', text: "This AI can improve itself and create new technologies", correct: false }
+                ],
+                roadblockText: "🚧 ROADBLOCK 1 🚧"
+            },
+            {
+                id: 2,
+                emoji: '🔐',
+                question: "An AI system that is vastly smarter than humans and capable of improving itself, creating new technologies, and making decisions beyond human understanding. Drag each statement to TRUE or FALSE:",
+                hint: "Think about which AI can surpass human intelligence",
+                options: [
+                    { id: 'a', text: "This AI surpasses human intelligence in all aspects", correct: true },
+                    { id: 'b', text: "This AI only performs one specialized task well", correct: false },
+                    { id: 'c', text: "This AI can recursively improve its own capabilities", correct: true },
+                    { id: 'd', text: "This AI has intelligence equal to an average human", correct: false }
+                ],
+                roadblockText: "🚧 ROADBLOCK 2 🚧"
+            },
+            {
+                id: 3,
+                emoji: '🏛️',
+                question: "Researchers create an AI that can reason, plan, solve unfamiliar problems, and learn any intellectual task a human can. It matches human intelligence across all areas. Drag each statement to TRUE or FALSE:",
+                hint: "This kind of AI would have the same capabilities as a human",
+                options: [
+                    { id: 'a', text: "This AI can perform any cognitive task a human can do", correct: true },
+                    { id: 'b', text: "This AI is limited to one specific domain or task", correct: false },
+                    { id: 'c', text: "This AI has human-level reasoning and learning abilities", correct: true },
+                    { id: 'd', text: "This AI has superhuman intelligence beyond human comprehension", correct: false }
+                ],
+                roadblockText: "🚧 ROADBLOCK 3 🚧"
+            }
+        ];
+
+        let currentRoadblock = 0;
+        let draggedElement = null;
+        let placements = {};
+        let showFeedback = false;
+
+        function showRoadblockOverlay() {
+            const overlay = document.getElementById('roadblock-overlay');
+            const text = document.getElementById('roadblock-text');
+            text.textContent = roadblocks[currentRoadblock].roadblockText;
+            overlay.classList.remove('hidden');
+            
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 2500);
+        }
+
+        function updateUI() {
+            const current = roadblocks[currentRoadblock];
+            
+            document.getElementById('counter').textContent = `Roadblock ${currentRoadblock + 1} / ${roadblocks.length}`;
+            document.getElementById('progress').style.width = `${(currentRoadblock / roadblocks.length) * 100}%`;
+            document.getElementById('emoji').textContent = current.emoji;
+            document.getElementById('question').textContent = current.question;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            current.options.forEach(option => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.draggable = true;
+                btn.innerHTML = `<span style="font-weight: bold; margin-right: 12px;">${option.id.toUpperCase()}.</span>${option.text}`;
+                btn.id = `option-${option.id}`;
+                btn.ondragstart = drag;
+                optionsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('true-items').innerHTML = '';
+            document.getElementById('false-items').innerHTML = '';
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('action-button').innerHTML = '';
+            placements = {};
+            showFeedback = false;
+        }
+
+        function drag(ev) {
+            draggedElement = ev.target;
+            ev.target.classList.add('dragging');
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('drag-over');
+        }
+
+        function dragLeave(ev) {
+            ev.currentTarget.classList.remove('drag-over');
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            
+            if (draggedElement && !showFeedback) {
+                const dropZone = ev.currentTarget.querySelector('.dropped-items');
+                const clone = document.createElement('div');
+                clone.className = 'dropped-item';
+                clone.innerHTML = draggedElement.innerHTML;
+                
+                dropZone.appendChild(clone);
+                draggedElement.style.display = 'none';
+                
+                const isTrue = ev.currentTarget.id === 'true-zone';
+                placements[draggedElement.id] = isTrue;
+                
+                draggedElement.classList.remove('dragging');
+                draggedElement = null;
+
+                checkIfAllPlaced();
+            }
+        }
+
+        function checkIfAllPlaced() {
+            const current = roadblocks[currentRoadblock];
+            const allPlaced = current.options.every(opt => placements.hasOwnProperty(`option-${opt.id}`));
+            
+            if (allPlaced) {
+                checkAnswers();
+            }
+        }
+
+        function checkAnswers() {
+            const current = roadblocks[currentRoadblock];
+            let allCorrect = true;
+            showFeedback = true;
+
+            current.options.forEach(option => {
+                const element = document.getElementById(`option-${option.id}`);
+                const isCorrectPlacement = (placements[`option-${option.id}`] === true && option.correct === true) ||
+                                          (placements[`option-${option.id}`] === false && option.correct === false);
+                
+                if (!isCorrectPlacement) {
+                    allCorrect = false;
+                }
+            });
+
+            // Only add visual feedback and update colors after checking
+            current.options.forEach(option => {
+                const element = document.getElementById(`option-${option.id}`);
+                const isCorrectPlacement = (placements[`option-${option.id}`] === true && option.correct === true) ||
+                                          (placements[`option-${option.id}`] === false && option.correct === false);
+                
+                if (isCorrectPlacement) {
+                    element.classList.add('correct');
+                } else {
+                    element.classList.add('incorrect');
+                }
+            });
+
+            // Update dropped items colors
+            const trueItems = document.getElementById('true-items').children;
+            const falseItems = document.getElementById('false-items').children;
+            
+            Array.from(trueItems).forEach(item => {
+                const text = item.textContent;
+                const optionData = current.options.find(opt => text.includes(opt.text));
+                if (optionData) {
+                    item.style.background = optionData.correct ? '#16a34a' : '#dc2626';
+                    item.style.borderColor = optionData.correct ? '#4ade80' : '#f87171';
+                }
+            });
+            
+            Array.from(falseItems).forEach(item => {
+                const text = item.textContent;
+                const optionData = current.options.find(opt => text.includes(opt.text));
+                if (optionData) {
+                    item.style.background = !optionData.correct ? '#16a34a' : '#dc2626';
+                    item.style.borderColor = !optionData.correct ? '#4ade80' : '#f87171';
+                }
+            });
+
+            const feedback = document.getElementById('feedback');
+            feedback.className = `feedback ${allCorrect ? 'correct' : 'incorrect'}`;
+            feedback.innerHTML = allCorrect 
+                ? '<span style="font-size: 24px;">✅</span><span>Correct! You may proceed.</span>'
+                : '<span style="font-size: 24px;">❌</span><span>Incorrect! Try again.</span>';
+            feedback.classList.remove('hidden');
+            
+            const actionBtn = document.createElement('button');
+            actionBtn.className = `action-btn ${allCorrect ? 'next' : 'retry'}`;
+            
+            if (allCorrect) {
+                actionBtn.textContent = currentRoadblock < roadblocks.length - 1 
+                    ? 'Proceed to Next Roadblock →' 
+                    : 'Open Vault! 🔓';
+                actionBtn.onclick = nextRoadblock;
+            } else {
+                actionBtn.textContent = 'Try Again';
+                actionBtn.onclick = retry;
+            }
+            
+            document.getElementById('action-button').appendChild(actionBtn);
+        }
+
+        function retry() {
+            updateUI();
+        }
+
+        function nextRoadblock() {
+            if (currentRoadblock < roadblocks.length - 1) {
+                currentRoadblock++;
+                updateUI();
+                showRoadblockOverlay();
+            } else {
+                showVictory();
+            }
+        }
+
+        function showVictory() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('victory-screen').classList.remove('hidden');
+        }
+
+        function resetGame() {
+            currentRoadblock = 0;
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('victory-screen').classList.add('hidden');
+            updateUI();
+            showRoadblockOverlay();
+        }
+
+        function proceedForward() {
+            // Empty function - button doesn't lead anywhere yet
+            console.log('Proceeding forward...');
+        }
+
+        // Initialize game
+        updateUI();
+        showRoadblockOverlay();
+    </script>
+</body>
+</html>
