@@ -347,6 +347,142 @@ date: 2025-10-21
         .hidden {
             display: none;
         }
+
+        /* JOKE POPUP STYLES */
+        .joke-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: jokeOverlayFadeIn 0.3s ease;
+        }
+
+        @keyframes jokeOverlayFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .joke-box {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 4px solid #fbbf24;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(251, 191, 36, 0.3);
+            transform: scale(0.8);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .joke-box.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .joke-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(220, 38, 38, 0.2);
+            border: 2px solid #dc2626;
+            color: #dc2626;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+
+        .joke-close-btn:hover {
+            background: #dc2626;
+            color: white;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .joke-emoji {
+            font-size: 72px;
+            margin-bottom: 20px;
+            animation: jokeEmojiBounce 1.5s ease-in-out infinite;
+        }
+
+        @keyframes jokeEmojiBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(-5deg); }
+            75% { transform: translateY(-5px) rotate(5deg); }
+        }
+
+        .joke-title {
+            color: #fbbf24;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 24px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .joke-text {
+            color: white;
+            font-size: 19px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            white-space: pre-line;
+            padding: 24px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .joke-timer {
+            width: 100%;
+            height: 8px;
+            background: rgba(75, 85, 99, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 24px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .joke-timer-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 50%, #dc2626 100%);
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+
+        .joke-box.celebration {
+            border-color: #4ade80;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(74, 222, 128, 0.4);
+        }
+
+        .joke-box.celebration .joke-title {
+            color: #4ade80;
+        }
+
+        .joke-box.celebration .joke-text {
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+
+        .joke-box.celebration .joke-timer-bar {
+            background: linear-gradient(90deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+            box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -401,6 +537,19 @@ date: 2025-10-21
         </div>
     </div>
 
+    <!-- JOKE POPUP -->
+    <div id="joke-popup" class="joke-overlay hidden">
+        <div class="joke-box" id="joke-box">
+            <button class="joke-close-btn" onclick="closeJokePopup()">✕</button>
+            <div class="joke-emoji" id="joke-emoji">😄</div>
+            <div class="joke-title" id="joke-title">Time for a Laugh!</div>
+            <div class="joke-text" id="joke-text"></div>
+            <div class="joke-timer">
+                <div class="joke-timer-bar" id="joke-timer-bar"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const roadblocks = [
             {
@@ -448,6 +597,91 @@ date: 2025-10-21
         let draggedElement = null;
         let placements = {};
         let showFeedback = false;
+        
+        // JOKE SYSTEM VARIABLES
+        let roadblockQuestionsAnswered = 0;
+        let jokeTimer = null;
+
+        // Sample jokes (will connect to database later)
+        const SAMPLE_JOKES = [
+            "Why do programmers prefer dark mode?\n\nBecause light attracts bugs! 🐛",
+            "Why did the AI go to therapy?\n\nIt had too many unresolved dependencies! 🤖",
+            "What's an AI's favorite snack?\n\nComputer chips! 🍟",
+            "Why don't AIs ever get lost?\n\nThey always follow their training data! 🗺️",
+            "How does an AI fix a mistake?\n\nCtrl + Z! ⌨️",
+            "Why did the neural network break up?\n\nToo many layers of complexity! 💔",
+            "What do you call an AI that sings?\n\nA-Dell! 🎵",
+            "Why was the machine learning model always calm?\n\nIt had excellent error handling! 😌"
+        ];
+
+        // JOKE FUNCTIONS
+        async function fetchJokeFromDB() {
+            try {
+                const response = await fetch('/api/joke/random');
+                const data = await response.json();
+                return data.joke;
+            } catch (error) {
+                console.log('Using sample joke');
+                return SAMPLE_JOKES[Math.floor(Math.random() * SAMPLE_JOKES.length)];
+            }
+        }
+
+        function showJokePopup(type = 'midgame') {
+            const popup = document.getElementById('joke-popup');
+            const jokeBox = document.getElementById('joke-box');
+            const jokeText = document.getElementById('joke-text');
+            const jokeTitle = document.getElementById('joke-title');
+            const jokeEmoji = document.getElementById('joke-emoji');
+            const timerBar = document.getElementById('joke-timer-bar');
+            
+            fetchJokeFromDB().then(joke => {
+                jokeText.textContent = joke;
+            });
+            
+            if (type === 'celebration') {
+                jokeBox.classList.add('celebration');
+                jokeTitle.textContent = '🎉 Victory Joke! 🎉';
+                jokeEmoji.textContent = '🎊';
+            } else {
+                jokeBox.classList.remove('celebration');
+                jokeTitle.textContent = 'Time for a Laugh!';
+                jokeEmoji.textContent = '😄';
+            }
+            
+            popup.classList.remove('hidden');
+            setTimeout(() => {
+                jokeBox.classList.add('show');
+            }, 50);
+            
+            timerBar.style.width = '100%';
+            timerBar.style.transition = 'width 7s linear';
+            setTimeout(() => {
+                timerBar.style.width = '0%';
+            }, 100);
+            
+            jokeTimer = setTimeout(() => {
+                closeJokePopup();
+            }, 7000);
+        }
+
+        function closeJokePopup() {
+            const popup = document.getElementById('joke-popup');
+            const jokeBox = document.getElementById('joke-box');
+            const timerBar = document.getElementById('joke-timer-bar');
+            
+            if (jokeTimer) {
+                clearTimeout(jokeTimer);
+                jokeTimer = null;
+            }
+            
+            jokeBox.classList.remove('show');
+            
+            setTimeout(() => {
+                popup.classList.add('hidden');
+                timerBar.style.transition = 'none';
+                timerBar.style.width = '100%';
+            }, 400);
+        }
 
         function showRoadblockOverlay() {
             const overlay = document.getElementById('roadblock-overlay');
@@ -522,6 +756,15 @@ date: 2025-10-21
                 draggedElement.classList.remove('dragging');
                 draggedElement = null;
 
+                // JOKE TRIGGER
+                roadblockQuestionsAnswered++;
+                
+                if (roadblockQuestionsAnswered === 2) {
+                    setTimeout(() => {
+                        showJokePopup('midgame');
+                    }, 800);
+                }
+
                 checkIfAllPlaced();
             }
         }
@@ -550,7 +793,6 @@ date: 2025-10-21
                 }
             });
 
-            // Only add visual feedback and update colors after checking
             current.options.forEach(option => {
                 const element = document.getElementById(`option-${option.id}`);
                 const isCorrectPlacement = (placements[`option-${option.id}`] === true && option.correct === true) ||
@@ -563,7 +805,6 @@ date: 2025-10-21
                 }
             });
 
-            // Update dropped items colors
             const trueItems = document.getElementById('true-items').children;
             const falseItems = document.getElementById('false-items').children;
             
@@ -609,40 +850,5 @@ date: 2025-10-21
         }
 
         function retry() {
+            roadblockQuestionsAnswered = 0;
             updateUI();
-        }
-
-        function nextRoadblock() {
-            if (currentRoadblock < roadblocks.length - 1) {
-                currentRoadblock++;
-                updateUI();
-                showRoadblockOverlay();
-            } else {
-                showVictory();
-            }
-        }
-
-        function showVictory() {
-            document.getElementById('game-screen').classList.add('hidden');
-            document.getElementById('victory-screen').classList.remove('hidden');
-        }
-
-        function resetGame() {
-            currentRoadblock = 0;
-            document.getElementById('game-screen').classList.remove('hidden');
-            document.getElementById('victory-screen').classList.add('hidden');
-            updateUI();
-            showRoadblockOverlay();
-        }
-
-        function proceedForward() {
-            // Empty function - button doesn't lead anywhere yet
-            console.log('Proceeding forward...');
-        }
-
-        // Initialize game
-        updateUI();
-        showRoadblockOverlay();
-    </script>
-</body>
-</html>
