@@ -9,6 +9,14 @@ author: "Debuggers Team - Laya Balaji, Akshara Shankar, Anishka Sanghvi"
 microblog: true
 date: 2025-10-30
 ---
+<!-- Progress Bar -->
+<div class="max-w-7xl mx-auto px-4 mb-6">
+    <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+        <div id="progress-bar" class="bg-blue-500 h-4 w-0 transition-all"></div>
+    </div>
+    <p id="progress-text" class="text-right text-sm text-blue-300 mt-1">0% completed</p>
+</div>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -519,3 +527,50 @@ date: 2025-10-30
 
                     <div class="question-block mb-6" id="question2">
                         <h3 class="text-xl mb-4">Question 2: An AI system that is vastly smarter than humans and capable of improving itself, creating new technologies, and making decisions beyond human understanding. Which type
+
+                                <!-- Your last section or quiz code here -->
+
+    <!-- Progress bar JS goes here -->
+    <script>
+        const totalSections = 5; // number of sections in your module
+        let completedSections = 0;
+
+        function goToSection(sectionIndex) {
+            const sections = document.querySelectorAll('.mission-section');
+            sections.forEach(sec => sec.classList.add('section-hidden'));
+            document.getElementById('section-' + sectionIndex).classList.remove('section-hidden');
+
+            if (sectionIndex > completedSections - 1) {
+                completedSections = sectionIndex;
+                updateProgressBar();
+            }
+        }
+
+        function updateProgressBar() {
+            const progressPercent = Math.round((completedSections / totalSections) * 100);
+            document.getElementById('progress-bar').style.width = progressPercent + '%';
+            document.getElementById('progress-text').innerText = progressPercent + '% completed';
+        }
+
+        function completeQuiz() {
+            completedSections = totalSections;
+            updateProgressBar();
+        }
+
+        function checkAnswer(questionId, selectedOption, isCorrect) {
+            const feedbackEl = document.getElementById('feedback' + questionId);
+            if (isCorrect) {
+                feedbackEl.innerHTML = '<span class="text-green-400 font-semibold">✅ Correct!</span>';
+            } else {
+                feedbackEl.innerHTML = '<span class="text-red-400 font-semibold">❌ Incorrect. Try again.</span>';
+            }
+
+            if (questionId === 2 && isCorrect) {
+                completeQuiz();
+            }
+        }
+
+        updateProgressBar();
+    </script>
+</body>
+</html>
