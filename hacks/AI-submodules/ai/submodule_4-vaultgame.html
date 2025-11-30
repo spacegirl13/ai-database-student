@@ -13,7 +13,513 @@ author: "Debuggers Team - Lillian Wu, Ruchika Kench"
 date: 2025-10-21
 ---
 
-<!-- Progress Bar -->
+integrate this front end into the code 
+front end:<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submodule Feedback Survey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            padding: 30px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .gold-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+            animation: pulse 1.5s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .modal-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .modal-content {
+            padding: 30px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .star {
+            font-size: 40px;
+            cursor: pointer;
+            color: #ddd;
+            transition: all 0.2s ease;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffd700;
+            transform: scale(1.1);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .category-btn:hover {
+            border-color: #667eea;
+            background: #f5f7ff;
+        }
+
+        .category-btn.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .previous-responses {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .previous-responses h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .response-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .response-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .response-stars {
+            color: #ffd700;
+            font-size: 14px;
+        }
+
+        .response-date {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .response-category {
+            display: inline-block;
+            background: #e8eaf6;
+            color: #667eea;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .response-text {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .success-message .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .success-message h3 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-overlay" id="feedbackModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="gold-icon">🏆</div>
+                <h2>Congratulations!</h2>
+                <p>You've completed the submodule</p>
+            </div>
+            
+            <div class="modal-content" id="feedbackForm">
+                <div class="form-section">
+                    <label>How would you rate this submodule?</label>
+                    <div class="star-rating" id="starRating">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label>What category best describes your feedback?</label>
+                    <div class="category-grid">
+                        <button class="category-btn" data-category="content">Content Quality</button>
+                        <button class="category-btn" data-category="difficulty">Difficulty Level</button>
+                        <button class="category-btn" data-category="engagement">Engagement</button>
+                        <button class="category-btn" data-category="clarity">Clarity</button>
+                        <button class="category-btn" data-category="pacing">Pacing</button>
+                        <button class="category-btn" data-category="other">Other</button>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <label>Additional comments (optional)</label>
+                    <textarea id="comments" placeholder="Share your thoughts about this submodule..."></textarea>
+                </div>
+
+                <div class="previous-responses">
+                    <h3>📋 Your Previous Feedback</h3>
+                    <div id="previousResponsesContainer">
+                        <!-- Previous responses will be inserted here -->
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="skipFeedback()">Skip</button>
+                    <button class="btn btn-primary" onclick="submitFeedback()">Submit Feedback</button>
+                </div>
+            </div>
+
+            <div class="modal-content success-message hidden" id="successMessage">
+                <div class="icon">✅</div>
+                <h3>Thank you!</h3>
+                <p>Your feedback helps us improve</p>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="closeModal()">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedRating = 0;
+        let selectedCategory = '';
+        let feedbackHistory = [];
+
+        // Initialize with sample previous responses
+        function initializeSampleData() {
+            feedbackHistory = [
+                {
+                    rating: 4,
+                    category: 'Content Quality',
+                    comment: 'Great explanations, but could use more practice exercises.',
+                    date: '2024-11-15'
+                },
+                {
+                    rating: 5,
+                    category: 'Engagement',
+                    comment: 'Really enjoyed the interactive examples!',
+                    date: '2024-11-10'
+                }
+            ];
+            displayPreviousResponses();
+        }
+
+        // Star rating functionality
+        const stars = document.querySelectorAll('.star');
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.dataset.rating);
+                updateStars();
+            });
+
+            star.addEventListener('mouseenter', () => {
+                const rating = parseInt(star.dataset.rating);
+                highlightStars(rating);
+            });
+        });
+
+        document.getElementById('starRating').addEventListener('mouseleave', () => {
+            updateStars();
+        });
+
+        function highlightStars(rating) {
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function updateStars() {
+            highlightStars(selectedRating);
+        }
+
+        // Category selection
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedCategory = btn.textContent;
+            });
+        });
+
+        // Display previous responses
+        function displayPreviousResponses() {
+            const container = document.getElementById('previousResponsesContainer');
+            
+            if (feedbackHistory.length === 0) {
+                container.innerHTML = '<p style="color: #999; font-size: 14px;">No previous feedback yet</p>';
+                return;
+            }
+
+            // Show only last 2 responses
+            const recentResponses = feedbackHistory.slice(-2).reverse();
+            
+            container.innerHTML = recentResponses.map(response => `
+                <div class="response-card">
+                    <div class="response-header">
+                        <span class="response-stars">${'★'.repeat(response.rating)}${'☆'.repeat(5-response.rating)}</span>
+                        <span class="response-date">${formatDate(response.date)}</span>
+                    </div>
+                    <div class="response-category">${response.category}</div>
+                    ${response.comment ? `<div class="response-text">${response.comment}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) return 'Today';
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        // Submit feedback
+        function submitFeedback() {
+            if (selectedRating === 0) {
+                alert('Please select a star rating');
+                return;
+            }
+
+            if (!selectedCategory) {
+                alert('Please select a category');
+                return;
+            }
+
+            const comments = document.getElementById('comments').value;
+
+            // Add to feedback history
+            const newFeedback = {
+                rating: selectedRating,
+                category: selectedCategory,
+                comment: comments,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            feedbackHistory.push(newFeedback);
+
+            // Show success message
+            document.getElementById('feedbackForm').classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
+        }
+
+        function skipFeedback() {
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('feedbackModal').style.display = 'none';
+        }
+
+        // Initialize on page load
+        initializeSampleData();
+    </script>
+</body>
+</html>
+
+
+code:<!-- Progress Bar -->
 <div class="max-w-7xl mx-auto px-4 mb-6">
     <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
         <div id="progress-bar" class="bg-blue-500 h-4 w-0 transition-all"></div>
