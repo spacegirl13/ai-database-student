@@ -62,8 +62,284 @@ date: 2025-10-30
 <body class="text-white">
 
 <!-- YOUR LEADERBOARD (unchanged) -->
+<!-- Leaderboard Panel HTML -->
 <div class="leaderboard-panel">
-    ... (KEEP YOUR SAME LEADERBOARD CODE)
+    <div class="panel-header">
+        <div class="panel-title">
+            <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+            </svg>
+            Leaderboard
+        </div>
+    </div>
+
+    <div class="leaderboard-content" id="leaderboardContent">
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th style="text-align: right;">Score</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+                <!-- Top 5 rows -->
+                <tr>
+                    <td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">4</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">5</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+            </tbody>
+            <tbody id="leaderboardBodyExtended" class="extended-rows">
+                <!-- Rows 6-10 (hidden by default) -->
+                <tr>
+                    <td class="rank-cell">6</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">7</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">8</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">9</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">10</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button class="expand-btn" id="expandBtn" onclick="toggleExpand()">
+        <span id="expandText">Show More</span>
+        <svg class="expand-icon" id="expandIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    </button>
+</div>
+
+<!-- Leaderboard CSS -->
+<style>
+    .leaderboard-panel {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 200px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        z-index: 1000;
+    }
+
+    .panel-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 12px;
+        text-align: center;
+    }
+
+    .panel-title {
+        font-size: 14px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .trophy-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .leaderboard-content {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .leaderboard-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .leaderboard-table thead {
+        background: #f8f9fa;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .leaderboard-table th {
+        padding: 8px 10px;
+        text-align: left;
+        font-size: 10px;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .leaderboard-table td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 12px;
+    }
+
+    .leaderboard-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .rank-cell {
+        font-weight: bold;
+        width: 40px;
+        text-align: center;
+    }
+
+    .rank-1 {
+        color: #ffd700;
+        font-size: 13px;
+    }
+
+    .rank-2 {
+        color: #c0c0c0;
+        font-size: 13px;
+    }
+
+    .rank-3 {
+        color: #cd7f32;
+        font-size: 13px;
+    }
+
+    .name-cell {
+        font-weight: 500;
+        color: #212529;
+        font-size: 11px;
+    }
+
+    .score-cell {
+        font-weight: bold;
+        color: #667eea;
+        text-align: right;
+        font-size: 12px;
+    }
+
+    .medal {
+        display: inline-block;
+        margin-right: 2px;
+        font-size: 11px;
+    }
+
+    .extended-rows {
+        display: none;
+    }
+
+    .extended-rows.show {
+        display: table-row-group;
+    }
+
+    .expand-btn {
+        width: 100%;
+        padding: 8px 12px;
+        background-color: #f8f9fa;
+        border: none;
+        border-top: 1px solid #e9ecef;
+        color: #667eea;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .expand-btn:hover {
+        background-color: #e9ecef;
+    }
+
+    .expand-icon {
+        width: 14px;
+        height: 14px;
+    }
+
+    .expand-icon.rotated {
+        transform: rotate(180deg);
+    }
+
+    .leaderboard-content::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .leaderboard-content::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+    }
+
+    .leaderboard-content::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 2px;
+    }
+
+    .leaderboard-content::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+    }
+</style>
+
+<!-- Leaderboard JavaScript -->
+<script>
+    function toggleExpand() {
+        const extendedRows = document.getElementById('leaderboardBodyExtended');
+        const expandText = document.getElementById('expandText');
+        const expandIcon = document.getElementById('expandIcon');
+        
+        if (extendedRows.classList.contains('show')) {
+            extendedRows.classList.remove('show');
+            expandText.textContent = 'Show More';
+            expandIcon.classList.remove('rotated');
+        } else {
+            extendedRows.classList.add('show');
+            expandText.textContent = 'Show Less';
+            expandIcon.classList.add('rotated');
+        }
+    }
+</script>
 </div>
 
 <!-- MODULE HEADER -->
