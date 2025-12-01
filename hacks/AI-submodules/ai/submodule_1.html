@@ -13,354 +13,268 @@ date: 2025-10-30
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Module 1: Types of AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1 – AI Usage Training Quest</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-/* ===================== GLOBAL ===================== */
-body {
-  background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
-  min-height: 100vh;
-  color: white;
-}
-
-/* Progress Bar */
-.pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.5; } }
-
-/* Hidden Utility */
-.section-hidden { display:none; }
-.hidden { display:none !important; }
-
-/* ===================== FEEDBACK MODAL ===================== */
-#feedbackModal {
-  position: fixed; inset: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none; align-items: center; justify-content: center;
-  z-index: 9999;
-}
-#feedbackModal .modal {
-  background: white;
-  width: 90%; max-width: 600px;
-  border-radius: 20px;
-  overflow-y: auto;
-  max-height: 90vh;
-  animation: fadeIn .3s ease;
-}
-#feedbackModal * {
-  box-sizing: border-box !important;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-}
-@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-
-/* ===================== LEADERBOARD ===================== */
+/* --- Leaderboard Styles (unchanged from your original) --- */
 .leaderboard-panel {
-  position: fixed; top: 20px; right: 20px;
-  width: 200px; background: white;
-  border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-  overflow: hidden; z-index: 1000;
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  width: 320px;
+  background: linear-gradient(135deg, #2d3748, #1a202c);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  color: white;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  z-index: 1000;
 }
 .panel-header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white; padding: 10px; text-align: center;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
 }
 .panel-title {
-  font-size: 14px; font-weight: bold;
-  display:flex; align-items:center; justify-content:center; gap:4px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
-.leaderboard-content { max-height: 300px; overflow-y: auto; }
-.leaderboard-table { width: 100%; border-collapse: collapse; }
-.leaderboard-table thead {
-  background:#f8f9fa; position:sticky; top:0; z-index:10;
+.trophy-icon {
+  width: 22px;
+  height: 22px;
+  margin-right: 6px;
+}
+.leaderboard-content {
+  padding: 12px 18px;
+  max-height: 260px;
+  overflow: hidden;
+}
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 .leaderboard-table th {
-  padding:8px; font-size:10px; color:#6c757d;
-  text-transform:uppercase; letter-spacing: .3px;
+  text-align: left;
+  font-size: 0.85rem;
+  padding-bottom: 8px;
+  opacity: 0.8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
-.leaderboard-table td { padding:8px; font-size:12px; color:#212529; }
-.rank-1 { color:#ffd700; }
-.rank-2 { color:#c0c0c0; }
-.rank-3 { color:#cd7f32; }
-.extended-rows { display:none; }
-
-/* Scrollbars */
-.leaderboard-content::-webkit-scrollbar { width:4px; }
-.leaderboard-content::-webkit-scrollbar-track { background:#f1f1f1; }
-.leaderboard-content::-webkit-scrollbar-thumb {
-  background:#888; border-radius:2px;
+.leaderboard-table td {
+  padding: 8px 4px;
+  font-size: 0.9rem;
 }
-
-/* Joke Popup */
-#joke-popup {
-  background:white; border-radius:12px;
-  color:#333;
+.rank-cell { width: 50px; font-weight: bold; opacity: 0.9; }
+.rank-1 { color: #ffd700; }
+.rank-2 { color: #c0c0c0; }
+.rank-3 { color: #cd7f32; }
+.score-cell { text-align: right; font-weight: bold; }
+.medal { margin-right: 4px; }
+.extended-rows { display: none; }
+.leaderboard-expanded .extended-rows { display: table-row-group; }
+.expand-btn {
+  width: 100%;
+  padding: 10px 0;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.expand-btn:hover { background: rgba(255, 255, 255, 0.18); }
+.expand-icon {
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  transition: transform 0.3s ease;
+}
+.leaderboard-expanded .expand-icon {
+  transform: rotate(180deg);
 }
 </style>
 </head>
 
+<body class="bg-gray-900 text-white">
 
-<body>
-
-<!-- ===================== PROGRESS BAR ===================== -->
-<div class="max-w-7xl mx-auto px-4 mb-6">
-    <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
-        <div id="progress-bar" class="bg-blue-500 h-4 w-0 transition-all"></div>
+<!-- ========================================================= -->
+<!-- =============== LEADERBOARD ============ -->
+<!-- ========================================================= -->
+<div class="leaderboard-panel" id="leaderboardPanel">
+    <div class="panel-header">
+        <div class="panel-title">
+            <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+            </svg>
+            Leaderboard
+        </div>
     </div>
-    <p id="progress-text" class="text-right text-sm text-blue-300 mt-1">0% completed</p>
+
+    <div class="leaderboard-content">
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th style="text-align:right;">Score</th>
+                </tr>
+            </thead>
+
+            <tbody id="leaderboardBody">
+                <tr><td class="rank-cell rank-1"><span class="medal">🥇</span>1</td><td class="name-cell">-</td><td class="score-cell">-</td></tr>
+                <tr><td class="rank-cell rank-2"><span class="medal">🥈</span>2</td><td class="name-cell">-</td><td class="score-cell">-</td></tr>
+                <tr><td class="rank-cell rank-3"><span class="medal">🥉</span>3</td><td class="name-cell">-</td><td class="score-cell">-</td></tr>
+                <tr><td class="rank-cell">4</td><td class="name-cell">-</td><td class="score-cell">-</td></tr>
+                <tr><td class="rank-cell">5</td><td class="name-cell">-</td><td class="score-cell">-</td></tr>
+            </tbody>
+
+            <tbody id="leaderboardBodyExtended" class="extended-rows">
+                <tr><td class="rank-cell">6</td><td class="name-cell">-</td><td class="score-cell">-</td></tr>
+                <tr><td class="rank-cell">7</td><td class="name-cell">-</td><td class="score-cell">-</td></tr>
+                <tr><td class="rank-cell">8</td><td class="name-cell">-</td><td class="score-cell">-</td></tr>
+                <tr><td class="rank-cell">9</td><td class="name-cell">-</td><td class="score-cell">-</td></tr>
+                <tr><td class="rank-cell">10</td><td class="name-cell">-</td><td class="score-cell">-</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button class="expand-btn" onclick="toggleExpand()">
+        <span id="expandText">Show More</span>
+        <svg class="expand-icon" id="expandIcon" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    </button>
 </div>
 
+<!-- ========================================================= -->
+<!-- =================== MAIN PAGE CONTENT =================== -->
+<!-- ========================================================= -->
 
-<!-- ===================== LEADERBOARD ===================== -->
-<div class="leaderboard-panel">
-  <div class="panel-header">
-      <div class="panel-title">
-          <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-              <path d="M4 22h16"></path>
-              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
-          </svg>
-          Leaderboard
-      </div>
-  </div>
+<div class="container mx-auto px-6 pt-40 pb-20 max-w-4xl">
+    <h1 class="text-4xl font-bold mb-6">Module 1: Understanding AI's Role at Work</h1>
+    <p class="mb-6 text-gray-300">Learn the basics of AI and test your knowledge!</p>
 
-  <div class="leaderboard-content">
-    <table class="leaderboard-table">
-      <thead>
-        <tr>
-          <th>Rank</th><th>Player</th><th style="text-align:right;">Score</th>
-        </tr>
-      </thead>
+    <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Quiz: Test Your Knowledge</h2>
 
-      <tbody id="leaderboardBody"></tbody>
-    </table>
-  </div>
+        <form id="quizForm" class="space-y-6">
+            <div>
+                <p class="font-semibold mb-2">1️⃣ What is the primary purpose of AI in the workplace?</p>
+                <label><input type="radio" name="q1" value="a"> Replace employees</label><br>
+                <label><input type="radio" name="q1" value="b"> Assist and improve productivity</label><br>
+                <label><input type="radio" name="q1" value="c"> Make work more confusing</label>
+            </div>
+
+            <div>
+                <p class="font-semibold mb-2">2️⃣ AI tools like ChatGPT can help with:</p>
+                <label><input type="radio" name="q2" value="a"> Writing emails</label><br>
+                <label><input type="radio" name="q2" value="b"> Organizing information</label><br>
+                <label><input type="radio" name="q2" value="c"> Both A and B</label>
+            </div>
+
+            <div>
+                <p class="font-semibold mb-2">3️⃣ What should you avoid when using AI?</p>
+                <label><input type="radio" name="q3" value="a"> Sharing private customer information</label><br>
+                <label><input type="radio" name="q3" value="b"> Asking for help drafting messages</label><br>
+                <label><input type="radio" name="q3" value="c"> Asking for creative ideas</label>
+            </div>
+
+            <div>
+                <p class="font-semibold mb-2">4️⃣ What is a good example of using AI responsibly?</p>
+                <label><input type="radio" name="q4" value="a"> Using it to automate all your work</label><br>
+                <label><input type="radio" name="q4" value="b"> Letting it make decisions for you</label><br>
+                <label><input type="radio" name="q4" value="c"> Using it to assist your work, while still checking accuracy</label>
+            </div>
+
+            <button type="submit" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-bold">
+                Submit Answers
+            </button>
+        </form>
+
+        <p id="result" class="text-xl font-bold mt-6"></p>
+    </div>
 </div>
 
+<!-- ========================================================= -->
+<!-- ====================== JAVASCRIPT ======================== -->
+<!-- ========================================================= -->
 
-<!-- ===================== MODULE HEADER ===================== -->
-<div class="border-b border-blue-500/30 bg-slate-900/50 backdrop-blur">
-  <div class="max-w-7xl mx-auto px-4 py-6">
-      <h1 class="text-4xl font-bold text-center mb-2">AI Usage Quest</h1>
-      <p class="text-center text-blue-300 text-lg">Module 1: Types of AI</p>
-  </div>
-</div>
-
-
-<!-- ===================== MODULE CONTENT ===================== -->
-<div class="max-w-7xl mx-auto px-4 py-8">
-  <!-- KEEP YOUR LESSON CONTENT HERE -->
-</div>
-
-
-<!-- ===================== FEEDBACK MODAL ===================== -->
-<div id="feedbackModal">
-  <div class="modal">
-
-    <div style="background:linear-gradient(135deg,#ffd700,#ffed4e); padding:30px; text-align:center;">
-      <div style="font-size:60px;">🏆</div>
-      <h2 style="color:#333; font-size:28px;">Congratulations!</h2>
-      <p style="color:#555;">You've completed the submodule</p>
-    </div>
-
-    <div id="feedbackForm" style="padding:30px;">
-
-      <label>How would you rate this submodule?</label>
-      <div id="starRating" class="flex gap-4 justify-center my-4">
-        <span class="star" data-rating="1">★</span>
-        <span class="star" data-rating="2">★</span>
-        <span class="star" data-rating="3">★</span>
-        <span class="star" data-rating="4">★</span>
-        <span class="star" data-rating="5">★</span>
-      </div>
-
-      <label>What category best describes your feedback?</label>
-      <div class="grid grid-cols-2 gap-3 my-4">
-        <button class="category-btn" data-category="content">Content Quality</button>
-        <button class="category-btn" data-category="difficulty">Difficulty</button>
-        <button class="category-btn" data-category="engagement">Engagement</button>
-        <button class="category-btn" data-category="clarity">Clarity</button>
-        <button class="category-btn" data-category="pacing">Pacing</button>
-        <button class="category-btn" data-category="other">Other</button>
-      </div>
-
-      <label>Additional comments</label>
-      <textarea id="comments" class="w-full border rounded p-2"></textarea>
-
-      <button onclick="submitFeedback()" class="w-full mt-4 bg-blue-600 text-white py-2 rounded">Submit</button>
-      <button onclick="closeModal()" class="w-full mt-3 bg-gray-300 text-black py-2 rounded">Skip</button>
-    </div>
-
-    <div id="successMessage" class="hidden text-center p-10">
-      <div style="font-size:80px;">✅</div>
-      <h3 class="text-2xl mt-4">Thank you!</h3>
-      <button onclick="closeModal()" class="mt-4 px-6 py-3 bg-blue-600 text-white rounded">Continue</button>
-    </div>
-
-  </div>
-</div>
-
-
-<!-- ===================== QUIZ SECTION ===================== -->
-<section class="max-w-3xl mx-auto mt-16 p-6 bg-white shadow-lg rounded-xl text-black">
-  <h2 class="text-3xl font-bold text-blue-600 text-center mb-6">Module 1 Quiz</h2>
-
-  <form id="quiz-form" class="space-y-6">
-
-    <div>
-      <p class="font-semibold">1) What is Artificial Intelligence?</p>
-      <label><input type="radio" name="q1" value="a"> A system that mimics human intelligence</label><br>
-      <label><input type="radio" name="q1" value="b"> A physical robot</label><br>
-      <label><input type="radio" name="q1" value="c"> A type of computer virus</label>
-    </div>
-
-    <div>
-      <p class="font-semibold">2) What is Machine Learning?</p>
-      <label><input type="radio" name="q2" value="a"> Rules humans program manually</label><br>
-      <label><input type="radio" name="q2" value="b"> A method where computers learn from data</label><br>
-      <label><input type="radio" name="q2" value="c"> Random guessing</label>
-    </div>
-
-    <div id="midpoint-marker"></div>
-
-    <div>
-      <p class="font-semibold">3) What is Narrow AI?</p>
-      <label><input type="radio" name="q3" value="a"> Many human-like tasks</label><br>
-      <label><input type="radio" name="q3" value="b"> Task-specific AI</label><br>
-      <label><input type="radio" name="q3" value="c"> AI with emotions</label>
-    </div>
-
-    <div>
-      <p class="font-semibold">4) Which describes task-specific AI?</p>
-      <label><input type="radio" name="q4" value="a"> Narrow AI only performs trained tasks</label><br>
-      <label><input type="radio" name="q4" value="b"> Super AI</label><br>
-      <label><input type="radio" name="q4" value="c"> General AI</label>
-    </div>
-
-    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg">Submit Quiz</button>
-  </form>
-</section>
-
-
-<!-- ===================== JOKE POPUP ===================== -->
-<div id="joke-popup" class="hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 w-96 text-center shadow-xl z-50">
-  <button id="close-joke" class="absolute top-3 right-4 text-xl font-bold text-gray-500">×</button>
-  <p id="joke-text" class="text-lg font-semibold"></p>
-</div>
-<div id="backdrop" class="hidden fixed inset-0 bg-black bg-opacity-40 z-40"></div>
-
-
-<!-- ===================== JAVASCRIPT ===================== -->
 <script>
-/* ---------------- FEEDBACK MODAL ---------------- */
-let selectedRating = 0;
-let selectedCategory = '';
+// Restore–Original Leaderboard Expander
+function toggleExpand() {
+    const panel = document.getElementById("leaderboardPanel");
+    const text = document.getElementById("expandText");
 
-document.querySelectorAll('.star').forEach(star =>
-  star.addEventListener('click', () => {
-    selectedRating = Number(star.dataset.rating);
-    document.querySelectorAll('.star').forEach(s => {
-      s.style.color = Number(s.dataset.rating) <= selectedRating ? '#ffd700' : '#ddd';
-    });
-  })
-);
-
-document.querySelectorAll('.category-btn').forEach(btn =>
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.category-btn').forEach(b => {
-      b.style.background = 'white'; b.style.color = 'black';
-    });
-    btn.style.background = '#667eea'; btn.style.color = 'white';
-    selectedCategory = btn.dataset.category;
-  })
-);
-
-function submitFeedback() {
-  if (!selectedRating) return alert("Please select a rating.");
-  if (!selectedCategory) return alert("Please choose a category.");
-
-  document.getElementById("feedbackForm").classList.add("hidden");
-  document.getElementById("successMessage").classList.remove("hidden");
+    panel.classList.toggle("leaderboard-expanded");
+    text.textContent =
+        panel.classList.contains("leaderboard-expanded")
+            ? "Show Less"
+            : "Show More";
 }
 
-function closeModal() {
-  document.getElementById("feedbackModal").style.display = "none";
-}
-
-function showFeedbackModal() {
-  document.getElementById("feedbackModal").style.display = "flex";
-}
-
-
-/* ---------------- QUIZ + JOKES ---------------- */
-const jokes = [
-  "Why did the AI cross the road? To optimize the chicken’s path!",
-  "I told my computer I needed a break… it said 'No problem, I’ll go to sleep.'"
-];
-
-function showJoke(index) {
-  document.getElementById("joke-text").textContent = jokes[index];
-  document.getElementById("joke-popup").classList.remove("hidden");
-  document.getElementById("backdrop").classList.remove("hidden");
-  setTimeout(hideJoke, 7000);
-}
-function hideJoke() {
-  document.getElementById("joke-popup").classList.add("hidden");
-  document.getElementById("backdrop").classList.add("hidden");
-}
-document.getElementById("close-joke").onclick = hideJoke;
-
-document.querySelectorAll("input[name='q2']").forEach(r =>
-  r.addEventListener("change", () => showJoke(0))
-);
-
-
-/* ---------------- LEADERBOARD + SCORING ---------------- */
+// Update leaderboard (fixed version)
 function updateLeaderboard(score) {
-  const board = JSON.parse(localStorage.getItem("leaderboard") || "[]");
-  board.push({ name: "You", score });
-  board.sort((a,b) => b.score - a.score);
-  localStorage.setItem("leaderboard", JSON.stringify(board));
+    const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
 
-  const tbody = document.getElementById("leaderboardBody");
-  tbody.innerHTML = "";
+    leaderboard.push({ name: "You", score: score });
+    leaderboard.sort((a, b) => b.score - a.score);
 
-  board.slice(0,10).forEach((entry, index) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td class="rank-cell ${index==0?'rank-1':index==1?'rank-2':index==2?'rank-3':''}">${index+1}</td>
-      <td class="name-cell">${entry.name}</td>
-      <td class="score-cell text-right">${entry.score}/4</td>
-    `;
-    tbody.appendChild(tr);
-  });
+    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+
+    const allRows = [
+        ...document.querySelectorAll("#leaderboardBody tr"),
+        ...document.querySelectorAll("#leaderboardBodyExtended tr")
+    ];
+
+    for (let i = 0; i < allRows.length; i++) {
+        const entry = leaderboard[i];
+        const cells = allRows[i].querySelectorAll("td");
+
+        if (!entry) {
+            cells[1].textContent = "-";
+            cells[2].textContent = "-";
+        } else {
+            cells[1].textContent = entry.name;
+            cells[2].textContent = entry.score;
+        }
+    }
 }
 
+// Quiz scoring
+document.getElementById("quizForm").addEventListener("submit", function (e) {
+    e.preventDefault();
 
-/* ---------------- QUIZ SUBMISSION ---------------- */
-document.getElementById("quiz-form").addEventListener("submit", e => {
-  e.preventDefault();
+    const correct = {
+        q1: "b",
+        q2: "c",
+        q3: "a",
+        q4: "c"
+    };
 
-  showJoke(1);
+    let score = 0;
+    for (let q in correct) {
+        const selected = document.querySelector(`input[name="${q}"]:checked`);
+        if (selected && selected.value === correct[q]) score++;
+    }
 
-  const correct = { q1:"a", q2:"b", q3:"b", q4:"a" };
-  let score = 0;
+    document.getElementById("result").textContent =
+        "You scored " + score + "/4!";
 
-  Object.keys(correct).forEach(q => {
-    const choice = document.querySelector(`input[name='${q}']:checked`);
-    if (choice && choice.value === correct[q]) score++;
-  });
-
-  updateLeaderboard(score);
-
-  alert(`Quiz complete! You scored ${score}/4.`);
-  showFeedbackModal();
+    updateLeaderboard(score);
 });
 </script>
 
