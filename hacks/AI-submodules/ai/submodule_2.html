@@ -9,117 +9,840 @@ author: "Debuggers Team - Ruchika Kench, Anishka Sanghvi"
 microblog: true
 date: 2025-10-30
 ---
-<!-- Progress Bar -->
-<div class="max-w-7xl mx-auto px-4 mb-6">
-    <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
-        <div id="progress-bar" class="bg-blue-500 h-4 w-0 transition-all"></div>
-    </div>
-    <p id="progress-text" class="text-right text-sm text-blue-300 mt-1">0% completed</p>
-</div>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Module 2: Prompt Engineering</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
         body {
             background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
             min-height: 100vh;
         }
-
         .pulse {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
-
         @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .section-hidden { display: none; }
 
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: .5;
-            }
+        /* Feedback Modal Styles */
+        #feedbackModal * {
+            box-sizing: border-box !important;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        #feedbackModal {
+            position: fixed; 
+            top: 0; 
+            left: 0;
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none; 
+            align-items: center; 
+            justify-content: center;
+            z-index: 9999;
+        }
+        #feedbackModal .modal {
+            background: white; 
+            width: 90%; 
+            max-width: 600px;
+            border-radius: 20px; 
+            overflow-y: auto;
+            max-height: 90vh;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
+        .hidden { 
+            display: none !important; 
+        }
+        .category-btn {
+            padding: 10px 16px;
+            background: white;
+            color: #000000;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .category-btn:hover {
+            border-color: #8b5cf6;
         }
 
-        .section-hidden {
-            display: none;
+
+        /* Footer Styles */
+        .module-footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 2px solid rgba(139, 92, 246, 0.3);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .footer-link {
+            display: inline-block;
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            background: rgba(139, 92, 246, 0.1);
+        }
+        .footer-link:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
     </style>
 </head>
 
 <body class="text-white">
-    <div class="border-b border-purple-500/30 bg-slate-900/50 backdrop-blur">
-        <div class="max-w-7xl mx-auto px-4 py-6">
-            <h1 class="text-4xl font-bold text-center mb-2">AI Usage Quest</h1>
-            <p class="text-center text-purple-300 text-lg">Module 2: Prompt Engineering</p>
+
+<!-- PROGRESS BAR -->
+<div class="max-w-7xl mx-auto px-4 mb-6 pt-4">
+    <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+        <div id="progress-bar" class="bg-purple-500 h-4 w-0 transition-all"></div>
+    </div>
+    <p id="progress-text" class="text-right text-sm text-purple-300 mt-1">0% completed</p>
+</div>
+
+
+<!-- MODULE HEADER -->
+<div class="border-b border-purple-500/30 bg-slate-900/50 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <h1 class="text-4xl font-bold text-center mb-2">AI Usage Quest</h1>
+        <p class="text-center text-purple-300 text-lg">Module 2: Prompt Engineering</p>
+    </div>
+</div>
+
+<!-- NAVIGATION + CONTENT -->
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="bg-slate-800/50 backdrop-blur border border-purple-500/30 rounded-lg p-6 mb-8">
+        <div class="flex items-center justify-between overflow-x-auto pb-2 gap-2">
+            <button onclick="goToSection(0)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-purple-600" data-section="0">
+                <span class="text-2xl mb-1">✍️</span>
+                <span class="text-xs text-center">Intro</span>
+            </button>
+            <div class="w-8 h-0.5 bg-purple-500/30"></div>
+            <button onclick="goToSection(1)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50" data-section="1">
+                <span class="text-2xl mb-1">📝</span>
+                <span class="text-xs text-center">Text</span>
+            </button>
+            <div class="w-8 h-0.5 bg-purple-500/30"></div>
+            <button onclick="goToSection(2)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50" data-section="2">
+                <span class="text-2xl mb-1">🗣️</span>
+                <span class="text-xs text-center">Voice</span>
+            </button>
+            <div class="w-8 h-0.5 bg-purple-500/30"></div>
+            <button onclick="goToSection(3)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50" data-section="3">
+                <span class="text-2xl mb-1">🖼️</span>
+                <span class="text-xs text-center">Visual</span>
+            </button>
+            <div class="w-8 h-0.5 bg-purple-500/30"></div>
+            <button onclick="goToSection(4)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50" data-section="4">
+                <span class="text-2xl mb-1">🎯</span>
+                <span class="text-xs text-center">Types</span>
+            </button>
+            <div class="w-8 h-0.5 bg-purple-500/30"></div>
+            <button onclick="goToSection(5)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50" data-section="5">
+                <span class="text-2xl mb-1">⚡</span>
+                <span class="text-xs text-center">Challenge</span>
+            </button>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
-        <div class="bg-slate-800/50 backdrop-blur border border-purple-500/30 rounded-lg p-6 mb-8">
-            <div class="flex items-center justify-between overflow-x-auto pb-2 gap-2">
-                <button onclick="goToSection(0)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-purple-600" data-section="0">
-                    <span class="text-2xl mb-1">✍️</span>
-                    <span class="text-xs text-center">Introduction</span>
-                </button>
-                <div class="w-8 h-0.5 bg-purple-500/30"></div>
-                <button onclick="goToSection(1)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50" data-section="1">
-                    <span class="text-2xl mb-1">📝</span>
-                    <span class="text-xs text-center">Text Prompts</span>
-                </button>
-                <div class="w-8 h-0.5 bg-purple-500/30"></div>
-                <button onclick="goToSection(2)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50" data-section="2">
-                    <span class="text-2xl mb-1">🗣️</span>
-                    <span class="text-xs text-center">Voice Commands</span>
-                </button>
-                <div class="w-8 h-0.5 bg-purple-500/30"></div>
-                <button onclick="goToSection(3)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50" data-section="3">
-                    <span class="text-2xl mb-1">🖼️</span>
-                    <span class="text-xs text-center">Visual Prompts</span>
-                </button>
-                <div class="w-8 h-0.5 bg-purple-500/30"></div>
-                <button onclick="goToSection(4)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50" data-section="4">
-                    <span class="text-2xl mb-1">🎯</span>
-                    <span class="text-xs text-center">Prompt Types</span>
-                </button>
-                <div class="w-8 h-0.5 bg-purple-500/30"></div>
-                <button onclick="goToSection(5)" class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50" data-section="5">
-                    <span class="text-2xl mb-1">🏆</span>
-                    <span class="text-xs text-center">Quiz</span>
-                </button>
+    <!-- SECTION 0: Introduction -->
+    <div id="section-0" class="mission-section">
+        <div class="space-y-6">
+            <div class="bg-slate-800/70 backdrop-blur border border-purple-500/50 rounded-lg p-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-4xl pulse">✍️</span>
+                    <h2 class="text-3xl font-bold text-purple-400">Prompt Engineering</h2>
+                </div>
+                <div class="space-y-4 text-lg">
+                    <div class="flex justify-center my-6">
+                        <img src="{{ '/images/digital-famine/textPrompts.png' | prepend: site.baseurl }}"
+                            alt="Prompt Engineering Illustration"
+                            class="rounded-lg border border-purple-500/30 max-w-2xl w-full">
+                    </div>
+
+                    <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-6 mt-6">
+                        <h3 class="text-xl font-semibold text-purple-300 mb-3">How AI Responds to Prompts</h3>
+                        <p class="mb-4">Generative AI like ChatGPT and Claude use two key technologies:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-slate-800/50 p-4 rounded-lg">
+                                <p class="text-purple-400 font-semibold mb-2">🗣️ Natural Language Processing</p>
+                                <p class="text-sm">Helps AI understand and respond to human language naturally, like talking to another person.</p>
+                            </div>
+                            <div class="bg-slate-800/50 p-4 rounded-lg">
+                                <p class="text-purple-400 font-semibold mb-2">🧠 Machine Learning</p>
+                                <p class="text-sm">Enables AI to learn from your input and improve its responses over time.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="goToSection(1)" class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Begin Learning</button>
+        </div>
+    </div>
+
+    <!-- SECTION 1: Text Prompts -->
+    <div id="section-1" class="mission-section section-hidden">
+        <div class="space-y-6">
+            <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                <h2 class="text-3xl font-bold mb-6">📝 Text Prompts</h2>
+                <div class="space-y-6 text-lg">
+                    <p>Text prompts are the most common way to interact with AI. The quality of your prompt directly impacts the quality of the response.</p>
+
+                    <div class="flex justify-center my-6">
+                        <img src="https://via.placeholder.com/800x400/1e293b/a78bfa?text=Text+Prompts"
+                            alt="Text Prompts Illustration"
+                            class="rounded-lg border border-purple-500/30 max-w-2xl w-full">
+                    </div>
+
+                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
+                        <h4 class="text-xl font-bold text-green-300 mb-4">✅ Best Practices</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="font-semibold text-green-400 mb-2">1. Be Specific and Clear</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-green-900/30 p-3 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-sm">"Write a 3-paragraph summary of Animal Farm by George Orwell with emphasis on motifs."</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-3 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-sm">"Tell me about Animal Farm."</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-semibold text-green-400 mb-2">2. Give Context</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-green-900/30 p-3 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-sm">"I'm a high school student. Explain quantum physics in simple terms."</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-3 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-sm">"Explain quantum physics."</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-semibold text-green-400 mb-2">3. Use Examples or Structure</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-green-900/30 p-3 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-sm">"Create a to-do list for planning a wedding. Format with bullet points."</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-3 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-sm">"Help me plan a wedding."</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-semibold text-green-400 mb-2">4. Set the Tone or Style</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-green-900/30 p-3 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-sm">"Write a funny tweet about coffee addiction."</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-3 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-sm">"Write something about coffee."</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <p class="font-semibold">💡 Impact:</p>
+                        <p>Clear prompts = accurate, useful, and creative responses.<br>Vague prompts = generic or off-topic answers.</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="goToSection(2)" class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to Voice Commands</button>
+        </div>
+    </div>
+
+    <!-- SECTION 2: Voice Commands -->
+    <div id="section-2" class="mission-section section-hidden">
+        <div class="space-y-6">
+            <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                <h2 class="text-3xl font-bold mb-6">🗣️ Voice Commands</h2>
+                <div class="space-y-6 text-lg">
+                    <p>Voice prompts are used in smart assistants like Siri, Alexa, or AI chat apps with voice input. They require different techniques than text prompts.</p>
+
+                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
+                        <h4 class="text-xl font-bold text-green-300 mb-4">✅ Best Practices</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="font-semibold text-green-400 mb-2">1. Speak Naturally but Clearly</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-green-900/30 p-3 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-sm">"Set a reminder for 3 PM today to call Mom."</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-3 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-sm">"Set a Reminder... Mom... later."</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-semibold text-green-400 mb-2">2. Use Short, Complete Sentences</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-green-900/30 p-3 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-sm">"What's the weather like in London tomorrow?"</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-3 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-sm">"London weather?"</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-4">
+                                <p class="font-semibold text-purple-300 mb-2">💡 Additional Tips:</p>
+                                <ul class="space-y-2 text-sm">
+                                    <li>• Avoid background noise for better recognition</li>
+                                    <li>• Use follow-up questions to maintain context</li>
+                                    <li>• Example: "Who is Marie Curie?" → "What did she discover?"</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <p class="font-semibold">💡 Impact:</p>
+                        <p>Clear voice commands = faster, more accurate responses.<br>Mumbled or fragmented speech = misinterpretation or errors.</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="goToSection(3)" class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to Visual Prompts</button>
+        </div>
+    </div>
+
+    <!-- SECTION 3: Visual Prompts -->
+    <div id="section-3" class="mission-section section-hidden">
+        <div class="space-y-6">
+            <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                <h2 class="text-3xl font-bold mb-6">🖼️ Visual Prompts</h2>
+                <div class="space-y-6 text-lg">
+                    <p>Visual prompts involve uploading or showing images to AI for description, analysis, or generation based on the picture.</p>
+
+                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
+                        <h4 class="text-xl font-bold text-green-300 mb-4">✅ Best Practices</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="font-semibold text-green-400 mb-2">1. Use High-Quality Images</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-green-900/30 p-3 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-sm">A clear, well-lit photo of a plant for identification.</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-3 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-sm">A blurry or dark image.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-semibold text-green-400 mb-2">2. Add Text Context with Images</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-green-900/30 p-3 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-sm">"What kind of insect is this?" (with a photo)</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-3 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-sm">Just uploading the image with no context.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-semibold text-green-400 mb-2">3. Ask Specific Questions</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-green-900/30 p-3 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-sm">"What's the architectural style of this building?"</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-3 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-sm">"What do you think?"</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-semibold text-green-400 mb-2">4. Combine Visual + Text for Creative Tasks</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="bg-green-900/30 p-3 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-sm">"Generate a painting of this dog with a black and white watercolor style."</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-3 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-sm">"Make this better."</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <p class="font-semibold">💡 Impact:</p>
+                        <p>Clear visuals + context = accurate analysis or creative output.<br>Unclear images or vague prompts = poor results or confusion.</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="goToSection(4)" class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to Prompt Types</button>
+        </div>
+    </div>
+
+    <!-- SECTION 4: Prompt Types -->
+    <div id="section-4" class="mission-section section-hidden">
+        <div class="space-y-6">
+            <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                <h2 class="text-3xl font-bold mb-6">🎯 Types of AI Prompts</h2>
+                <div class="space-y-4 text-lg">
+                    <p class="mb-4">Different prompting strategies achieve different results. Understanding these types helps you choose the right approach for your task.</p>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse bg-slate-900/50 rounded-lg overflow-hidden">
+                            <thead>
+                                <tr class="bg-purple-900/30">
+                                    <th class="border border-purple-500/30 p-4 text-left">Prompt Type</th>
+                                    <th class="border border-purple-500/30 p-4 text-left">Description</th>
+                                    <th class="border border-purple-500/30 p-4 text-left">Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-purple-500/30 p-4"><strong>Zero-Shot</strong></td>
+                                    <td class="border border-purple-500/30 p-4">Simple instructions without examples. Quick, general responses.</td>
+                                    <td class="border border-purple-500/30 p-4 text-sm">"Summarize this article in 5 bullet points."</td>
+                                </tr>
+                                <tr class="bg-slate-800/30">
+                                    <td class="border border-purple-500/30 p-4"><strong>Few-Shot</strong></td>
+                                    <td class="border border-purple-500/30 p-4">Provide examples for AI to mimic. Helps learn structure or tone.</td>
+                                    <td class="border border-purple-500/30 p-4 text-sm">"Here are 2 example summaries. Write a third in the same style."</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-purple-500/30 p-4"><strong>Instructional</strong></td>
+                                    <td class="border border-purple-500/30 p-4">Direct commands using action verbs.</td>
+                                    <td class="border border-purple-500/30 p-4 text-sm">"Write an executive summary under 100 words."</td>
+                                </tr>
+                                <tr class="bg-slate-800/30">
+                                    <td class="border border-purple-500/30 p-4"><strong>Role-Based</strong></td>
+                                    <td class="border border-purple-500/30 p-4">AI assumes a specific persona or viewpoint.</td>
+                                    <td class="border border-purple-500/30 p-4 text-sm">"You are an MBA professor. Prepare a lecture outline..."</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-purple-500/30 p-4"><strong>Contextual</strong></td>
+                                    <td class="border border-purple-500/30 p-4">Include background before asking. Tailors to audience.</td>
+                                    <td class="border border-purple-500/30 p-4 text-sm">"This is for undergrads. Rephrase in simpler language."</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-6 mt-6">
+                        <h4 class="text-xl font-bold text-yellow-300 mb-3">💡 Final Tips for All Prompt Types</h4>
+                        <ul class="space-y-2">
+                            <li>• <strong>Think like a teacher:</strong> Explain as if teaching someone new</li>
+                            <li>• <strong>Iterate:</strong> If the first result isn't perfect, refine and try again</li>
+                            <li>• <strong>Use formatting:</strong> Request bullet points, tables, or sections</li>
+                            <li>• <strong>Be patient:</strong> Complex requests may need multiple attempts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <button onclick="goToSection(5)" class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Try the Interactive Challenge</button>
+        </div>
+    </div>
+
+    <!-- SECTION 5: Interactive Challenge -->
+    <div id="section-5" class="mission-section section-hidden">
+        <div class="space-y-6">
+            <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                <h2 class="text-3xl font-bold mb-6">🎯 Interactive Prompt Challenge</h2>
+                <p class="text-lg mb-6">See the difference between good and bad prompts! Write both versions and compare the AI responses.</p>
+
+                <!-- Bad Prompt Section -->
+                <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-red-300 mb-4">❌ Bad Prompt</h3>
+                    <p class="mb-4 text-gray-300">Write a vague, incomplete, or poorly structured prompt:</p>
+                    <textarea id="bad-prompt" rows="3" placeholder="Example: 'write something about dogs'"
+                        class="w-full p-3 rounded text-white bg-slate-700 border border-red-500/30 mb-3"></textarea>
+                    <div class="flex gap-2">
+                        <button onclick="generateBadPrompt()"
+                            class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold">Generate Bad Response</button>
+                        <button onclick="autoFillBad()"
+                            class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block font-semibold mb-2 text-red-300">AI Response to Bad Prompt:</label>
+                        <pre id="output-bad"
+                            class="bg-slate-900/50 border border-red-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                    </div>
+
+                    <!-- Community Prompt Feed for Bad Prompts -->
+                    <div class="community-feed mt-6 bg-slate-800/70 border border-red-500/30 rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-red-300 mb-4">💬 Examples of Bad Prompts</h4>
+                        <div class="space-y-4">
+                            <div class="prompt-card bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-red-300 font-medium text-sm">@confused_user</span>
+                                    <button onclick="copyPromptToTextarea('bad-prompt', 'write about technology')" 
+                                        class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-xs text-white transition-colors">Try this prompt</button>
+                                </div>
+                                <p class="text-gray-300 text-sm">write about technology</p>
+                            </div>
+                            
+                            <div class="prompt-card bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-red-300 font-medium text-sm">@vague_writer</span>
+                                    <button onclick="copyPromptToTextarea('bad-prompt', 'help me with my homework')" 
+                                        class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-xs text-white transition-colors">Try this prompt</button>
+                                </div>
+                                <p class="text-gray-300 text-sm">help me with my homework</p>
+                            </div>
+                            
+                            <div class="prompt-card bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-red-300 font-medium text-sm">@lazy_prompter</span>
+                                    <button onclick="copyPromptToTextarea('bad-prompt', 'make it good')" 
+                                        class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-xs text-white transition-colors">Try this prompt</button>
+                                </div>
+                                <p class="text-gray-300 text-sm">make it good</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Good Prompt Section -->
+                <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-green-300 mb-4">✅ Good Prompt</h3>
+                    <p class="mb-4 text-gray-300">Write a clear, specific, and well-structured prompt:</p>
+                    <textarea id="good-prompt" rows="3"
+                        placeholder="Example: 'Write a 150-word informative paragraph about Golden Retrievers, focusing on their temperament and why they make good family pets.'"
+                        class="w-full p-3 rounded text-white bg-slate-700 border border-green-500/30 mb-3"></textarea>
+                    <div class="flex gap-2">
+                        <button onclick="generateGoodPrompt()"
+                            class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">Generate Good Response</button>
+                        <button onclick="autoFillGood()"
+                            class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block font-semibold mb-2 text-green-300">AI Response to Good Prompt:</label>
+                        <pre id="output-good"
+                            class="bg-slate-900/50 border border-green-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                    </div>
+
+                    <!-- Community Prompt Feed for Good Prompts -->
+                    <div class="community-feed mt-6 bg-slate-800/70 border border-green-500/30 rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-green-300 mb-4">💬 Examples of Good Prompts</h4>
+                        <div class="space-y-4">
+                            <div class="prompt-card bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-green-300 font-medium text-sm">@detail_oriented</span>
+                                    <button onclick="copyPromptToTextarea('good-prompt', 'Write a 200-word professional email to a potential client explaining our web design services, highlighting our 5+ years of experience and including a call-to-action for a free consultation.')" 
+                                        class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-xs text-white transition-colors">Try this prompt</button>
+                                </div>
+                                <p class="text-gray-300 text-sm">Write a 200-word professional email to a potential client explaining our web design services, highlighting our 5+ years of experience and including a call-to-action for a free consultation.</p>
+                            </div>
+                            
+                            <div class="prompt-card bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-green-300 font-medium text-sm">@clear_communicator</span>
+                                    <button onclick="copyPromptToTextarea('good-prompt', 'Explain the concept of machine learning to a 12-year-old using simple language and everyday examples. Include one analogy comparing it to how humans learn. Keep it under 150 words.')" 
+                                        class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-xs text-white transition-colors">Try this prompt</button>
+                                </div>
+                                <p class="text-gray-300 text-sm">Explain the concept of machine learning to a 12-year-old using simple language and everyday examples. Include one analogy comparing it to how humans learn. Keep it under 150 words.</p>
+                            </div>
+                            
+                            <div class="prompt-card bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-green-300 font-medium text-sm">@structured_thinker</span>
+                                    <button onclick="copyPromptToTextarea('good-prompt', 'Create a step-by-step study plan for learning Python programming in 8 weeks. Include specific topics for each week, recommended practice hours, and suggested projects. Target audience: complete beginners with no coding experience.')" 
+                                        class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-xs text-white transition-colors">Try this prompt</button>
+                                </div>
+                                <p class="text-gray-300 text-sm">Create a step-by-step study plan for learning Python programming in 8 weeks. Include specific topics for each week, recommended practice hours, and suggested projects. Target audience: complete beginners with no coding experience.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                    <h4 class="text-xl font-bold text-purple-300 mb-3">💡 What Makes a Good Prompt?</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li>✓ Be specific about what you want</li>
+                        <li>✓ Include context and desired format</li>
+                        <li>✓ Use clear, complete sentences</li>
+                        <li>✓ Specify tone, length, or style if needed</li>
+                        <li>✗ Avoid vague requests</li>
+                        <li>✗ Don't use incomplete sentences</li>
+                        <li>✗ Avoid ambiguous language</li>
+                    </ul>
+                </div>
+
+                <!-- Complete Section -->
+                <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 text-center">
+                    <h3 class="text-2xl font-bold text-blue-300 mb-3">🎉 Challenge Complete!</h3>
+                    <p class="mb-4 text-gray-300">Now you understand the power of good prompting!</p>
+                    <div class="bg-green-900/30 border-2 border-green-500 rounded-lg p-6 mb-4">
+                        <p class="text-xl font-bold text-green-400 mb-2">🔑 Your Code Number: 6</p>
+                        <p class="text-sm text-gray-300">Remember this number! You'll need it along with the other module codes to unlock the final challenge.</p>
+                    </div>
+                    <button onclick="showFeedbackModal()" class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold">Complete Module</button>
+                </div>
             </div>
         </div>
-
-        <!-- Sections copied as-is -->
-        <!-- Section 0 -->
-        <div id="section-0" class="mission-section">...</div>
-
-        <!-- Section 1 -->
-        <div id="section-1" class="mission-section section-hidden">...</div>
-
-        <!-- Section 2 -->
-        <div id="section-2" class="mission-section section-hidden">...</div>
-
-        <!-- Section 3 -->
-        <div id="section-3" class="mission-section section-hidden">...</div>
-
-        <!-- Section 4 -->
-        <div id="section-4" class="mission-section section-hidden">...</div>
-
-        <!-- Section 5 (Quiz) -->
-        <div id="section-5" class="mission-section section-hidden">...</div>
     </div>
+</div>
+
+<!-- FEEDBACK MODAL -->
+<div id="feedbackModal">
+    <div class="modal">
+        <div style="background:linear-gradient(135deg,#ffd700,#ffed4e); padding:30px; border-radius:20px 20px 0 0; text-align:center;">
+            <div style="font-size:60px; margin-bottom:10px;">🏆</div>
+            <h2 style="color:#333; font-size:28px;">Congratulations!</h2>
+            <p style="color:#555;">You've completed the submodule</p>
+        </div>
+
+        <div class="modal-content" id="feedbackForm" style="padding:30px;">
+            <label style="font-weight:600; color:#000000;">How would you rate this submodule?</label>
+            <div id="starRating" style="display:flex; gap:10px; justify-content:center; margin:20px 0;">
+                <span class="star" data-rating="1" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                <span class="star" data-rating="2" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                <span class="star" data-rating="3" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                <span class="star" data-rating="4" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                <span class="star" data-rating="5" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+            </div>
+
+            <label style="font-weight:600; color:#000000;">What category best describes your feedback?</label>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:20px 0;">
+                <button class="category-btn" data-category="content">Content Quality</button>
+                <button class="category-btn" data-category="difficulty">Difficulty Level</button>
+                <button class="category-btn" data-category="engagement">Engagement</button>
+                <button class="category-btn" data-category="clarity">Clarity</button>
+                <button class="category-btn" data-category="pacing">Pacing</button>
+                <button class="category-btn" data-category="other">Other</button>
+            </div>
+
+            <label style="font-weight:600; color:#000000;">Additional comments (optional)</label>
+            <textarea id="comments" style="width:100%; border:2px solid #ddd; border-radius:10px; padding:12px; min-height:100px; color:#000000; background: white;"></textarea>
+
+            <div style="background: #faf5ff; border-radius: 10px; padding: 20px; margin: 20px 0; border: 1px solid #e879f9;">
+                <h4 style="color: #000000; margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">📊 Previous Feedback Summary</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
+                    <div>
+                        <p style="margin: 0 0 5px 0; color: #6b7280;"><strong>Average Rating:</strong></p>
+                        <p style="margin: 0; color: #8b5cf6; font-weight: 600;">⭐ 4.3/5 (based on 38 responses)</p>
+                    </div>
+                    <div>
+                        <p style="margin: 0 0 5px 0; color: #6b7280;"><strong>Most Common Feedback:</strong></p>
+                        <p style="margin: 0; color: #374151;">"Interactive exercises"</p>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="submitFeedback()" class="btn-primary w-full mt-6" style="padding:14px; background:#8b5cf6; color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer;">Submit Feedback</button>
+            <button onclick="closeModal()" class="btn-secondary w-full mt-3" style="padding:12px; background:#ccc; color:#000000; border:none; border-radius:10px; cursor:pointer;">Skip</button>
+        </div>
+
+        <div id="successMessage" class="hidden" style="text-align:center; padding:40px;">
+            <div style="font-size:80px;">✅</div>
+            <h3 style="font-size:24px; margin-top:10px; color:#000000;">Thank you!</h3>
+            <button onclick="closeModal()" style="margin-top:20px; padding:14px 24px; background:#8b5cf6; color:white; border:none; border-radius:10px; font-size:16px; cursor:pointer;">Continue</button>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="module-footer">
+    <a href="#" class="footer-link">← Back to AI Quest Home</a>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+    // Progress bar update
+    function updateProgress() {
+        const sections = ['section-0', 'section-1', 'section-2', 'section-3', 'section-4', 'section-5'];
+        const currentSection = sections.findIndex(id => !document.getElementById(id).classList.contains('section-hidden'));
+        const progress = ((currentSection + 1) / sections.length) * 100;
+        document.getElementById('progress-bar').style.width = progress + '%';
+        document.getElementById('progress-text').textContent = Math.round(progress) + '% completed';
+    }
+
+
+    // Navigation
+    function goToSection(n) {
+        document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
+        document.getElementById('section-' + n).classList.remove('section-hidden');
+        document.querySelectorAll('.nav-btn').forEach(b => { 
+            b.classList.remove('bg-purple-600'); 
+            b.classList.add('bg-slate-700/50'); 
+        });
+        document.querySelector('.nav-btn[data-section="' + n + '"]').classList.add('bg-purple-600');
+        updateProgress();
+        window.scrollTo(0, 0);
+    }
+
+    // Auto-fill functions
+    function autoFillBad() {
+        const textarea = document.getElementById('bad-prompt');
+        if (!textarea.value.trim()) {
+            textarea.value = "tell me about space";
+        }
+    }
+
+    function autoFillGood() {
+        const textarea = document.getElementById('good-prompt');
+        if (!textarea.value.trim()) {
+            textarea.value = "Write a 200-word informative explanation about the Solar System, including details about the eight planets, their order from the Sun, and one unique characteristic of each planet.";
+        }
+    }
+
+    // Generate functions (placeholder - replace with actual API)
+    function generateBadPrompt() {
+        const badPrompt = document.getElementById('bad-prompt').value.trim();
+        const outputEl = document.getElementById('output-bad');
+
+        if (!badPrompt) {
+            outputEl.textContent = 'Please enter a bad prompt above.';
+            return;
+        }
+
+        outputEl.textContent = 'Generating response...\n\n[This is a simulated response. The vague prompt "' + badPrompt + '" would result in a generic, less helpful AI response because it lacks specificity, context, and clear instructions.]';
+    }
+
+    function generateGoodPrompt() {
+        const goodPrompt = document.getElementById('good-prompt').value.trim();
+        const outputEl = document.getElementById('output-good');
+
+        if (!goodPrompt) {
+            outputEl.textContent = 'Please enter a good prompt above.';
+            return;
+        }
+
+        outputEl.textContent = 'Generating response...\n\n[This is a simulated response. The well-structured prompt "' + goodPrompt + '" would result in a detailed, focused, and helpful AI response because it provides clear instructions, context, and specific requirements.]';
+    }
+
+    // Feedback modal
+    let selectedRating = 0;
+    let selectedCategory = '';
+
+    document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', () => {
+            selectedRating = parseInt(star.dataset.rating);
+            updateStars();
+        });
+    });
+
+    function updateStars() {
+        document.querySelectorAll('.star').forEach(s => {
+            s.style.color = (parseInt(s.dataset.rating) <= selectedRating) ? '#ffd700' : '#ddd';
+        });
+    }
+
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.category-btn').forEach(b => {
+                b.style.background = 'white';
+                b.style.color = '#000000';
+                b.style.borderColor = '#ddd';
+            });
+            btn.style.background = '#8b5cf6';
+            btn.style.color = 'white';
+            btn.style.borderColor = '#7c3aed';
+            selectedCategory = btn.dataset.category;
+        });
+    });
+
+    function submitFeedback() {
+        if (!selectedRating) return alert("Please select a rating");
+        if (!selectedCategory) return alert("Select a category");
+
+        document.getElementById("feedbackForm").classList.add("hidden");
+        document.getElementById("successMessage").classList.remove("hidden");
+    }
+
+    function closeModal() {
+        document.getElementById("feedbackModal").style.display = "none";
+    }
+
+    function showFeedbackModal() {
+        console.log("showFeedbackModal called");
+        const modal = document.getElementById("feedbackModal");
+        console.log("Modal element:", modal);
+        if (modal) {
+            // Force visibility with all possible overrides
+            modal.style.display = "flex";
+            modal.style.visibility = "visible";
+            modal.style.opacity = "1";
+            modal.style.zIndex = "99999";
+            modal.style.position = "fixed";
+            modal.style.top = "0";
+            modal.style.left = "0";
+            modal.style.width = "100%";
+            modal.style.height = "100%";
+            modal.style.background = "rgba(0, 0, 0, 0.8)";
+            modal.style.alignItems = "center";
+            modal.style.justifyContent = "center";
+            console.log("Modal display set to flex with overrides");
+            
+            // Check if modal is actually visible
+            const rect = modal.getBoundingClientRect();
+            console.log("Modal bounding rect:", rect);
+            console.log("Modal computed style display:", window.getComputedStyle(modal).display);
+        } else {
+            console.error("Modal not found!");
+        }
+    }
+
+    // Copy community prompt to textarea
+    function copyPromptToTextarea(textareaId, promptText) {
+        const textarea = document.getElementById(textareaId);
+        if (textarea) {
+            textarea.value = promptText;
+            textarea.focus();
+            // Add brief visual feedback
+            textarea.style.borderColor = '#3b82f6';
+            setTimeout(() => {
+                textarea.style.borderColor = '';
+            }, 1000);
+        }
+    }
+
+    // Initialize
+    updateProgress();
+</script>
+
 </body>
 </html>
-
-// --- Front Matter Added ---
-'use client';
-// This component uses TailwindCSS, React hooks, and section-based navigation.
-// It powers Module 2 of the AI Usage Quest: Prompt Engineering.
-
