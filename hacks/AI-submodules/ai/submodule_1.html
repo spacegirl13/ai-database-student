@@ -5,11 +5,107 @@ description: "Explore the three main types of artificial intelligence through in
 permalink: /digital-famine/ai/submodule_1/
 categories: [CSP, Submodule, AIUsage]
 tags: [ai, fundamentals, narrow-ai, general-ai, super-ai]
-author: "Debuggers Team - Laya Balaji, Akshara Shankar, Anishka Sanghvi"
+author: "Debuggers Team - Michelle Ji, Akshara Shankar, Anishka Sanghvi"
 microblog: true
 date: 2025-10-30
 ---
-<!-- ================= PROGRESS BAR ================= -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Module 1: Types of AI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+/* ===================== GLOBAL ===================== */
+body {
+  background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
+  min-height: 100vh;
+  color: white;
+}
+
+/* Progress Bar */
+.pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.5; } }
+
+/* Hidden Utility */
+.section-hidden { display:none; }
+.hidden { display:none !important; }
+
+/* ===================== FEEDBACK MODAL ===================== */
+#feedbackModal {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none; align-items: center; justify-content: center;
+  z-index: 9999;
+}
+#feedbackModal .modal {
+  background: white;
+  width: 90%; max-width: 600px;
+  border-radius: 20px;
+  overflow-y: auto;
+  max-height: 90vh;
+  animation: fadeIn .3s ease;
+}
+#feedbackModal * {
+  box-sizing: border-box !important;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+
+/* ===================== LEADERBOARD ===================== */
+.leaderboard-panel {
+  position: fixed; top: 20px; right: 20px;
+  width: 200px; background: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  overflow: hidden; z-index: 1000;
+}
+.panel-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white; padding: 10px; text-align: center;
+}
+.panel-title {
+  font-size: 14px; font-weight: bold;
+  display:flex; align-items:center; justify-content:center; gap:4px;
+}
+.leaderboard-content { max-height: 300px; overflow-y: auto; }
+.leaderboard-table { width: 100%; border-collapse: collapse; }
+.leaderboard-table thead {
+  background:#f8f9fa; position:sticky; top:0; z-index:10;
+}
+.leaderboard-table th {
+  padding:8px; font-size:10px; color:#6c757d;
+  text-transform:uppercase; letter-spacing: .3px;
+}
+.leaderboard-table td { padding:8px; font-size:12px; color:#212529; }
+.rank-1 { color:#ffd700; }
+.rank-2 { color:#c0c0c0; }
+.rank-3 { color:#cd7f32; }
+.extended-rows { display:none; }
+
+/* Scrollbars */
+.leaderboard-content::-webkit-scrollbar { width:4px; }
+.leaderboard-content::-webkit-scrollbar-track { background:#f1f1f1; }
+.leaderboard-content::-webkit-scrollbar-thumb {
+  background:#888; border-radius:2px;
+}
+
+/* Joke Popup */
+#joke-popup {
+  background:white; border-radius:12px;
+  color:#333;
+}
+</style>
+</head>
+
+
+<body>
+
+<!-- ===================== PROGRESS BAR ===================== -->
 <div class="max-w-7xl mx-auto px-4 mb-6">
     <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
         <div id="progress-bar" class="bg-blue-500 h-4 w-0 transition-all"></div>
@@ -17,443 +113,255 @@ date: 2025-10-30
     <p id="progress-text" class="text-right text-sm text-blue-300 mt-1">0% completed</p>
 </div>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module 1: Types of AI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-        body {
-            background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
-            min-height: 100vh;
-        }
-        .pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.5;} }
-        .section-hidden { display:none; }
-    </style>
-
-    <!-- ====== FEEDBACK MODAL STYLES (wrapped to avoid conflicts) ====== -->
-    <style>
-        #feedbackModal * {
-            box-sizing: border-box !important;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-        }
-        #feedbackModal {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            display: none; align-items: center; justify-content: center;
-            z-index: 9999;
-        }
-        #feedbackModal .modal {
-            background: white; width: 90%; max-width: 600px;
-            border-radius: 20px; overflow-y: auto;
-            max-height: 90vh;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-        .hidden { display:none !important; }
-    </style>
-</head>
-
-<body class="text-white">
-
-<!-- YOUR LEADERBOARD (unchanged) -->
-<!-- Leaderboard Panel HTML -->
+<!-- ===================== LEADERBOARD ===================== -->
 <div class="leaderboard-panel">
-    <div class="panel-header">
-        <div class="panel-title">
-            <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                <path d="M4 22h16"></path>
-                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
-            </svg>
-            Leaderboard
-        </div>
-    </div>
+  <div class="panel-header">
+      <div class="panel-title">
+          <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+          </svg>
+          Leaderboard
+      </div>
+  </div>
 
-    <div class="leaderboard-content" id="leaderboardContent">
-        <table class="leaderboard-table">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Player</th>
-                    <th style="text-align: right;">Score</th>
-                </tr>
-            </thead>
-            <tbody id="leaderboardBody">
-                <!-- Top 5 rows -->
-                <tr>
-                    <td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>
-                    <td class="name-cell">-</td>
-                    <td class="score-cell">-</td>
-                </tr>
-                <tr>
-                    <td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>
-                    <td class="name-cell">-</td>
-                    <td class="score-cell">-</td>
-                </tr>
-                <tr>
-                    <td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>
-                    <td class="name-cell">-</td>
-                    <td class="score-cell">-</td>
-                </tr>
-                <tr>
-                    <td class="rank-cell">4</td>
-                    <td class="name-cell">-</td>
-                    <td class="score-cell">-</td>
-                </tr>
-                <tr>
-                    <td class="rank-cell">5</td>
-                    <td class="name-cell">-</td>
-                    <td class="score-cell">-</td>
-                </tr>
-            </tbody>
-            <tbody id="leaderboardBodyExtended" class="extended-rows">
-                <!-- Rows 6-10 (hidden by default) -->
-                <tr>
-                    <td class="rank-cell">6</td>
-                    <td class="name-cell">-</td>
-                    <td class="score-cell">-</td>
-                </tr>
-                <tr>
-                    <td class="rank-cell">7</td>
-                    <td class="name-cell">-</td>
-                    <td class="score-cell">-</td>
-                </tr>
-                <tr>
-                    <td class="rank-cell">8</td>
-                    <td class="name-cell">-</td>
-                    <td class="score-cell">-</td>
-                </tr>
-                <tr>
-                    <td class="rank-cell">9</td>
-                    <td class="name-cell">-</td>
-                    <td class="score-cell">-</td>
-                </tr>
-                <tr>
-                    <td class="rank-cell">10</td>
-                    <td class="name-cell">-</td>
-                    <td class="score-cell">-</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="leaderboard-content">
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Rank</th><th>Player</th><th style="text-align:right;">Score</th>
+        </tr>
+      </thead>
 
-    <button class="expand-btn" id="expandBtn" onclick="toggleExpand()">
-        <span id="expandText">Show More</span>
-        <svg class="expand-icon" id="expandIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-    </button>
+      <tbody id="leaderboardBody"></tbody>
+    </table>
+  </div>
 </div>
 
-<!-- Leaderboard CSS -->
-<style>
-    .leaderboard-panel {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        width: 200px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        overflow: hidden;
-        z-index: 1000;
-    }
 
-    .panel-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 10px 12px;
-        text-align: center;
-    }
-
-    .panel-title {
-        font-size: 14px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-    }
-
-    .trophy-icon {
-        width: 16px;
-        height: 16px;
-    }
-
-    .leaderboard-content {
-        max-height: 300px;
-        overflow-y: auto;
-    }
-
-    .leaderboard-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .leaderboard-table thead {
-        background: #f8f9fa;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-    }
-
-    .leaderboard-table th {
-        padding: 8px 10px;
-        text-align: left;
-        font-size: 10px;
-        font-weight: 600;
-        color: #6c757d;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
-        border-bottom: 2px solid #e9ecef;
-    }
-
-    .leaderboard-table td {
-        padding: 8px 10px;
-        border-bottom: 1px solid #e9ecef;
-        font-size: 12px;
-    }
-
-    .leaderboard-table tbody tr:hover {
-        background-color: #f8f9fa;
-    }
-
-    .rank-cell {
-        font-weight: bold;
-        width: 40px;
-        text-align: center;
-    }
-
-    .rank-1 {
-        color: #ffd700;
-        font-size: 13px;
-    }
-
-    .rank-2 {
-        color: #c0c0c0;
-        font-size: 13px;
-    }
-
-    .rank-3 {
-        color: #cd7f32;
-        font-size: 13px;
-    }
-
-    .name-cell {
-        font-weight: 500;
-        color: #212529;
-        font-size: 11px;
-    }
-
-    .score-cell {
-        font-weight: bold;
-        color: #667eea;
-        text-align: right;
-        font-size: 12px;
-    }
-
-    .medal {
-        display: inline-block;
-        margin-right: 2px;
-        font-size: 11px;
-    }
-
-    .extended-rows {
-        display: none;
-    }
-
-    .extended-rows.show {
-        display: table-row-group;
-    }
-
-    .expand-btn {
-        width: 100%;
-        padding: 8px 12px;
-        background-color: #f8f9fa;
-        border: none;
-        border-top: 1px solid #e9ecef;
-        color: #667eea;
-        font-size: 11px;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-    }
-
-    .expand-btn:hover {
-        background-color: #e9ecef;
-    }
-
-    .expand-icon {
-        width: 14px;
-        height: 14px;
-    }
-
-    .expand-icon.rotated {
-        transform: rotate(180deg);
-    }
-
-    .leaderboard-content::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .leaderboard-content::-webkit-scrollbar-track {
-        background-color: #f1f1f1;
-    }
-
-    .leaderboard-content::-webkit-scrollbar-thumb {
-        background-color: #888;
-        border-radius: 2px;
-    }
-
-    .leaderboard-content::-webkit-scrollbar-thumb:hover {
-        background-color: #555;
-    }
-</style>
-
-<!-- Leaderboard JavaScript -->
-<script>
-    function toggleExpand() {
-        const extendedRows = document.getElementById('leaderboardBodyExtended');
-        const expandText = document.getElementById('expandText');
-        const expandIcon = document.getElementById('expandIcon');
-        
-        if (extendedRows.classList.contains('show')) {
-            extendedRows.classList.remove('show');
-            expandText.textContent = 'Show More';
-            expandIcon.classList.remove('rotated');
-        } else {
-            extendedRows.classList.add('show');
-            expandText.textContent = 'Show Less';
-            expandIcon.classList.add('rotated');
-        }
-    }
-</script>
-</div>
-
-<!-- MODULE HEADER -->
+<!-- ===================== MODULE HEADER ===================== -->
 <div class="border-b border-blue-500/30 bg-slate-900/50 backdrop-blur">
-    <div class="max-w-7xl mx-auto px-4 py-6">
-        <h1 class="text-4xl font-bold text-center mb-2">AI Usage Quest</h1>
-        <p class="text-center text-blue-300 text-lg">Module 1: Types of AI</p>
-    </div>
+  <div class="max-w-7xl mx-auto px-4 py-6">
+      <h1 class="text-4xl font-bold text-center mb-2">AI Usage Quest</h1>
+      <p class="text-center text-blue-300 text-lg">Module 1: Types of AI</p>
+  </div>
 </div>
 
-<!-- NAVIGATION + CONTENT -->
+
+<!-- ===================== MODULE CONTENT ===================== -->
 <div class="max-w-7xl mx-auto px-4 py-8">
-    ... (KEEP ALL YOUR MODULE SECTIONS EXACTLY THE SAME)
+  <!-- KEEP YOUR LESSON CONTENT HERE -->
 </div>
 
-<!-- ======================================= -->
-<!-- 🚀 FEEDBACK MODAL (FULL FRONT-END)     -->
-<!-- ======================================= -->
+
+<!-- ===================== FEEDBACK MODAL ===================== -->
 <div id="feedbackModal">
-    <div class="modal">
+  <div class="modal">
 
-        <div style="background:linear-gradient(135deg,#ffd700,#ffed4e); padding:30px; border-radius:20px 20px 0 0; text-align:center;">
-            <div style="font-size:60px; margin-bottom:10px;">🏆</div>
-            <h2 style="color:#333; font-size:28px;">Congratulations!</h2>
-            <p style="color:#555;">You've completed the submodule</p>
-        </div>
-
-        <div class="modal-content" id="feedbackForm" style="padding:30px;">
-
-            <!-- RATING -->
-            <label style="font-weight:600; color:#333;">How would you rate this submodule?</label>
-            <div id="starRating" style="display:flex; gap:10px; justify-content:center; margin:20px 0;">
-                <span class="star" data-rating="1" style="font-size:40px; cursor:pointer;">★</span>
-                <span class="star" data-rating="2" style="font-size:40px; cursor:pointer;">★</span>
-                <span class="star" data-rating="3" style="font-size:40px; cursor:pointer;">★</span>
-                <span class="star" data-rating="4" style="font-size:40px; cursor:pointer;">★</span>
-                <span class="star" data-rating="5" style="font-size:40px; cursor:pointer;">★</span>
-            </div>
-
-            <!-- CATEGORY -->
-            <label style="font-weight:600; color:#333;">What category best describes your feedback?</label>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:20px 0;">
-                <button class="category-btn" data-category="content">Content Quality</button>
-                <button class="category-btn" data-category="difficulty">Difficulty Level</button>
-                <button class="category-btn" data-category="engagement">Engagement</button>
-                <button class="category-btn" data-category="clarity">Clarity</button>
-                <button class="category-btn" data-category="pacing">Pacing</button>
-                <button class="category-btn" data-category="other">Other</button>
-            </div>
-
-            <!-- COMMENTS -->
-            <label style="font-weight:600; color:#333;">Additional comments (optional)</label>
-            <textarea id="comments" style="width:100%; border:2px solid #ddd; border-radius:10px; padding:12px; min-height:100px;"></textarea>
-
-            <button onclick="submitFeedback()" class="btn-primary w-full mt-6" style="padding:14px; background:#667eea; color:white; border:none; border-radius:10px; font-weight:600;">Submit Feedback</button>
-            <button onclick="closeModal()" class="btn-secondary w-full mt-3" style="padding:12px; background:#ccc; color:#333; border:none; border-radius:10px;">Skip</button>
-
-        </div>
-
-        <div id="successMessage" class="hidden" style="text-align:center; padding:40px;">
-            <div style="font-size:80px;">✅</div>
-            <h3 style="font-size:24px; margin-top:10px;">Thank you!</h3>
-            <button onclick="closeModal()" style="margin-top:20px; padding:14px 24px; background:#667eea; color:white; border:none; border-radius:10px; font-size:16px;">Continue</button>
-        </div>
-
+    <div style="background:linear-gradient(135deg,#ffd700,#ffed4e); padding:30px; text-align:center;">
+      <div style="font-size:60px;">🏆</div>
+      <h2 style="color:#333; font-size:28px;">Congratulations!</h2>
+      <p style="color:#555;">You've completed the submodule</p>
     </div>
+
+    <div id="feedbackForm" style="padding:30px;">
+
+      <label>How would you rate this submodule?</label>
+      <div id="starRating" class="flex gap-4 justify-center my-4">
+        <span class="star" data-rating="1">★</span>
+        <span class="star" data-rating="2">★</span>
+        <span class="star" data-rating="3">★</span>
+        <span class="star" data-rating="4">★</span>
+        <span class="star" data-rating="5">★</span>
+      </div>
+
+      <label>What category best describes your feedback?</label>
+      <div class="grid grid-cols-2 gap-3 my-4">
+        <button class="category-btn" data-category="content">Content Quality</button>
+        <button class="category-btn" data-category="difficulty">Difficulty</button>
+        <button class="category-btn" data-category="engagement">Engagement</button>
+        <button class="category-btn" data-category="clarity">Clarity</button>
+        <button class="category-btn" data-category="pacing">Pacing</button>
+        <button class="category-btn" data-category="other">Other</button>
+      </div>
+
+      <label>Additional comments</label>
+      <textarea id="comments" class="w-full border rounded p-2"></textarea>
+
+      <button onclick="submitFeedback()" class="w-full mt-4 bg-blue-600 text-white py-2 rounded">Submit</button>
+      <button onclick="closeModal()" class="w-full mt-3 bg-gray-300 text-black py-2 rounded">Skip</button>
+    </div>
+
+    <div id="successMessage" class="hidden text-center p-10">
+      <div style="font-size:80px;">✅</div>
+      <h3 class="text-2xl mt-4">Thank you!</h3>
+      <button onclick="closeModal()" class="mt-4 px-6 py-3 bg-blue-600 text-white rounded">Continue</button>
+    </div>
+
+  </div>
 </div>
 
-<!-- ========================== -->
-<!-- FEEDBACK JAVASCRIPT       -->
-<!-- ========================== -->
+
+<!-- ===================== QUIZ SECTION ===================== -->
+<section class="max-w-3xl mx-auto mt-16 p-6 bg-white shadow-lg rounded-xl text-black">
+  <h2 class="text-3xl font-bold text-blue-600 text-center mb-6">Module 1 Quiz</h2>
+
+  <form id="quiz-form" class="space-y-6">
+
+    <div>
+      <p class="font-semibold">1) What is Artificial Intelligence?</p>
+      <label><input type="radio" name="q1" value="a"> A system that mimics human intelligence</label><br>
+      <label><input type="radio" name="q1" value="b"> A physical robot</label><br>
+      <label><input type="radio" name="q1" value="c"> A type of computer virus</label>
+    </div>
+
+    <div>
+      <p class="font-semibold">2) What is Machine Learning?</p>
+      <label><input type="radio" name="q2" value="a"> Rules humans program manually</label><br>
+      <label><input type="radio" name="q2" value="b"> A method where computers learn from data</label><br>
+      <label><input type="radio" name="q2" value="c"> Random guessing</label>
+    </div>
+
+    <div id="midpoint-marker"></div>
+
+    <div>
+      <p class="font-semibold">3) What is Narrow AI?</p>
+      <label><input type="radio" name="q3" value="a"> Many human-like tasks</label><br>
+      <label><input type="radio" name="q3" value="b"> Task-specific AI</label><br>
+      <label><input type="radio" name="q3" value="c"> AI with emotions</label>
+    </div>
+
+    <div>
+      <p class="font-semibold">4) Which describes task-specific AI?</p>
+      <label><input type="radio" name="q4" value="a"> Narrow AI only performs trained tasks</label><br>
+      <label><input type="radio" name="q4" value="b"> Super AI</label><br>
+      <label><input type="radio" name="q4" value="c"> General AI</label>
+    </div>
+
+    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg">Submit Quiz</button>
+  </form>
+</section>
+
+
+<!-- ===================== JOKE POPUP ===================== -->
+<div id="joke-popup" class="hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 w-96 text-center shadow-xl z-50">
+  <button id="close-joke" class="absolute top-3 right-4 text-xl font-bold text-gray-500">×</button>
+  <p id="joke-text" class="text-lg font-semibold"></p>
+</div>
+<div id="backdrop" class="hidden fixed inset-0 bg-black bg-opacity-40 z-40"></div>
+
+
+<!-- ===================== JAVASCRIPT ===================== -->
 <script>
+/* ---------------- FEEDBACK MODAL ---------------- */
 let selectedRating = 0;
 let selectedCategory = '';
 
-document.querySelectorAll('.star').forEach(star => {
-    star.addEventListener('click', () => {
-        selectedRating = parseInt(star.dataset.rating);
-        updateStars();
-    });
-});
-
-function updateStars() {
+document.querySelectorAll('.star').forEach(star =>
+  star.addEventListener('click', () => {
+    selectedRating = Number(star.dataset.rating);
     document.querySelectorAll('.star').forEach(s => {
-        s.style.color = (parseInt(s.dataset.rating) <= selectedRating) ? '#ffd700' : '#ddd';
+      s.style.color = Number(s.dataset.rating) <= selectedRating ? '#ffd700' : '#ddd';
     });
-}
+  })
+);
 
-document.querySelectorAll('.category-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.category-btn').forEach(b => b.style.background = 'white');
-        btn.style.background = '#667eea';
-        btn.style.color = 'white';
-        selectedCategory = btn.innerText;
+document.querySelectorAll('.category-btn').forEach(btn =>
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.category-btn').forEach(b => {
+      b.style.background = 'white'; b.style.color = 'black';
     });
-});
+    btn.style.background = '#667eea'; btn.style.color = 'white';
+    selectedCategory = btn.dataset.category;
+  })
+);
 
 function submitFeedback() {
-    if (!selectedRating) return alert("Please select a rating");
-    if (!selectedCategory) return alert("Select a category");
+  if (!selectedRating) return alert("Please select a rating.");
+  if (!selectedCategory) return alert("Please choose a category.");
 
-    document.getElementById("feedbackForm").classList.add("hidden");
-    document.getElementById("successMessage").classList.remove("hidden");
+  document.getElementById("feedbackForm").classList.add("hidden");
+  document.getElementById("successMessage").classList.remove("hidden");
 }
 
 function closeModal() {
-    document.getElementById("feedbackModal").style.display = "none";
+  document.getElementById("feedbackModal").style.display = "none";
 }
 
-/* 🔥 SHOW MODAL WHEN MODULE FINISHES
-   Call this when user reaches last slide: */
 function showFeedbackModal() {
-    document.getElementById("feedbackModal").style.display = "flex";
+  document.getElementById("feedbackModal").style.display = "flex";
 }
+
+
+/* ---------------- QUIZ + JOKES ---------------- */
+const jokes = [
+  "Why did the AI cross the road? To optimize the chicken’s path!",
+  "I told my computer I needed a break… it said 'No problem, I’ll go to sleep.'"
+];
+
+function showJoke(index) {
+  document.getElementById("joke-text").textContent = jokes[index];
+  document.getElementById("joke-popup").classList.remove("hidden");
+  document.getElementById("backdrop").classList.remove("hidden");
+  setTimeout(hideJoke, 7000);
+}
+function hideJoke() {
+  document.getElementById("joke-popup").classList.add("hidden");
+  document.getElementById("backdrop").classList.add("hidden");
+}
+document.getElementById("close-joke").onclick = hideJoke;
+
+document.querySelectorAll("input[name='q2']").forEach(r =>
+  r.addEventListener("change", () => showJoke(0))
+);
+
+
+/* ---------------- LEADERBOARD + SCORING ---------------- */
+function updateLeaderboard(score) {
+  const board = JSON.parse(localStorage.getItem("leaderboard") || "[]");
+  board.push({ name: "You", score });
+  board.sort((a,b) => b.score - a.score);
+  localStorage.setItem("leaderboard", JSON.stringify(board));
+
+  const tbody = document.getElementById("leaderboardBody");
+  tbody.innerHTML = "";
+
+  board.slice(0,10).forEach((entry, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="rank-cell ${index==0?'rank-1':index==1?'rank-2':index==2?'rank-3':''}">${index+1}</td>
+      <td class="name-cell">${entry.name}</td>
+      <td class="score-cell text-right">${entry.score}/4</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+
+/* ---------------- QUIZ SUBMISSION ---------------- */
+document.getElementById("quiz-form").addEventListener("submit", e => {
+  e.preventDefault();
+
+  showJoke(1);
+
+  const correct = { q1:"a", q2:"b", q3:"b", q4:"a" };
+  let score = 0;
+
+  Object.keys(correct).forEach(q => {
+    const choice = document.querySelector(`input[name='${q}']:checked`);
+    if (choice && choice.value === correct[q]) score++;
+  });
+
+  updateLeaderboard(score);
+
+  alert(`Quiz complete! You scored ${score}/4.`);
+  showFeedbackModal();
+});
 </script>
 
 </body>
