@@ -7,10 +7,10 @@ microblog: true
 
 <!-- Progress Bar -->
 <div class="max-w-7xl mx-auto px-4 mb-6">
-    <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
-        <div id="progress-bar" class="bg-blue-500 h-4 w-0 transition-all"></div>
-    </div>
-    <p id="progress-text" class="text-right text-sm text-blue-300 mt-1">0% completed</p>
+  <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+    <div id="progress-bar" class="bg-blue-500 h-4 w-0 transition-all"></div>
+  </div>
+  <p id="progress-text" class="text-right text-sm text-blue-300 mt-1">0% completed</p>
 </div>
 
 
@@ -36,13 +36,11 @@ microblog: true
           <h3>Types of AI</h3>
         </header>
         <figure class="mission-media">
-          <img src="{{ '/images/digital-famine/ai.jpeg' | prepend: site.baseurl }}"
+          <img src="{{ '/images/ai/ai.jpeg' | prepend: site.baseurl }}"
             alt="Understanding different types of artificial intelligence" loading="lazy">
-          <figcaption>Explore Narrow AI, General AI, and Super AI through interactive examples.</figcaption>
         </figure>
         <p class="concept">Concept: AI Fundamentals & Classification</p>
-        <p class="mission-blurb">Discover the three main types of AI and understand how each powers different aspects of
-          modern technology, from voice assistants to future innovations.</p>
+        <p class="mission-blurb">Explore Narrow AI, General AI, and Super AI through interactive examples.</p>
         <span class="mission-link-text">Start Learning</span>
       </a>
     </article>
@@ -54,13 +52,11 @@ microblog: true
           <h3>Prompt Engineering</h3>
         </header>
         <figure class="mission-media">
-          <img src="{{ '/images/digital-famine/robot.jpg' | prepend: site.baseurl }}"
-            alt="Mastering AI prompting techniques" loading="lazy">
-          <figcaption>Learn to communicate effectively with AI through strategic prompting.</figcaption>
+          <img src="{{ '/images/ai/robot.jpg' | prepend: site.baseurl }}" alt="Mastering AI prompting techniques"
+            loading="lazy">
         </figure>
         <p class="concept">Concept: Text, Voice & Visual Prompts</p>
-        <p class="mission-blurb">Master the art of prompt engineering with hands-on practice in zero-shot, few-shot, and
-          contextual prompting techniques for maximum AI effectiveness.</p>
+        <p class="mission-blurb">Learn to communicate effectively with AI through strategic prompting.</p>
         <span class="mission-link-text">Start Learning</span>
       </a>
     </article>
@@ -72,13 +68,11 @@ microblog: true
           <h3>AI APIs</h3>
         </header>
         <figure class="mission-media">
-          <img src="{{ '/images/digital-famine/Introduction-to-APIs.png' | prepend: site.baseurl }}"
+          <img src="{{ '/images/ai/Introduction-to-APIs.png' | prepend: site.baseurl }}"
             alt="Integrating AI APIs into applications" loading="lazy">
-          <figcaption>Build real applications by integrating powerful AI APIs into your projects.</figcaption>
         </figure>
         <p class="concept">Concept: API Integration & Flask</p>
-        <p class="mission-blurb">Learn to harness AI capabilities through APIs, building practical applications that
-          leverage ChatGPT, image generation, and more.</p>
+        <p class="mission-blurb">Build real applications by integrating powerful AI APIs into your projects.</p>
         <span class="mission-link-text">Start Learning</span>
       </a>
     </article>
@@ -90,29 +84,15 @@ microblog: true
           <h3>AI Mastery Mini-Game</h3>
         </header>
         <figure class="mission-media">
-          <img src="{{ '/images/digital-famine/trophy.webp' | prepend: site.baseurl }}" alt="Final AI challenge game"
+          <img src="{{ '/images/ai/trophy.webp' | prepend: site.baseurl }}" alt="Final AI challenge game"
             loading="lazy">
-          <figcaption>Test your complete AI knowledge in an interactive challenge.</figcaption>
         </figure>
-        <p class="mission-blurb">Apply everything you've learned about AI types, prompting, and APIs in this
-          comprehensive interactive challenge that brings it all together.</p>
+        <p class="mission-blurb">Test your complete AI knowledge in an interactive challenge.</p>
         <span class="mission-link-text">Take the Challenge</span>
       </a>
     </article>
   </section>
 
-  <section class="technical-notes">
-    <h2>🧩 What You'll Learn</h2>
-    <ul>
-      <li><strong>AI Fundamentals:</strong> Understand Narrow AI, General AI, and Super AI with real-world applications.
-      </li>
-      <li><strong>Effective Prompting:</strong> Master text, voice, and visual prompting techniques for optimal AI
-        responses.</li>
-      <li><strong>API Integration:</strong> Learn to build applications using AI APIs with Python and Flask.</li>
-      <li><strong>Practical Skills:</strong> Apply AI to frontend/backend development, data visualization, and
-        professional tools.</li>
-    </ul>
-  </section>
 </div>
 
 <style>
@@ -481,43 +461,43 @@ microblog: true
   });
 </script>
 <script>
-    const totalSections = 5; // number of sections in your module
-    let completedSections = 0;
+  const totalSections = 5; // number of sections in your module
+  let completedSections = 0;
 
-    function goToSection(sectionIndex) {
-        const sections = document.querySelectorAll('.mission-section');
-        sections.forEach(sec => sec.classList.add('section-hidden'));
-        document.getElementById('section-' + sectionIndex).classList.remove('section-hidden');
+  function goToSection(sectionIndex) {
+    const sections = document.querySelectorAll('.mission-section');
+    sections.forEach(sec => sec.classList.add('section-hidden'));
+    document.getElementById('section-' + sectionIndex).classList.remove('section-hidden');
 
-        if (sectionIndex > completedSections - 1) {
-            completedSections = sectionIndex;
-            updateProgressBar();
-        }
+    if (sectionIndex > completedSections - 1) {
+      completedSections = sectionIndex;
+      updateProgressBar();
     }
+  }
 
-    function updateProgressBar() {
-        const progressPercent = Math.round((completedSections / totalSections) * 100);
-        document.getElementById('progress-bar').style.width = progressPercent + '%';
-        document.getElementById('progress-text').innerText = progressPercent + '% completed';
-    }
+  function updateProgressBar() {
+    const progressPercent = Math.round((completedSections / totalSections) * 100);
+    document.getElementById('progress-bar').style.width = progressPercent + '%';
+    document.getElementById('progress-text').innerText = progressPercent + '% completed';
+  }
 
-    function completeQuiz() {
-        completedSections = totalSections;
-        updateProgressBar();
-    }
-
-    function checkAnswer(questionId, selectedOption, isCorrect) {
-        const feedbackEl = document.getElementById('feedback' + questionId);
-        if (isCorrect) {
-            feedbackEl.innerHTML = '<span class="text-green-400 font-semibold">✅ Correct!</span>';
-        } else {
-            feedbackEl.innerHTML = '<span class="text-red-400 font-semibold">❌ Incorrect. Try again.</span>';
-        }
-
-        if (questionId === 2 && isCorrect) {
-            completeQuiz();
-        }
-    }
-
+  function completeQuiz() {
+    completedSections = totalSections;
     updateProgressBar();
+  }
+
+  function checkAnswer(questionId, selectedOption, isCorrect) {
+    const feedbackEl = document.getElementById('feedback' + questionId);
+    if (isCorrect) {
+      feedbackEl.innerHTML = '<span class="text-green-400 font-semibold">✅ Correct!</span>';
+    } else {
+      feedbackEl.innerHTML = '<span class="text-red-400 font-semibold">❌ Incorrect. Try again.</span>';
+    }
+
+    if (questionId === 2 && isCorrect) {
+      completeQuiz();
+    }
+  }
+
+  updateProgressBar();
 </script>
