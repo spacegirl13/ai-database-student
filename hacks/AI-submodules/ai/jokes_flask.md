@@ -1,7 +1,7 @@
 ---
-title: Fetch of Flask Backend Jokes
+title: Fetch of Flask Backend Concepts
 layout: post
-description: An introductory example of Frontend talking to Backend Python Flask application serving jokes.  
+description: An introductory example of Frontend talking to Backend Python Flask application serving concepts.  
 permalink: /python/flask/api/jokes
 image: /images/jokes.png
 breadcrumb: true
