@@ -1314,12 +1314,13 @@ date: 2025-10-21
 
             document.getElementById('action-button').appendChild(actionBtn);
         }
-    });
+function resetGameUI() {
     document.getElementById('true-items').innerHTML = '';
     document.getElementById('false-items').innerHTML = '';
     document.getElementById('feedback').className = 'hidden';
     document.getElementById('action-button').innerHTML = '';
 }
+
 
         function retry() {
             selectedAnswer = null;
