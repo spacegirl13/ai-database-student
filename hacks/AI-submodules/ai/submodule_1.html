@@ -1,11 +1,11 @@
 ---
 layout: post
-title: Module 1: AI Student Insight Poll 
-description: "Explore the different types of AI and their applications"
+title: "AI Usage Quest — Module 1: AI Student Insights Poll"
+description: "Share your thoughts on AI usage and see how students use AI"
 permalink: /digital-famine/ai/submodule_1/
 categories: [CSP, Submodule, AIUsage]
-tags: [ai, types, classification, applications]
-author: "Debuggers Team - Varada Vichare 
+tags: [ai, survey, poll, student-insights]
+author: "Debuggers Team - Akshara Shankar, Anishka Sanghvi"
 microblog: true
 date: 2025-10-30
 ---
@@ -71,6 +71,7 @@ date: 2025-10-30
         font-size: 14px;
         resize: vertical;
         transition: border-color 0.3s ease;
+        box-sizing: border-box;
     }
     
     .frq-textarea:focus {
@@ -114,6 +115,7 @@ date: 2025-10-30
         font-weight: 700;
         margin-bottom: 20px;
         color: #2196F3;
+        text-align: center;
     }
     
     .result-item {
@@ -122,15 +124,90 @@ date: 2025-10-30
         background: #f5f5f5;
         border-radius: 6px;
     }
+    
+    .chart-container {
+        background: white;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .chart-container h3 {
+        color: #555;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    
+    canvas {
+        max-height: 300px;
+    }
+    
+    .recent-frqs {
+        background: #e3f2fd;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        border-left: 4px solid #2196F3;
+    }
+    
+    .recent-frqs h3 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 18px;
+    }
+    
+    .frq-item {
+        background: white;
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+    }
+    
+    .frq-text {
+        color: #555;
+        line-height: 1.5;
+        margin-bottom: 5px;
+    }
+    
+    .frq-time {
+        color: #888;
+        font-size: 12px;
+    }
+    
+    .success-message {
+        background: #4CAF50;
+        color: white;
+        padding: 15px;
+        border-radius: 6px;
+        text-align: center;
+        margin-bottom: 20px;
+        display: none;
+    }
+    
+    .loading {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+    }
 </style>
+
+<!-- Add Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="poll-container">
     <h1 style="text-align: center; color: #333; margin-bottom: 30px;">AI Usage Survey</h1>
     
-    <form id="aiPollForm">
+    <div class="success-message" id="successMessage">
+        ✓ Thank you! Your response has been submitted. Scroll down to see the results!
+    </div>
+    
+    <div id="recentFRQs"></div>
+    
+    <div id="aiPollForm">
         <!-- English Question -->
         <div class="question-block">
-            <div class="question-title">1. What AI source do you use for English?</div>
+            <div class="question-title">1. What AI source do you find the most useful for English work?</div>
             <div class="option-group">
                 <label class="option-label">
                     <input type="radio" name="english" value="ChatGPT" required>
@@ -153,7 +230,7 @@ date: 2025-10-30
 
         <!-- Math Question -->
         <div class="question-block">
-            <div class="question-title">2. What AI source do you use for Math?</div>
+            <div class="question-title">2. What AI source do you find the most useful for Math work?</div>
             <div class="option-group">
                 <label class="option-label">
                     <input type="radio" name="math" value="ChatGPT" required>
@@ -176,7 +253,7 @@ date: 2025-10-30
 
         <!-- Science Question -->
         <div class="question-block">
-            <div class="question-title">3. What AI source do you use for Science?</div>
+            <div class="question-title">3. What AI source do you find the most useful for Science work?</div>
             <div class="option-group">
                 <label class="option-label">
                     <input type="radio" name="science" value="ChatGPT" required>
@@ -199,7 +276,7 @@ date: 2025-10-30
 
         <!-- Computer Science Question -->
         <div class="question-block">
-            <div class="question-title">4. What AI source do you use for Computer Science?</div>
+            <div class="question-title">4. What AI source do you find the most useful for Computer Science work?</div>
             <div class="option-group">
                 <label class="option-label">
                     <input type="radio" name="cs" value="ChatGPT" required>
@@ -222,7 +299,7 @@ date: 2025-10-30
 
         <!-- History Question -->
         <div class="question-block">
-            <div class="question-title">5. What AI source do you use for History?</div>
+            <div class="question-title">5. What AI source do you find the most useful for History work?</div>
             <div class="option-group">
                 <label class="option-label">
                     <input type="radio" name="history" value="ChatGPT" required>
@@ -269,53 +346,184 @@ date: 2025-10-30
             ></textarea>
         </div>
 
-        <button type="submit" class="submit-btn">Submit Survey</button>
-    </form>
+        <button type="button" class="submit-btn" onclick="submitSurvey()">Submit Survey</button>
+    </div>
 
     <div class="results-container" id="resultsContainer">
-        <div class="results-title">Thank you for your submission!</div>
-        <div id="resultsContent"></div>
+        <div class="results-title">Survey Results</div>
+        
+        <div class="chart-container">
+            <h3>English</h3>
+            <canvas id="englishChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Math</h3>
+            <canvas id="mathChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Science</h3>
+            <canvas id="scienceChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Computer Science</h3>
+            <canvas id="csChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h3>History</h3>
+            <canvas id="historyChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h3>Do Students Use AI for Schoolwork?</h3>
+            <canvas id="useAIChart"></canvas>
+        </div>
+        
+        <div id="resultsRecentFRQs"></div>
     </div>
 </div>
 
 <script>
-    document.getElementById('aiPollForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // CHANGE THIS TO YOUR FLASK SERVER URL
+    const API_URL = 'http://localhost:5000/api';  // Change to your production URL when deploying
+    
+    let charts = {};
+    
+    // Load survey data when page loads
+    async function loadSurveyData() {
+        try {
+            const response = await fetch(`${API_URL}/survey`);
+            const data = await response.json();
+            displayRecentFRQs(data.frqs.slice(0, 3), 'recentFRQs');
+        } catch (error) {
+            console.error('Error loading survey data:', error);
+        }
+    }
+    
+    // Display recent FRQs
+    function displayRecentFRQs(frqs, containerId) {
+        const container = document.getElementById(containerId);
+        if (frqs.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
         
-        // Collect form data
+        let html = '<div class="recent-frqs"><h3>Recent Student Thoughts:</h3>';
+        frqs.forEach(frq => {
+            const date = new Date(frq.timestamp).toLocaleString();
+            html += `
+                <div class="frq-item">
+                    <div class="frq-text">${frq.text}</div>
+                    <div class="frq-time">${date}</div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    }
+    
+    // Submit survey
+    async function submitSurvey() {
         const formData = {
-            english: document.querySelector('input[name="english"]:checked').value,
-            math: document.querySelector('input[name="math"]:checked').value,
-            science: document.querySelector('input[name="science"]:checked').value,
-            cs: document.querySelector('input[name="cs"]:checked').value,
-            history: document.querySelector('input[name="history"]:checked').value,
-            useAI: document.querySelector('input[name="useAI"]:checked').value,
+            english: document.querySelector('input[name="english"]:checked')?.value,
+            math: document.querySelector('input[name="math"]:checked')?.value,
+            science: document.querySelector('input[name="science"]:checked')?.value,
+            cs: document.querySelector('input[name="cs"]:checked')?.value,
+            history: document.querySelector('input[name="history"]:checked')?.value,
+            useAI: document.querySelector('input[name="useAI"]:checked')?.value,
             frq: document.querySelector('textarea[name="frq"]').value
         };
         
-        console.log('Survey Data:', formData);
+        // Validate all fields
+        if (!formData.english || !formData.math || !formData.science || !formData.cs || !formData.history || !formData.useAI || !formData.frq) {
+            alert('Please answer all questions before submitting.');
+            return;
+        }
         
-        // Display results
-        const resultsContent = document.getElementById('resultsContent');
-        resultsContent.innerHTML = `
-            <div class="result-item"><strong>English:</strong> ${formData.english}</div>
-            <div class="result-item"><strong>Math:</strong> ${formData.math}</div>
-            <div class="result-item"><strong>Science:</strong> ${formData.science}</div>
-            <div class="result-item"><strong>Computer Science:</strong> ${formData.cs}</div>
-            <div class="result-item"><strong>History:</strong> ${formData.history}</div>
-            <div class="result-item"><strong>Use AI for schoolwork:</strong> ${formData.useAI}</div>
-            <div class="result-item"><strong>Your thoughts:</strong> ${formData.frq}</div>
-        `;
+        try {
+            const response = await fetch(`${API_URL}/survey`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(formData)
+            });
+            
+            if (!response.ok) throw new Error('Failed to submit');
+            
+            const result = await response.json();
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Hide form and show results
+            document.getElementById('aiPollForm').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'block';
+            
+            // Display results
+            displayResults(result.data);
+            displayRecentFRQs(result.data.frqs.slice(0, 3), 'resultsRecentFRQs');
+            
+            // Scroll to results
+            window.scrollTo({ top: document.getElementById('resultsContainer').offsetTop - 100, behavior: 'smooth' });
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert('There was an error submitting your survey. Please make sure the Flask server is running at ' + API_URL);
+        }
+    }
+    
+    // Display results with charts
+    function displayResults(data) {
+        createChart('englishChart', 'English', data.english);
+        createChart('mathChart', 'Math', data.math);
+        createChart('scienceChart', 'Science', data.science);
+        createChart('csChart', 'Computer Science', data.cs);
+        createChart('historyChart', 'History', data.history);
+        createChart('useAIChart', 'Use AI', data.useAI, '#2196F3');
+    }
+    
+    // Create bar chart
+    function createChart(canvasId, label, data, color = '#4CAF50') {
+        const ctx = document.getElementById(canvasId);
         
-        // Hide form and show results
-        document.getElementById('aiPollForm').style.display = 'none';
-        document.getElementById('resultsContainer').style.display = 'block';
+        if (charts[canvasId]) {
+            charts[canvasId].destroy();
+        }
         
-        // TODO: Send data to backend
-        // fetch('/api/submit-survey', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(formData)
-        // });
-    });
+        charts[canvasId] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data),
+                datasets: [{
+                    label: 'Votes',
+                    data: Object.values(data),
+                    backgroundColor: color,
+                    borderColor: color,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+    
+    // Load data when page loads
+    window.addEventListener('DOMContentLoaded', loadSurveyData);
 </script>
