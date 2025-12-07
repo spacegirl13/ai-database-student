@@ -1347,6 +1347,25 @@ date: 2025-10-21
         function showVictory() {
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('victory-screen').classList.remove('hidden');
+            
+            // Prompt for player name
+            setTimeout(() => {
+                const playerName = prompt('Enter your name for the leaderboard:');
+                if (playerName && playerName.trim()) {
+                    // Calculate score based on performance (you can customize this)
+                    const score = calculateScore();
+                    submitScore(playerName.trim(), score);
+                }
+            }, 1000);
+}
+
+// Calculate score based on game performance
+    function calculateScore() {
+    // Example: Base score of 100 per roadblock completed
+        const baseScore = (currentRoadblock + 1) * 100;
+    // You can add bonuses for speed, accuracy, etc.
+        return baseScore;
+}
         }
 
         function resetGame() {
@@ -1751,6 +1770,101 @@ date: 2025-10-21
             ← Back to AI Quest Home
         </a>
     </footer>
+    <script>
+// Backend API URL - change this to your deployed backend URL
+const API_URL = 'http://localhost:5001/api/leaderboard';
+
+// Load leaderboard from backend
+async function loadLeaderboard() {
+    try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+
+        if (data.success && data.leaderboard) {
+            updateLeaderboardDisplay(data.leaderboard);
+        }
+    } catch (error) {
+        console.error('Error loading leaderboard:', error);
+    }
+}
+
+// Update the leaderboard display with data from backend
+function updateLeaderboardDisplay(leaderboard) {
+    const topFive = document.getElementById('leaderboardBody');
+    const extended = document.getElementById('leaderboardBodyExtended');
+
+    // Clear current data
+    topFive.innerHTML = '';
+    extended.innerHTML = '';
+
+    // Populate top 5
+    for (let i = 0; i < 5; i++) {
+        const entry = leaderboard[i];
+        const row = createLeaderboardRow(i + 1, entry);
+        topFive.appendChild(row);
+    }
+
+    // Populate ranks 6–10
+    for (let i = 5; i < 10; i++) {
+        const entry = leaderboard[i];
+        const row = createLeaderboardRow(i + 1, entry);
+        extended.appendChild(row);
+    }
+}
+
+// Create a table row for leaderboard entry
+function createLeaderboardRow(rank, entry) {
+    const tr = document.createElement('tr');
+
+    const rankClass = rank <= 3 ? `rank-${rank}` : '';
+    const medal =
+        rank === 1 ? '🥇' :
+        rank === 2 ? '🥈' :
+        rank === 3 ? '🥉' : '';
+
+    tr.innerHTML = `
+        <td class="rank-cell ${rankClass}">
+            ${medal ? `<span class="medal">${medal}</span>` : ''} ${rank}
+        </td>
+        <td class="name-cell">${entry ? entry.name : '-'}</td>
+        <td class="score-cell">${entry ? entry.score : '-'}</td>
+    `;
+
+    return tr;
+}
+
+// Submit score to backend when vault is unlocked
+async function submitScore(playerName, score) {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: playerName,
+                score: score
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            updateLeaderboardDisplay(data.leaderboard);
+            return true;
+        }
+    } catch (error) {
+        console.error('Error submitting score:', error);
+    }
+
+    return false;
+}
+
+// Call this when the game starts
+document.addEventListener('DOMContentLoaded', () => {
+    loadLeaderboard();
+    setInterval(loadLeaderboard, 30000); // Auto-refresh every 30s
+});
+</script>
+
 </body>
 
 </html>
