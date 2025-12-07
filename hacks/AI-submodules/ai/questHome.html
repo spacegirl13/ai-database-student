@@ -18,13 +18,13 @@ microblog: true
   <section class="ai-hero">
     <p class="tagline">🤖 Interactive Learning Journey</p>
     <h1>AI Usage Quest: Streamline Your Development</h1>
-    <p>Master AI tools and prompting techniques through four progressive modules. Learn to leverage AI for
+    <p>Master AI tools and prompting techniques through three progressive modules. Learn to leverage AI for
       frontend/backend development, data visualization, and professional growth.</p>
   </section>
 
   <section class="mission-overview">
-    <h2> Overview</h2>
-    <p>This hands-on experience takes you from understanding AI fundamentals to building with AI APIs. Each module
+    <h2>Overview</h2>
+    <p>This hands-on experience takes you from understanding student AI preferences to mastering prompt engineering and building interactive games. Each module
       builds on the previous, culminating in a mini-game that tests your mastery of AI integration.</p>
   </section>
 
@@ -33,15 +33,15 @@ microblog: true
       <a class="mission-card-link" href="{{ '/digital-famine/ai/submodule_1/' | prepend: site.baseurl }}">
         <header>
           <p class="mission-label">Module 1</p>
-          <h3>Types of AI</h3>
+          <h3>AI Student Insights Poll</h3>
         </header>
         <figure class="mission-media">
           <img src="{{ '/images/ai/ai.jpeg' | prepend: site.baseurl }}"
-            alt="Understanding different types of artificial intelligence" loading="lazy">
+            alt="Survey about student AI usage and preferences" loading="lazy">
         </figure>
-        <p class="concept">Concept: AI Fundamentals & Classification</p>
-        <p class="mission-blurb">Explore Narrow AI, General AI, and Super AI through interactive examples.</p>
-        <span class="mission-link-text">Start Learning</span>
+        <p class="concept">Concept: Data Collection & Visualization</p>
+        <p class="mission-blurb">Share your thoughts on AI usage in education and see how your peers use AI across different subjects.</p>
+        <span class="mission-link-text">Take the Survey</span>
       </a>
     </article>
 
@@ -49,46 +49,31 @@ microblog: true
       <a class="mission-card-link" href="{{ '/digital-famine/ai/submodule_2/' | prepend: site.baseurl }}">
         <header>
           <p class="mission-label">Module 2</p>
-          <h3>Prompt Engineering</h3>
+          <h3>Subject-Based Prompt Engineering</h3>
         </header>
         <figure class="mission-media">
-          <img src="{{ '/images/ai/robot.jpg' | prepend: site.baseurl }}" alt="Mastering AI prompting techniques"
+          <img src="{{ '/images/ai/robot.jpg' | prepend: site.baseurl }}" alt="Mastering AI prompting techniques for different subjects"
             loading="lazy">
         </figure>
-        <p class="concept">Concept: Text, Voice & Visual Prompts</p>
-        <p class="mission-blurb">Learn to communicate effectively with AI through strategic prompting.</p>
-        <span class="mission-link-text">Start Learning</span>
-      </a>
-    </article>
-
-    <article class="mission-card">
-      <a class="mission-card-link" href="{{ '/digital-famine/ai/submodule_3/' | prepend: site.baseurl }}">
-        <header>
-          <p class="mission-label">Module 3</p>
-          <h3>AI APIs</h3>
-        </header>
-        <figure class="mission-media">
-          <img src="{{ '/images/ai/Introduction-to-APIs.png' | prepend: site.baseurl }}"
-            alt="Integrating AI APIs into applications" loading="lazy">
-        </figure>
-        <p class="concept">Concept: API Integration & Flask</p>
-        <p class="mission-blurb">Build real applications by integrating powerful AI APIs into your projects.</p>
+        <p class="concept">Concept: Context-Aware AI Prompts</p>
+        <p class="mission-blurb">Learn to craft effective prompts for Math, English, Science, History, and Computer Science.</p>
         <span class="mission-link-text">Start Learning</span>
       </a>
     </article>
 
     <article class="mission-card finale">
-      <a class="mission-card-link" href="{{ '/digital-famine/ai/submodule_4/' | prepend: site.baseurl }}">
+      <a class="mission-card-link" href="{{ '/digital-famine/ai/submodule_3/' | prepend: site.baseurl }}">
         <header>
-          <p class="mission-label">Final Challenge</p>
-          <h3>AI Mastery Mini-Game</h3>
+          <p class="mission-label">Module 3 - Coming Soon</p>
+          <h3>AI Mastery Game</h3>
         </header>
         <figure class="mission-media">
           <img src="{{ '/images/ai/trophy.webp' | prepend: site.baseurl }}" alt="Final AI challenge game"
             loading="lazy">
         </figure>
-        <p class="mission-blurb">Test your complete AI knowledge in an interactive challenge.</p>
-        <span class="mission-link-text">Take the Challenge</span>
+        <p class="concept">Concept: Interactive AI Challenge</p>
+        <p class="mission-blurb">Test your complete AI knowledge in an interactive challenge game. (In Development)</p>
+        <span class="mission-link-text">Coming Soon</span>
       </a>
     </article>
   </section>
@@ -195,7 +180,7 @@ microblog: true
 
   .mission-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.75rem;
     margin-bottom: 2.5rem;
   }
@@ -268,6 +253,7 @@ microblog: true
   .mission-card .concept {
     font-weight: 600;
     color: #93c5fd;
+    font-size: 0.95rem;
   }
 
   .mission-card ul {
@@ -325,6 +311,7 @@ microblog: true
     margin: 0.8rem 0 1.4rem;
     color: #cbd5e1;
     font-size: 1rem;
+    flex-grow: 1;
   }
 
   .mission-link-text {
@@ -356,14 +343,20 @@ microblog: true
   }
 
   .mission-card.finale {
-    background: linear-gradient(160deg, rgba(37, 99, 235, 0.95), rgba(15, 23, 42, 0.95));
+    background: linear-gradient(160deg, rgba(37, 99, 235, 0.75), rgba(15, 23, 42, 0.95));
     border-color: rgba(96, 165, 250, 0.35);
+    opacity: 0.85;
   }
 
   .mission-card.finale .mission-label {
     color: #93c5fd;
     border-color: rgba(147, 197, 253, 0.45);
     background: rgba(147, 197, 253, 0.12);
+  }
+
+  .mission-card.finale:hover {
+    transform: translateY(-4px);
+    opacity: 0.9;
   }
 
   .mission-flow .mermaid-card {
@@ -427,6 +420,10 @@ microblog: true
       min-width: 640px;
       font-size: 1rem;
     }
+
+    .mission-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
@@ -461,7 +458,7 @@ microblog: true
   });
 </script>
 <script>
-  const totalSections = 5; // number of sections in your module
+  const totalSections = 3; // Updated to 3 modules
   let completedSections = 0;
 
   function goToSection(sectionIndex) {
