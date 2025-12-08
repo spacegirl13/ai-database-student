@@ -1297,6 +1297,211 @@ date: 2025-10-30
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
+<!-- Add this section right before the closing </body> tag -->
+
+<!-- Check for Understanding Section -->
+    <div style="max-width: 900px; margin: 60px auto; padding: 20px;">
+        <div style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+            <h2 style="color: #333; text-align: center; font-size: 2em; margin-bottom: 10px;">
+                ✅ Check for Understanding
+            </h2>
+            <p style="text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em;">
+                Let us know which AI concepts you understand!
+            </p>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                <thead>
+                    <tr>
+                        <th style="background-color: #4a90e2; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                            AI Concept
+                        </th>
+                        <th style="background-color: #4a90e2; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                            Got It ✓
+                        </th>
+                        <th style="background-color: #4a90e2; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                            Need Help ✗
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="conceptsResult">
+                    <tr>
+                        <td colspan="3" style="padding: 20px; text-align: center; color: #888;">
+                            Loading concepts...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <style>
+        #conceptsResult td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #conceptsResult tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        #conceptsResult button {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            min-width: 60px;
+        }
+
+        #conceptsResult button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        #conceptsResult tr td:nth-child(2) button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #conceptsResult tr td:nth-child(3) button {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+
+    <script>
+    // Configuration for the Check for Understanding survey
+        const CONCEPTS_API_CONFIG = {
+            pythonURI: 'http://127.0.0.1:8587', // Update this to match your backend
+            fetchOptions: {
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'omit',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        };
+
+        const conceptsResultContainer = document.getElementById("conceptsResult");
+        const HAHA_KEY = "haha";
+        const BOOHOO_KEY = "boohoo";
+
+        const conceptsUrl = `${CONCEPTS_API_CONFIG.pythonURI}/api/jokes`;
+        const getConceptsURL = conceptsUrl + "/";
+        const likeConceptsURL = conceptsUrl + "/like/";
+        const jeerConceptsURL = conceptsUrl + "/jeer/";
+
+        const reactConceptsOptions = {
+            ...CONCEPTS_API_CONFIG.fetchOptions,
+            method: 'PUT',
+        };
+
+    // Fetch and display AI concepts
+        fetch(getConceptsURL, CONCEPTS_API_CONFIG.fetchOptions)
+            .then(response => {
+                if (response.status !== 200) {
+                    conceptsError('GET API response failure: ' + response.status);
+                    return;
+                }
+                response.json().then(data => {
+                    console.log(data);
+                    conceptsResultContainer.innerHTML = ''; // Clear loading message
+
+                    for (const row of data) {
+                        const tr = document.createElement("tr");
+
+                    // Concept cell
+                        const concept = document.createElement("td");
+                        concept.innerHTML = row.id + ". " + row.joke;
+
+                    // Got It button cell
+                        const gotIt = document.createElement("td");
+                        const gotItBtn = document.createElement('button');
+                        gotItBtn.id = HAHA_KEY + row.id;
+                        gotItBtn.innerHTML = row.haha;
+                        gotItBtn.onclick = function () {
+                            conceptReaction(HAHA_KEY, likeConceptsURL + row.id, gotItBtn.id);
+                        };
+                        gotIt.appendChild(gotItBtn);
+
+                    // Need Help button cell
+                        const needHelp = document.createElement("td");
+                        const needHelpBtn = document.createElement('button');
+                        needHelpBtn.id = BOOHOO_KEY + row.id;
+                        needHelpBtn.innerHTML = row.boohoo;
+                        needHelpBtn.onclick = function () {
+                            conceptReaction(BOOHOO_KEY, jeerConceptsURL + row.id, needHelpBtn.id);
+                        };
+                        needHelp.appendChild(needHelpBtn);
+
+                        tr.appendChild(concept);
+                        tr.appendChild(gotIt);
+                        tr.appendChild(needHelp);
+                        conceptsResultContainer.appendChild(tr);
+                    }
+                })
+            })
+            .catch(err => {
+                conceptsError(err + ": " + getConceptsURL);
+            });
+
+    // Auto-refresh reactions every 5 seconds
+        function refreshConceptReactions() {
+            fetch(getConceptsURL, CONCEPTS_API_CONFIG.fetchOptions)
+                .then(response => response.json())
+                .then(data => {
+                    for (const row of data) {
+                        const gotItBtn = document.getElementById(HAHA_KEY + row.id);
+                        if (gotItBtn) gotItBtn.innerHTML = row.haha;
+                        const needHelpBtn = document.getElementById(BOOHOO_KEY + row.id);
+                        if (needHelpBtn) needHelpBtn.innerHTML = row.boohoo;
+                    }
+                })
+                .catch(err => {
+                    console.error('Refresh error:', err);
+                });
+        }
+        setInterval(refreshConceptReactions, 5000);
+
+    // Handle student reactions
+        function conceptReaction(type, postURL, elemID) {
+            fetch(postURL, reactConceptsOptions)
+                .then(response => {
+                    if (response.status !== 200) {
+                        conceptsError("Post API response failure: " + response.status);
+                        return;
+                    }
+                    response.json().then(data => {
+                        console.log(data);
+                        if (type === HAHA_KEY) {
+                            document.getElementById(elemID).innerHTML = data.haha;
+                        } else if (type === BOOHOO_KEY) {
+                            document.getElementById(elemID).innerHTML = data.boohoo;
+                        } else {
+                            conceptsError("unknown type: " + type);
+                        }
+                    })
+                })
+                .catch(err => {
+                    conceptsError(err + " " + postURL);
+                });
+        }
+
+        function conceptsError(err) {
+            console.error(err);
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colSpan = 3;
+            td.style.padding = "15px";
+            td.style.background = "#fee";
+            td.style.color = "#c00";
+            td.innerHTML = err;
+            tr.appendChild(td);
+            conceptsResultContainer.appendChild(tr);
+        }
+    </script>
 </body>
 
 </html>
