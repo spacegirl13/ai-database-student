@@ -115,41 +115,45 @@ date: 2025-10-30
 
         .input-group {
             margin: 30px 0;
-        .input-group input {
-            width: 100%;
-            max-width: 400px;
-            padding: 15px;
-            font-size: 1.1em;
-            border: 2px solid #3b82f6;
-            border-radius: 10px;
-            text-align: center;
-            background: rgba(30, 58, 138, 0.3);
-            color: #e0e7ff;
-        }
 
-        .input-group input::placeholder {
-            color: rgba(224, 231, 255, 0.5);
-        }
+            .input-group input {
+                width: 100%;
+                max-width: 400px;
+                padding: 15px;
+                font-size: 1.1em;
+                border: 2px solid #3b82f6;
+                border-radius: 10px;
+                text-align: center;
+                background: rgba(30, 58, 138, 0.3);
+                color: #e0e7ff;
+            }
 
-        .btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2em;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+            .input-group input::placeholder {
+                color: rgba(224, 231, 255, 0.5);
+            }
 
-        .btn:hover {
+            .btn {
+                background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+                color: white;
+                border: none;
+                padding: 15px 40px;
+                font-size: 1.2em;
+                border-radius: 10px;
+                cursor: pointer;
+                font-weight: 600;
+                box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+            }
+
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
-        }   transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
+
         .question-card {
             background: rgba(15, 23, 42, 0.85);
             border-radius: 20px;
@@ -158,12 +162,6 @@ date: 2025-10-30
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             margin-bottom: 20px;
             border: 1px solid rgba(37, 99, 235, 0.3);
-        }   background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            color: #333;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
         }
 
         .subject-badge {
@@ -188,17 +186,17 @@ date: 2025-10-30
         .subject-history {
             background: #f9ca24;
             color: #333;
+        }
+
+        .subject-cs {
+            background: #9b59b6;
+            color: white;
+        }
+
         .scenario {
             font-size: 1.3em;
             font-weight: 600;
             color: #e0e7ff;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        .scenario {
-            font-size: 1.3em;
-            font-weight: 600;
-            color: #333;
             margin-bottom: 30px;
             line-height: 1.6;
         }
@@ -208,6 +206,7 @@ date: 2025-10-30
             flex-direction: column;
             gap: 15px;
         }
+
         .prompt-option {
             background: rgba(30, 58, 138, 0.4);
             border: 3px solid rgba(59, 130, 246, 0.3);
@@ -251,7 +250,6 @@ date: 2025-10-30
         .prompt-text {
             color: #cbd5e1;
             line-height: 1.5;
-        }   line-height: 1.5;
         }
 
         .feedback {
@@ -277,6 +275,8 @@ date: 2025-10-30
             background: #ffebee;
             color: #c62828;
             border-left: 4px solid #f44336;
+        }
+
         .timer {
             text-align: center;
             font-size: 3em;
@@ -291,11 +291,11 @@ date: 2025-10-30
         }
 
         .results-screen {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.95);
             border-radius: 20px;
             padding: 50px;
             text-align: center;
-            color: #e0e7ff;
+            color: #ffffff;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(37, 99, 235, 0.3);
         }
@@ -304,30 +304,46 @@ date: 2025-10-30
             color: #60a5fa;
             font-size: 2.5em;
             margin-bottom: 20px;
-        }   font-size: 2.5em;
-            margin-bottom: 20px;
+        }
+
+        .results-screen p {
+            color: #ffffff;
         }
 
         .final-score {
             font-size: 4em;
             font-weight: bold;
-            color: #764ba2;
+            color: #fbbf24;
             margin: 30px 0;
         }
 
         .score-breakdown {
-            background: #f8f9fa;
+            background: rgba(30, 58, 138, 0.4);
+            border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 15px;
             padding: 30px;
             margin: 30px 0;
             text-align: left;
         }
 
+        .score-breakdown h3 {
+            color: #60a5fa;
+        }
+
         .score-item {
             display: flex;
             justify-content: space-between;
             padding: 15px;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            color: #ffffff;
+        }
+
+        .score-item span {
+            color: #ffffff;
+        }
+
+        .score-item strong {
+            color: #fbbf24;
         }
 
         .score-item:last-child {
@@ -335,14 +351,15 @@ date: 2025-10-30
         }
 
         .leaderboard {
-            background: #f8f9fa;
+            background: rgba(30, 58, 138, 0.4);
+            border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 15px;
             padding: 30px;
             margin-top: 30px;
         }
 
         .leaderboard h3 {
-            color: #667eea;
+            color: #60a5fa;
             margin-bottom: 20px;
             font-size: 1.5em;
         }
@@ -351,16 +368,17 @@ date: 2025-10-30
             display: flex;
             align-items: center;
             padding: 15px;
-            background: white;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 10px;
             margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .rank {
             font-size: 1.5em;
             font-weight: bold;
-            color: #667eea;
+            color: #fbbf24;
             width: 50px;
         }
 
@@ -379,12 +397,13 @@ date: 2025-10-30
         .player-name {
             flex: 1;
             font-weight: 600;
+            color: #ffffff;
         }
 
         .player-score {
             font-size: 1.2em;
             font-weight: bold;
-            color: #764ba2;
+            color: #fbbf24;
         }
 
         .progress-bar {
@@ -576,7 +595,7 @@ date: 2025-10-30
 
         .name-cell {
             font-weight: 500;
-            color: #212529;
+            color: #ffffff;
             font-size: 11px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -585,7 +604,7 @@ date: 2025-10-30
 
         .score-cell {
             font-weight: bold;
-            color: #667eea;
+            color: #fbbf24;
             text-align: right;
             font-size: 12px;
         }
@@ -599,6 +618,10 @@ date: 2025-10-30
             margin-top: 20px;
         }
 
+        .drag-drop-container p {
+            color: #ffffff;
+        }
+
         .drag-items {
             display: flex;
             flex-direction: column;
@@ -607,18 +630,21 @@ date: 2025-10-30
         }
 
         .drag-item {
-            background: #f8f9fa;
-            border: 2px solid #dee2e6;
+            background: #ffffff;
+            border: 2px solid #3b82f6;
             border-radius: 10px;
             padding: 15px;
             cursor: grab;
             transition: all 0.3s;
             user-select: none;
+            color: #000000;
+            font-weight: 500;
         }
 
         .drag-item:hover {
-            border-color: #667eea;
+            border-color: #60a5fa;
             transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
         }
 
         .drag-item.dragging {
@@ -627,18 +653,24 @@ date: 2025-10-30
         }
 
         .drop-zone {
-            min-height: 60px;
-            border: 2px dashed #dee2e6;
+            min-height: 80px;
+            border: 3px dashed rgba(59, 130, 246, 0.6);
             border-radius: 10px;
             padding: 10px;
             margin-bottom: 10px;
-            background: #f8f9fa;
+            background: rgba(30, 58, 138, 0.3);
             transition: all 0.3s;
         }
 
+        .drop-zone p {
+            color: #94a3af;
+            text-align: center;
+            margin: 10px;
+        }
+
         .drop-zone.drag-over {
-            border-color: #667eea;
-            background: #e8eaf6;
+            border-color: #60a5fa;
+            background: rgba(59, 130, 246, 0.2);
         }
 
         .drop-zone .drag-item {
@@ -647,7 +679,7 @@ date: 2025-10-30
         }
 
         .check-order-btn {
-            background: #667eea;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
             border: none;
             border-radius: 10px;
@@ -656,16 +688,94 @@ date: 2025-10-30
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
         .check-order-btn:hover {
-            background: #5568d3;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
         }
 
         .check-order-btn:disabled {
-            background: #ccc;
+            background: #6b7280;
             cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Feedback Modal Styles */
+        #feedbackModal * {
+            box-sizing: border-box !important;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        #feedbackModal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow-y: auto;
+            pointer-events: all !important;
+        }
+
+        #feedbackModal .modal {
+            background: white !important;
+            width: 90% !important;
+            max-width: 600px !important;
+            min-width: 300px !important;
+            border-radius: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            min-height: 200px !important;
+            animation: fadeInModal 0.3s ease;
+            position: relative !important;
+            margin: 20px auto !important;
+            display: block !important;
+            z-index: 10000000 !important;
+        }
+
+        @keyframes fadeInModal {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-show {
+            display: flex !important;
+        }
+
+        .category-btn {
+            padding: 12px 18px;
+            background: white;
+            color: #1f2937;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .category-btn:hover {
+            border-color: #8b5cf6;
+            background: #f3f4f6;
         }
     </style>
 </head>
@@ -772,7 +882,12 @@ date: 2025-10-30
                     <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
                 </div>
 
-                <button class="btn" onclick="startGame()">Start Challenge</button>
+                <div class="btn-group">
+                    <button class="btn" onclick="startGame()">Start Challenge</button>
+                    <button class="btn" onclick="skipToCompletion()" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+                        Skip to Complete Module
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -854,9 +969,88 @@ date: 2025-10-30
 
                 <div class="btn-group">
                     <button class="btn" onclick="restartGame()">Play Again</button>
-                    <a href="../index.html" class="btn" style="text-decoration: none; display: inline-block;">Back to
-                        Home</a>
+                    <button class="btn" onclick="showFeedbackModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        Complete Module
+                    </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEEDBACK MODAL -->
+    <div id="feedbackModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999;">
+        <div class="modal" style="position: relative; z-index: 1000000;">
+            <div
+                style="background: linear-gradient(135deg, #10b981, #34d399); padding:30px; border-radius:20px 20px 0 0; text-align:center;">
+                <div style="font-size:60px; margin-bottom:10px;">🏆</div>
+                <h2 style="color: white; font-size:28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                    Congratulations!</h2>
+                <p style="color: white; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">You've completed the
+                    submodule</p>
+            </div>
+
+            <div class="modal-content" id="feedbackForm" style="padding:30px; background: white;">
+                <label style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">How
+                    would you rate this submodule?</label>
+                <div id="starRating" style="display:flex; gap:10px; justify-content:center; margin:20px 0;">
+                    <span class="star" data-rating="1" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                    <span class="star" data-rating="2" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                    <span class="star" data-rating="3" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                    <span class="star" data-rating="4" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                    <span class="star" data-rating="5" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                </div>
+
+                <label
+                    style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">What
+                    category best describes your feedback?</label>
+                <div
+                    style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:20px 0;">
+                    <button class="category-btn" data-category="content">Content Quality</button>
+                    <button class="category-btn" data-category="difficulty">Difficulty Level</button>
+                    <button class="category-btn" data-category="engagement">Engagement</button>
+                    <button class="category-btn" data-category="clarity">Clarity</button>
+                    <button class="category-btn" data-category="pacing">Pacing</button>
+                    <button class="category-btn" data-category="other">Other</button>
+                </div>
+
+                <label
+                    style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">Additional
+                    comments (optional)</label>
+                <textarea id="comments"
+                    style="width:100%; border:2px solid #d1d5db; border-radius:10px; padding:12px; min-height:100px; color:#1f2937; background: white; font-size: 16px; font-family: 'Segoe UI', Tahoma, sans-serif;"></textarea>
+
+                <div
+                    style="background: #f3f4f6; border-radius: 10px; padding: 20px; margin: 20px 0; border: 2px solid #d1d5db;">
+                    <h4 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; font-weight: 700;">📊 Previous
+                        Feedback Summary</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
+                        <div>
+                            <p style="margin: 0 0 5px 0; color: #374151; font-weight: 600;">Average Rating:</p>
+                            <p id="averageRatingDisplay" style="margin: 0; color: #059669; font-weight: 700; font-size: 16px;">⭐ 4.5/5 <span
+                                    style="color: #6b7280; font-weight: 400;">(12 responses)</span></p>
+                        </div>
+                        <div>
+                            <p style="margin: 0 0 5px 0; color: #374151; font-weight: 600;">Recent Feedback:</p>
+                            <p id="recentFeedbackDisplay" style="margin: 0; color: #1f2937; font-weight: 600; font-size: 16px;">"Fun and
+                                challenging!"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="submitFeedback()" class="btn-primary w-full mt-6"
+                    style="padding:14px; background:#10b981; color:white; border:none; border-radius:10px; font-weight:700; font-size: 16px; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%; margin-top: 10px;">Submit
+                    Feedback</button>
+                <button onclick="closeModal()" class="btn-secondary w-full mt-3"
+                    style="padding:12px; background:#e5e7eb; color:#1f2937; border:2px solid #d1d5db; border-radius:10px; font-weight:600; font-size: 15px; cursor:pointer; width: 100%; margin-top: 10px;">Skip</button>
+            </div>
+
+            <div id="successMessage" class="hidden" style="text-align:center; padding:40px; background: white;">
+                <div style="font-size:80px;">✅</div>
+                <h3 style="font-size:28px; margin-top:10px; color:#1f2937; font-weight: 700;">Thank you!</h3>
+                <p style="color: #6b7280; font-size: 16px; margin: 10px 0 20px 0;">Your feedback helps us improve the
+                    module!</p>
+                <button onclick="closeModal()"
+                    style="margin-top:20px; padding:14px 28px; background:#10b981; color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Continue</button>
             </div>
         </div>
     </div>
@@ -876,116 +1070,241 @@ date: 2025-10-30
         let subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
         let subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
 
-        // Questions Database
-        const questions = [
-            // Math Questions (3 total)
-            {
-                subject: 'math',
-                scenario: 'You need help solving this quadratic equation: 2x² + 5x - 3 = 0',
-                options: [
-                    { text: 'solve equation', isCorrect: false, explanation: 'Too vague - which equation? What method?' },
-                    { text: 'Solve 2x² + 5x - 3 = 0 step-by-step using the quadratic formula. Show all work and explain each step.', isCorrect: true, explanation: 'Perfect! Specific equation, clear method, and requests explanation.' },
-                    { text: 'Help with math homework', isCorrect: false, explanation: 'Way too vague - no specific problem or context.' },
-                    { text: 'Solve 2x² + 5x - 3 = 0', isCorrect: false, explanation: 'Better, but missing request for step-by-step explanation and method.' }
-                ]
-            },
-            {
-                subject: 'math',
-                scenario: 'You want to understand how to find the derivative of a function',
-                options: [
-                    { text: 'Find the derivative of f(x) = 3x³ - 2x² + 5x - 1. Show the steps and explain the power rule.', isCorrect: true, explanation: 'Excellent! Specific function, requests steps and rule explanation.' },
-                    { text: 'derivative help', isCorrect: false, explanation: 'Too vague - which function? What level?' },
-                    { text: 'How do derivatives work?', isCorrect: false, explanation: 'Too broad - needs specific example and context.' },
-                    { text: 'Calculate derivative', isCorrect: false, explanation: 'Missing the function and detail level.' }
-                ]
-            },
-            {
-                subject: 'math',
-                scenario: 'You need practice problems for probability',
-                options: [
-                    { text: 'probability problems', isCorrect: false, explanation: 'Too vague - what type? What difficulty?' },
-                    { text: 'Create 5 probability practice problems suitable for high school students. Include scenarios with dice, cards, and real-world situations. Provide answers.', isCorrect: true, explanation: 'Perfect! Specific number, difficulty level, variety, and requests solutions.' },
-                    { text: 'Give me some math problems', isCorrect: false, explanation: 'Too broad - which topic? What level?' },
-                    { text: 'Create probability problems with answers', isCorrect: false, explanation: 'Better, but missing difficulty level and specific types.' }
-                ]
-            },
+        // Questions will be loaded from backend
+        let allQuestions = [];
+        let gameQuestions = [];
 
-            // Science Questions (3 total)
-            {
-                subject: 'science',
-                scenario: 'You need to understand photosynthesis for your biology test',
-                options: [
-                    { text: 'photosynthesis', isCorrect: false, explanation: 'Too vague - what aspect? What depth?' },
-                    { text: 'Explain photosynthesis', isCorrect: false, explanation: 'Better, but missing level and desired format.' },
-                    { text: 'Explain photosynthesis in simple terms for a high school student. Include the chemical equation, main steps, and why it\'s important. Use everyday analogies.', isCorrect: true, explanation: 'Excellent! Clear level, specific details requested, and asks for analogies.' },
-                    { text: 'What is photosynthesis and why is it important?', isCorrect: false, explanation: 'Good start, but missing level detail and format preferences.' }
-                ]
-            },
-            {
-                subject: 'science',
-                scenario: 'You need to compare mitosis and meiosis for your essay',
-                options: [
-                    { text: 'Create a comparison table of mitosis and meiosis. Include: number of divisions, number of daughter cells, genetic variation, and where each occurs. Add 2-3 sentences explaining why these differences matter.', isCorrect: true, explanation: 'Perfect! Specific format (table), clear comparison points, and asks for significance.' },
-                    { text: 'mitosis vs meiosis', isCorrect: false, explanation: 'Too vague - needs format and specific aspects.' },
-                    { text: 'Compare cell division', isCorrect: false, explanation: 'Too broad - which types? What aspects?' },
-                    { text: 'Explain the difference between mitosis and meiosis', isCorrect: false, explanation: 'Better, but missing specific comparison points and format.' }
-                ]
-            },
-            {
-                subject: 'science',
-                scenario: 'You need to understand Newton\'s Laws of Motion',
-                options: [
-                    { text: 'physics help', isCorrect: false, explanation: 'Way too vague - which topic?' },
-                    { text: 'Explain Newton\'s 3 Laws of Motion with a real-world example for each law. Keep it simple for a beginner. Include one practical application.', isCorrect: true, explanation: 'Excellent! Specific laws, requests examples, clear level, and asks for application.' },
-                    { text: 'What are Newton\'s Laws?', isCorrect: false, explanation: 'Too basic - needs detail level and examples.' },
-                    { text: 'Explain Newton\'s Laws of Motion', isCorrect: false, explanation: 'Better, but missing level and request for examples.' }
-                ]
-            },
-
-            // History Questions (2 total)
-            {
-                subject: 'history',
-                scenario: 'You need to write an essay on the causes of World War I',
-                options: [
-                    { text: 'world war 1 causes', isCorrect: false, explanation: 'Too vague - needs depth and structure.' },
-                    { text: 'List and explain the 4 main causes of World War I (MAIN: Militarism, Alliances, Imperialism, Nationalism). For each cause, provide 2-3 specific examples and explain how they led to war.', isCorrect: true, explanation: 'Perfect! Specific framework (MAIN), requests details and causation.' },
-                    { text: 'Why did World War I start?', isCorrect: false, explanation: 'Too broad - needs structure and depth.' },
-                    { text: 'Explain what caused WW1', isCorrect: false, explanation: 'Better, but missing specific framework and example requests.' }
-                ]
-            },
-            {
-                subject: 'history',
-                scenario: 'You need to analyze a primary source document from the Civil Rights Movement',
-                options: [
-                    { text: 'Analyze Martin Luther King Jr.\'s "I Have a Dream" speech. Identify 3 main rhetorical devices used, explain their effect, and discuss the historical context. Write for a high school analysis.', isCorrect: true, explanation: 'Excellent! Specific document, clear analysis points, context, and level.' },
-                    { text: 'analyze civil rights speech', isCorrect: false, explanation: 'Too vague - which speech? What aspects?' },
-                    { text: 'Help me understand MLK\'s speech', isCorrect: false, explanation: 'Too general - needs specific analysis framework.' },
-                    { text: 'What is the I Have a Dream speech about?', isCorrect: false, explanation: 'Too basic - needs analytical depth and structure.' }
-                ]
-            },
-
-            // Computer Science Questions (2 total)
-            {
-                subject: 'cs',
-                scenario: 'You need to learn about Python loops for beginners',
-                options: [
-                    { text: 'python loops', isCorrect: false, explanation: 'Too vague - which type? What level?' },
-                    { text: 'Explain Python for loops and while loops to a beginner. Include: syntax, when to use each, and 2 simple examples for each. Use clear comments in code.', isCorrect: true, explanation: 'Perfect! Specific loop types, clear level, requests examples and comments.' },
-                    { text: 'How do loops work in Python?', isCorrect: false, explanation: 'Too broad - needs specific types and examples.' },
-                    { text: 'Teach me about for loops', isCorrect: false, explanation: 'Missing language, level, and comparison with while loops.' }
-                ]
-            },
-            {
-                subject: 'cs',
-                scenario: 'You have a bug in your JavaScript code that you need to debug',
-                options: [
-                    { text: 'fix my code', isCorrect: false, explanation: 'Too vague - which code? What\'s the error?' },
-                    { text: 'help with javascript', isCorrect: false, explanation: 'Too general - what specific problem?' },
-                    { text: 'I have this JavaScript function [paste code]. It\'s supposed to filter an array but returns undefined. Can you identify the bug, explain why it\'s happening, and show the corrected code?', isCorrect: true, explanation: 'Excellent! Shows code, explains expected vs actual behavior, and requests explanation.' },
-                    { text: 'My JavaScript code doesn\'t work', isCorrect: false, explanation: 'Too vague - needs code and specific error description.' }
-                ]
+        // Load questions from backend
+        async function loadQuestionsFromBackend() {
+            try {
+                const response = await fetch(`${API_URL}/questions`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.success && data.questions) {
+                    allQuestions = data.questions;
+                    return true;
+                } else {
+                    throw new Error('Invalid response format');
+                }
+            } catch (error) {
+                console.error('Error loading questions:', error);
+                alert('Failed to load questions from server. Please make sure the backend is running.');
+                return false;
             }
-        ];
+        }
+
+        // Load and update persistent leaderboard
+        async function updatePersistentLeaderboard() {
+            try {
+                const response = await fetch(`${API_URL}/leaderboard`);
+                if (!response.ok) return;
+
+                const data = await response.json();
+                if (data.success && data.leaderboard) {
+                    const tbody = document.getElementById('persistentLeaderboardBody');
+                    tbody.innerHTML = '';
+
+                    for (let i = 0; i < 10; i++) {
+                        const entry = data.leaderboard[i];
+                        const tr = document.createElement('tr');
+
+                        let rankHtml = '';
+                        if (i === 0) {
+                            rankHtml = `<td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>`;
+                        } else if (i === 1) {
+                            rankHtml = `<td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>`;
+                        } else if (i === 2) {
+                            rankHtml = `<td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>`;
+                        } else {
+                            rankHtml = `<td class="rank-cell">${i + 1}</td>`;
+                        }
+
+                        if (entry) {
+                            tr.innerHTML = `
+                                ${rankHtml}
+                                <td class="name-cell">${entry.playerName || '-'}</td>
+                                <td class="score-cell">${entry.score || '-'}</td>
+                            `;
+                        } else {
+                            tr.innerHTML = `
+                                ${rankHtml}
+                                <td class="name-cell">-</td>
+                                <td class="score-cell">-</td>
+                            `;
+                        }
+                        tbody.appendChild(tr);
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating leaderboard:', error);
+            }
+        }
+
+        // Drag and drop state
+        let draggedElement = null;
+        let currentDragItems = [];
+
+        // Initialize drag and drop for a question
+        function initializeDragAndDrop(items) {
+            currentDragItems = shuffleArray(items);
+            const container = document.getElementById('promptOptions');
+
+            container.innerHTML = `
+                <div class="drag-drop-container">
+                    <p style="color: #cbd5e1; margin-bottom: 15px; font-size: 1.1em;">
+                        Drag the items below into the correct order:
+                    </p>
+                    <div class="drag-items" id="dragItems"></div>
+                    <div style="margin-top: 20px;">
+                        <p style="color: #cbd5e1; margin-bottom: 10px; font-weight: bold;">Your Answer:</p>
+                        <div class="drop-zone" id="dropZone">
+                            <p style="color: #94a3af; text-align: center; margin: 10px;">Drop items here</p>
+                        </div>
+                    </div>
+                    <button class="check-order-btn" onclick="checkDragDropAnswer()" id="checkOrderBtn">
+                        Check Answer
+                    </button>
+                </div>
+            `;
+
+            const dragItemsContainer = document.getElementById('dragItems');
+            currentDragItems.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'drag-item';
+                div.draggable = true;
+                div.textContent = item.text;
+                div.dataset.itemId = item.id;
+                div.dataset.index = index;
+
+                div.addEventListener('dragstart', handleDragStart);
+                div.addEventListener('dragend', handleDragEnd);
+
+                dragItemsContainer.appendChild(div);
+            });
+
+            const dropZone = document.getElementById('dropZone');
+            dropZone.addEventListener('dragover', handleDragOver);
+            dropZone.addEventListener('drop', handleDrop);
+            dropZone.addEventListener('dragleave', handleDragLeave);
+        }
+
+        function handleDragStart(e) {
+            draggedElement = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.classList.add('drag-over');
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            e.preventDefault();
+
+            const dropZone = e.currentTarget;
+            dropZone.classList.remove('drag-over');
+
+            if (draggedElement) {
+                // Remove placeholder text if present
+                const placeholder = dropZone.querySelector('p');
+                if (placeholder) {
+                    placeholder.remove();
+                }
+
+                // Clone the dragged element
+                const clone = draggedElement.cloneNode(true);
+                clone.draggable = true;
+                clone.addEventListener('dragstart', handleDragStart);
+                clone.addEventListener('dragend', handleDragEnd);
+
+                // Add click to remove
+                clone.addEventListener('click', function() {
+                    this.remove();
+                    if (dropZone.children.length === 0) {
+                        dropZone.innerHTML = '<p style="color: #94a3af; text-align: center; margin: 10px;">Drop items here</p>';
+                    }
+                });
+
+                dropZone.appendChild(clone);
+                draggedElement.remove();
+            }
+
+            return false;
+        }
+
+        function checkDragDropAnswer() {
+            clearInterval(timerInterval);
+
+            const dropZone = document.getElementById('dropZone');
+            const droppedItems = Array.from(dropZone.querySelectorAll('.drag-item'));
+
+            if (droppedItems.length === 0) {
+                alert('Please arrange the items first!');
+                return;
+            }
+
+            const question = gameQuestions[currentQuestionIndex];
+            const userOrder = droppedItems.map(item => item.dataset.itemId);
+            const correctOrder = question.correctOrder;
+
+            const isCorrect = JSON.stringify(userOrder) === JSON.stringify(correctOrder);
+
+            let pointsEarned = 0;
+            if (isCorrect) {
+                const timeBonus = Math.floor(timeLeft / 3);
+                pointsEarned = 100 + timeBonus;
+                score += pointsEarned;
+            }
+
+            if (question.subject) {
+                subjectCounts[question.subject]++;
+                if (isCorrect) {
+                    subjectScores[question.subject]++;
+                }
+            }
+
+            document.getElementById('currentScore').textContent = score;
+
+            const feedback = document.getElementById('feedback');
+            if (isCorrect) {
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = `
+                    <strong>✓ Correct! (+${pointsEarned} points)</strong><br>
+                    ${question.explanation || 'Great job!'}
+                `;
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.innerHTML = `
+                    <strong>✗ Incorrect</strong><br>
+                    The correct order was: ${correctOrder.map(id => {
+                        const item = question.items.find(i => i.id === id);
+                        return item ? item.text : '';
+                    }).join(' → ')}<br><br>
+                    ${question.explanation || ''}
+                `;
+            }
+
+            document.getElementById('checkOrderBtn').disabled = true;
+            document.getElementById('nextBtn').style.display = 'block';
+        }
 
         // Shuffle array helper
         function shuffleArray(array) {
@@ -997,17 +1316,23 @@ date: 2025-10-30
             return newArray;
         }
 
-        let gameQuestions = [];
-
-        function startGame() {
+        async function startGame() {
             playerName = document.getElementById('playerName').value.trim();
             if (!playerName) {
                 alert('Please enter your name!');
                 return;
             }
 
+            // Load questions from backend if not already loaded
+            if (allQuestions.length === 0) {
+                const loaded = await loadQuestionsFromBackend();
+                if (!loaded) {
+                    return;
+                }
+            }
+
             // Shuffle and reset
-            gameQuestions = shuffleArray(questions);
+            gameQuestions = shuffleArray(allQuestions);
             currentQuestionIndex = 0;
             score = 0;
             subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
@@ -1026,31 +1351,42 @@ date: 2025-10-30
             // Update UI
             document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
             document.getElementById('currentScore').textContent = score;
-            document.getElementById('progressBar').style.width = ((currentQuestionIndex + 1) / 10 * 100) + '%';
+            document.getElementById('progressBar').style.width = ((currentQuestionIndex + 1) / gameQuestions.length * 100) + '%';
 
             // Update subject badge
             const badge = document.getElementById('subjectBadge');
-            badge.textContent = question.subject.charAt(0).toUpperCase() + question.subject.slice(1);
-            badge.className = 'subject-badge subject-' + question.subject;
+            if (question.subject) {
+                badge.textContent = question.subject.charAt(0).toUpperCase() + question.subject.slice(1);
+                badge.className = 'subject-badge subject-' + question.subject;
+            } else {
+                badge.textContent = 'General';
+                badge.className = 'subject-badge';
+            }
 
-            // Update scenario
-            document.getElementById('scenario').textContent = question.scenario;
+            // Update scenario/question text
+            const scenarioText = question.question || question.scenario;
+            document.getElementById('scenario').textContent = scenarioText;
 
-            // Shuffle and display options
-            const shuffledOptions = shuffleArray(question.options);
-            const optionsHtml = shuffledOptions.map((option, index) => `
-                <div class="prompt-option" onclick="selectAnswer(${index})">
-                    <div class="prompt-option-label">Option ${String.fromCharCode(65 + index)}</div>
-                    <div class="prompt-text">${option.text}</div>
-                </div>
-            `).join('');
-
-            document.getElementById('promptOptions').innerHTML = optionsHtml;
             document.getElementById('feedback').classList.remove('show');
             document.getElementById('nextBtn').style.display = 'none';
 
-            // Store shuffled options for checking
-            window.currentOptions = shuffledOptions;
+            // Handle different question types
+            if (question.type === 'drag_drop') {
+                // Drag and drop question
+                initializeDragAndDrop(question.items);
+            } else {
+                // Multiple choice or ethics question
+                const shuffledOptions = shuffleArray(question.options);
+                const optionsHtml = shuffledOptions.map((option, index) => `
+                    <div class="prompt-option" onclick="selectAnswer(${index})">
+                        <div class="prompt-option-label">Option ${String.fromCharCode(65 + index)}</div>
+                        <div class="prompt-text">${option.text}</div>
+                    </div>
+                `).join('');
+
+                document.getElementById('promptOptions').innerHTML = optionsHtml;
+                window.currentOptions = shuffledOptions;
+            }
 
             // Start timer
             startTimer();
@@ -1163,13 +1499,13 @@ date: 2025-10-30
             document.getElementById('finalPlayerName').textContent = playerName;
 
             const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
-            document.getElementById('correctCount').textContent = `${correctCount}/10`;
+            document.getElementById('correctCount').textContent = `${correctCount}/${gameQuestions.length}`;
             document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
             document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
             document.getElementById('historyScore').textContent = `${subjectScores.history}/${subjectCounts.history}`;
             document.getElementById('csScore').textContent = `${subjectScores.cs}/${subjectCounts.cs}`;
 
-            // Save score to backend (will implement later)
+            // Save score to backend
             try {
                 await saveScore({
                     playerName: playerName,
@@ -1178,11 +1514,14 @@ date: 2025-10-30
                     subjectScores: subjectScores,
                     timestamp: new Date().toISOString()
                 });
+
+                // Update persistent leaderboard panel
+                await updatePersistentLeaderboard();
             } catch (error) {
                 console.log('Backend not ready yet:', error);
             }
 
-            // Load leaderboard
+            // Load leaderboard in results screen
             loadLeaderboard();
         }
 
@@ -1244,6 +1583,30 @@ date: 2025-10-30
             document.getElementById('playerName').value = playerName;
         }
 
+        function skipToCompletion() {
+            playerName = document.getElementById('playerName').value.trim();
+            if (!playerName) {
+                alert('Please enter your name first!');
+                return;
+            }
+
+            // Show results screen with minimal data
+            showScreen('resultsScreen');
+            document.getElementById('finalScore').textContent = '-';
+            document.getElementById('finalPlayerName').textContent = playerName;
+            document.getElementById('correctCount').textContent = '-';
+            document.getElementById('mathScore').textContent = '-';
+            document.getElementById('scienceScore').textContent = '-';
+            document.getElementById('historyScore').textContent = '-';
+            document.getElementById('csScore').textContent = '-';
+
+            // Hide leaderboard on skip
+            document.querySelector('.leaderboard').style.display = 'none';
+
+            // Still load persistent leaderboard
+            updatePersistentLeaderboard();
+        }
+
         function showScreen(screenId) {
             document.querySelectorAll('.game-screen').forEach(screen => {
                 screen.classList.remove('active');
@@ -1261,59 +1624,166 @@ date: 2025-10-30
                     startGame();
                 }
             });
+
+            // Load persistent leaderboard on page load
+            updatePersistentLeaderboard();
+
+            // Update leaderboard every 30 seconds
+            setInterval(updatePersistentLeaderboard, 30000);
         });
-        function showFeedbackModal() {
-            console.log("showFeedbackModal called");
+
+        // Feedback Modal Functions
+        let selectedRating = 0;
+        let selectedCategory = '';
+
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.dataset.rating);
+                updateStars();
+            });
+        });
+
+        function updateStars() {
+            document.querySelectorAll('.star').forEach(s => {
+                s.style.color = (parseInt(s.dataset.rating) <= selectedRating) ? '#ffd700' : '#ddd';
+            });
+        }
+
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => {
+                    b.style.background = 'white';
+                    b.style.color = '#1f2937';
+                    b.style.borderColor = '#d1d5db';
+                });
+                btn.style.background = '#8b5cf6';
+                btn.style.color = 'white';
+                btn.style.borderColor = '#7c3aed';
+                selectedCategory = btn.dataset.category;
+            });
+        });
+
+        async function submitFeedback() {
+            if (!selectedRating) return alert("Please select a rating");
+            if (!selectedCategory) return alert("Select a category");
+
+            const comments = document.getElementById('comments').value;
+
+            // Save feedback to backend
+            try {
+                const response = await fetch('http://localhost:8001/api/submodule3/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        playerName: playerName,
+                        rating: selectedRating,
+                        category: selectedCategory,
+                        comments: comments
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save feedback');
+                }
+
+                const data = await response.json();
+                console.log('Feedback saved:', data);
+            } catch (error) {
+                console.error('Error saving feedback:', error);
+                // Still show success message even if save fails
+            }
+
+            document.getElementById("feedbackForm").classList.add("hidden");
+            document.getElementById("successMessage").classList.remove("hidden");
+        }
+
+        function closeModal() {
             const modal = document.getElementById("feedbackModal");
-            console.log("Modal element:", modal);
+            if (modal) {
+                modal.classList.remove("modal-show");
+                modal.style.display = "none";
+                document.body.style.overflow = "";
+
+                // Reset form
+                document.getElementById("feedbackForm").classList.remove("hidden");
+                document.getElementById("successMessage").classList.add("hidden");
+                selectedRating = 0;
+                selectedCategory = '';
+                document.getElementById('comments').value = '';
+                updateStars();
+
+                // Redirect to home page
+                window.location.href = "../index.html";
+            }
+        }
+
+        async function showFeedbackModal() {
+            const modal = document.getElementById("feedbackModal");
 
             if (!modal) {
-                console.error("Modal not found!");
                 alert("Error: Feedback modal not found. Please refresh the page and try again.");
                 return;
             }
 
-            // Force visibility with all possible overrides
+            // Load recent feedback
+            try {
+                const response = await fetch('http://localhost:8001/api/submodule3/feedback/recent');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        // Update average rating display
+                        const avgRatingElement = document.getElementById('averageRatingDisplay');
+                        if (avgRatingElement) {
+                            avgRatingElement.innerHTML = `⭐ ${data.averageRating}/5 <span style="color: #6b7280; font-weight: 400;">(${data.totalResponses} responses)</span>`;
+                        }
+
+                        // Update most recent feedback comment
+                        const feedbackElement = document.getElementById('recentFeedbackDisplay');
+                        if (feedbackElement) {
+                            if (data.feedback && data.feedback.comments) {
+                                // Truncate long comments
+                                const shortComment = data.feedback.comments.length > 50
+                                    ? data.feedback.comments.substring(0, 50) + '...'
+                                    : data.feedback.comments;
+                                feedbackElement.innerHTML = `"${shortComment}"`;
+                            } else {
+                                feedbackElement.innerHTML = '"No feedback yet"';
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading recent feedback:', error);
+                // Continue showing modal even if loading fails
+            }
+
+            // Prevent background scrolling
+            document.body.style.overflow = "hidden";
+
+            // Show modal
+            modal.classList.add("modal-show");
             modal.style.display = "flex";
             modal.style.visibility = "visible";
             modal.style.opacity = "1";
-            modal.style.zIndex = "99999";
-            modal.style.position = "fixed";
-            modal.style.top = "0";
-            modal.style.left = "0";
-            modal.style.width = "100%";
-            modal.style.height = "100%";
-            modal.style.background = "rgba(0, 0, 0, 0.8)";
-            modal.style.alignItems = "center";
-            modal.style.justifyContent = "center";
-            console.log("Modal display set to flex with overrides");
 
             // Ensure inner modal box is visible
             const modalBox = modal.querySelector('.modal');
             if (modalBox) {
                 modalBox.style.display = "block";
-                modalBox.style.position = "relative";
-                modalBox.style.zIndex = "100000";
-                console.log("Modal box display set to block");
             }
-
-            // Check if modal is actually visible
-            const rect = modal.getBoundingClientRect();
-            console.log("Modal bounding rect:", rect);
-            console.log("Modal computed style display:", window.getComputedStyle(modal).display);
-
-            // Prevent background scrolling
-            document.body.style.overflow = "hidden";
 
             // Scroll to top when modal opens
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
-<!-- Add this section right before the closing </body> tag -->
+    <!-- Add this section right before the closing </body> tag -->
 
-<!-- Check for Understanding Section -->
+    <!-- Check for Understanding Section -->
     <div style="max-width: 900px; margin: 60px auto; padding: 20px;">
-        <div style="background: rgba(15, 23, 42, 0.85); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid rgba(37, 99, 235, 0.3);">
+        <div
+            style="background: rgba(15, 23, 42, 0.85); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid rgba(37, 99, 235, 0.3);">
             <h2 style="color: #60a5fa; text-align: center; font-size: 2em; margin-bottom: 10px;">
                 ✅ Check for Understanding
             </h2>
@@ -1324,13 +1794,16 @@ date: 2025-10-30
             <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
                 <thead>
                     <tr>
-                        <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                        <th
+                            style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
                             AI Concept
                         </th>
-                        <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                        <th
+                            style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
                             Got It ✓
                         </th>
-                        <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                        <th
+                            style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
                             Need Help ✗
                         </th>
                     </tr>
@@ -1384,9 +1857,9 @@ date: 2025-10-30
     </style>
 
     <script>
-    // Configuration for the Check for Understanding survey
+        // Configuration for the Check for Understanding survey
         const CONCEPTS_API_CONFIG = {
-            pythonURI: 'http://127.0.0.1:8587', // Update this to match your backend
+            pythonURI: 'http://127.0.0.1:8001', // Update this to match your backend
             fetchOptions: {
                 mode: 'cors',
                 cache: 'no-cache',
@@ -1411,7 +1884,7 @@ date: 2025-10-30
             method: 'PUT',
         };
 
-    // Fetch and display AI concepts
+        // Fetch and display AI concepts
         fetch(getConceptsURL, CONCEPTS_API_CONFIG.fetchOptions)
             .then(response => {
                 if (response.status !== 200) {
@@ -1425,11 +1898,11 @@ date: 2025-10-30
                     for (const row of data) {
                         const tr = document.createElement("tr");
 
-                    // Concept cell
+                        // Concept cell
                         const concept = document.createElement("td");
                         concept.innerHTML = row.id + ". " + row.joke;
 
-                    // Got It button cell
+                        // Got It button cell
                         const gotIt = document.createElement("td");
                         const gotItBtn = document.createElement('button');
                         gotItBtn.id = HAHA_KEY + row.id;
@@ -1439,7 +1912,7 @@ date: 2025-10-30
                         };
                         gotIt.appendChild(gotItBtn);
 
-                    // Need Help button cell
+                        // Need Help button cell
                         const needHelp = document.createElement("td");
                         const needHelpBtn = document.createElement('button');
                         needHelpBtn.id = BOOHOO_KEY + row.id;
@@ -1460,7 +1933,7 @@ date: 2025-10-30
                 conceptsError(err + ": " + getConceptsURL);
             });
 
-    // Auto-refresh reactions every 5 seconds
+        // Auto-refresh reactions every 5 seconds
         function refreshConceptReactions() {
             fetch(getConceptsURL, CONCEPTS_API_CONFIG.fetchOptions)
                 .then(response => response.json())
@@ -1478,7 +1951,7 @@ date: 2025-10-30
         }
         setInterval(refreshConceptReactions, 5000);
 
-    // Handle student reactions
+        // Handle student reactions
         function conceptReaction(type, postURL, elemID) {
             fetch(postURL, reactConceptsOptions)
                 .then(response => {
