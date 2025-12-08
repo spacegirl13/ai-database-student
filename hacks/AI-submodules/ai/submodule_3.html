@@ -1049,8 +1049,8 @@ date: 2025-10-30
                 <h3 style="font-size:28px; margin-top:10px; color:#1f2937; font-weight: 700;">Thank you!</h3>
                 <p style="color: #6b7280; font-size: 16px; margin: 10px 0 20px 0;">Your feedback helps us improve the
                     module!</p>
-                <button onclick="closeModal()"
-                    style="margin-top:20px; padding:14px 28px; background:#10b981; color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Continue</button>
+                <button onclick="showCheckForUnderstanding()"
+                    style="margin-top:20px; padding:14px 28px; background:#10b981; color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"> Continue </button>
             </div>
         </div>
     </div>
@@ -1781,56 +1781,63 @@ date: 2025-10-30
     <!-- Add this section right before the closing </body> tag -->
 
     <!-- Check for Understanding Section -->
-    <div style="max-width: 900px; margin: 60px auto; padding: 20px;">
-        <div
-            style="background: rgba(15, 23, 42, 0.85); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid rgba(37, 99, 235, 0.3);">
-            <h2 style="color: #60a5fa; text-align: center; font-size: 2em; margin-bottom: 10px;">
-                ✅ Check for Understanding
-            </h2>
-            <p style="text-align: center; color: #cbd5e1; margin-bottom: 30px; font-size: 1.1em;">
-                Let us know which AI concepts you understand!
-            </p>
 
-            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                <thead>
-                    <tr>
-                        <th
-                            style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
-                            AI Concept
-                        </th>
-                        <th
-                            style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
-                            Got It ✓
-                        </th>
-                        <th
-                            style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
-                            Need Help ✗
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="conceptsResult">
-                    <tr>
-                        <td colspan="3" style="padding: 20px; text-align: center; color: #888;">
-                            Loading concepts...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+    <!-- Check for Understanding Modal -->
+    <div id="checkForUnderstandingModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; overflow-y: auto; padding: 20px;">
+        <div style="max-width: 900px; margin: 60px auto; padding: 20px;">
+            <div style="background: rgba(15, 23, 42, 0.95); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid rgba(37, 99, 235, 0.3);">
+                <h2 style="color: #60a5fa; text-align: center; font-size: 2em; margin-bottom: 10px;">
+                    ✅ Check for Understanding
+                </h2>
+                <p style="text-align: center; color: #cbd5e1; margin-bottom: 30px; font-size: 1.1em;">
+                    Let us know which AI concepts you understand!
+                </p>
+
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead>
+                        <tr>
+                            <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                                AI Concept
+                            </th>
+                            <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                                Got It ✓
+                            </th>
+                            <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                                Need Help ✗
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="conceptsResultModal">
+                        <tr>
+                            <td colspan="3" style="padding: 20px; text-align: center; color: #cbd5e1;">
+                                Loading concepts...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="../index.html" style="padding:14px 28px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-decoration: none; display: inline-block;">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
     <style>
-        #conceptsResult td {
+        #conceptsResultModal td {
             padding: 12px;
             border-bottom: 1px solid rgba(37, 99, 235, 0.2);
             color: #cbd5e1;
         }
 
-        #conceptsResult tr:hover {
+        #conceptsResultModal tr:hover {
             background-color: rgba(59, 130, 246, 0.1);
         }
 
-        #conceptsResult button {
+        #conceptsResultModal button {
             padding: 6px 16px;
             border: none;
             border-radius: 4px;
@@ -1840,25 +1847,42 @@ date: 2025-10-30
             min-width: 60px;
         }
 
-        #conceptsResult button:hover {
+        #conceptsResultModal button:hover {
             transform: scale(1.05);
             opacity: 0.9;
         }
 
-        #conceptsResult tr td:nth-child(2) button {
+        #conceptsResultModal tr td:nth-child(2) button {
             background-color: #10b981;
             color: white;
         }
 
-        #conceptsResult tr td:nth-child(3) button {
+        #conceptsResultModal tr td:nth-child(3) button {
             background-color: #ef4444;
             color: white;
         }
     </style>
 
     <script>
-        // Configuration for the Check for Understanding survey
-        const CONCEPTS_API_CONFIG = {
+    // STEP 2: Add this function to show the Check for Understanding modal
+        function showCheckForUnderstanding() {
+        // Hide feedback modal
+            const feedbackModal = document.getElementById("feedbackModal");
+            if (feedbackModal) {
+                feedbackModal.style.display = "none";
+            }
+        
+        // Show Check for Understanding modal
+            const checkModal = document.getElementById("checkForUnderstandingModal");
+            checkModal.style.display = "block";
+            document.body.style.overflow = "hidden";
+        
+        // Load the concepts data
+            loadConceptsDataForModal();
+        }
+
+    // Configuration for the Check for Understanding survey
+        const CONCEPTS_API_CONFIG_MODAL = {
             pythonURI: 'http://127.0.0.1:8001', // Update this to match your backend
             fetchOptions: {
                 mode: 'cors',
@@ -1870,122 +1894,127 @@ date: 2025-10-30
             }
         };
 
-        const conceptsResultContainer = document.getElementById("conceptsResult");
-        const HAHA_KEY = "haha";
-        const BOOHOO_KEY = "boohoo";
+        const conceptsResultContainerModal = document.getElementById("conceptsResultModal");
+        const HAHA_KEY_MODAL = "haha";
+        const BOOHOO_KEY_MODAL = "boohoo";
 
-        const conceptsUrl = `${CONCEPTS_API_CONFIG.pythonURI}/api/jokes`;
-        const getConceptsURL = conceptsUrl + "/";
-        const likeConceptsURL = conceptsUrl + "/like/";
-        const jeerConceptsURL = conceptsUrl + "/jeer/";
+        const conceptsUrlModal = `${CONCEPTS_API_CONFIG_MODAL.pythonURI}/api/jokes`;
+        const getConceptsURLModal = conceptsUrlModal + "/";
+        const likeConceptsURLModal = conceptsUrlModal + "/like/";
+        const jeerConceptsURLModal = conceptsUrlModal + "/jeer/";
 
-        const reactConceptsOptions = {
-            ...CONCEPTS_API_CONFIG.fetchOptions,
+        const reactConceptsOptionsModal = {
+            ...CONCEPTS_API_CONFIG_MODAL.fetchOptions,
             method: 'PUT',
         };
 
-        // Fetch and display AI concepts
-        fetch(getConceptsURL, CONCEPTS_API_CONFIG.fetchOptions)
-            .then(response => {
-                if (response.status !== 200) {
-                    conceptsError('GET API response failure: ' + response.status);
-                    return;
-                }
-                response.json().then(data => {
-                    console.log(data);
-                    conceptsResultContainer.innerHTML = ''; // Clear loading message
-
-                    for (const row of data) {
-                        const tr = document.createElement("tr");
-
-                        // Concept cell
-                        const concept = document.createElement("td");
-                        concept.innerHTML = row.id + ". " + row.joke;
-
-                        // Got It button cell
-                        const gotIt = document.createElement("td");
-                        const gotItBtn = document.createElement('button');
-                        gotItBtn.id = HAHA_KEY + row.id;
-                        gotItBtn.innerHTML = row.haha;
-                        gotItBtn.onclick = function () {
-                            conceptReaction(HAHA_KEY, likeConceptsURL + row.id, gotItBtn.id);
-                        };
-                        gotIt.appendChild(gotItBtn);
-
-                        // Need Help button cell
-                        const needHelp = document.createElement("td");
-                        const needHelpBtn = document.createElement('button');
-                        needHelpBtn.id = BOOHOO_KEY + row.id;
-                        needHelpBtn.innerHTML = row.boohoo;
-                        needHelpBtn.onclick = function () {
-                            conceptReaction(BOOHOO_KEY, jeerConceptsURL + row.id, needHelpBtn.id);
-                        };
-                        needHelp.appendChild(needHelpBtn);
-
-                        tr.appendChild(concept);
-                        tr.appendChild(gotIt);
-                        tr.appendChild(needHelp);
-                        conceptsResultContainer.appendChild(tr);
-                    }
-                })
-            })
-            .catch(err => {
-                conceptsError(err + ": " + getConceptsURL);
-            });
-
-        // Auto-refresh reactions every 5 seconds
-        function refreshConceptReactions() {
-            fetch(getConceptsURL, CONCEPTS_API_CONFIG.fetchOptions)
-                .then(response => response.json())
-                .then(data => {
-                    for (const row of data) {
-                        const gotItBtn = document.getElementById(HAHA_KEY + row.id);
-                        if (gotItBtn) gotItBtn.innerHTML = row.haha;
-                        const needHelpBtn = document.getElementById(BOOHOO_KEY + row.id);
-                        if (needHelpBtn) needHelpBtn.innerHTML = row.boohoo;
-                    }
-                })
-                .catch(err => {
-                    console.error('Refresh error:', err);
-                });
-        }
-        setInterval(refreshConceptReactions, 5000);
-
-        // Handle student reactions
-        function conceptReaction(type, postURL, elemID) {
-            fetch(postURL, reactConceptsOptions)
+    // Function to load concepts data for modal
+        function loadConceptsDataForModal() {
+            fetch(getConceptsURLModal, CONCEPTS_API_CONFIG_MODAL.fetchOptions)
                 .then(response => {
                     if (response.status !== 200) {
-                        conceptsError("Post API response failure: " + response.status);
+                        conceptsErrorModal('GET API response failure: ' + response.status);
                         return;
                     }
                     response.json().then(data => {
                         console.log(data);
-                        if (type === HAHA_KEY) {
-                            document.getElementById(elemID).innerHTML = data.haha;
-                        } else if (type === BOOHOO_KEY) {
-                            document.getElementById(elemID).innerHTML = data.boohoo;
-                        } else {
-                            conceptsError("unknown type: " + type);
+                        conceptsResultContainerModal.innerHTML = ''; // Clear loading message
+
+                        for (const row of data) {
+                            const tr = document.createElement("tr");
+
+                        // Concept cell
+                            const concept = document.createElement("td");
+                            concept.innerHTML = row.id + ". " + row.joke;
+
+                        // Got It button cell
+                            const gotIt = document.createElement("td");
+                            const gotItBtn = document.createElement('button');
+                            gotItBtn.id = HAHA_KEY_MODAL + row.id + "_modal";
+                            gotItBtn.innerHTML = row.haha;
+                            gotItBtn.onclick = function () {
+                                conceptReactionModal(HAHA_KEY_MODAL, likeConceptsURLModal + row.id, gotItBtn.id);
+                            };
+                            gotIt.appendChild(gotItBtn);
+
+                        // Need Help button cell
+                            const needHelp = document.createElement("td");
+                            const needHelpBtn = document.createElement('button');
+                            needHelpBtn.id = BOOHOO_KEY_MODAL + row.id + "_modal";
+                            needHelpBtn.innerHTML = row.boohoo;
+                            needHelpBtn.onclick = function () {
+                                conceptReactionModal(BOOHOO_KEY_MODAL, jeerConceptsURLModal + row.id, needHelpBtn.id);
+                            };
+                            needHelp.appendChild(needHelpBtn);
+
+                            tr.appendChild(concept);
+                            tr.appendChild(gotIt);
+                            tr.appendChild(needHelp);
+                            conceptsResultContainerModal.appendChild(tr);
                         }
                     })
                 })
                 .catch(err => {
-                    conceptsError(err + " " + postURL);
+                    conceptsErrorModal(err + ": " + getConceptsURLModal);
                 });
         }
 
-        function conceptsError(err) {
+    // Auto-refresh reactions every 5 seconds for modal
+        function refreshConceptReactionsModal() {
+            const checkModal = document.getElementById("checkForUnderstandingModal");
+            if (checkModal && checkModal.style.display !== "none") {
+                fetch(getConceptsURLModal, CONCEPTS_API_CONFIG_MODAL.fetchOptions)
+                    .then(response => response.json())
+                    .then(data => {
+                        for (const row of data) {
+                            const gotItBtn = document.getElementById(HAHA_KEY_MODAL + row.id + "_modal");
+                            if (gotItBtn) gotItBtn.innerHTML = row.haha;
+                            const needHelpBtn = document.getElementById(BOOHOO_KEY_MODAL + row.id + "_modal");
+                            if (needHelpBtn) needHelpBtn.innerHTML = row.boohoo;
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Refresh error:', err);
+                    });
+            }
+        }
+        setInterval(refreshConceptReactionsModal, 5000);
+
+    // Handle student reactions for modal
+        function conceptReactionModal(type, postURL, elemID) {
+            fetch(postURL, reactConceptsOptionsModal)
+                .then(response => {
+                    if (response.status !== 200) {
+                        conceptsErrorModal("Post API response failure: " + response.status);
+                        return;
+                    }
+                    response.json().then(data => {
+                        console.log(data);
+                        if (type === HAHA_KEY_MODAL) {
+                            document.getElementById(elemID).innerHTML = data.haha;
+                        } else if (type === BOOHOO_KEY_MODAL) {
+                            document.getElementById(elemID).innerHTML = data.boohoo;
+                        } else {
+                            conceptsErrorModal("unknown type: " + type);
+                        }
+                    })
+                })
+                .catch(err => {
+                    conceptsErrorModal(err + " " + postURL);
+                });
+        }
+
+        function conceptsErrorModal(err) {
             console.error(err);
             const tr = document.createElement("tr");
             const td = document.createElement("td");
             td.colSpan = 3;
             td.style.padding = "15px";
-            td.style.background = "#fee";
-            td.style.color = "#c00";
+            td.style.background = "rgba(254, 226, 226, 0.2)";
+            td.style.color = "#ef4444";
             td.innerHTML = err;
             tr.appendChild(td);
-            conceptsResultContainer.appendChild(tr);
+            conceptsResultContainerModal.appendChild(tr);
         }
     </script>
 </body>
