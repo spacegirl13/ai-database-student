@@ -1,1055 +1,1302 @@
 ---
 layout: post
-title: "AI Usage Quest — Module 3: AI APIs"
-description: "Learn to integrate AI capabilities through APIs and build interactive applications"
+title: "AI Usage Quest — Module 2: Prompt Engineering"
+description: "Master the art of communicating effectively with AI through strategic prompting"
 permalink: /digital-famine/ai/submodule_3/
 categories: [CSP, Submodule, AIUsage]
-tags: [ai, api, flask, microblog, integration]
-author: "Debuggers Team - Lilian Wu, Rebecca Yan"
+tags: [ai, prompts, prompt-engineering, zero-shot, few-shot]
+author: "Debuggers Team - Ruchika Kench, Anishka Sanghvi"
 microblog: true
 date: 2025-10-30
 ---
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module 3: AI APIs</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>AI Prompt Challenge - Test Your Skills!</title>
     <style>
-        body {
-            background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
-            min-height: 100vh;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .game-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            animation: fadeIn 0.6s ease 0.2s both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .game-screen {
+            display: none;
+        }
+
+        .game-screen.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .start-screen {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            color: #333;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .start-screen h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .start-screen p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .input-group {
+            margin: 30px 0;
+        }
+
+        .input-group input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            color: #333;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .subject-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .subject-math {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .subject-science {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .subject-history {
+            background: #f9ca24;
+            color: #333;
+        }
+
+        .subject-cs {
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .scenario {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .prompt-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .prompt-option {
+            background: #f8f9fa;
+            border: 3px solid #dee2e6;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .prompt-option:hover {
+            border-color: #667eea;
+            transform: translateX(10px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .prompt-option.selected {
+            border-color: #667eea;
+            background: #e8eaf6;
+        }
+
+        .prompt-option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            animation: pulse 0.5s;
+        }
+
+        .prompt-option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            animation: shake 0.5s;
+        }
+
+        .prompt-option-label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .prompt-text {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #4caf50;
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #f44336;
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .timer.warning {
+            color: #ff6b6b;
+            animation: pulse 1s infinite;
+        }
+
+        .results-screen {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            color: #333;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .results-screen h2 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .final-score {
+            font-size: 4em;
+            font-weight: bold;
+            color: #764ba2;
+            margin: 30px 0;
+        }
+
+        .score-breakdown {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .score-item:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .leaderboard h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .rank {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            width: 50px;
+        }
+
+        .rank.first {
+            color: #ffd700;
+        }
+
+        .rank.second {
+            color: #c0c0c0;
+        }
+
+        .rank.third {
+            color: #cd7f32;
+        }
+
+        .player-name {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .player-score {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #764ba2;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            transition: width 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes pulse {
 
             0%,
             100% {
-                opacity: 1;
+                transform: scale(1);
             }
 
             50% {
-                opacity: .5;
+                transform: scale(1.05);
             }
         }
 
-        .section-hidden {
-            display: none;
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            75% {
+                transform: translateX(10px);
+            }
         }
 
-        .code-example {
-            background: #1e293b;
-            border: 1px solid #475569;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-            overflow-x: auto;
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
         }
 
-        .code-example pre {
-            margin: 0;
-            color: #e2e8f0;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
+        /* Leaderboard Panel Styles */
+        .leaderboard-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 220px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            z-index: 1000;
         }
 
-        .code-example code {
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
-            font-size: 0.9rem;
-            line-height: 1.5;
+        .panel-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 14px;
+            text-align: center;
         }
 
-        .inline-input,
-        .inline-select {
-            background: #0f172a;
-            color: #10b981;
-            border: 2px solid #475569;
-            border-radius: 4px;
-            padding: 2px 8px;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
-            font-size: 0.9rem;
-            transition: all 0.2s;
+        .panel-title {
+            font-size: 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
-        .inline-input:focus,
-        .inline-select:focus {
-            outline: none;
-            border-color: #10b981;
-            background: #1e293b;
+        .trophy-icon {
+            width: 18px;
+            height: 18px;
         }
 
-        .hidden {
-            display: none;
+        .leaderboard-content {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .leaderboard-table thead {
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .leaderboard-table th {
+            padding: 9px 11px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .leaderboard-table th:first-child {
+            width: 60px;
+        }
+
+        .leaderboard-table th:last-child {
+            width: 65px;
+            text-align: right;
+        }
+
+        .leaderboard-table td {
+            padding: 9px 11px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 12px;
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .rank-cell {
+            font-weight: bold;
+            width: 60px;
+            text-align: center;
+        }
+
+        .rank-1 {
+            color: #ffd700;
+            font-size: 13px;
+        }
+
+        .rank-2 {
+            color: #c0c0c0;
+            font-size: 13px;
+        }
+
+        .rank-3 {
+            color: #cd7f32;
+            font-size: 13px;
+        }
+
+        .name-cell {
+            font-weight: 500;
+            color: #212529;
+            font-size: 11px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .score-cell {
+            font-weight: bold;
+            color: #667eea;
+            text-align: right;
+            font-size: 12px;
+        }
+
+        .medal {
+            font-size: 14px;
+        }
+
+        /* Drag and Drop Styles */
+        .drag-drop-container {
+            margin-top: 20px;
+        }
+
+        .drag-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .drag-item {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: grab;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .drag-item:hover {
+            border-color: #667eea;
+            transform: scale(1.02);
+        }
+
+        .drag-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .drop-zone {
+            min-height: 60px;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        .drop-zone.drag-over {
+            border-color: #667eea;
+            background: #e8eaf6;
+        }
+
+        .drop-zone .drag-item {
+            cursor: grab;
+            margin-bottom: 5px;
+        }
+
+        .check-order-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .check-order-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .check-order-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
 
-<body class="text-white">
-    <div class="border-b border-green-500/30 bg-slate-900/50 backdrop-blur">
-        <div class="max-w-7xl mx-auto px-4 py-6">
-            <h1 class="text-4xl font-bold text-center mb-2">AI Usage Quest</h1>
-            <p class="text-center text-green-300 text-lg">Module 3: AI APIs</p>
+<body>
+    <!-- LEADERBOARD PANEL -->
+    <div class="leaderboard-panel">
+        <div class="panel-header">
+            <div class="panel-title">
+                <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                    <path d="M4 22h16"></path>
+                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                </svg>
+                Leaderboard
+            </div>
+        </div>
+
+        <div class="leaderboard-content" id="leaderboardContent">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th style="text-align: right;">Score</th>
+                    </tr>
+                </thead>
+                <tbody id="persistentLeaderboardBody">
+                    <tr>
+                        <td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>
+                        <td class="name-cell">-</td>
+                        <td class="score-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>
+                        <td class="name-cell">-</td>
+                        <td class="score-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>
+                        <td class="name-cell">-</td>
+                        <td class="score-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">4</td>
+                        <td class="name-cell">-</td>
+                        <td class="score-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">5</td>
+                        <td class="name-cell">-</td>
+                        <td class="score-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">6</td>
+                        <td class="name-cell">-</td>
+                        <td class="score-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">7</td>
+                        <td class="name-cell">-</td>
+                        <td class="score-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">8</td>
+                        <td class="name-cell">-</td>
+                        <td class="score-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">9</td>
+                        <td class="name-cell">-</td>
+                        <td class="score-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td class="rank-cell">10</td>
+                        <td class="name-cell">-</td>
+                        <td class="score-cell">-</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
-        <div class="bg-slate-800/50 backdrop-blur border border-green-500/30 rounded-lg p-6 mb-8">
-            <div class="flex items-center justify-between overflow-x-auto pb-2 gap-2">
-                <button onclick="goToSection(0)"
-                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-green-600"
-                    data-section="0">
-                    <span class="text-2xl mb-1">🔌</span>
-                    <span class="text-xs text-center">AI APIs</span>
-                </button>
-                <div class="w-8 h-0.5 bg-green-500/30"></div>
-                <button onclick="goToSection(1)"
-                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
-                    data-section="1">
-                    <span class="text-2xl mb-1">📚</span>
-                    <span class="text-xs text-center">API Basics</span>
-                </button>
-                <div class="w-8 h-0.5 bg-green-500/30"></div>
-                <button onclick="goToSection(2)"
-                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
-                    data-section="2">
-                    <span class="text-2xl mb-1">🏗️</span>
-                    <span class="text-xs text-center">Architecture</span>
-                </button>
-                <div class="w-8 h-0.5 bg-green-500/30"></div>
-                <button onclick="goToSection(3)"
-                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
-                    data-section="3">
-                    <span class="text-2xl mb-1">🔧</span>
-                    <span class="text-xs text-center">UI Framework</span>
-                </button>
-                <div class="w-8 h-0.5 bg-green-500/30"></div>
-                <button onclick="goToSection(4)"
-                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
-                    data-section="4">
-                    <span class="text-2xl mb-1">💻</span>
-                    <span class="text-xs text-center">UI Functionality</span>
-                </button>
-                <div class="w-8 h-0.5 bg-green-500/30"></div>
-                <button onclick="goToSection(5)"
-                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
-                    data-section="5">
-                    <span class="text-2xl mb-1">📡</span>
-                    <span class="text-xs text-center">API Management</span>
-                </button>
-                <div class="w-8 h-0.5 bg-green-500/30"></div>
-                <button onclick="goToSection(6)"
-                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
-                    data-section="6">
-                    <span class="text-2xl mb-1">🔑</span>
-                    <span class="text-xs text-center">Get Code</span>
-                </button>
-                <div class="w-8 h-0.5 bg-green-500/30"></div>
-            </div>
+    <div class="container">
+        <div class="game-header">
+            <h1>🎮 AI Prompt Challenge</h1>
+            <p>Test your prompt engineering skills across Math, Science, History, and Computer Science!</p>
         </div>
 
-        <div id="section-0" class="mission-section">
-            <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-green-500/50 rounded-lg p-8">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="text-4xl pulse">🔌</span>
-                        <h2 class="text-3xl font-bold text-green-400">Welcome to AI APIs</h2>
-                    </div>
-                    <div class="space-y-4 text-lg">
-                        <p>An AI API (Application Programming Interface) is a set of rules that allows developers to
-                            integrate artificial intelligence capabilities into their applications without building AI
-                            models from scratch.</p>
-                        <p class="text-green-300">APIs act as bridges, enabling software to communicate with and use AI
-                            services by sending requests and receiving responses.</p>
+        <!-- Start Screen -->
+        <div id="startScreen" class="game-screen active">
+            <div class="start-screen">
+                <h2>Welcome to the AI Prompt Challenge! 🚀</h2>
+                <p><strong>How to Play:</strong></p>
+                <p>📝 You'll face 10 scenarios across different subjects</p>
+                <p>⏱️ You have 30 seconds to choose the best AI prompt for each scenario</p>
+                <p>🎯 Get points for correct answers - faster answers = more points!</p>
+                <p>🏆 Compete for the top spot on the leaderboard!</p>
 
-                        <div class="bg-slate-900/50 border border-green-500/20 rounded-lg p-6 mt-6">
-                            <h3 class="text-xl font-semibold text-green-300 mb-3">What Can AI APIs Do?</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-slate-800/50 p-4 rounded-lg">
-                                    <p class="text-green-400 font-semibold mb-2">🗣️ Natural Language Processing</p>
-                                    <p class="text-sm">Understand and generate human language for chatbots,
-                                        translations, and content creation.</p>
-                                </div>
-                                <div class="bg-slate-800/50 p-4 rounded-lg">
-                                    <p class="text-green-400 font-semibold mb-2">👁️ Image Recognition</p>
-                                    <p class="text-sm">Identify objects, faces, and scenes in photos and videos.</p>
-                                </div>
-                                <div class="bg-slate-800/50 p-4 rounded-lg">
-                                    <p class="text-green-400 font-semibold mb-2">📊 Data Analysis</p>
-                                    <p class="text-sm">Process and analyze large datasets to find patterns and insights.
-                                    </p>
-                                </div>
-                                <div class="bg-slate-800/50 p-4 rounded-lg">
-                                    <p class="text-green-400 font-semibold mb-2">🤖 Automation</p>
-                                    <p class="text-sm">Automate repetitive tasks and make intelligent decisions.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mt-4">
-                            <p class="font-semibold">💡 Real World Example:</p>
-                            <p>When you use Google, Uber, ApplePay, or any service that needs AI analysis, you're using
-                                AI APIs. They combine our world digitally!</p>
-                        </div>
-                    </div>
+                <div class="input-group">
+                    <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
                 </div>
-                <button onclick="goToSection(1)"
-                    class="w-full bg-green-600 hover:bg-green-700 py-4 rounded-lg font-semibold text-lg">Begin
-                    Learning</button>
+
+                <button class="btn" onclick="startGame()">Start Challenge</button>
             </div>
         </div>
 
-        <div id="section-1" class="mission-section section-hidden">
-            <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-green-500/30 rounded-lg p-8">
-                    <h2 class="text-3xl font-bold mb-6">📚 API Fundamentals</h2>
-                    <div class="space-y-6 text-lg">
-                        <div>
-                            <h3 class="text-2xl font-semibold text-green-300 mb-3">Building a Customer Service Chatbot
-                            </h3>
-                            <p class="mb-4">A typical example of using an AI API is building a customer service chatbot
-                                that uses natural language processing to understand queries and generate responses.</p>
-                        </div>
+        <!-- Game Screen -->
+        <div id="gameScreen" class="game-screen">
+            <div class="game-stats">
+                <div class="stat-item">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="currentScore">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Question</div>
+                    <div class="stat-value"><span id="currentQuestion">1</span>/10</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Time</div>
+                    <div class="stat-value" id="timer">30</div>
+                </div>
+            </div>
 
-                        <div class="bg-slate-900/50 border border-green-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">How It Works</h4>
-                            <div class="space-y-4">
-                                <div class="flex items-start gap-3">
-                                    <span class="text-green-400 text-2xl">1</span>
-                                    <div>
-                                        <p class="font-semibold text-green-300">User Sends Message</p>
-                                        <p class="text-sm text-gray-300">Customer asks a question through your website
-                                            or app.</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="text-green-400 text-2xl">2</span>
-                                    <div>
-                                        <p class="font-semibold text-green-300">API Request</p>
-                                        <p class="text-sm text-gray-300">Your application sends the message to an AI API
-                                            (like OpenAI or Claude).</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="text-green-400 text-2xl">3</span>
-                                    <div>
-                                        <p class="font-semibold text-green-300">AI Processes</p>
-                                        <p class="text-sm text-gray-300">The AI understands the question and generates
-                                            an appropriate response.</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-3">
-                                    <span class="text-green-400 text-2xl">4</span>
-                                    <div>
-                                        <p class="font-semibold text-green-300">Response Returned</p>
-                                        <p class="text-sm text-gray-300">Your application receives the AI's response and
-                                            displays it to the customer.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 10%"></div>
+            </div>
 
-                        <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-purple-300 mb-4">Key Benefits</h4>
-                            <ul class="space-y-2">
-                                <li class="flex items-start gap-2">
-                                    <span class="text-purple-400">•</span>
-                                    <span><strong>No AI Expertise Required:</strong> Use pre-trained models without
-                                        understanding machine learning</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-purple-400">•</span>
-                                    <span><strong>Faster Development:</strong> Integrate powerful AI features in hours
-                                        instead of months</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-purple-400">•</span>
-                                    <span><strong>Cost Effective:</strong> Pay only for what you use, no infrastructure
-                                        needed</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-purple-400">•</span>
-                                    <span><strong>Continuous Updates:</strong> API providers improve models without you
-                                        changing code</span>
-                                </li>
-                            </ul>
-                        </div>
+            <div class="question-card">
+                <span class="subject-badge" id="subjectBadge">Math</span>
+                <div class="scenario" id="scenario">Loading...</div>
+
+                <div class="prompt-options" id="promptOptions">
+                    <!-- Options will be inserted here -->
+                </div>
+
+                <div class="feedback" id="feedback"></div>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next Question
+                    →</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="game-screen">
+            <div class="results-screen">
+                <h2>🎉 Challenge Complete!</h2>
+                <div class="final-score" id="finalScore">0</div>
+                <p style="font-size: 1.2em; color: #555;">Great job, <span id="finalPlayerName"></span>!</p>
+
+                <div class="score-breakdown">
+                    <h3 style="color: #667eea; margin-bottom: 20px;">📊 Your Performance</h3>
+                    <div class="score-item">
+                        <span>Correct Answers</span>
+                        <strong id="correctCount">0/10</strong>
+                    </div>
+                    <div class="score-item">
+                        <span>Math Questions</span>
+                        <strong id="mathScore">0/3</strong>
+                    </div>
+                    <div class="score-item">
+                        <span>Science Questions</span>
+                        <strong id="scienceScore">0/3</strong>
+                    </div>
+                    <div class="score-item">
+                        <span>History Questions</span>
+                        <strong id="historyScore">0/2</strong>
+                    </div>
+                    <div class="score-item">
+                        <span>Computer Science Questions</span>
+                        <strong id="csScore">0/2</strong>
                     </div>
                 </div>
 
-                <button onclick="goToSection(2)"
-                    class="w-full bg-green-600 hover:bg-green-700 py-4 rounded-lg font-semibold text-lg">Continue to
-                    Architecture</button>
-            </div>
-        </div>
-
-        <div id="section-2" class="mission-section section-hidden">
-            <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-green-500/30 rounded-lg p-8">
-                    <h2 class="text-3xl font-bold mb-6">🏗️ Microblog Architecture: Three Layers</h2>
-                    <div class="space-y-6 text-lg">
-                        <p>Understanding how a complete application works helps you build better AI integrations. Let's
-                            explore the microblog system as an example.</p>
-
-                        <div class="bg-slate-900/50 border border-blue-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-blue-300 mb-4">Layer 1: UI Framework (opencs.html)</h4>
-                            <p class="mb-3">Provides the structure, layout, and dependencies for the microblog panel.
-                            </p>
-                            <ul class="space-y-2 text-sm ml-4">
-                                <li>• Includes CSS and JavaScript libraries (Tailwind, jQuery, DataTables)</li>
-                                <li>• Creates the sliding panel structure with HTML elements</li>
-                                <li>• Defines CSS styles for panel positioning and animations</li>
-                                <li>• Adds floating toggle button and close button</li>
-                                <li>• Implements basic open/close functionality for the panel</li>
-                                <li>• Checks page frontmatter (<code
-                                        class="bg-slate-800 px-2 py-1 rounded">microblog: true</code>) to activate
-                                    features</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-purple-300 mb-4">Layer 2: UI Functionality
-                                (microblog_foundation.html)</h4>
-                            <p class="mb-3">Makes the microblog interactive by handling user actions and data display.
-                            </p>
-                            <ul class="space-y-2 text-sm ml-4">
-                                <li>• Manages modal window for creating/editing posts</li>
-                                <li>• Handles form submission and data collection</li>
-                                <li>• Renders the table of microblog posts dynamically</li>
-                                <li>• Implements filter modes (page-specific vs all posts)</li>
-                                <li>• Binds event handlers to buttons (create, edit, filter)</li>
-                                <li>• Calls API functions when data needs to be fetched or saved</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-slate-900/50 border border-green-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">Layer 3: API Management (microblog.js)
-                            </h4>
-                            <p class="mb-3">Handles all communication between the frontend and backend server.</p>
-                            <ul class="space-y-2 text-sm ml-4">
-                                <li>• Provides three core functions: fetchPosts(), createPost(), updatePost()</li>
-                                <li>• Sends HTTP requests to server (GET, POST, PUT methods)</li>
-                                <li>• Formats data as JSON before sending to server</li>
-                                <li>• Receives and parses JSON responses from server</li>
-                                <li>• Handles errors during network communication</li>
-                                <li>• Abstracts server communication so UI layer doesn't need to know details</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4 mt-4">
-                            <p class="font-semibold">🔑 Key Flow:</p>
-                            <p>User Action → Event Handler → Function → API Call → Re-render → Updated UI</p>
-                            <p class="text-sm mt-2">The UI stays in sync with data by re-rendering after every change,
-                                rather than manually updating individual pieces.</p>
-                        </div>
+                <div class="leaderboard">
+                    <h3>🏆 Top Players</h3>
+                    <div id="leaderboardList">
+                        <p style="text-align: center; color: #888;">Loading leaderboard...</p>
                     </div>
                 </div>
-                <button onclick="goToSection(3)"
-                    class="w-full bg-green-600 hover:bg-green-700 py-4 rounded-lg font-semibold text-lg">Continue to UI
-                    Layer</button>
-            </div>
-        </div>
 
-        <div id="section-3" class="mission-section section-hidden">
-            <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-green-500/30 rounded-lg p-8">
-                    <h2 class="text-3xl font-bold mb-6">🎨 UI Framework Layer</h2>
-                    <div class="space-y-6 text-lg">
-                        <p>The UI Framework (opencs.html) provides the visual structure and basic panel behavior.</p>
-
-                        <div class="bg-slate-900/50 border border-blue-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-blue-300 mb-4">1. Conditional Loading</h4>
-                            <p class="mb-3">Only loads when <code
-                                    class="bg-slate-800 px-2 py-1 rounded">microblog: true</code> is set in page
-                                frontmatter.</p>
-
-                            <div class="code-example">
-                                <pre><code>{%- if page.microblog %}
-    &lt;!-- Microblog loads here --&gt;
-    {%- endif %}</code></pre>
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-purple-300 mb-4">2. External Libraries</h4>
-                            <p class="mb-3">Loads required dependencies:</p>
-                            <ul class="text-sm space-y-1 ml-4">
-                                <li>• <strong>Tailwind CSS</strong> - Styling utilities</li>
-                                <li>• <strong>jQuery</strong> - DOM manipulation</li>
-                                <li>• <strong>DataTables</strong> - Table features (search, sort, pagination)</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-slate-900/50 border border-green-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">3. Sliding Panel</h4>
-                            <p class="mb-3">A fixed panel that slides in from the right:</p>
-
-                            <div class="code-example">
-                                <pre><code>&lt;aside id="microblog-panel" 
-        class="fixed right-0 transform translate-x-full 
-                transition-transform"&gt;
-    &lt;/aside&gt;</code></pre>
-                            </div>
-
-                            <p class="text-sm mt-3"><strong>Key classes:</strong></p>
-                            <ul class="text-sm space-y-1 ml-4">
-                                <li>• <code class="bg-slate-800 px-1 rounded">fixed</code> - Stays in place when
-                                    scrolling</li>
-                                <li>• <code class="bg-slate-800 px-1 rounded">translate-x-full</code> - Hidden
-                                    off-screen initially</li>
-                                <li>• <code class="bg-slate-800 px-1 rounded">transition-transform</code> - Smooth slide
-                                    animation</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-slate-900/50 border border-orange-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-orange-300 mb-4">4. Toggle Button & JavaScript</h4>
-                            <p class="mb-3">Floating button controls panel visibility:</p>
-
-                            <div class="code-example">
-                                <pre><code>function openMicroblog() {
-    overlay.style.transform = 'translateX(0)';
-    toggleBtn.style.display = 'none';
-    }
-
-    function closeMicroblog() {
-    overlay.style.transform = 'translateX(100%)';
-    toggleBtn.style.display = '';
-    }</code></pre>
-                            </div>
-
-                            <p class="text-sm mt-3">Open: Panel slides in, button hides. Close: Panel slides out, button
-                                reappears.</p>
-                        </div>
-
-                        <div class="bg-slate-900/50 border border-cyan-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-cyan-300 mb-4">5. Responsive Design</h4>
-                            <p class="mb-3">Adapts to screen size:</p>
-
-                            <div class="code-example">
-                                <pre><code>@media (max-width: 600px) {
-    #microblog-panel { width: 100vw; }
-    #microblog-toggle-btn { border-radius: 50%; }
-    }</code></pre>
-                            </div>
-
-                            <p class="text-sm mt-3">Mobile: Full-width panel, circular button.</p>
-                        </div>
-                    </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="restartGame()">Play Again</button>
+                    <a href="../index.html" class="btn" style="text-decoration: none; display: inline-block;">Back to
+                        Home</a>
                 </div>
-                <button onclick="goToSection(4)"
-                    class="w-full bg-green-600 hover:bg-green-700 py-4 rounded-lg font-semibold text-lg">Continue to UI
-                    Functionality</button>
             </div>
         </div>
+    </div>
 
-        <style>
-            .code-example {
-                background: #1e293b;
-                border: 1px solid #475569;
-                border-radius: 8px;
-                padding: 1rem;
-                margin: 1rem 0;
-                overflow-x: auto;
+    <script>
+        // API Configuration - Update when backend is ready
+        const API_URL = 'http://localhost:8001/api/prompt-game';
+
+        // Game State
+        let playerName = '';
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30;
+        let timerInterval = null;
+        let selectedAnswer = null;
+        let questionStartTime = 0;
+        let subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
+        let subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
+
+        // Questions Database
+        const questions = [
+            // Math Questions (3 total)
+            {
+                subject: 'math',
+                scenario: 'You need help solving this quadratic equation: 2x² + 5x - 3 = 0',
+                options: [
+                    { text: 'solve equation', isCorrect: false, explanation: 'Too vague - which equation? What method?' },
+                    { text: 'Solve 2x² + 5x - 3 = 0 step-by-step using the quadratic formula. Show all work and explain each step.', isCorrect: true, explanation: 'Perfect! Specific equation, clear method, and requests explanation.' },
+                    { text: 'Help with math homework', isCorrect: false, explanation: 'Way too vague - no specific problem or context.' },
+                    { text: 'Solve 2x² + 5x - 3 = 0', isCorrect: false, explanation: 'Better, but missing request for step-by-step explanation and method.' }
+                ]
+            },
+            {
+                subject: 'math',
+                scenario: 'You want to understand how to find the derivative of a function',
+                options: [
+                    { text: 'Find the derivative of f(x) = 3x³ - 2x² + 5x - 1. Show the steps and explain the power rule.', isCorrect: true, explanation: 'Excellent! Specific function, requests steps and rule explanation.' },
+                    { text: 'derivative help', isCorrect: false, explanation: 'Too vague - which function? What level?' },
+                    { text: 'How do derivatives work?', isCorrect: false, explanation: 'Too broad - needs specific example and context.' },
+                    { text: 'Calculate derivative', isCorrect: false, explanation: 'Missing the function and detail level.' }
+                ]
+            },
+            {
+                subject: 'math',
+                scenario: 'You need practice problems for probability',
+                options: [
+                    { text: 'probability problems', isCorrect: false, explanation: 'Too vague - what type? What difficulty?' },
+                    { text: 'Create 5 probability practice problems suitable for high school students. Include scenarios with dice, cards, and real-world situations. Provide answers.', isCorrect: true, explanation: 'Perfect! Specific number, difficulty level, variety, and requests solutions.' },
+                    { text: 'Give me some math problems', isCorrect: false, explanation: 'Too broad - which topic? What level?' },
+                    { text: 'Create probability problems with answers', isCorrect: false, explanation: 'Better, but missing difficulty level and specific types.' }
+                ]
+            },
+
+            // Science Questions (3 total)
+            {
+                subject: 'science',
+                scenario: 'You need to understand photosynthesis for your biology test',
+                options: [
+                    { text: 'photosynthesis', isCorrect: false, explanation: 'Too vague - what aspect? What depth?' },
+                    { text: 'Explain photosynthesis', isCorrect: false, explanation: 'Better, but missing level and desired format.' },
+                    { text: 'Explain photosynthesis in simple terms for a high school student. Include the chemical equation, main steps, and why it\'s important. Use everyday analogies.', isCorrect: true, explanation: 'Excellent! Clear level, specific details requested, and asks for analogies.' },
+                    { text: 'What is photosynthesis and why is it important?', isCorrect: false, explanation: 'Good start, but missing level detail and format preferences.' }
+                ]
+            },
+            {
+                subject: 'science',
+                scenario: 'You need to compare mitosis and meiosis for your essay',
+                options: [
+                    { text: 'Create a comparison table of mitosis and meiosis. Include: number of divisions, number of daughter cells, genetic variation, and where each occurs. Add 2-3 sentences explaining why these differences matter.', isCorrect: true, explanation: 'Perfect! Specific format (table), clear comparison points, and asks for significance.' },
+                    { text: 'mitosis vs meiosis', isCorrect: false, explanation: 'Too vague - needs format and specific aspects.' },
+                    { text: 'Compare cell division', isCorrect: false, explanation: 'Too broad - which types? What aspects?' },
+                    { text: 'Explain the difference between mitosis and meiosis', isCorrect: false, explanation: 'Better, but missing specific comparison points and format.' }
+                ]
+            },
+            {
+                subject: 'science',
+                scenario: 'You need to understand Newton\'s Laws of Motion',
+                options: [
+                    { text: 'physics help', isCorrect: false, explanation: 'Way too vague - which topic?' },
+                    { text: 'Explain Newton\'s 3 Laws of Motion with a real-world example for each law. Keep it simple for a beginner. Include one practical application.', isCorrect: true, explanation: 'Excellent! Specific laws, requests examples, clear level, and asks for application.' },
+                    { text: 'What are Newton\'s Laws?', isCorrect: false, explanation: 'Too basic - needs detail level and examples.' },
+                    { text: 'Explain Newton\'s Laws of Motion', isCorrect: false, explanation: 'Better, but missing level and request for examples.' }
+                ]
+            },
+
+            // History Questions (2 total)
+            {
+                subject: 'history',
+                scenario: 'You need to write an essay on the causes of World War I',
+                options: [
+                    { text: 'world war 1 causes', isCorrect: false, explanation: 'Too vague - needs depth and structure.' },
+                    { text: 'List and explain the 4 main causes of World War I (MAIN: Militarism, Alliances, Imperialism, Nationalism). For each cause, provide 2-3 specific examples and explain how they led to war.', isCorrect: true, explanation: 'Perfect! Specific framework (MAIN), requests details and causation.' },
+                    { text: 'Why did World War I start?', isCorrect: false, explanation: 'Too broad - needs structure and depth.' },
+                    { text: 'Explain what caused WW1', isCorrect: false, explanation: 'Better, but missing specific framework and example requests.' }
+                ]
+            },
+            {
+                subject: 'history',
+                scenario: 'You need to analyze a primary source document from the Civil Rights Movement',
+                options: [
+                    { text: 'Analyze Martin Luther King Jr.\'s "I Have a Dream" speech. Identify 3 main rhetorical devices used, explain their effect, and discuss the historical context. Write for a high school analysis.', isCorrect: true, explanation: 'Excellent! Specific document, clear analysis points, context, and level.' },
+                    { text: 'analyze civil rights speech', isCorrect: false, explanation: 'Too vague - which speech? What aspects?' },
+                    { text: 'Help me understand MLK\'s speech', isCorrect: false, explanation: 'Too general - needs specific analysis framework.' },
+                    { text: 'What is the I Have a Dream speech about?', isCorrect: false, explanation: 'Too basic - needs analytical depth and structure.' }
+                ]
+            },
+
+            // Computer Science Questions (2 total)
+            {
+                subject: 'cs',
+                scenario: 'You need to learn about Python loops for beginners',
+                options: [
+                    { text: 'python loops', isCorrect: false, explanation: 'Too vague - which type? What level?' },
+                    { text: 'Explain Python for loops and while loops to a beginner. Include: syntax, when to use each, and 2 simple examples for each. Use clear comments in code.', isCorrect: true, explanation: 'Perfect! Specific loop types, clear level, requests examples and comments.' },
+                    { text: 'How do loops work in Python?', isCorrect: false, explanation: 'Too broad - needs specific types and examples.' },
+                    { text: 'Teach me about for loops', isCorrect: false, explanation: 'Missing language, level, and comparison with while loops.' }
+                ]
+            },
+            {
+                subject: 'cs',
+                scenario: 'You have a bug in your JavaScript code that you need to debug',
+                options: [
+                    { text: 'fix my code', isCorrect: false, explanation: 'Too vague - which code? What\'s the error?' },
+                    { text: 'help with javascript', isCorrect: false, explanation: 'Too general - what specific problem?' },
+                    { text: 'I have this JavaScript function [paste code]. It\'s supposed to filter an array but returns undefined. Can you identify the bug, explain why it\'s happening, and show the corrected code?', isCorrect: true, explanation: 'Excellent! Shows code, explains expected vs actual behavior, and requests explanation.' },
+                    { text: 'My JavaScript code doesn\'t work', isCorrect: false, explanation: 'Too vague - needs code and specific error description.' }
+                ]
+            }
+        ];
+
+        // Shuffle array helper
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        let gameQuestions = [];
+
+        function startGame() {
+            playerName = document.getElementById('playerName').value.trim();
+            if (!playerName) {
+                alert('Please enter your name!');
+                return;
             }
 
-            .code-example pre {
-                margin: 0;
-                color: #e2e8f0;
-                font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
-                line-height: 1.5;
-            }
+            // Shuffle and reset
+            gameQuestions = shuffleArray(questions);
+            currentQuestionIndex = 0;
+            score = 0;
+            subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
+            subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
 
-            .code-example code {
-                font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
-                font-size: 0.875rem;
-                line-height: 1.5;
-            }
-        </style>
+            // Show game screen
+            showScreen('gameScreen');
+            loadQuestion();
+        }
 
-        <div id="section-4" class="mission-section section-hidden">
-            <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-green-500/30 rounded-lg p-8">
-                    <h2 class="text-3xl font-bold mb-6">💻 JavaScript UI Functionality</h2>
-                    <div class="space-y-6 text-lg">
-                        <p>UI functionality refers to the JavaScript code that makes your web page interactive. Let's
-                            explore the three main components:</p>
+        function loadQuestion() {
+            const question = gameQuestions[currentQuestionIndex];
+            selectedAnswer = null;
+            questionStartTime = Date.now();
 
-                        <div class="bg-slate-900/50 border border-green-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">1. Modal System (Pop-up Window)</h4>
-                            <p class="mb-3">A modal is a pop-up window that appears over the main page for creating and
-                                editing posts.</p>
+            // Update UI
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('currentScore').textContent = score;
+            document.getElementById('progressBar').style.width = ((currentQuestionIndex + 1) / 10 * 100) + '%';
 
-                            <div class="code-example">
-                                <pre><code>function openModal({ mode, post = {} }) {
-  document.getElementById('microblog-modal').classList.remove('hidden');
-  document.getElementById('modal-title').textContent = 
-    mode === 'edit' ? 'Edit Microblog Post' : 'Create Microblog Post';
-  document.getElementById('post-id').value = post.id || '';
-  document.getElementById('content').value = post.content || '';
-}</code></pre>
-                            </div>
+            // Update subject badge
+            const badge = document.getElementById('subjectBadge');
+            badge.textContent = question.subject.charAt(0).toUpperCase() + question.subject.slice(1);
+            badge.className = 'subject-badge subject-' + question.subject;
 
-                            <p class="text-sm mt-3"><strong>What this does:</strong></p>
-                            <ul class="text-sm space-y-1 ml-4 mt-2">
-                                <li>• Makes the modal visible by removing the 'hidden' CSS class</li>
-                                <li>• Changes the title based on create/edit mode</li>
-                                <li>• Pre-fills form with existing data (edit) or leaves empty (create)</li>
-                            </ul>
-                        </div>
+            // Update scenario
+            document.getElementById('scenario').textContent = question.scenario;
 
-                        <div class="bg-slate-900/50 border border-blue-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-blue-300 mb-4">2. Form Submission (Saving Data)</h4>
-                            <p class="mb-3">When a user fills out the form and clicks "Save":</p>
-
-                            <div class="code-example">
-                                <pre><code>document.getElementById('microblog-form').onsubmit = async function(e) {
-  e.preventDefault();
-  
-  const id = document.getElementById('post-id').value;
-  const content = document.getElementById('content').value;
-  
-  try {
-    if (id) {
-      await updatePost({ id, content });
-    } else {
-      await createPost({ content });
-    }
-    closeModal();
-    renderMicroblogTable();
-  } catch (err) {
-    alert('Error saving post: ' + err.message);
-  }
-};</code></pre>
-                            </div>
-
-                            <p class="text-sm mt-3"><strong>Step-by-step:</strong></p>
-                            <ul class="text-sm space-y-1 ml-4 mt-2">
-                                <li>1. <code class="bg-slate-800 px-1 rounded">e.preventDefault()</code> stops page
-                                    refresh</li>
-                                <li>2. Collect data from form fields</li>
-                                <li>3. Check for ID - if exists, update; if not, create</li>
-                                <li>4. Call appropriate API function</li>
-                                <li>5. Close modal and refresh table display</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-purple-300 mb-4">3. Table Rendering (Displaying Data)</h4>
-                            <p class="mb-3">This function fetches post data and displays it in a table:</p>
-
-                            <div class="code-example">
-                                <pre><code>async function renderMicroblogTable() {
-  const container = document.getElementById('microblog-playground');
-  
-  try {
-    // Fetch data from API
-    const data = await fetchPosts();
-    
-    // Build table HTML
-    let tableHTML = '&lt;table id="microblog-table"&gt;...';
-    data.microblogs.forEach(post => {
-      tableHTML += `&lt;tr&gt;
-        &lt;td&gt;${post.userName}&lt;/td&gt;
-        &lt;td&gt;${post.content}&lt;/td&gt;
-      &lt;/tr&gt;`;
-    });
-    tableHTML += '&lt;/table&gt;';
-    
-    // Display table
-    container.innerHTML = tableHTML;
-    
-    // Add interactive features
-    $('#microblog-table').DataTable();
-  } catch (error) {
-    container.innerHTML = `&lt;div style="color:red;"&gt;Error: ${error.message}&lt;/div&gt;`;
-  }
-}</code></pre>
-                            </div>
-
-                            <p class="text-sm mt-3"><strong>Why this matters:</strong> The table rebuilds from scratch
-                                every time data changes, ensuring the UI always matches current data.</p>
-                        </div>
-                    </div>
+            // Shuffle and display options
+            const shuffledOptions = shuffleArray(question.options);
+            const optionsHtml = shuffledOptions.map((option, index) => `
+                <div class="prompt-option" onclick="selectAnswer(${index})">
+                    <div class="prompt-option-label">Option ${String.fromCharCode(65 + index)}</div>
+                    <div class="prompt-text">${option.text}</div>
                 </div>
+            `).join('');
 
-                <!-- Challenge 1 -->
-                <div class="bg-yellow-900/20 border-2 border-yellow-500 rounded-lg p-6">
-                    <h3 class="text-2xl font-semibold text-yellow-300 mb-4">🎯 Practice Challenge 1: Prevent Default
-                        Form Behavior</h3>
-                    <p class="mb-4">Based on the form submission example above, complete this code:</p>
-                    <div class="code-example">
-                        <pre><code>document.getElementById('microblog-form').on<input type="text" id="input4" class="inline-input" placeholder="event" style="width: 100px;"> = async function(e) {
-    e.<input type="text" id="input5" class="inline-input" placeholder="method" style="width: 150px;">();
-    // Collect form data and make API call
-};</code></pre>
-                    </div>
-                    <p class="text-sm text-gray-400 mt-2">Hint: Listen for form submission and prevent page reload using
-                        the method shown above</p>
-                    <button onclick="checkChallenge2()"
-                        class="mt-4 bg-yellow-600 hover:bg-yellow-700 px-6 py-2 rounded-lg font-semibold">Check
-                        Answer</button>
-                    <div id="feedback2" class="hidden mt-4"></div>
-                </div>
+            document.getElementById('promptOptions').innerHTML = optionsHtml;
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('nextBtn').style.display = 'none';
 
-                <button onclick="goToSection(5)"
-                    class="w-full bg-green-600 hover:bg-green-700 py-4 rounded-lg font-semibold text-lg">Continue to API
-                    Management</button>
-            </div>
-        </div>
+            // Store shuffled options for checking
+            window.currentOptions = shuffledOptions;
 
-        <div id="section-5" class="mission-section section-hidden">
-            <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-green-500/30 rounded-lg p-8">
-                    <h2 class="text-3xl font-bold mb-6">🔌 API Management Layer</h2>
-                    <div class="space-y-6 text-lg">
-                        <p>The API Management layer (microblog.js) handles all communication between your application
-                            and the server. Let's explore the three core functions:</p>
+            // Start timer
+            startTimer();
+        }
 
-                        <div class="bg-slate-900/50 border border-green-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">1. Fetching Posts (READ)</h4>
-                            <p class="mb-3">Retrieves posts from the server, optionally filtered by page.</p>
+        function startTimer() {
+            timeLeft = 30;
+            document.getElementById('timer').textContent = timeLeft;
+            document.getElementById('timer').classList.remove('warning');
 
-                            <div class="code-example">
-                                <pre><code>export async function fetchPosts(pagePath) {
-            let apiUrl = pythonURI + '/api/microblog';
-            if (pagePath) {
-                apiUrl += `?pagePath=${encodeURIComponent(pagePath)}`;
-            }
-            
-            const response = await fetch(apiUrl, {
-                method: 'GET'
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+
+                if (timeLeft <= 10) {
+                    document.getElementById('timer').classList.add('warning');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if (selectedAnswer === null) {
+                        checkAnswer(-1); // Auto-submit as wrong
+                    }
+                }
+            }, 1000);
+        }
+
+        function selectAnswer(optionIndex) {
+            if (selectedAnswer !== null) return; // Already answered
+
+            selectedAnswer = optionIndex;
+            document.querySelectorAll('.prompt-option').forEach((option, index) => {
+                if (index === optionIndex) {
+                    option.classList.add('selected');
+                }
             });
-            
-            return await response.json();
-        }</code></pre>
-                            </div>
 
-                            <p class="text-sm mt-3"><strong>What this does:</strong></p>
-                            <ul class="text-sm space-y-1 ml-4 mt-2">
-                                <li>• Builds the API URL from base URI</li>
-                                <li>• Adds page filter as query parameter if provided</li>
-                                <li>• Uses GET method to retrieve data (not modifying)</li>
-                                <li>• Waits for server response and parses JSON</li>
-                            </ul>
-                        </div>
+            setTimeout(() => checkAnswer(optionIndex), 300);
+        }
 
-                        <div class="bg-slate-900/50 border border-blue-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-blue-300 mb-4">2. Creating Posts (CREATE)</h4>
-                            <p class="mb-3">Sends a new post to the server to be saved.</p>
+        function checkAnswer(optionIndex) {
+            clearInterval(timerInterval);
 
-                            <div class="code-example">
-                                <pre><code>export async function createPost(postData) {
-            const apiUrl = pythonURI + '/api/microblog';
-            
-            const response = await fetch(apiUrl, {
+            const question = gameQuestions[currentQuestionIndex];
+            const selectedOption = optionIndex >= 0 ? window.currentOptions[optionIndex] : null;
+            const isCorrect = selectedOption && selectedOption.isCorrect;
+
+            // Calculate points (more points for faster answers)
+            let pointsEarned = 0;
+            if (isCorrect) {
+                const timeBonus = Math.floor(timeLeft / 3); // Up to 10 bonus points
+                pointsEarned = 100 + timeBonus;
+                score += pointsEarned;
+
+                // Track subject score
+                subjectScores[question.subject]++;
+            }
+            subjectCounts[question.subject]++;
+
+            // Update UI
+            document.getElementById('currentScore').textContent = score;
+
+            // Show feedback
+            const feedback = document.getElementById('feedback');
+            const options = document.querySelectorAll('.prompt-option');
+
+            if (isCorrect) {
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = `
+                    <strong>✓ Correct! (+${pointsEarned} points)</strong><br>
+                    ${selectedOption.explanation}
+                `;
+                if (optionIndex >= 0) {
+                    options[optionIndex].classList.add('correct');
+                }
+            } else {
+                feedback.className = 'feedback incorrect show';
+                const correctOption = window.currentOptions.findIndex(opt => opt.isCorrect);
+                feedback.innerHTML = `
+                    <strong>✗ Incorrect</strong><br>
+                    ${selectedOption ? selectedOption.explanation : 'Time\'s up!'}
+                `;
+                if (optionIndex >= 0) {
+                    options[optionIndex].classList.add('incorrect');
+                }
+                if (correctOption >= 0) {
+                    options[correctOption].classList.add('correct');
+                }
+            }
+
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex >= gameQuestions.length) {
+                endGame();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        async function endGame() {
+            showScreen('resultsScreen');
+
+            // Update results
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalPlayerName').textContent = playerName;
+
+            const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
+            document.getElementById('correctCount').textContent = `${correctCount}/10`;
+            document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
+            document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
+            document.getElementById('historyScore').textContent = `${subjectScores.history}/${subjectCounts.history}`;
+            document.getElementById('csScore').textContent = `${subjectScores.cs}/${subjectCounts.cs}`;
+
+            // Save score to backend (will implement later)
+            try {
+                await saveScore({
+                    playerName: playerName,
+                    score: score,
+                    correctAnswers: correctCount,
+                    subjectScores: subjectScores,
+                    timestamp: new Date().toISOString()
+                });
+            } catch (error) {
+                console.log('Backend not ready yet:', error);
+            }
+
+            // Load leaderboard
+            loadLeaderboard();
+        }
+
+        async function saveScore(scoreData) {
+            // This will connect to Flask backend when ready
+            const response = await fetch(`${API_URL}/scores`, {
                 method: 'POST',
-                body: JSON.stringify(postData)
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(scoreData)
             });
-            
+
+            if (!response.ok) {
+                throw new Error('Failed to save score');
+            }
+
             return await response.json();
-        }</code></pre>
-                            </div>
+        }
 
-                            <p class="text-sm mt-3"><strong>Key differences from fetchPosts:</strong></p>
-                            <ul class="text-sm space-y-1 ml-4 mt-2">
-                                <li>• Uses POST method (creating new data)</li>
-                                <li>• Includes data in request body</li>
-                                <li>• Converts JavaScript object to JSON with <code
-                                        class="bg-slate-800 px-1 rounded">JSON.stringify()</code></li>
-                                <li>• Server responds with created post including new ID</li>
-                            </ul>
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch(`${API_URL}/leaderboard`);
+                const data = await response.json();
+
+                const leaderboardHtml = data.leaderboard.slice(0, 10).map((entry, index) => {
+                    let rankClass = '';
+                    if (index === 0) rankClass = 'first';
+                    else if (index === 1) rankClass = 'second';
+                    else if (index === 2) rankClass = 'third';
+
+                    return `
+                        <div class="leaderboard-item">
+                            <div class="rank ${rankClass}">#${index + 1}</div>
+                            <div class="player-name">${entry.playerName}</div>
+                            <div class="player-score">${entry.score}</div>
                         </div>
+                    `;
+                }).join('');
 
-                        <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-purple-300 mb-4">3. Updating Posts (UPDATE)</h4>
-                            <p class="mb-3">Sends updated post data to modify an existing post.</p>
-
-                            <div class="code-example">
-                                <pre><code>export async function updatePost(postData) {
-            const apiUrl = pythonURI + '/api/microblog';
-            
-            const response = await fetch(apiUrl, {
-                method: 'PUT',
-                body: JSON.stringify(postData)
-            });
-            
-            return await response.json();
-        }</code></pre>
-                            </div>
-
-                            <p class="text-sm mt-3"><strong>Key differences from createPost:</strong></p>
-                            <ul class="text-sm space-y-1 ml-4 mt-2">
-                                <li>• Uses PUT method (updating existing data)</li>
-                                <li>• postData must include ID to identify which post to update</li>
-                                <li>• Similar structure but different HTTP method tells server this is an update</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-slate-900/50 border border-orange-500/20 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-orange-300 mb-4">HTTP Methods Explained</h4>
-                            <table class="w-full text-sm mt-3">
-                                <thead>
-                                    <tr class="border-b border-orange-500/30">
-                                        <th class="text-left py-2">Method</th>
-                                        <th class="text-left py-2">Purpose</th>
-                                        <th class="text-left py-2">Has Body?</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b border-orange-500/10">
-                                        <td class="py-2"><code class="bg-slate-800 px-2 rounded">GET</code></td>
-                                        <td class="py-2">Read/retrieve data</td>
-                                        <td class="py-2">No</td>
-                                    </tr>
-                                    <tr class="border-b border-orange-500/10">
-                                        <td class="py-2"><code class="bg-slate-800 px-2 rounded">POST</code></td>
-                                        <td class="py-2">Create new data</td>
-                                        <td class="py-2">Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-2"><code class="bg-slate-800 px-2 rounded">PUT</code></td>
-                                        <td class="py-2">Update existing data</td>
-                                        <td class="py-2">Yes</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <p class="text-sm mt-3"><strong>Key concept:</strong> Different HTTP methods tell the server
-                                what operation to perform on the data.</p>
-                        </div>
+                document.getElementById('leaderboardList').innerHTML = leaderboardHtml;
+            } catch (error) {
+                // Use mock data if backend not ready
+                document.getElementById('leaderboardList').innerHTML = `
+                    <div class="leaderboard-item">
+                        <div class="rank first">#1</div>
+                        <div class="player-name">${playerName}</div>
+                        <div class="player-score">${score}</div>
                     </div>
-                </div>
-
-                <!-- Challenge 2 -->
-                <div class="bg-yellow-900/20 border-2 border-yellow-500 rounded-lg p-6">
-                    <h3 class="text-2xl font-semibold text-yellow-300 mb-4">🎯 Practice Challenge 2: Complete the API
-                        Request</h3>
-                    <p class="mb-4">Based on the examples above, fill in the blanks to create a POST request:</p>
-                    <div class="code-example">
-                        <pre><code>const response = await fetch(apiUrl, {
-    method: '<select id="input1" class="inline-select"><option value="">Choose</option><option value="GET">GET</option><option value="POST">POST</option><option value="PUT">PUT</option></select>',
-    body: JSON.stringify(<input type="text" id="input2" class="inline-input" placeholder="variable" style="width: 120px;">)
-});
-
-return await response.<input type="text" id="input3" class="inline-input" placeholder="method" style="width: 100px;">();</code></pre>
-                    </div>
-                    <p class="text-sm text-gray-400 mt-2">Hint: Creating new data uses POST, send the postData, and
-                        convert response to JSON</p>
-                    <button onclick="checkChallenge1()"
-                        class="mt-4 bg-yellow-600 hover:bg-yellow-700 px-6 py-2 rounded-lg font-semibold">Check
-                        Answer</button>
-                    <div id="feedback1" class="hidden mt-4"></div>
-                </div>
-
-                <button onclick="goToSection(6)"
-                    class="w-full bg-green-600 hover:bg-green-700 py-4 rounded-lg font-semibold text-lg">Get the
-                    code</button>
-            </div>
-        </div>
-
-        <div id="section-6" class="mission-section section-hidden">
-            <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-green-500/30 rounded-lg p-8 text-center">
-                    <h2 class="text-4xl font-bold mb-6">🎉 Module 3 Complete!</h2>
-                    <p class="text-xl mb-6 text-gray-300">Congratulations! You've mastered AI APIs.</p>
-
-                    <div class="bg-yellow-900/30 border-2 border-yellow-500 rounded-lg p-8">
-                        <p class="text-2xl font-bold text-yellow-400 mb-4">🔑 Your Module Code: 1</p>
-                        <p class="text-gray-300">Remember this number! You'll need it along with the other module codes
-                            to unlock the final vault challenge.</p>
-                    </div>
-
-                    <div class="mt-6">
-                        <button onclick="showFeedbackModal()"
-                            class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-semibold">Complete
-                            Module</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- FEEDBACK MODAL -->
-        <div id="feedbackModal"
-            style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 9999;">
-            <div
-                style="background: white; width: 90%; max-width: 600px; border-radius: 20px; overflow-y: auto; max-height: 90vh; animation: fadeIn 0.3s ease;">
-                <div
-                    style="background: linear-gradient(135deg,#10b981,#059669); padding: 30px; border-radius: 20px 20px 0 0; text-align: center;">
-                    <div style="font-size: 60px; margin-bottom: 10px;">🏆</div>
-                    <h2 style="color: white; font-size: 28px; margin: 0;">Congratulations!</h2>
-                    <p style="color: #f0fdf4; margin: 5px 0 0 0;">You've completed the submodule</p>
-                </div>
-
-                <div class="modal-content" id="feedbackForm"
-                    style="padding: 30px; font-family: 'Segoe UI', Tahoma, sans-serif;">
-                    <label style="font-weight: 600; color: #ffffff; display: block; margin-bottom: 10px;">How would you
-                        rate this submodule?</label>
-                    <div id="starRating" style="display: flex; gap: 10px; justify-content: center; margin: 20px 0;">
-                        <span class="star" data-rating="1"
-                            style="font-size: 40px; cursor: pointer; color: #ddd;">★</span>
-                        <span class="star" data-rating="2"
-                            style="font-size: 40px; cursor: pointer; color: #ddd;">★</span>
-                        <span class="star" data-rating="3"
-                            style="font-size: 40px; cursor: pointer; color: #ddd;">★</span>
-                        <span class="star" data-rating="4"
-                            style="font-size: 40px; cursor: pointer; color: #ddd;">★</span>
-                        <span class="star" data-rating="5"
-                            style="font-size: 40px; cursor: pointer; color: #ddd;">★</span>
-                    </div>
-
-                    <label style="font-weight: 600; color: #ffffff; display: block; margin-bottom: 10px;">What category
-                        best describes your feedback?</label>
-                    <div
-                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 20px 0;">
-                        <button class="category-btn" data-category="content"
-                            style="padding: 10px 16px; background: white; color: #000; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.2s;">Content
-                            Quality</button>
-                        <button class="category-btn" data-category="difficulty"
-                            style="padding: 10px 16px; background: white; color: #000; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.2s;">Difficulty
-                            Level</button>
-                        <button class="category-btn" data-category="engagement"
-                            style="padding: 10px 16px; background: white; color: #000; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.2s;">Engagement</button>
-                        <button class="category-btn" data-category="clarity"
-                            style="padding: 10px 16px; background: white; color: #000; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.2s;">Clarity</button>
-                        <button class="category-btn" data-category="pacing"
-                            style="padding: 10px 16px; background: white; color: #000; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.2s;">Pacing</button>
-                        <button class="category-btn" data-category="other"
-                            style="padding: 10px 16px; background: white; color: #000; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.2s;">Other</button>
-                    </div>
-
-                    <label style="font-weight: 600; color: #ffffff; display: block; margin-bottom: 10px;">Additional
-                        comments (optional)</label>
-                    <textarea id="comments"
-                        style="width: 100%; border: 2px solid #ddd; border-radius: 10px; padding: 12px; min-height: 100px; color: #000; background: white; font-family: inherit; resize: vertical;"></textarea>
-
-                    <div
-                        style="background: #f8fafc; border-radius: 10px; padding: 20px; margin: 20px 0; border: 1px solid #e2e8f0;">
-                        <h4 style="color: #000000; margin: 0 0 15px 0; font-size: 16px; font-weight: 600;">📊 Previous
-                            Feedback Summary</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
-                            <div>
-                                <p style="margin: 0 0 5px 0; color: #6b7280;"><strong>Average Rating:</strong></p>
-                                <p style="margin: 0; color: #059669; font-weight: 600;">⭐ 4.2/5 (based on 47 responses)
-                                </p>
-                            </div>
-                            <div>
-                                <p style="margin: 0 0 5px 0; color: #6b7280;"><strong>Most Common Feedback:</strong></p>
-                                <p style="margin: 0; color: #374151;">"Great hands-on examples"</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="submitFeedback()"
-                        style="width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 16px; margin-top: 10px;">Submit
-                        Feedback</button>
-                    <button onclick="closeModal()"
-                        style="width: 100%; padding: 12px; background: #ccc; color: #000; border: none; border-radius: 10px; cursor: pointer; margin-top: 10px;">Skip</button>
-                </div>
-
-                <div id="successMessage" style="display: none; text-align: center; padding: 40px;">
-                    <div style="font-size: 80px;">✅</div>
-                    <h3 style="font-size: 24px; margin: 10px 0; color: #000;">Thank you!</h3>
-                    <p style="color: #000000; margin-bottom: 20px;">Your feedback helps us improve the learning experience.
+                    <p style="text-align: center; color: #888; margin-top: 15px;">
+                        Backend will show all players when connected!
                     </p>
-                    <button onclick="closeModal()"
-                        style="padding: 14px 24px; background: #10b981; color: white; border: none; border-radius: 10px; font-size: 16px; cursor: pointer;">Continue</button>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            function goToSection(n) {
-                document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
-                document.getElementById('section-' + n).classList.remove('section-hidden');
-                document.querySelectorAll('.nav-btn').forEach(b => {
-                    b.classList.remove('bg-green-600');
-                    b.classList.add('bg-slate-700/50');
-                });
-                const active = document.querySelector('.nav-btn[data-section="' + n + '"]');
-                if (active) active.classList.add('bg-green-600');
-                window.scrollTo(0, 0);
+                `;
             }
+        }
 
-            // Challenge checks
-            function checkChallenge1() {
-                const input1 = document.getElementById('input1').value;
-                const input2 = document.getElementById('input2').value.trim().toLowerCase();
-                const input3 = document.getElementById('input3').value.trim().toLowerCase();
-                const feedback = document.getElementById('feedback1');
-                feedback.classList.remove('hidden');
+        function restartGame() {
+            showScreen('startScreen');
+            document.getElementById('playerName').value = playerName;
+        }
 
-                if (input1 === 'POST' && input2 === 'postdata' && input3 === 'json') {
-                    feedback.innerHTML =
-                        '<div class="bg-green-900/30 border-2 border-green-500 rounded-lg p-4 text-green-400 font-bold">✅ Correct! You understand API requests!</div>';
-                } else {
-                    feedback.innerHTML =
-                        '<div class="bg-red-900/30 border-2 border-red-500 rounded-lg p-4 text-red-400 font-bold">❌ Try again! Method: POST, Variable: postData, Method: json</div>';
-                }
-            }
-
-            function checkChallenge2() {
-                const input4 = document.getElementById('input4').value.trim().toLowerCase();
-                const input5 = document.getElementById('input5').value.trim().toLowerCase();
-                const feedback = document.getElementById('feedback2');
-                feedback.classList.remove('hidden');
-
-                if (input4 === 'submit' && input5 === 'preventdefault') {
-                    feedback.innerHTML =
-                        '<div class="bg-green-900/30 border-2 border-green-500 rounded-lg p-4 text-green-400 font-bold">✅ Perfect! You understand form handling!</div>';
-                } else {
-                    feedback.innerHTML =
-                        '<div class="bg-red-900/30 border-2 border-red-500 rounded-lg p-4 text-red-400 font-bold">❌ Try again! Event property: submit, Method: preventDefault</div>';
-                }
-            }
-
-            // Feedback modal functionality
-            let selectedRating = 0;
-            let selectedCategory = '';
-
-            // Star rating functionality
-            document.querySelectorAll('.star').forEach(star => {
-                star.addEventListener('click', () => {
-                    selectedRating = parseInt(star.dataset.rating);
-                    updateStars();
-                });
-                star.addEventListener('mouseover', () => {
-                    const rating = parseInt(star.dataset.rating);
-                    highlightStars(rating);
-                });
+        function showScreen(screenId) {
+            document.querySelectorAll('.game-screen').forEach(screen => {
+                screen.classList.remove('active');
             });
+            document.getElementById(screenId).classList.add('active');
+        }
 
-            document.getElementById('starRating').addEventListener('mouseleave', () => {
-                updateStars();
-            });
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('playerName').focus();
 
-            function updateStars() {
-                document.querySelectorAll('.star').forEach(s => {
-                    s.style.color = (parseInt(s.dataset.rating) <= selectedRating) ? '#ffd700' : '#ddd';
-                });
-            }
-
-            function highlightStars(rating) {
-                document.querySelectorAll('.star').forEach(s => {
-                    s.style.color = (parseInt(s.dataset.rating) <= rating) ? '#ffd700' : '#ddd';
-                });
-            }
-
-            // Category selection
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.category-btn').forEach(b => {
-                        b.style.background = 'white';
-                        b.style.color = '#000';
-                        b.style.borderColor = '#ddd';
-                    });
-                    btn.style.background = '#10b981';
-                    btn.style.color = 'white';
-                    btn.style.borderColor = '#059669';
-                    selectedCategory = btn.dataset.category;
-                });
-
-                btn.addEventListener('mouseover', () => {
-                    if (!selectedCategory || selectedCategory !== btn.dataset.category) {
-                        btn.style.borderColor = '#10b981';
-                    }
-                });
-
-                btn.addEventListener('mouseout', () => {
-                    if (!selectedCategory || selectedCategory !== btn.dataset.category) {
-                        btn.style.borderColor = '#ddd';
-                        btn.style.color = '#000';
-                    }
-                });
-            });
-
-            function submitFeedback() {
-                if (!selectedRating) {
-                    alert('Please select a rating');
-                    return;
+            // Allow Enter key to start
+            document.getElementById('playerName').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    startGame();
                 }
-                if (!selectedCategory) {
-                    alert('Please select a feedback category');
-                    return;
-                }
+            });
+        });
+        function showFeedbackModal() {
+            console.log("showFeedbackModal called");
+            const modal = document.getElementById("feedbackModal");
+            console.log("Modal element:", modal);
 
-                // Simulate saving feedback (in real implementation, this would call an API)
-                const feedback = {
-                    rating: selectedRating,
-                    category: selectedCategory,
-                    comments: document.getElementById('comments').value,
-                    timestamp: new Date().toISOString(),
-                    module: 'AI APIs'
-                };
-
-                console.log('Feedback submitted:', feedback);
-
-                document.getElementById('feedbackForm').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
+            if (!modal) {
+                console.error("Modal not found!");
+                alert("Error: Feedback modal not found. Please refresh the page and try again.");
+                return;
             }
 
-            function closeModal() {
-                document.getElementById('feedbackModal').style.display = 'none';
-                // Reset form
-                selectedRating = 0;
-                selectedCategory = '';
-                updateStars();
-                document.querySelectorAll('.category-btn').forEach(b => {
-                    b.style.background = 'white';
-                    b.style.color = '#000';
-                    b.style.borderColor = '#ddd';
-                });
-                document.getElementById('comments').value = '';
-                document.getElementById('feedbackForm').style.display = 'block';
-                document.getElementById('successMessage').style.display = 'none';
+            // Force visibility with all possible overrides
+            modal.style.display = "flex";
+            modal.style.visibility = "visible";
+            modal.style.opacity = "1";
+            modal.style.zIndex = "99999";
+            modal.style.position = "fixed";
+            modal.style.top = "0";
+            modal.style.left = "0";
+            modal.style.width = "100%";
+            modal.style.height = "100%";
+            modal.style.background = "rgba(0, 0, 0, 0.8)";
+            modal.style.alignItems = "center";
+            modal.style.justifyContent = "center";
+            console.log("Modal display set to flex with overrides");
+
+            // Ensure inner modal box is visible
+            const modalBox = modal.querySelector('.modal');
+            if (modalBox) {
+                modalBox.style.display = "block";
+                modalBox.style.position = "relative";
+                modalBox.style.zIndex = "100000";
+                console.log("Modal box display set to block");
             }
 
-            function showFeedbackModal() {
-                document.getElementById('feedbackModal').style.display = 'flex';
-            }
-        </script>
+            // Check if modal is actually visible
+            const rect = modal.getBoundingClientRect();
+            console.log("Modal bounding rect:", rect);
+            console.log("Modal computed style display:", window.getComputedStyle(modal).display);
 
+            // Prevent background scrolling
+            document.body.style.overflow = "hidden";
 
-
-
-        <footer class="module-footer">
-            <a href="{{ '/digital-famine/ai/' | prepend: site.baseurl }}" class="footer-link">
-                ← Back to AI Quest Home
-            </a>
-        </footer>
-
-        <style>
-            .module-footer {
-                background: rgba(15, 23, 42, 0.95);
-                border-top: 2px solid rgba(16, 185, 129, 0.3);
-                padding: 2rem;
-                text-align: center;
-                margin-top: 3rem;
-            }
-
-            .footer-link {
-                display: inline-block;
-                color: #34d399;
-                text-decoration: none;
-                font-size: 1.1rem;
-                font-weight: 600;
-                padding: 0.75rem 1.5rem;
-                border: 2px solid rgba(16, 185, 129, 0.4);
-                border-radius: 0.5rem;
-                transition: all 0.2s ease;
-                background: rgba(16, 185, 129, 0.1);
-            }
-
-            .footer-link:hover {
-                background: rgba(16, 185, 129, 0.2);
-                border-color: rgba(16, 185, 129, 0.6);
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-            }
-        </style>
+            // Scroll to top when modal opens
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 
 </html>
