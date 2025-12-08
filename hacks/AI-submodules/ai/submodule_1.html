@@ -5,34 +5,42 @@ description: "Share your thoughts on AI usage and see how students use AI"
 permalink: /digital-famine/ai/submodule_1/
 categories: [CSP, Submodule, AIUsage]
 tags: [ai, survey, poll, student-insights]
-author: "Debuggers Team - Varada Vichare 
+author: "Debuggers Team - Varada Vichare"
 microblog: true
 date: 2025-10-30
 ---
 
 <style>
+    body {
+        background: linear-gradient(185deg, #0f172a 0%, #1e293b 45%, #334155 100%);
+        min-height: 100vh;
+        color: #f1f5f9;
+    }
+    
     .poll-container {
         max-width: 800px;
         margin: 40px auto;
         padding: 30px;
-        background: #f9f9f9;
+        background: rgba(30, 41, 59, 0.95);
         border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        border: 1px solid rgba(96, 165, 250, 0.3);
     }
     
     .question-block {
-        background: white;
+        background: rgba(15, 23, 42, 0.9);
         padding: 25px;
         margin-bottom: 25px;
         border-radius: 8px;
-        border-left: 4px solid #4CAF50;
+        border-left: 4px solid #60a5fa;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     
     .question-title {
         font-size: 18px;
         font-weight: 600;
         margin-bottom: 15px;
-        color: #333;
+        color: #e2e8f0;
     }
     
     .option-group {
@@ -45,42 +53,53 @@ date: 2025-10-30
         display: flex;
         align-items: center;
         padding: 12px;
-        background: #f5f5f5;
+        background: rgba(30, 41, 59, 0.6);
         border-radius: 6px;
         cursor: pointer;
         transition: all 0.3s ease;
+        color: #cbd5e1;
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
     
     .option-label:hover {
-        background: #e8f5e9;
+        background: rgba(59, 130, 246, 0.2);
+        border-color: rgba(96, 165, 250, 0.5);
         transform: translateX(5px);
     }
     
     .option-label input[type="radio"] {
         margin-right: 10px;
         cursor: pointer;
+        accent-color: #60a5fa;
     }
     
     .frq-textarea {
         width: 100%;
         min-height: 150px;
         padding: 15px;
-        border: 2px solid #ddd;
+        border: 2px solid rgba(96, 165, 250, 0.3);
         border-radius: 6px;
         font-family: inherit;
         font-size: 14px;
         resize: vertical;
         transition: border-color 0.3s ease;
         box-sizing: border-box;
+        background: rgba(15, 23, 42, 0.6);
+        color: #e2e8f0;
     }
     
     .frq-textarea:focus {
         outline: none;
-        border-color: #4CAF50;
+        border-color: #60a5fa;
+        background: rgba(15, 23, 42, 0.8);
+    }
+    
+    .frq-textarea::placeholder {
+        color: #94a3b8;
     }
     
     .submit-btn {
-        background: #4CAF50;
+        background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
         color: white;
         padding: 15px 40px;
         border: none;
@@ -88,13 +107,16 @@ date: 2025-10-30
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        transition: background 0.3s ease;
+        transition: all 0.3s ease;
         display: block;
         margin: 30px auto 0;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
     }
     
     .submit-btn:hover {
-        background: #45a049;
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
     }
     
     .submit-btn:active {
@@ -103,38 +125,41 @@ date: 2025-10-30
     
     .results-container {
         display: none;
-        background: white;
+        background: rgba(30, 41, 59, 0.95);
         padding: 25px;
         margin-top: 30px;
         border-radius: 8px;
-        border-left: 4px solid #2196F3;
+        border-left: 4px solid #818cf8;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     
     .results-title {
         font-size: 20px;
         font-weight: 700;
         margin-bottom: 20px;
-        color: #2196F3;
+        color: #a5b4fc;
         text-align: center;
     }
     
     .result-item {
         margin-bottom: 15px;
         padding: 10px;
-        background: #f5f5f5;
+        background: rgba(15, 23, 42, 0.6);
         border-radius: 6px;
+        color: #cbd5e1;
     }
     
     .chart-container {
-        background: white;
+        background: rgba(15, 23, 42, 0.8);
         padding: 20px;
         margin-bottom: 30px;
         border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
     
     .chart-container h3 {
-        color: #555;
+        color: #93c5fd;
         margin-bottom: 15px;
         text-align: center;
     }
@@ -144,51 +169,54 @@ date: 2025-10-30
     }
     
     .recent-frqs {
-        background: #e3f2fd;
+        background: rgba(59, 130, 246, 0.15);
         padding: 20px;
         margin-bottom: 30px;
         border-radius: 8px;
-        border-left: 4px solid #2196F3;
+        border-left: 4px solid #60a5fa;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     
     .recent-frqs h3 {
-        color: #333;
+        color: #93c5fd;
         margin-bottom: 15px;
         font-size: 18px;
     }
     
     .frq-item {
-        background: white;
+        background: rgba(15, 23, 42, 0.6);
         padding: 12px;
         margin-bottom: 10px;
         border-radius: 6px;
+        border: 1px solid rgba(96, 165, 250, 0.2);
     }
     
     .frq-text {
-        color: #555;
+        color: #cbd5e1;
         line-height: 1.5;
         margin-bottom: 5px;
     }
     
     .frq-time {
-        color: #888;
+        color: #94a3b8;
         font-size: 12px;
     }
     
     .success-message {
-        background: #4CAF50;
+        background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
         color: white;
         padding: 15px;
         border-radius: 6px;
         text-align: center;
         margin-bottom: 20px;
         display: none;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
     }
     
     .loading {
         text-align: center;
         padding: 20px;
-        color: #666;
+        color: #cbd5e1;
     }
 </style>
 
@@ -196,7 +224,7 @@ date: 2025-10-30
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="poll-container">
-    <h1 style="text-align: center; color: #333; margin-bottom: 30px;">AI Usage Survey</h1>
+    <h1 style="text-align: center; color: #e2e8f0; margin-bottom: 30px;">AI Usage Survey</h1>
     
     <div class="success-message" id="successMessage">
         ✓ Thank you! Your response has been submitted. Scroll down to see the results!
@@ -481,16 +509,21 @@ date: 2025-10-30
         createChart('scienceChart', 'Science', data.science);
         createChart('csChart', 'Computer Science', data.cs);
         createChart('historyChart', 'History', data.history);
-        createChart('useAIChart', 'Use AI', data.useAI, '#2196F3');
+        createChart('useAIChart', 'Use AI', data.useAI, '#818cf8');
     }
     
     // Create bar chart
-    function createChart(canvasId, label, data, color = '#4CAF50') {
+    function createChart(canvasId, label, data, color = '#60a5fa') {
         const ctx = document.getElementById(canvasId);
         
         if (charts[canvasId]) {
             charts[canvasId].destroy();
         }
+        
+        // Create gradient
+        const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, color === '#60a5fa' ? '#3b82f6' : '#818cf8');
+        gradient.addColorStop(1, color === '#60a5fa' ? '#60a5fa' : '#a5b4fc');
         
         charts[canvasId] = new Chart(ctx, {
             type: 'bar',
@@ -499,7 +532,7 @@ date: 2025-10-30
                 datasets: [{
                     label: 'Votes',
                     data: Object.values(data),
-                    backgroundColor: color,
+                    backgroundColor: gradient,
                     borderColor: color,
                     borderWidth: 1
                 }]
@@ -511,7 +544,19 @@ date: 2025-10-30
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            stepSize: 1
+                            stepSize: 1,
+                            color: '#94a3b8'
+                        },
+                        grid: {
+                            color: 'rgba(96, 165, 250, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#94a3b8'
+                        },
+                        grid: {
+                            color: 'rgba(96, 165, 250, 0.1)'
                         }
                     }
                 },
