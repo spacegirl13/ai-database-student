@@ -1,0 +1,1015 @@
+---
+layout: post
+title: "AI Usage Quest — Module 2: Prompt Engineering"
+description: "Master the art of communicating effectively with AI through strategic prompting"
+permalink: /digital-famine/ai/submodule_2/
+categories: [CSP, Submodule, AIUsage]
+tags: [ai, prompts, prompt-engineering, zero-shot, few-shot]
+author: "Debuggers Team - Ruchika Kench, Anishka Sanghvi"
+microblog: true
+date: 2025-10-30
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 2: Prompt Engineering</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
+            min-height: 100vh;
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
+        }
+
+        .section-hidden {
+            display: none;
+        }
+
+        /* Dropdown Animation */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slideDown {
+            animation: slideDown 0.3s ease-out;
+        }
+
+        /* Feedback Modal Styles */
+        #feedbackModal * {
+            box-sizing: border-box !important;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        #feedbackModal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow-y: auto;
+            pointer-events: all !important;
+        }
+
+        #feedbackModal .modal {
+            background: white !important;
+            width: 90% !important;
+            max-width: 600px !important;
+            min-width: 300px !important;
+            border-radius: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            min-height: 200px !important;
+            animation: fadeIn 0.3s ease;
+            position: relative !important;
+            margin: 20px auto !important;
+            display: block !important;
+            z-index: 10000000 !important;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-show {
+            display: flex !important;
+        }
+
+        .category-btn {
+            padding: 12px 18px;
+            background: white;
+            color: #1f2937;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .category-btn:hover {
+            border-color: #8b5cf6;
+            background: #f3f4f6;
+        }
+
+
+        /* Footer Styles */
+        .module-footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 2px solid rgba(139, 92, 246, 0.3);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer-link {
+            display: inline-block;
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .footer-link:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+    </style>
+</head>
+
+<body class="text-white">
+
+    <!-- PROGRESS BAR -->
+    <div class="max-w-7xl mx-auto px-4 mb-6 pt-4">
+        <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+            <div id="progress-bar" class="bg-purple-500 h-4 w-0 transition-all"></div>
+        </div>
+        <p id="progress-text" class="text-right text-sm text-purple-300 mt-1">0% completed</p>
+    </div>
+
+
+    <!-- MODULE HEADER -->
+    <div class="border-b border-purple-500/30 bg-slate-900/50 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <h1 class="text-4xl font-bold text-center mb-2">AI Usage Quest</h1>
+            <p class="text-center text-purple-300 text-lg">Module 2: Prompt Engineering</p>
+        </div>
+    </div>
+
+    <!-- NAVIGATION + CONTENT -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="bg-slate-800/50 backdrop-blur border border-purple-500/30 rounded-lg p-6 mb-8">
+            <div class="flex items-center justify-between overflow-x-auto pb-2 gap-2">
+                <button onclick="goToSection(3)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
+                    Computer Science</button>
+            </div>
+        </div>
+
+        <!-- SECTION 3: Computer Science -->
+        <div id="section-3" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <h2 class="text-3xl font-bold mb-6">💻 Prompts for Computer Science</h2>
+                    <div class="space-y-6 text-lg">
+                        <p>AI can be your coding tutor, helping you learn programming concepts, debug code, understand
+                            algorithms, and build projects.</p>
+
+                        <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
+                            <h4 class="text-xl font-bold text-green-300 mb-4">✅ Effective CS Prompts</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">1. Learn Programming Concepts</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Explain how for loops work in Python with 2 simple
+                                                examples. I'm a beginner."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"What are loops?"</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">2. Debug Your Code</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"I'm getting an 'IndexError' in this Python code. Can you
+                                                identify the bug and explain how to fix it? [paste code]"</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"My code doesn't work."</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">3. Get Project Ideas & Guidance</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Suggest a beginner JavaScript project that uses arrays
+                                                and functions. Provide an outline of the steps to build it."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"Give me a project idea."</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">4. Understand Algorithms</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Explain the bubble sort algorithm in simple terms. Show
+                                                how it works with the array [5, 2, 8, 1]."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"Explain bubble sort."</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                            <p class="font-semibold">💡 Pro Tips for Computer Science:</p>
+                            <ul class="mt-2 space-y-1">
+                                <li>• Include the programming language in your prompt</li>
+                                <li>• When asking about code, paste the relevant code snippet</li>
+                                <li>• Ask for comments in code to understand each line</li>
+                                <li>• Request multiple solutions to compare different approaches</li>
+                                <li>• Ask AI to create practice coding challenges for you</li>
+                            </ul>
+                        </div>
+
+                        <!-- Interactive Activity: Prompt Analyzer -->
+                        <div
+                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6">
+                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Interactive: CS Prompt Analyzer!</h4>
+                            <p class="mb-4">Write a coding prompt and get instant feedback on how to improve it:</p>
+
+                            <div class="bg-slate-800/50 p-4 rounded-lg">
+                                <label class="block text-sm font-semibold mb-2">Type your coding prompt here:</label>
+                                <textarea id="cs-prompt-input" rows="4" placeholder="Example: Help me with Python loops"
+                                    class="w-full p-3 rounded bg-slate-700 border border-green-500/30 text-white"></textarea>
+
+                                <div class="grid md:grid-cols-2 gap-3 mt-4">
+                                    <button onclick="analyzeCSPrompt()"
+                                        class="bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold">
+                                        🔍 Analyze Prompt
+                                    </button>
+                                    <button onclick="improveCSPrompt()"
+                                        class="bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold">
+                                        ✨ Auto-Improve
+                                    </button>
+                                </div>
+
+                                <!-- Analysis Results -->
+                                <div id="cs-analysis" class="mt-4 hidden">
+                                    <div class="bg-slate-900/50 border border-purple-500/30 rounded-lg p-4">
+                                        <p class="font-semibold text-purple-300 mb-3">📊 Analysis Results:</p>
+                                        <div id="cs-checklist" class="space-y-2 mb-4"></div>
+                                        <div id="cs-score" class="text-center p-3 rounded-lg font-bold text-xl"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Improved Version -->
+                                <div id="cs-improved" class="mt-4 hidden">
+                                    <div class="bg-green-900/30 border border-green-500/50 rounded-lg p-4">
+                                        <p class="font-semibold text-green-300 mb-2">✅ Improved Version:</p>
+                                        <p id="cs-improved-text" class="text-white p-3 bg-slate-800/50 rounded"></p>
+                                        <button onclick="copyToClipboard('cs-improved-text')"
+                                            class="mt-3 px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                            📋 Copy Improved Prompt
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="goToSection(4)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
+                    History</button>
+            </div>
+        </div>
+
+        <!-- SECTION 4: History -->
+        <div id="section-4" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <h2 class="text-3xl font-bold mb-6">📜 Prompts for History</h2>
+                    <div class="space-y-6 text-lg">
+                        <p>Use AI to explore historical events, understand cause and effect, analyze primary sources,
+                            and make connections across time periods.</p>
+
+                        <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-xl font-bold text-green-300">✅ Effective History Prompts</h4>
+                                <button onclick="toggleHistoryTips()" 
+                                    class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-300 group">
+                                    <span class="text-xl group-hover:scale-110 transition-transform">❓</span>
+                                    <span class="text-sm font-semibold">Pro Tips</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Collapsible Tips Section -->
+                            <div id="history-tips-dropdown" class="hidden overflow-hidden transition-all duration-500 mb-4">
+                                <div class="bg-blue-900/30 border border-blue-500/40 rounded-lg p-5 animate-slideDown">
+                                    <p class="font-semibold text-blue-300 mb-3 flex items-center gap-2">
+                                        <span class="text-xl">💡</span>
+                                        <span>Pro Tips for History:</span>
+                                    </p>
+                                    <ul class="space-y-2 text-gray-200">
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-blue-400 mt-1">•</span>
+                                            <span>Ask for multiple perspectives on historical events</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-blue-400 mt-1">•</span>
+                                            <span>Request connections between historical events and modern issues</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-blue-400 mt-1">•</span>
+                                            <span>Ask AI to create essay outlines or thesis statements</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-blue-400 mt-1">•</span>
+                                            <span>Use AI to generate practice DBQs (Document-Based Questions)</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-blue-400 mt-1">•</span>
+                                            <span>Request historical context for better understanding</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">1. Understand Cause and Effect</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Explain the main causes of World War I in simple terms.
+                                                Include at least 3 causes and how they led to the war."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"Why did WWI happen?"</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">2. Analyze Primary Sources</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Analyze Martin Luther King Jr.'s 'I Have a Dream'
+                                                speech. What were the main themes and rhetorical devices used?"</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"What did MLK say?"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Activity: Prompt Template Builder -->
+                        <div
+                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6">
+                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Interactive: History Prompt Builder!
+                            </h4>
+                            <p class="mb-4">Choose your prompt type and fill in the details to create an effective
+                                history prompt:</p>
+
+                            <div class="bg-slate-800/50 p-4 rounded-lg space-y-4">
+                                <!-- Prompt Type Selection -->
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">1. Select prompt type:</label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button onclick="selectHistoryType('cause')" id="hist-cause-btn"
+                                            class="history-type-btn p-3 bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors">
+                                            🔍 Cause & Effect
+                                        </button>
+                                        <button onclick="selectHistoryType('compare')" id="hist-compare-btn"
+                                            class="history-type-btn p-3 bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors">
+                                            ⚖️ Compare Events
+                                        </button>
+                                        <button onclick="selectHistoryType('analyze')" id="hist-analyze-btn"
+                                            class="history-type-btn p-3 bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors">
+                                            📜 Analyze Source
+                                        </button>
+                                        <button onclick="selectHistoryType('timeline')" id="hist-timeline-btn"
+                                            class="history-type-btn p-3 bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors">
+                                            📅 Create Timeline
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Template Form (changes based on type) -->
+                                <div id="history-template-form" class="hidden space-y-3">
+                                    <div id="history-inputs"></div>
+                                    <button onclick="generateHistoryPrompt()"
+                                        class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold mt-4">
+                                        ✨ Generate Prompt
+                                    </button>
+                                </div>
+
+                                <!-- Generated Prompt Display -->
+                                <div id="history-output"
+                                    class="hidden mt-4 p-4 bg-green-900/30 border border-green-500/50 rounded-lg">
+                                    <p class="text-sm text-green-300 mb-2">Your Generated History Prompt:</p>
+                                    <p id="history-prompt-text" class="text-white font-semibold text-lg mb-3"></p>
+                                    <div class="flex gap-2">
+                                        <button onclick="copyToClipboard('history-prompt-text')"
+                                            class="flex-1 px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                            📋 Copy Prompt
+                                        </button>
+                                        <button onclick="resetHistoryBuilder()"
+                                            class="flex-1 px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded text-sm">
+                                            🔄 Start Over
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="goToSection(5)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Try the
+                    Interactive Challenge</button>
+            </div>
+        </div>
+
+        <!-- SECTION 5: Interactive Challenge -->
+        <div id="section-5" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <h2 class="text-3xl font-bold mb-6">🎯 Interactive Prompt Challenge</h2>
+                    <p class="text-lg mb-6">Review effective prompts for each subject, then practice writing your own!
+                    </p>
+
+                    <!-- Quick Reference Table -->
+                    <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                        <h3 class="text-2xl font-bold text-purple-300 mb-4">📊 Student Prompt Examples by Subject</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse bg-slate-900/50 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-purple-900/30">
+                                        <th class="border border-purple-500/30 p-4 text-left">Subject</th>
+                                        <th class="border border-purple-500/30 p-4 text-left">Effective Prompt Example
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-purple-500/30 p-4"><strong>🔢 Math</strong></td>
+                                        <td class="border border-purple-500/30 p-4 text-sm">"Solve this quadratic
+                                            equation step-by-step: 2x² + 5x - 3 = 0. Explain each step."</td>
+                                    </tr>
+                                    <tr class="bg-slate-800/30">
+                                        <td class="border border-purple-500/30 p-4"><strong>🔬 Science</strong></td>
+                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain photosynthesis to a
+                                            10th grader using simple language and an analogy."</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-purple-500/30 p-4"><strong>💻 Computer Science</strong>
+                                        </td>
+                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain how for loops work
+                                            in Python with 2 simple examples. I'm a beginner."</td>
+                                    </tr>
+                                    <tr class="bg-slate-800/30">
+                                        <td class="border border-purple-500/30 p-4"><strong>📜 History</strong></td>
+                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain the main causes of
+                                            World War I in simple terms. Include at least 3 causes."</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold mb-4 mt-8">✏️ Try It Yourself!</h3>
+                    <p class="text-lg mb-6">See the difference between good and bad prompts! Write both versions and
+                        compare the AI responses.</p>
+
+                    <!-- Bad Prompt Section -->
+                    <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6 mb-6">
+                        <h3 class="text-2xl font-bold text-red-300 mb-4">❌ Bad Prompt</h3>
+                        <p class="mb-4 text-gray-300">Write a vague, incomplete, or poorly structured prompt:</p>
+                        <textarea id="bad-prompt" rows="3" placeholder="Example: 'write something about dogs'"
+                            class="w-full p-3 rounded text-white bg-slate-700 border border-red-500/30 mb-3"></textarea>
+                        <div class="flex gap-2">
+                            <button onclick="generateBadPrompt()"
+                                class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold">Generate
+                                Bad Response</button>
+                            <button onclick="autoFillBad()"
+                                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="block font-semibold mb-2 text-red-300">AI Response to Bad Prompt:</label>
+                            <pre id="output-bad"
+                                class="bg-slate-900/50 border border-red-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                        </div>
+
+                        <!-- Community Prompt Feed for Bad Prompts -->
+                        <div class="community-feed mt-6 bg-slate-800/70 border border-red-500/30 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold text-red-300 mb-4">💬 Student-Submitted Bad Prompts</h4>
+                            <div id="bad-prompts-feed" class="space-y-4">
+                                <!-- Prompts will be loaded here dynamically -->
+                                <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Good Prompt Section -->
+                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6 mb-6">
+                        <h3 class="text-2xl font-bold text-green-300 mb-4">✅ Good Prompt</h3>
+                        <p class="mb-4 text-gray-300">Write a clear, specific, and well-structured prompt:</p>
+                        <textarea id="good-prompt" rows="3"
+                            placeholder="Example: 'Write a 150-word informative paragraph about Golden Retrievers, focusing on their temperament and why they make good family pets.'"
+                            class="w-full p-3 rounded text-white bg-slate-700 border border-green-500/30 mb-3"></textarea>
+                        <div class="flex gap-2">
+                            <button onclick="generateGoodPrompt()"
+                                class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">Generate
+                                Good Response</button>
+                            <button onclick="autoFillGood()"
+                                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="block font-semibold mb-2 text-green-300">AI Response to Good Prompt:</label>
+                            <pre id="output-good"
+                                class="bg-slate-900/50 border border-green-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                        </div>
+
+                        <!-- Community Prompt Feed for Good Prompts -->
+                        <div class="community-feed mt-6 bg-slate-800/70 border border-green-500/30 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold text-green-300 mb-4">💬 Student-Submitted Good Prompts</h4>
+                            <div id="good-prompts-feed" class="space-y-4">
+                                <!-- Prompts will be loaded here dynamically -->
+                                <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tips Section -->
+                    <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                        <h4 class="text-xl font-bold text-purple-300 mb-3">💡 What Makes a Good Prompt?</h4>
+                        <ul class="space-y-2 text-gray-300">
+                            <li>✓ Be specific about what you want</li>
+                            <li>✓ Include context and desired format</li>
+                            <li>✓ Use clear, complete sentences</li>
+                            <li>✓ Specify tone, length, or style if needed</li>
+                            <li>✗ Avoid vague requests</li>
+                            <li>✗ Don't use incomplete sentences</li>
+                            <li>✗ Avoid ambiguous language</li>
+                        </ul>
+                    </div>
+
+                    <!-- Complete Section -->
+                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 text-center">
+                        <h3 class="text-2xl font-bold text-blue-300 mb-3">🎉 Challenge Complete!</h3>
+                        <p class="mb-4 text-gray-300">Now you understand the power of good prompting!</p>
+                        <div class="bg-green-900/30 border-2 border-green-500 rounded-lg p-6 mb-4">
+                            <p class="text-xl font-bold text-green-400 mb-2">🔑 Your Code Number: 6</p>
+                            <p class="text-sm text-gray-300">Remember this number! You'll need it along with the other
+                                module codes to unlock the final challenge.</p>
+                        </div>
+                        <button onclick="showFeedbackModal()"
+                            class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold">Complete
+                            Module</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEEDBACK MODAL -->
+    <div id="feedbackModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999;">
+        <div class="modal" style="position: relative; z-index: 1000000;">
+            <div
+                style="background: linear-gradient(135deg, #10b981, #34d399); padding:30px; border-radius:20px 20px 0 0; text-align:center;">
+                <div style="font-size:60px; margin-bottom:10px;">🏆</div>
+                <h2 style="color: white; font-size:28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                    Congratulations!</h2>
+                <p style="color: white; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">You've completed the
+                    submodule</p>
+            </div>
+
+            <div class="modal-content" id="feedbackForm" style="padding:30px; background: white;">
+                <label style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">How
+                    would you rate this submodule?</label>
+                <div id="starRating" style="display:flex; gap:10px; justify-content:center; margin:20px 0;">
+                    <span class="star" data-rating="1" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                    <span class="star" data-rating="2" style="font-size:40px; cursor:pointer; color:#ddd;">★goToSection(0)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-purple-600"
+                    data-section="0">
+                    <span class="text-2xl mb-1">✍️</span>
+                    <span class="text-xs text-center">Intro</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="goToSection(1)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="1">
+                    <span class="text-2xl mb-1">🔢</span>
+                    <span class="text-xs text-center">Math</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="goToSection(2)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="2">
+                    <span class="text-2xl mb-1">🔬</span>
+                    <span class="text-xs text-center">Science</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="goToSection(3)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="3">
+                    <span class="text-2xl mb-1">💻</span>
+                    <span class="text-xs text-center">Comp Sci</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="goToSection(4)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="4">
+                    <span class="text-2xl mb-1">📜</span>
+                    <span class="text-xs text-center">History</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="goToSection(5)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="5">
+                    <span class="text-2xl mb-1">⚡</span>
+                    <span class="text-xs text-center">Challenge</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 0: Introduction -->
+        <div id="section-0" class="mission-section">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/50 rounded-lg p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-4xl pulse">✍️</span>
+                        <h2 class="text-3xl font-bold text-purple-400">Prompt Engineering</h2>
+                    </div>
+                    <div class="space-y-4 text-lg">
+                        <div class="flex justify-center my-6">
+                            <img src="{{ '/images/digital-famine/textPrompts.png' | prepend: site.baseurl }}"
+                                alt="Prompt Engineering Illustration"
+                                class="rounded-lg border border-purple-500/30 max-w-2xl w-full">
+                        </div>
+
+                        <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-6 mt-6">
+                            <h3 class="text-xl font-semibold text-purple-300 mb-3">How AI Responds to Prompts</h3>
+                            <p class="mb-4">Generative AI like ChatGPT and Claude use two key technologies:</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-800/50 p-4 rounded-lg">
+                                    <p class="text-purple-400 font-semibold mb-2">🗣️ Natural Language Processing</p>
+                                    <p class="text-sm">Helps AI understand and respond to human language naturally, like
+                                        talking to another person.</p>
+                                </div>
+                                <div class="bg-slate-800/50 p-4 rounded-lg">
+                                    <p class="text-purple-400 font-semibold mb-2">🧠 Machine Learning</p>
+                                    <p class="text-sm">Enables AI to learn from your input and improve its responses
+                                        over time.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="goToSection(1)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Begin
+                    Learning</button>
+            </div>
+        </div>
+
+        <!-- SECTION 1: Math -->
+        <div id="section-1" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <h2 class="text-3xl font-bold mb-6">🔢 Prompts for Math</h2>
+                    <div class="space-y-6 text-lg">
+                        <p>AI can be a powerful math tutor when you ask the right questions. Learn how to get
+                            step-by-step solutions, conceptual explanations, and practice problems.</p>
+
+                        <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
+                            <h4 class="text-xl font-bold text-green-300 mb-4">✅ Effective Math Prompts</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">1. Ask for Step-by-Step Solutions</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Solve this quadratic equation step-by-step: 2x² + 5x - 3
+                                                = 0. Explain each step."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"Solve 2x² + 5x - 3 = 0"</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">2. Request Conceptual Understanding</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Explain the concept of derivatives in calculus using a
+                                                real-world example, like speed and distance."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"What are derivatives?"</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">3. Get Practice Problems</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Create 5 practice problems on solving systems of linear
+                                                equations with varying difficulty levels."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"Give me math problems."</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">4. Check Your Work</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"I solved this problem and got x = 7. Can you verify if
+                                                this is correct and identify any errors in my steps?"</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"Is this right?"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                            <p class="font-semibold">💡 Pro Tips for Math:</p>
+                            <ul class="mt-2 space-y-1">
+                                <li>• Always ask for explanations, not just answers</li>
+                                <li>• Specify your grade level or course (Algebra I, Calculus, etc.)</li>
+                                <li>• Request visual aids like graphs or diagrams when helpful</li>
+                                <li>• Ask AI to create study guides or formula sheets</li>
+                            </ul>
+                        </div>
+
+                        <!-- Interactive Activity: Prompt Builder -->
+                        <div
+                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6">
+                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Interactive: Build Your Math Prompt!
+                            </h4>
+                            <p class="mb-4">Fill in the blanks to create an effective math prompt:</p>
+
+                            <div class="space-y-4 bg-slate-800/50 p-4 rounded-lg">
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">1. What do you want AI to
+                                        do?</label>
+                                    <select id="math-action"
+                                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white">
+                                        <option value="">-- Select --</option>
+                                        <option value="Solve">Solve</option>
+                                        <option value="Explain">Explain</option>
+                                        <option value="Create practice problems for">Create practice problems for
+                                        </option>
+                                        <option value="Help me understand">Help me understand</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">2. Your math topic or
+                                        problem:</label>
+                                    <input type="text" id="math-topic"
+                                        placeholder="e.g., quadratic equations, derivatives, fractions"
+                                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">3. Add details (optional):</label>
+                                    <select id="math-detail"
+                                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white">
+                                        <option value="">-- Select --</option>
+                                        <option value="step-by-step">step-by-step</option>
+                                        <option value="with examples">with examples</option>
+                                        <option value="in simple terms">in simple terms</option>
+                                        <option value="with a visual diagram">with a visual diagram</option>
+                                    </select>
+                                </div>
+
+                                <button onclick="buildMathPrompt()"
+                                    class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold mt-4">
+                                    ✨ Generate My Prompt
+                                </button>
+
+                                <div id="math-prompt-output"
+                                    class="hidden mt-4 p-4 bg-green-900/30 border border-green-500/50 rounded-lg">
+                                    <p class="text-sm text-green-300 mb-2">Your Generated Prompt:</p>
+                                    <p id="math-prompt-text" class="text-white font-semibold text-lg"></p>
+                                    <button onclick="copyToClipboard('math-prompt-text')"
+                                        class="mt-3 px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                        📋 Copy to Clipboard
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="goToSection(2)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
+                    Science</button>
+            </div>
+        </div>
+
+        <!-- SECTION 2: Science -->
+        <div id="section-2" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <h2 class="text-3xl font-bold mb-6">🔬 Prompts for Science</h2>
+                    <div class="space-y-6 text-lg">
+                        <p>Use AI to explore scientific concepts, understand experiments, and make connections between
+                            different topics in biology, chemistry, physics, and earth science.</p>
+
+                        <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
+                            <h4 class="text-xl font-bold text-green-300 mb-4">✅ Effective Science Prompts</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">1. Request Simple Explanations</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Explain photosynthesis to a 10th grader using simple
+                                                language and an analogy."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"What is photosynthesis?"</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">2. Connect Concepts to Real Life</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Give me 3 real-world examples of Newton's Third Law of
+                                                Motion that I can observe in daily life."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"Explain Newton's Third Law."</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">3. Ask for Experiment Ideas</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Suggest a simple chemistry experiment I can do at home
+                                                to demonstrate acid-base reactions. List materials needed and safety
+                                                precautions."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"Give me a chemistry experiment."</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-green-400 mb-2">4. Study for Tests</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-green-900/30 p-3 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-sm">"Create 10 quiz questions about cell structure and
+                                                function, with answers. Focus on the differences between plant and
+                                                animal cells."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-3 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-sm">"Help me study cells."</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                            <p class="font-semibold">💡 Pro Tips for Science:</p>
+                            <ul class="mt-2 space-y-1">
+                                <li>• Ask for diagrams or visual descriptions of processes</li>
+                                <li>• Request comparisons to understand differences (e.g., mitosis vs. meiosis)</li>
+                                <li>• Ask AI to create study flashcards or concept maps</li>
+                                <li>• Use AI to understand scientific articles or research papers</li>
+                            </ul>
+                        </div>
+
+                        <!-- Interactive Activity: Drag and Drop -->
+                        <div
+                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6">
+                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Interactive: Match the Science Prompt!
+                            </h4>
+                            <p class="mb-4">Drag the prompt elements to create an effective science prompt:</p>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <!-- Draggable Elements -->
+                                <div class="space-y-3">
+                                    <p class="font-semibold text-green-300 mb-3">Drag these elements:</p>
+                                    <div id="science-draggables" class="space-y-2">
+                                        <div draggable="true" ondragstart="drag(event)" id="sci-action"
+                                            class="p-3 bg-purple-600 rounded-lg cursor-move hover:bg-purple-500 transition-colors border-2 border-purple-400">
+                                            <span class="font-semibold">Action:</span> "Explain photosynthesis"
+                                        </div>
+                                        <div draggable="true" ondragstart="drag(event)" id="sci-audience"
+                                            class="p-3 bg-blue-600 rounded-lg cursor-move hover:bg-blue-500 transition-colors border-2 border-blue-400">
+                                            <span class="font-semibold">Audience:</span> "to a 10th grader"
+                                        </div>
+                                        <div draggable="true" ondragstart="drag(event)" id="sci-format"
+                                            class="p-3 bg-green-600 rounded-lg cursor-move hover:bg-green-500 transition-colors border-2 border-green-400">
+                                            <span class="font-semibold">Format:</span> "using simple language and an
+                                            analogy"
+                                        </div>
+                                    </div>
+                                    <button onclick="resetScienceDrag()"
+                                        class="w-full mt-3 px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded text-sm">
+                                        🔄 Reset
+                                    </button>
+                                </div>
+
+                                <!-- Drop Zone -->
+                                <div>
+                                    <p class="font-semibold text-green-300 mb-3">Build your prompt here:</p>
+                                    <div id="science-dropzone" ondrop="drop(event)" ondragover="allowDrop(event)"
+                                        class="min-h-[200px] p-4 bg-slate-800/50 border-2 border-dashed border-green-500/50 rounded-lg">
+                                        <p class="text-gray-400 text-sm mb-2">Drop elements here in order...</p>
+                                        <div id="science-prompt-preview" class="space-y-2"></div>
+                                    </div>
+                                    <div id="science-feedback" class="mt-4 hidden p-3 rounded-lg"></div>
+                                    <button onclick="checkSciencePrompt()"
+                                        class="w-full mt-3 bg-green-600 hover:bg-green-700 py-2 rounded font-semibold">
+                                        ✅ Check My Prompt
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="
