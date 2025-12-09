@@ -971,8 +971,66 @@ microblog: true
         showUserCard(data.user);
         loginForm.reset();
       } else {
-        // Login failed
-        showError(data.message || 'Invalid username or password', 'login');
+        // Login failed - try to create guest account
+        console.log('Login failed, attempting to create guest account...');
+
+        try {
+          // Create guest account
+          const signupResponse = await fetch(`${API_BASE_URL}/user/guest`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              uid: username,
+              password: password
+            })
+          });
+
+          const signupData = await signupResponse.json();
+
+          if (signupResponse.ok) {
+            console.log('Guest account created successfully!', signupData);
+
+            // Check if this is a new user or existing user
+            // If user already existed, the signup returns the existing user
+            // We can detect this by checking if we just tried to login and failed
+            showSuccess('Account created! Logging you in...');
+
+            // Wait a moment for database to commit
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // Retry login with new account
+            const retryResponse = await fetch(`${API_BASE_URL}/authenticate`, {
+              method: 'POST',
+              credentials: 'include',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                uid: username,
+                password: password
+              })
+            });
+
+            const retryData = await retryResponse.json();
+
+            if (retryResponse.ok) {
+              console.log('Login successful after signup:', retryData);
+              showUserCard(retryData.user);
+              loginForm.reset();
+            } else {
+              showError('Account created but login failed. Please try logging in again.', 'login');
+            }
+          } else {
+            // Signup also failed
+            showError(signupData.message || data.message || 'Invalid username or password', 'login');
+          }
+        } catch (signupError) {
+          console.error('Signup error:', signupError);
+          showError(data.message || 'Invalid username or password', 'login');
+        }
       }
     } catch (error) {
       console.error('Login error:', error);

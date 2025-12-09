@@ -1,0 +1,1746 @@
+---
+layout: post
+title: "AI Usage Quest — Module 2: Prompt Engineering"
+description: "Master the art of communicating effectively with AI through strategic prompting"
+permalink: /digital-famine/ai/submodule_2_copy/
+categories: [CSP, Submodule, AIUsage]
+tags: [ai, prompts, prompt-engineering, zero-shot, few-shot]
+author: "Debuggers Team - Ruchika Kench, Anishka Sanghvi"
+microblog: true
+date: 2025-10-30
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 2: Prompt Engineering</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax for rendering LaTeX equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
+            min-height: 100vh;
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
+        }
+
+        .section-hidden {
+            display: none;
+        }
+
+        /* Feedback Modal Styles */
+        #feedbackModal * {
+            box-sizing: border-box !important;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        #feedbackModal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow-y: auto;
+            pointer-events: all !important;
+        }
+
+        #feedbackModal .modal {
+            background: white !important;
+            width: 90% !important;
+            max-width: 600px !important;
+            min-width: 300px !important;
+            border-radius: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            min-height: 200px !important;
+            animation: fadeIn 0.3s ease;
+            position: relative !important;
+            margin: 20px auto !important;
+            display: block !important;
+            z-index: 10000000 !important;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-show {
+            display: flex !important;
+        }
+
+        .category-btn {
+            padding: 12px 18px;
+            background: white;
+            color: #1f2937;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .category-btn:hover {
+            border-color: #8b5cf6;
+            background: #f3f4f6;
+        }
+
+
+        /* Footer Styles */
+        .module-footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 2px solid rgba(139, 92, 246, 0.3);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer-link {
+            display: inline-block;
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .footer-link:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Math output formatting */
+        #gemini-result-1,
+        #gemini-result-2,
+        #gemini-result-3,
+        #gemini-result-4 {
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* MathJax rendered equations */
+        .MathJax {
+            font-size: 1.1em !important;
+        }
+
+        /* Make bold text in LaTeX explanations stand out */
+        strong {
+            color: #a78bfa;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body class="text-white">
+
+    <!-- PROGRESS BAR -->
+    <div class="max-w-7xl mx-auto px-4 mb-6 pt-4">
+        <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+            <div id="progress-bar" class="bg-purple-500 h-4 w-0 transition-all"></div>
+        </div>
+        <p id="progress-text" class="text-right text-sm text-purple-300 mt-1">0% completed</p>
+    </div>
+
+
+    <!-- MODULE HEADER -->
+    <div class="border-b border-purple-500/30 bg-slate-900/50 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <h1 class="text-4xl font-bold text-center mb-2">AI Usage Quest</h1>
+            <p class="text-center text-purple-300 text-lg">Module 2: Prompt Engineering</p>
+        </div>
+    </div>
+
+    <!-- NAVIGATION + CONTENT -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="bg-slate-800/50 backdrop-blur border border-purple-500/30 rounded-lg p-6 mb-8">
+            <div class="flex items-center justify-between overflow-x-auto pb-2 gap-2">
+                <button onclick="goToSection(0)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-purple-600"
+                    data-section="0">
+                    <span class="text-2xl mb-1">✍️</span>
+                    <span class="text-xs text-center">Intro</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="goToSection(1)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="1">
+                    <span class="text-2xl mb-1">🔢</span>
+                    <span class="text-xs text-center">Math</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="goToSection(2)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="2">
+                    <span class="text-2xl mb-1">🔬</span>
+                    <span class="text-xs text-center">Science</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="goToSection(3)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="3">
+                    <span class="text-2xl mb-1">💻</span>
+                    <span class="text-xs text-center">Comp Sci</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="goToSection(4)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="4">
+                    <span class="text-2xl mb-1">📜</span>
+                    <span class="text-xs text-center">History</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="goToSection(5)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="5">
+                    <span class="text-2xl mb-1">⚡</span>
+                    <span class="text-xs text-center">Challenge</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 0: Introduction -->
+        <div id="section-0" class="mission-section">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/50 rounded-lg p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-4xl pulse">✍️</span>
+                        <h2 class="text-3xl font-bold text-purple-400">Prompt Engineering</h2>
+                    </div>
+                    <div class="space-y-4 text-lg">
+                        <div class="flex justify-center my-6">
+                            <img src="{{ '/images/digital-famine/textPrompts.png' | prepend: site.baseurl }}"
+                                alt="Prompt Engineering Illustration"
+                                class="rounded-lg border border-purple-500/30 max-w-2xl w-full">
+                        </div>
+
+                        <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-6 mt-6">
+                            <h3 class="text-xl font-semibold text-purple-300 mb-3">How AI Responds to Prompts</h3>
+                            <p class="mb-4">Generative AI like ChatGPT and Claude use two key technologies:</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-800/50 p-4 rounded-lg">
+                                    <p class="text-purple-400 font-semibold mb-2">🗣️ Natural Language Processing</p>
+                                    <p class="text-sm">Helps AI understand and respond to human language naturally, like
+                                        talking to another person.</p>
+                                </div>
+                                <div class="bg-slate-800/50 p-4 rounded-lg">
+                                    <p class="text-purple-400 font-semibold mb-2">🧠 Machine Learning</p>
+                                    <p class="text-sm">Enables AI to learn from your input and improve its responses
+                                        over time.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="goToSection(1)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Begin
+                    Learning</button>
+            </div>
+        </div>
+
+        <!-- SECTION 1: Math -->
+        <div id="section-1" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">🔢 Math Practice</h2>
+                        <button onclick="toggleMathTips()" class="text-3xl hover:scale-110 transition-transform"
+                            title="Show Tips">❓</button>
+                    </div>
+
+                    <!-- Collapsible Tips Section -->
+                    <div id="math-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for Math</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-green-900/30 p-3 rounded">
+                                <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                <p>"Find the derivative of 3x⁴ - 2x³ step-by-step. Show all work and explain each step
+                                    using the power rule."</p>
+                            </div>
+                            <div class="bg-red-900/30 p-3 rounded">
+                                <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                <p>"What's the derivative?"</p>
+                            </div>
+                        </div>
+                        <p class="mt-3 text-sm text-blue-200">✨ <strong>Key:</strong> Be specific, ask for step-by-step
+                            explanations, and mention the concept/rule to use.</p>
+                    </div>
+
+                    <div class="space-y-6 text-lg">
+                        <p>Practice solving derivative problems with AI assistance. Click "View Prompt" to see an
+                            effective prompt, then use the Gemini API to check your work.</p>
+
+                        <!-- Questions Container (loaded from database) -->
+                        <div id="math-questions-container" class="space-y-4">
+                            <p class="text-center text-purple-300">Loading questions...</p>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="goToSection(2)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
+                    Science</button>
+            </div>
+        </div>
+
+        <!-- SECTION 2: Science -->
+        <div id="section-2" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">🔬 Science Practice</h2>
+                        <button onclick="toggleScienceTips()" class="text-3xl hover:scale-110 transition-transform"
+                            title="Show Tips">❓</button>
+                    </div>
+
+                    <!-- Collapsible Tips Section -->
+                    <div id="science-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for Science</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-green-900/30 p-3 rounded">
+                                <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                <p>"Explain photosynthesis to a 10th grader. Include the chemical equation, the role of
+                                    chlorophyll, and the two main stages."</p>
+                            </div>
+                            <div class="bg-red-900/30 p-3 rounded">
+                                <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                <p>"What is photosynthesis?"</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-xs text-blue-200">
+                            <p><strong>Key:</strong> Be specific, ask for detailed explanations, request examples or
+                                real-world connections</p>
+                        </div>
+                    </div>
+
+                    <!-- Questions Container (loaded from database) -->
+                    <div id="science-questions-container" class="space-y-4">
+                        <p class="text-center text-purple-300">Loading questions...</p>
+                    </div>
+                </div>
+                <button onclick="goToSection(3)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
+                    Computer Science</button>
+            </div>
+        </div>
+
+        <!-- SECTION 3: Computer Science -->
+        <div id="section-3" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">💻 Computer Science</h2>
+                        <button onclick="toggleCSTips()" class="text-3xl hover:scale-110 transition-transform"
+                            title="Show Tips">❓</button>
+                    </div>
+
+                    <!-- Collapsible Tips Section -->
+                    <div id="cs-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for CS</h4>
+                        <div class="space-y-3 text-sm">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-green-900/30 p-3 rounded">
+                                    <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                    <p>"Explain how for loops work in Python with 2 simple examples. I'm a beginner."
+                                    </p>
+                                </div>
+                                <div class="bg-red-900/30 p-3 rounded">
+                                    <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                    <p>"What are loops?"</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-green-900/30 p-3 rounded">
+                                    <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                    <p>"I'm getting an 'IndexError' in this Python code. Can you identify the bug and
+                                        explain how to fix it? [paste code]"</p>
+                                </div>
+                                <div class="bg-red-900/30 p-3 rounded">
+                                    <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                    <p>"My code doesn't work."</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-xs text-blue-200">
+                            <p><strong>Key:</strong> Include programming language, paste code when debugging, specify
+                                skill level, ask for examples</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-lg">
+
+                        <!-- Interactive Activity: Prompt Analyzer -->
+                        <div
+                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6">
+                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Interactive: CS Prompt Analyzer!</h4>
+                            <p class="mb-4">Write a coding prompt and get instant feedback on how to improve it:</p>
+
+                            <div class="bg-slate-800/50 p-4 rounded-lg">
+                                <label class="block text-sm font-semibold mb-2">Type your coding prompt here:</label>
+                                <textarea id="cs-prompt-input" rows="4" placeholder="Example: Help me with Python loops"
+                                    class="w-full p-3 rounded bg-slate-700 border border-green-500/30 text-white"></textarea>
+
+                                <div class="grid md:grid-cols-2 gap-3 mt-4">
+                                    <button onclick="analyzeCSPrompt()"
+                                        class="bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold">
+                                        🔍 Analyze Prompt
+                                    </button>
+                                    <button onclick="improveCSPrompt()"
+                                        class="bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold">
+                                        ✨ Auto-Improve
+                                    </button>
+                                </div>
+
+                                <!-- Analysis Results -->
+                                <div id="cs-analysis" class="mt-4 hidden">
+                                    <div class="bg-slate-900/50 border border-purple-500/30 rounded-lg p-4">
+                                        <p class="font-semibold text-purple-300 mb-3">📊 Analysis Results:</p>
+                                        <div id="cs-checklist" class="space-y-2 mb-4"></div>
+                                        <div id="cs-score" class="text-center p-3 rounded-lg font-bold text-xl"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Improved Version -->
+                                <div id="cs-improved" class="mt-4 hidden">
+                                    <div class="bg-green-900/30 border border-green-500/50 rounded-lg p-4">
+                                        <p class="font-semibold text-green-300 mb-2">✅ Improved Version:</p>
+                                        <p id="cs-improved-text" class="text-white p-3 bg-slate-800/50 rounded"></p>
+                                        <button onclick="copyToClipboard('cs-improved-text')"
+                                            class="mt-3 px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                            📋 Copy Improved Prompt
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="goToSection(4)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
+                    History</button>
+            </div>
+        </div>
+
+        <!-- SECTION 4: History -->
+        <div id="section-4" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">📜 History</h2>
+                        <button onclick="toggleHistoryTips()" class="text-3xl hover:scale-110 transition-transform"
+                            title="Show Tips">❓</button>
+                    </div>
+
+                    <!-- Collapsible Tips Section -->
+                    <div id="history-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for History</h4>
+                        <div class="space-y-3 text-sm">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-green-900/30 p-3 rounded">
+                                    <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                    <p>"Explain the main causes of World War I in simple terms. Include at least 3
+                                        causes and how they led to the war."</p>
+                                </div>
+                                <div class="bg-red-900/30 p-3 rounded">
+                                    <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                    <p>"Why did WWI happen?"</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-green-900/30 p-3 rounded">
+                                    <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                    <p>"Compare and contrast the American Revolution and the French Revolution. Create a
+                                        table showing their similarities and differences."</p>
+                                </div>
+                                <div class="bg-red-900/30 p-3 rounded">
+                                    <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                    <p>"Tell me about revolutions."</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-xs text-blue-200">
+                            <p><strong>Key:</strong> Ask for causes and effects, request comparisons, analyze primary
+                                sources, create timelines with dates</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-lg">
+
+                        <!-- Interactive Activity: Prompt Template Builder -->
+                        <div
+                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6">
+                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Interactive: History Prompt Builder!
+                            </h4>
+                            <p class="mb-4">Choose your prompt type and fill in the details to create an effective
+                                history prompt:</p>
+
+                            <div class="bg-slate-800/50 p-4 rounded-lg space-y-4">
+                                <!-- Prompt Type Selection -->
+                                <div>
+                                    <label class="block text-sm font-semibold mb-2">1. Select prompt type:</label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button onclick="selectHistoryType('cause')" id="hist-cause-btn"
+                                            class="history-type-btn p-3 bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors">
+                                            🔍 Cause & Effect
+                                        </button>
+                                        <button onclick="selectHistoryType('compare')" id="hist-compare-btn"
+                                            class="history-type-btn p-3 bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors">
+                                            ⚖️ Compare Events
+                                        </button>
+                                        <button onclick="selectHistoryType('analyze')" id="hist-analyze-btn"
+                                            class="history-type-btn p-3 bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors">
+                                            📜 Analyze Source
+                                        </button>
+                                        <button onclick="selectHistoryType('timeline')" id="hist-timeline-btn"
+                                            class="history-type-btn p-3 bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors">
+                                            📅 Create Timeline
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Template Form (changes based on type) -->
+                                <div id="history-template-form" class="hidden space-y-3">
+                                    <div id="history-inputs"></div>
+                                    <button onclick="generateHistoryPrompt()"
+                                        class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold mt-4">
+                                        ✨ Generate Prompt
+                                    </button>
+                                </div>
+
+                                <!-- Generated Prompt Display -->
+                                <div id="history-output"
+                                    class="hidden mt-4 p-4 bg-green-900/30 border border-green-500/50 rounded-lg">
+                                    <p class="text-sm text-green-300 mb-2">Your Generated History Prompt:</p>
+                                    <p id="history-prompt-text" class="text-white font-semibold text-lg mb-3"></p>
+                                    <div class="flex gap-2">
+                                        <button onclick="copyToClipboard('history-prompt-text')"
+                                            class="flex-1 px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                            📋 Copy Prompt
+                                        </button>
+                                        <button onclick="resetHistoryBuilder()"
+                                            class="flex-1 px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded text-sm">
+                                            🔄 Start Over
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="goToSection(5)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Try the
+                    Interactive Challenge</button>
+            </div>
+        </div>
+
+        <!-- SECTION 5: Interactive Challenge -->
+        <div id="section-5" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <h2 class="text-3xl font-bold mb-6">🎯 Interactive Prompt Challenge</h2>
+                    <p class="text-lg mb-6">Review effective prompts for each subject, then practice writing your own!
+                    </p>
+
+                    <!-- Quick Reference Table -->
+                    <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                        <h3 class="text-2xl font-bold text-purple-300 mb-4">📊 Student Prompt Examples by Subject</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse bg-slate-900/50 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-purple-900/30">
+                                        <th class="border border-purple-500/30 p-4 text-left">Subject</th>
+                                        <th class="border border-purple-500/30 p-4 text-left">Effective Prompt Example
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-purple-500/30 p-4"><strong>🔢 Math</strong></td>
+                                        <td class="border border-purple-500/30 p-4 text-sm">"Solve this quadratic
+                                            equation step-by-step: 2x² + 5x - 3 = 0. Explain each step."</td>
+                                    </tr>
+                                    <tr class="bg-slate-800/30">
+                                        <td class="border border-purple-500/30 p-4"><strong>🔬 Science</strong></td>
+                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain photosynthesis to a
+                                            10th grader using simple language and an analogy."</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-purple-500/30 p-4"><strong>💻 Computer Science</strong>
+                                        </td>
+                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain how for loops work
+                                            in Python with 2 simple examples. I'm a beginner."</td>
+                                    </tr>
+                                    <tr class="bg-slate-800/30">
+                                        <td class="border border-purple-500/30 p-4"><strong>📜 History</strong></td>
+                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain the main causes of
+                                            World War I in simple terms. Include at least 3 causes."</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold mb-4 mt-8">✏️ Try It Yourself!</h3>
+                    <p class="text-lg mb-6">See the difference between good and bad prompts! Write both versions and
+                        compare the AI responses.</p>
+
+                    <!-- Bad Prompt Section -->
+                    <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6 mb-6">
+                        <h3 class="text-2xl font-bold text-red-300 mb-4">❌ Bad Prompt</h3>
+                        <p class="mb-4 text-gray-300">Write a vague, incomplete, or poorly structured prompt:</p>
+                        <textarea id="bad-prompt" rows="3" placeholder="Example: 'write something about dogs'"
+                            class="w-full p-3 rounded text-white bg-slate-700 border border-red-500/30 mb-3"></textarea>
+                        <div class="flex gap-2">
+                            <button onclick="generateBadPrompt()"
+                                class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold">Generate
+                                Bad Response</button>
+                            <button onclick="autoFillBad()"
+                                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="block font-semibold mb-2 text-red-300">AI Response to Bad Prompt:</label>
+                            <pre id="output-bad"
+                                class="bg-slate-900/50 border border-red-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                        </div>
+
+                        <!-- Community Prompt Feed for Bad Prompts -->
+                        <div class="community-feed mt-6 bg-slate-800/70 border border-red-500/30 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold text-red-300 mb-4">💬 Student-Submitted Bad Prompts</h4>
+                            <div id="bad-prompts-feed" class="space-y-4">
+                                <!-- Prompts will be loaded here dynamically -->
+                                <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Good Prompt Section -->
+                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6 mb-6">
+                        <h3 class="text-2xl font-bold text-green-300 mb-4">✅ Good Prompt</h3>
+                        <p class="mb-4 text-gray-300">Write a clear, specific, and well-structured prompt:</p>
+                        <textarea id="good-prompt" rows="3"
+                            placeholder="Example: 'Write a 150-word informative paragraph about Golden Retrievers, focusing on their temperament and why they make good family pets.'"
+                            class="w-full p-3 rounded text-white bg-slate-700 border border-green-500/30 mb-3"></textarea>
+                        <div class="flex gap-2">
+                            <button onclick="generateGoodPrompt()"
+                                class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">Generate
+                                Good Response</button>
+                            <button onclick="autoFillGood()"
+                                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="block font-semibold mb-2 text-green-300">AI Response to Good Prompt:</label>
+                            <pre id="output-good"
+                                class="bg-slate-900/50 border border-green-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                        </div>
+
+                        <!-- Community Prompt Feed for Good Prompts -->
+                        <div class="community-feed mt-6 bg-slate-800/70 border border-green-500/30 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold text-green-300 mb-4">💬 Student-Submitted Good Prompts</h4>
+                            <div id="good-prompts-feed" class="space-y-4">
+                                <!-- Prompts will be loaded here dynamically -->
+                                <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tips Section -->
+                    <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                        <h4 class="text-xl font-bold text-purple-300 mb-3">💡 What Makes a Good Prompt?</h4>
+                        <ul class="space-y-2 text-gray-300">
+                            <li>✓ Be specific about what you want</li>
+                            <li>✓ Include context and desired format</li>
+                            <li>✓ Use clear, complete sentences</li>
+                            <li>✓ Specify tone, length, or style if needed</li>
+                            <li>✗ Avoid vague requests</li>
+                            <li>✗ Don't use incomplete sentences</li>
+                            <li>✗ Avoid ambiguous language</li>
+                        </ul>
+                    </div>
+
+                    <!-- Complete Section -->
+                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 text-center">
+                        <h3 class="text-2xl font-bold text-blue-300 mb-3">🎉 Challenge Complete!</h3>
+                        <p class="mb-4 text-gray-300">Now you understand the power of good prompting!</p>
+                        <div class="bg-green-900/30 border-2 border-green-500 rounded-lg p-6 mb-4">
+                            <p class="text-xl font-bold text-green-400 mb-2">🔑 Your Code Number: 6</p>
+                            <p class="text-sm text-gray-300">Remember this number! You'll need it along with the other
+                                module codes to unlock the final challenge.</p>
+                        </div>
+                        <button onclick="showFeedbackModal()"
+                            class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold">Complete
+                            Module</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEEDBACK MODAL -->
+    <div id="feedbackModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999;">
+        <div class="modal" style="position: relative; z-index: 1000000;">
+            <div
+                style="background: linear-gradient(135deg, #10b981, #34d399); padding:30px; border-radius:20px 20px 0 0; text-align:center;">
+                <div style="font-size:60px; margin-bottom:10px;">🏆</div>
+                <h2 style="color: white; font-size:28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                    Congratulations!</h2>
+                <p style="color: white; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">You've completed the
+                    submodule</p>
+            </div>
+
+            <div class="modal-content" id="feedbackForm" style="padding:30px; background: white;">
+                <label style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">How
+                    would you rate this submodule?</label>
+                <div id="starRating" style="display:flex; gap:10px; justify-content:center; margin:20px 0;">
+                    <span class="star" data-rating="1" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                    <span class="star" data-rating="2" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                    <span class="star" data-rating="3" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                    <span class="star" data-rating="4" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                    <span class="star" data-rating="5" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                </div>
+
+                <label
+                    style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">What
+                    category best describes your feedback?</label>
+                <div
+                    style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:20px 0;">
+                    <button class="category-btn" data-category="content">Content Quality</button>
+                    <button class="category-btn" data-category="difficulty">Difficulty Level</button>
+                    <button class="category-btn" data-category="engagement">Engagement</button>
+                    <button class="category-btn" data-category="clarity">Clarity</button>
+                    <button class="category-btn" data-category="pacing">Pacing</button>
+                    <button class="category-btn" data-category="other">Other</button>
+                </div>
+
+                <label
+                    style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">Additional
+                    comments (optional)</label>
+                <textarea id="comments"
+                    style="width:100%; border:2px solid #d1d5db; border-radius:10px; padding:12px; min-height:100px; color:#1f2937; background: white; font-size: 16px; font-family: 'Segoe UI', Tahoma, sans-serif;"></textarea>
+
+                <div
+                    style="background: #f3f4f6; border-radius: 10px; padding: 20px; margin: 20px 0; border: 2px solid #d1d5db;">
+                    <h4 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; font-weight: 700;">📊 Previous
+                        Feedback Summary</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
+                        <div>
+                            <p style="margin: 0 0 5px 0; color: #374151; font-weight: 600;">Average Rating:</p>
+                            <p style="margin: 0; color: #059669; font-weight: 700; font-size: 16px;">⭐ 4.3/5 <span
+                                    style="color: #6b7280; font-weight: 400;">(38 responses)</span></p>
+                        </div>
+                        <div>
+                            <p style="margin: 0 0 5px 0; color: #374151; font-weight: 600;">Most Common Feedback:</p>
+                            <p style="margin: 0; color: #1f2937; font-weight: 600; font-size: 16px;">"Interactive
+                                exercises"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="submitFeedback()" class="btn-primary w-full mt-6"
+                    style="padding:14px; background:#10b981; color:white; border:none; border-radius:10px; font-weight:700; font-size: 16px; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Submit
+                    Feedback</button>
+                <button onclick="closeModal()" class="btn-secondary w-full mt-3"
+                    style="padding:12px; background:#e5e7eb; color:#1f2937; border:2px solid #d1d5db; border-radius:10px; font-weight:600; font-size: 15px; cursor:pointer;">Skip</button>
+            </div>
+
+            <div id="successMessage" class="hidden" style="text-align:center; padding:40px; background: white;">
+                <div style="font-size:80px;">✅</div>
+                <h3 style="font-size:28px; margin-top:10px; color:#1f2937; font-weight: 700;">Thank you!</h3>
+                <p style="color: #6b7280; font-size: 16px; margin: 10px 0 20px 0;">Your feedback helps us improve the
+                    module!</p>
+                <button onclick="closeModal()"
+                    style="margin-top:20px; padding:14px 28px; background:#10b981; color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="module-footer">
+        <a href="#" class="footer-link">← Back to AI Quest Home</a>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Progress bar update
+        function updateProgress() {
+            const sections = ['section-0', 'section-1', 'section-2', 'section-3', 'section-4', 'section-5'];
+            const currentSection = sections.findIndex(id => !document.getElementById(id).classList.contains('section-hidden'));
+            const progress = ((currentSection + 1) / sections.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = Math.round(progress) + '% completed';
+        }
+
+
+        // Navigation
+        function goToSection(n) {
+            document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
+            document.getElementById('section-' + n).classList.remove('section-hidden');
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('bg-purple-600');
+                b.classList.add('bg-slate-700/50');
+            });
+            document.querySelector('.nav-btn[data-section="' + n + '"]').classList.add('bg-purple-600');
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        // Auto-fill functions
+        function autoFillBad() {
+            const textarea = document.getElementById('bad-prompt');
+            if (!textarea.value.trim()) {
+                textarea.value = "tell me about space";
+            }
+        }
+
+        function autoFillGood() {
+            const textarea = document.getElementById('good-prompt');
+            if (!textarea.value.trim()) {
+                textarea.value = "Write a 200-word informative explanation about the Solar System, including details about the eight planets, their order from the Sun, and one unique characteristic of each planet.";
+            }
+        }
+
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:8001/api/prompts';
+
+        // Load and display prompts from backend
+        async function loadPrompts(type) {
+            const feedId = type === 'bad' ? 'bad-prompts-feed' : 'good-prompts-feed';
+            const feedEl = document.getElementById(feedId);
+            const color = type === 'bad' ? 'red' : 'green';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/${type}`);
+                const data = await response.json();
+
+                if (data.success && data.prompts.length > 0) {
+                    feedEl.innerHTML = data.prompts.map((p, index) => `
+                    <div class="prompt-card bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-${color}-300 font-medium text-sm">@${p.user_id || 'anonymous'}</span>
+                            <button onclick="copyPromptToTextarea('${type}-prompt', '${p.prompt.replace(/'/g, "\\'")}')"
+                                class="px-3 py-1 bg-${color}-600 hover:bg-${color}-700 rounded text-xs text-white transition-colors">Try this prompt</button>
+                        </div>
+                        <p class="text-gray-300 text-sm">${p.prompt}</p>
+                    </div>
+                `).join('');
+                } else {
+                    feedEl.innerHTML = `<p class="text-gray-400 text-sm text-center py-4">No ${type} prompts yet. Be the first to submit one!</p>`;
+                }
+            } catch (error) {
+                console.error('Error loading prompts:', error);
+                feedEl.innerHTML = `<p class="text-gray-400 text-sm text-center py-4">Could not load prompts. Make sure the backend is running.</p>`;
+            }
+        }
+
+        // Generate functions - Connected to Flask backend
+        async function generateBadPrompt() {
+            const badPrompt = document.getElementById('bad-prompt').value.trim();
+            const outputEl = document.getElementById('output-bad');
+
+            if (!badPrompt) {
+                outputEl.textContent = 'Please enter a bad prompt above.';
+                return;
+            }
+
+            outputEl.textContent = 'Generating response...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/test`, {
+                    method: 'POST',
+                    credentials: 'include', // Include cookies for authentication
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: badPrompt,
+                        type: 'bad'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate response');
+                }
+
+                const data = await response.json();
+                outputEl.textContent = data.response;
+
+                // Reload the bad prompts feed to show the new prompt
+                loadPrompts('bad');
+
+            } catch (error) {
+                console.error('Error:', error);
+                outputEl.textContent = 'Error: Could not connect to server. Make sure the backend is running.\n\n' +
+                    'Simulated response: The vague prompt "' + badPrompt + '" would result in a generic response.';
+            }
+        }
+
+        async function generateGoodPrompt() {
+            const goodPrompt = document.getElementById('good-prompt').value.trim();
+            const outputEl = document.getElementById('output-good');
+
+            if (!goodPrompt) {
+                outputEl.textContent = 'Please enter a good prompt above.';
+                return;
+            }
+
+            outputEl.textContent = 'Generating response...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/test`, {
+                    method: 'POST',
+                    credentials: 'include', // Include cookies for authentication
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: goodPrompt,
+                        type: 'good'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate response');
+                }
+
+                const data = await response.json();
+                outputEl.textContent = data.response;
+
+                // Reload the good prompts feed to show the new prompt
+                loadPrompts('good');
+
+            } catch (error) {
+                console.error('Error:', error);
+                outputEl.textContent = 'Error: Could not connect to server. Make sure the backend is running.\n\n' +
+                    'Simulated response: The well-structured prompt would result in a detailed response.';
+            }
+        }
+
+        // Load prompts when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            loadPrompts('bad');
+            loadPrompts('good');
+        });
+
+        // Feedback modal
+        let selectedRating = 0;
+        let selectedCategory = '';
+
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.dataset.rating);
+                updateStars();
+            });
+        });
+
+        function updateStars() {
+            document.querySelectorAll('.star').forEach(s => {
+                s.style.color = (parseInt(s.dataset.rating) <= selectedRating) ? '#ffd700' : '#ddd';
+            });
+        }
+
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => {
+                    b.style.background = 'white';
+                    b.style.color = '#000000';
+                    b.style.borderColor = '#ddd';
+                });
+                btn.style.background = '#8b5cf6';
+                btn.style.color = 'white';
+                btn.style.borderColor = '#7c3aed';
+                selectedCategory = btn.dataset.category;
+            });
+        });
+
+        function submitFeedback() {
+            if (!selectedRating) return alert("Please select a rating");
+            if (!selectedCategory) return alert("Select a category");
+
+            document.getElementById("feedbackForm").classList.add("hidden");
+            document.getElementById("successMessage").classList.remove("hidden");
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("feedbackModal");
+            if (modal) {
+                // Use class-based approach
+                modal.classList.remove("modal-show");
+                // Re-enable body scrolling
+                document.body.style.overflow = "";
+                // Reset form
+                document.getElementById("feedbackForm").classList.remove("hidden");
+                document.getElementById("successMessage").classList.add("hidden");
+            }
+        }
+
+        function showFeedbackModal() {
+            const modal = document.getElementById("feedbackModal");
+
+            if (!modal) {
+                alert("Error: Feedback modal not found. Please refresh the page and try again.");
+                return;
+            }
+
+            // Prevent background scrolling
+            document.body.style.overflow = "hidden";
+
+            // Show modal
+            modal.classList.add("modal-show");
+            modal.style.display = "flex";
+            modal.style.visibility = "visible";
+            modal.style.opacity = "1";
+
+            // Ensure inner modal box is visible
+            const modalBox = modal.querySelector('.modal');
+            if (modalBox) {
+                modalBox.style.display = "block";
+            }
+
+            // Scroll to top when modal opens
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Copy community prompt to textarea
+        function copyPromptToTextarea(textareaId, promptText) {
+            const textarea = document.getElementById(textareaId);
+            if (textarea) {
+                textarea.value = promptText;
+                textarea.focus();
+                // Add brief visual feedback
+                textarea.style.borderColor = '#3b82f6';
+                setTimeout(() => {
+                    textarea.style.borderColor = '';
+                }, 1000);
+            }
+        }
+
+        // ===== INTERACTIVE ACTIVITIES =====
+
+        // Math Prompt Builder
+        function buildMathPrompt() {
+            const action = document.getElementById('math-action').value;
+            const topic = document.getElementById('math-topic').value;
+            const detail = document.getElementById('math-detail').value;
+
+            if (!action || !topic) {
+                alert('Please fill in the action and topic fields!');
+                return;
+            }
+
+            let prompt = action + ' ' + topic;
+            if (detail) {
+                prompt += ' ' + detail;
+            }
+            prompt += '.';
+
+            document.getElementById('math-prompt-text').textContent = prompt;
+            document.getElementById('math-prompt-output').classList.remove('hidden');
+        }
+
+        // Copy to Clipboard
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+
+        // Science Drag and Drop
+        let droppedElements = [];
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const element = document.getElementById(data);
+
+            if (!droppedElements.includes(data)) {
+                droppedElements.push(data);
+                const preview = document.getElementById('science-prompt-preview');
+                const clone = element.cloneNode(true);
+                clone.draggable = false;
+                clone.classList.add('mb-2');
+                preview.appendChild(clone);
+            }
+        }
+
+        function resetScienceDrag() {
+            droppedElements = [];
+            document.getElementById('science-prompt-preview').innerHTML = '';
+            document.getElementById('science-feedback').classList.add('hidden');
+        }
+
+        function checkSciencePrompt() {
+            const feedback = document.getElementById('science-feedback');
+            const correctOrder = ['sci-action', 'sci-audience', 'sci-format'];
+
+            if (droppedElements.length === 0) {
+                feedback.textContent = 'Please drag some elements first!';
+                feedback.className = 'mt-4 p-3 rounded-lg bg-red-900/30 border border-red-500/50 text-red-300';
+                feedback.classList.remove('hidden');
+                return;
+            }
+
+            const isCorrect = JSON.stringify(droppedElements) === JSON.stringify(correctOrder);
+
+            if (isCorrect) {
+                feedback.textContent = '🎉 Perfect! This is a well-structured science prompt with action, audience, and format!';
+                feedback.className = 'mt-4 p-3 rounded-lg bg-green-900/30 border border-green-500/50 text-green-300';
+            } else {
+                feedback.textContent = '💡 Good try! The ideal order is: Action → Audience → Format. This creates a clear, targeted prompt.';
+                feedback.className = 'mt-4 p-3 rounded-lg bg-yellow-900/30 border border-yellow-500/50 text-yellow-300';
+            }
+            feedback.classList.remove('hidden');
+        }
+
+        // CS Prompt Analyzer - Connected to Flask backend
+        async function analyzeCSPrompt() {
+            const prompt = document.getElementById('cs-prompt-input').value.trim();
+
+            if (!prompt) {
+                alert('Please enter a prompt first!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to analyze prompt');
+                }
+
+                const data = await response.json();
+                const { checklist, score } = data.analysis;
+
+                // Display results
+                const checklistDiv = document.getElementById('cs-checklist');
+                checklistDiv.innerHTML = checklist.map(item =>
+                    `<div class="flex items-center gap-2">
+                    <span class="text-${item.passed ? 'green' : 'red'}-400">${item.passed ? '✅' : '❌'}</span>
+                    <span>${item.item}</span>
+                </div>`
+                ).join('');
+
+                const scoreDiv = document.getElementById('cs-score');
+                let scoreColor = score >= 75 ? 'green' : score >= 50 ? 'yellow' : 'red';
+                scoreDiv.textContent = `Score: ${score}/100`;
+                scoreDiv.className = `text-center p-3 rounded-lg font-bold text-xl bg-${scoreColor}-900/30 text-${scoreColor}-300`;
+
+                document.getElementById('cs-analysis').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error: Could not connect to server. Make sure the backend is running.');
+            }
+        }
+
+        async function improveCSPrompt() {
+            const prompt = document.getElementById('cs-prompt-input').value.trim();
+
+            if (!prompt) {
+                alert('Please enter a prompt first!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/improve`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to improve prompt');
+                }
+
+                const data = await response.json();
+                const improved = data.improved;
+
+                document.getElementById('cs-improved-text').textContent = improved;
+                document.getElementById('cs-improved').classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error: Could not connect to server. Make sure the backend is running.');
+            }
+        }
+
+        // History Prompt Builder
+        let selectedHistoryType = null;
+
+        function selectHistoryType(type) {
+            selectedHistoryType = type;
+
+            // Update button styles
+            document.querySelectorAll('.history-type-btn').forEach(btn => {
+                btn.classList.remove('bg-purple-600');
+                btn.classList.add('bg-slate-700');
+            });
+            document.getElementById(`hist-${type}-btn`).classList.add('bg-purple-600');
+            document.getElementById(`hist-${type}-btn`).classList.remove('bg-slate-700');
+
+            // Show form with appropriate inputs
+            const form = document.getElementById('history-template-form');
+            const inputs = document.getElementById('history-inputs');
+
+            let html = '';
+            switch (type) {
+                case 'cause':
+                    html = `
+                    <label class="block text-sm font-semibold mb-2">Historical Event:</label>
+                    <input type="text" id="hist-event" placeholder="e.g., World War I"
+                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white mb-3">
+                    <label class="block text-sm font-semibold mb-2">Number of causes to include:</label>
+                    <select id="hist-count" class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white">
+                        <option value="3">3 causes</option>
+                        <option value="5">5 causes</option>
+                    </select>
+                `;
+                    break;
+                case 'compare':
+                    html = `
+                    <label class="block text-sm font-semibold mb-2">First Event:</label>
+                    <input type="text" id="hist-event1" placeholder="e.g., American Revolution"
+                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white mb-3">
+                    <label class="block text-sm font-semibold mb-2">Second Event:</label>
+                    <input type="text" id="hist-event2" placeholder="e.g., French Revolution"
+                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white">
+                `;
+                    break;
+                case 'analyze':
+                    html = `
+                    <label class="block text-sm font-semibold mb-2">Source/Document:</label>
+                    <input type="text" id="hist-source" placeholder="e.g., Gettysburg Address"
+                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white mb-3">
+                    <label class="block text-sm font-semibold mb-2">Focus on:</label>
+                    <select id="hist-focus" class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white">
+                        <option value="main themes">Main themes</option>
+                        <option value="historical context">Historical context</option>
+                        <option value="rhetorical devices">Rhetorical devices</option>
+                    </select>
+                `;
+                    break;
+                case 'timeline':
+                    html = `
+                    <label class="block text-sm font-semibold mb-2">Topic/Period:</label>
+                    <input type="text" id="hist-period" placeholder="e.g., Civil Rights Movement"
+                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white mb-3">
+                    <label class="block text-sm font-semibold mb-2">Time Range:</label>
+                    <input type="text" id="hist-range" placeholder="e.g., 1954-1968"
+                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white">
+                `;
+                    break;
+            }
+
+            inputs.innerHTML = html;
+            form.classList.remove('hidden');
+            document.getElementById('history-output').classList.add('hidden');
+        }
+
+        function generateHistoryPrompt() {
+            let prompt = '';
+
+            switch (selectedHistoryType) {
+                case 'cause':
+                    const event = document.getElementById('hist-event').value;
+                    const count = document.getElementById('hist-count').value;
+                    if (!event) { alert('Please enter an event!'); return; }
+                    prompt = `Explain the main causes of ${event} in simple terms. Include at least ${count} causes and how they led to the event.`;
+                    break;
+                case 'compare':
+                    const event1 = document.getElementById('hist-event1').value;
+                    const event2 = document.getElementById('hist-event2').value;
+                    if (!event1 || !event2) { alert('Please enter both events!'); return; }
+                    prompt = `Compare and contrast the ${event1} and the ${event2}. Create a table showing their similarities and differences.`;
+                    break;
+                case 'analyze':
+                    const source = document.getElementById('hist-source').value;
+                    const focus = document.getElementById('hist-focus').value;
+                    if (!source) { alert('Please enter a source!'); return; }
+                    prompt = `Analyze the ${source}. Focus on the ${focus} used in the document.`;
+                    break;
+                case 'timeline':
+                    const period = document.getElementById('hist-period').value;
+                    const range = document.getElementById('hist-range').value;
+                    if (!period || !range) { alert('Please fill in all fields!'); return; }
+                    prompt = `Create a timeline of key events during the ${period} from ${range}. Include dates and brief descriptions.`;
+                    break;
+            }
+
+            document.getElementById('history-prompt-text').textContent = prompt;
+            document.getElementById('history-output').classList.remove('hidden');
+        }
+
+        function resetHistoryBuilder() {
+            selectedHistoryType = null;
+            document.getElementById('history-template-form').classList.add('hidden');
+            document.getElementById('history-output').classList.add('hidden');
+            document.querySelectorAll('.history-type-btn').forEach(btn => {
+                btn.classList.remove('bg-purple-600');
+                btn.classList.add('bg-slate-700');
+            });
+        }
+
+        // Initialize
+        updateProgress();
+        function showFeedbackModal() {
+            console.log("showFeedbackModal called");
+            const modal = document.getElementById("feedbackModal");
+            console.log("Modal element:", modal);
+
+            if (!modal) {
+                console.error("Modal not found!");
+                alert("Error: Feedback modal not found. Please refresh the page and try again.");
+                return;
+            }
+
+            // Force visibility with all possible overrides
+            modal.style.display = "flex";
+            modal.style.visibility = "visible";
+            modal.style.opacity = "1";
+            modal.style.zIndex = "99999";
+            modal.style.position = "fixed";
+            modal.style.top = "0";
+            modal.style.left = "0";
+            modal.style.width = "100%";
+            modal.style.height = "100%";
+            modal.style.background = "rgba(0, 0, 0, 0.8)";
+            modal.style.alignItems = "center";
+            modal.style.justifyContent = "center";
+            console.log("Modal display set to flex with overrides");
+
+            // Ensure inner modal box is visible
+            const modalBox = modal.querySelector('.modal');
+            if (modalBox) {
+                modalBox.style.display = "block";
+                modalBox.style.position = "relative";
+                modalBox.style.zIndex = "100000";
+                console.log("Modal box display set to block");
+            }
+
+            // Check if modal is actually visible
+            const rect = modal.getBoundingClientRect();
+            console.log("Modal bounding rect:", rect);
+            console.log("Modal computed style display:", window.getComputedStyle(modal).display);
+
+            // Prevent background scrolling
+            document.body.style.overflow = "hidden";
+
+            // Scroll to top when modal opens
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==================== MATH SECTION FUNCTIONS ====================
+
+        // Toggle math tips visibility
+        function toggleMathTips() {
+            const tipsEl = document.getElementById('math-tips');
+            if (tipsEl.classList.contains('hidden')) {
+                tipsEl.classList.remove('hidden');
+            } else {
+                tipsEl.classList.add('hidden');
+            }
+        }
+
+        // Load math questions from database
+        async function loadMathQuestions() {
+            try {
+                const response = await fetch('http://localhost:8001/api/math/questions');
+                const data = await response.json();
+
+                if (data.success && data.questions) {
+                    displayMathQuestions(data.questions);
+                } else {
+                    throw new Error('Failed to load questions');
+                }
+            } catch (error) {
+                console.error('Error loading math questions:', error);
+                document.getElementById('math-questions-container').innerHTML =
+                    '<p class="text-center text-red-400">Failed to load questions. Please refresh the page.</p>';
+            }
+        }
+
+        // Display math questions
+        function displayMathQuestions(questions) {
+            const container = document.getElementById('math-questions-container');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const questionHtml = `
+                    <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-purple-300 mb-4">Question ${index + 1}</h3>
+                        <p class="text-lg mb-4">${q.question}</p>
+
+                        <button
+                            onclick="togglePrompt(${q.id})"
+                            id="prompt-btn-${q.id}"
+                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition-all mb-3">
+                            View Prompt
+                        </button>
+
+                        <!-- Prompt Display Area (hidden by default) -->
+                        <div id="prompt-area-${q.id}" class="hidden mt-4">
+                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mb-3">
+                                <p class="text-sm text-blue-300 mb-2">Generated Prompt:</p>
+                                <p id="prompt-text-${q.id}" class="text-white mb-3">${q.prompt_template.replace('{question}', q.question)}</p>
+
+                                <button
+                                    onclick="autofillPrompt(${q.id})"
+                                    class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm mr-2">
+                                    Autofill & Test
+                                </button>
+                                <button
+                                    onclick="copyPrompt(${q.id})"
+                                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm">
+                                    Copy Prompt
+                                </button>
+                            </div>
+
+                            <!-- Gemini API Output Area -->
+                            <div id="gemini-output-${q.id}" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                                <p class="text-sm text-green-300 mb-2">AI Response:</p>
+                                <div id="gemini-result-${q.id}" class="text-white text-sm whitespace-pre-wrap"></div>
+                                <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += questionHtml;
+            });
+        }
+
+        // Toggle prompt visibility
+        function togglePrompt(questionId) {
+            const promptArea = document.getElementById(`prompt-area-${questionId}`);
+            const btn = document.getElementById(`prompt-btn-${questionId}`);
+
+            if (promptArea.classList.contains('hidden')) {
+                promptArea.classList.remove('hidden');
+                btn.textContent = 'Hide Prompt';
+                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                btn.classList.add('bg-red-600', 'hover:bg-red-700');
+            } else {
+                promptArea.classList.add('hidden');
+                btn.textContent = 'View Prompt';
+                btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                // Also hide Gemini output
+                document.getElementById(`gemini-output-${questionId}`).classList.add('hidden');
+            }
+        }
+
+        // Autofill prompt and call Gemini API
+        async function autofillPrompt(questionId) {
+            const promptText = document.getElementById(`prompt-text-${questionId}`).textContent;
+            const outputArea = document.getElementById(`gemini-output-${questionId}`);
+            const resultArea = document.getElementById(`gemini-result-${questionId}`);
+
+            // Show output area with loading message
+            outputArea.classList.remove('hidden');
+            resultArea.textContent = 'Loading AI response...';
+
+            try {
+                const response = await fetch('http://localhost:8001/api/gemini', {
+                    method: 'POST',
+                    credentials: 'include', // Include authentication cookies
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: promptText, // API expects 'text' field, not 'prompt'
+                        prompt: '' // Empty custom prompt to use default behavior
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.text) {
+                    resultArea.textContent = data.text;
+
+                    // Trigger MathJax to render LaTeX equations
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([resultArea]).catch((err) => {
+                            console.error('MathJax rendering error:', err);
+                        });
+                    }
+                } else if (data.message) {
+                    // Show error message from API
+                    resultArea.textContent = `Error: ${data.message}`;
+                } else {
+                    resultArea.textContent = 'Error: No response from AI';
+                }
+            } catch (error) {
+                console.error('Gemini API error:', error);
+                resultArea.textContent = 'Error: Failed to get AI response. Please make sure you are logged in.';
+            }
+        }
+
+        // Copy prompt to clipboard
+        function copyPrompt(questionId) {
+            const promptText = document.getElementById(`prompt-text-${questionId}`).textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                alert('Prompt copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // ==================== SCIENCE SECTION FUNCTIONS ====================
+
+        // Toggle science tips visibility
+        function toggleScienceTips() {
+            const tipsEl = document.getElementById('science-tips');
+            if (tipsEl.classList.contains('hidden')) {
+                tipsEl.classList.remove('hidden');
+            } else {
+                tipsEl.classList.add('hidden');
+            }
+        }
+
+        // Load science questions from database
+        async function loadScienceQuestions() {
+            try {
+                const response = await fetch('http://localhost:8001/api/science/questions');
+                const data = await response.json();
+
+                if (data.success && data.questions) {
+                    displayScienceQuestions(data.questions);
+                } else {
+                    throw new Error('Failed to load questions');
+                }
+            } catch (error) {
+                console.error('Error loading science questions:', error);
+                document.getElementById('science-questions-container').innerHTML =
+                    '<p class="text-center text-red-400">Failed to load questions. Please refresh the page.</p>';
+            }
+        }
+
+        // Display science questions
+        function displayScienceQuestions(questions) {
+            const container = document.getElementById('science-questions-container');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const questionHtml = `
+                    <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-purple-300 mb-4">Question ${index + 1} - ${q.category.charAt(0).toUpperCase() + q.category.slice(1)}</h3>
+                        <p class="text-lg mb-4">${q.question}</p>
+
+                        <button
+                            onclick="toggleSciencePrompt(${q.id})"
+                            id="science-prompt-btn-${q.id}"
+                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition-all mb-3">
+                            View Prompt
+                        </button>
+
+                        <!-- Prompt Display Area (hidden by default) -->
+                        <div id="science-prompt-area-${q.id}" class="hidden mt-4">
+                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mb-3">
+                                <p class="text-sm text-blue-300 mb-2">Generated Prompt:</p>
+                                <p id="science-prompt-text-${q.id}" class="text-white mb-3">${q.prompt_template.replace('{question}', q.question)}</p>
+
+                                <button
+                                    onclick="autofillSciencePrompt(${q.id})"
+                                    class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm mr-2">
+                                    Autofill & Test
+                                </button>
+                                <button
+                                    onclick="copySciencePrompt(${q.id})"
+                                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm">
+                                    Copy Prompt
+                                </button>
+                            </div>
+
+                            <!-- Gemini API Output Area -->
+                            <div id="science-gemini-output-${q.id}" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                                <p class="text-sm text-green-300 mb-2">AI Response:</p>
+                                <div id="science-gemini-result-${q.id}" class="text-white text-sm whitespace-pre-wrap"></div>
+                                <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += questionHtml;
+            });
+        }
+
+        // Toggle science prompt visibility
+        function toggleSciencePrompt(questionId) {
+            const promptArea = document.getElementById(`science-prompt-area-${questionId}`);
+            const btn = document.getElementById(`science-prompt-btn-${questionId}`);
+
+            if (promptArea.classList.contains('hidden')) {
+                promptArea.classList.remove('hidden');
+                btn.textContent = 'Hide Prompt';
+                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                btn.classList.add('bg-red-600', 'hover:bg-red-700');
+            } else {
+                promptArea.classList.add('hidden');
+                btn.textContent = 'View Prompt';
+                btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                // Also hide Gemini output
+                document.getElementById(`science-gemini-output-${questionId}`).classList.add('hidden');
+            }
+        }
+
+        // Autofill science prompt and call Gemini API
+        async function autofillSciencePrompt(questionId) {
+            const promptText = document.getElementById(`science-prompt-text-${questionId}`).textContent;
+            const outputArea = document.getElementById(`science-gemini-output-${questionId}`);
+            const resultArea = document.getElementById(`science-gemini-result-${questionId}`);
+
+            // Show output area with loading message
+            outputArea.classList.remove('hidden');
+            resultArea.textContent = 'Loading AI response...';
+
+            try {
+                const response = await fetch('http://localhost:8001/api/gemini', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: promptText,
+                        prompt: ''
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.text) {
+                    resultArea.textContent = data.text;
+
+                    // Trigger MathJax to render any chemical equations
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([resultArea]).catch((err) => {
+                            console.error('MathJax rendering error:', err);
+                        });
+                    }
+                } else if (data.message) {
+                    resultArea.textContent = `Error: ${data.message}`;
+                } else {
+                    resultArea.textContent = 'Error: No response from AI';
+                }
+            } catch (error) {
+                console.error('Gemini API error:', error);
+                resultArea.textContent = 'Error: Failed to get AI response. Please make sure you are logged in.';
+            }
+        }
+
+        // Copy science prompt to clipboard
+        function copySciencePrompt(questionId) {
+            const promptText = document.getElementById(`science-prompt-text-${questionId}`).textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                alert('Prompt copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // ==================== END SCIENCE SECTION FUNCTIONS ====================
+
+        // Toggle CS tips visibility
+        function toggleCSTips() {
+            const tipsEl = document.getElementById('cs-tips');
+            if (tipsEl.classList.contains('hidden')) {
+                tipsEl.classList.remove('hidden');
+            } else {
+                tipsEl.classList.add('hidden');
+            }
+        }
+
+        // Toggle History tips visibility
+        function toggleHistoryTips() {
+            const tipsEl = document.getElementById('history-tips');
+            if (tipsEl.classList.contains('hidden')) {
+                tipsEl.classList.remove('hidden');
+            } else {
+                tipsEl.classList.add('hidden');
+            }
+        }
+
+        // Load questions when the math or science section is accessed
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load questions immediately if already on math/science section, or when navigating to it
+            const originalGoToSection = window.goToSection;
+            window.goToSection = function (sectionIndex) {
+                originalGoToSection(sectionIndex);
+                if (sectionIndex === 1) { // Math section is section 1
+                    loadMathQuestions();
+                } else if (sectionIndex === 2) { // Science section is section 2
+                    loadScienceQuestions();
+                }
+            };
+        });
+    </script>
+
+</body>
+
+</html>

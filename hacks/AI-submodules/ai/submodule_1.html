@@ -368,7 +368,10 @@ date: 2025-10-30
             <div class="question-title">7. Most classes do not want students to use AI. What do you feel about these
                 policies? How would you want to use AI without having it do everything for you and it being considered
                 cheating?</div>
-            <textarea class="frq-textarea" name="frq" placeholder="Share your thoughts here..." required></textarea>
+            <textarea class="frq-textarea" id="frq-textarea" name="frq" placeholder="Share your thoughts here..." required></textarea>
+            <button type="button" onclick="autofillQuestion7()" style="margin-top: 10px; padding: 8px 16px; background-color: #6366f1; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                ✨ Autofill Sample Response
+            </button>
         </div>
 
         <button type="button" class="submit-btn" onclick="submitSurvey()">Submit Survey</button>
@@ -453,6 +456,12 @@ date: 2025-10-30
         });
         html += '</div>';
         container.innerHTML = html;
+    }
+
+    // Autofill Question 7 with a sample response
+    function autofillQuestion7() {
+        const sampleResponse = "I believe AI policies need to strike a balance between preventing academic dishonesty and allowing students to learn how to use AI as a tool. Rather than banning AI completely, I think we should learn how to use it ethically and responsibly. I would want to use AI as a learning aid—for example, to help me understand difficult concepts, brainstorm ideas, or check my work for errors—but I would still write my own original responses and do my own critical thinking. AI should enhance my learning, not replace it. I think it's important to cite when I've used AI and be transparent about how I've incorporated it into my work.";
+        document.getElementById('frq-textarea').value = sampleResponse;
     }
 
     // Submit survey
