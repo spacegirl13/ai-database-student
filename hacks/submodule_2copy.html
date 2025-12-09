@@ -1,0 +1,418 @@
+---
+layout: post
+title: "AI Usage Quest — Module 2: Prompt Engineering"
+description: "Master the art of communicating effectively with AI through strategic prompting"
+permalink: /digital-famine/ai/submodule_2/
+categories: [CSP, Submodule, AIUsage]
+tags: [ai, prompts, prompt-engineering, zero-shot, few-shot]
+author: "Debuggers Team - Ruchika Kench, Anishka Sanghvi"
+microblog: true
+date: 2025-10-30
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Usage Quest — Module 2: Prompt Engineering</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .game-header { text-align: center; margin-bottom: 30px; animation: fadeInDown 0.6s ease; }
+        .game-header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); }
+        .game-header p { font-size: 1.1em; opacity: 0.9; }
+        .game-screen { display: none; }
+        .game-screen.active { display: block; animation: fadeIn 0.4s ease; }
+        .start-screen {
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            color: #e0e7ff;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+        }
+        .start-screen h2 { color: #60a5fa; font-size: 2em; margin-bottom: 20px; }
+        .start-screen p { font-size: 1.1em; margin-bottom: 15px; line-height: 1.6; color: #cbd5e1; }
+        .btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px 5px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+        .btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+        .section-card {
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        .problem-number, .concept-number {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+            color: white;
+        }
+        .problem-number { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); }
+        .concept-number { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .problem-text { font-size: 1.2em; color: #e0e7ff; margin-bottom: 20px; line-height: 1.6; font-weight: 500; }
+        .toggle-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+        .toggle-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+        .toggle-button::before { content: "❓"; font-size: 1.2em; }
+        .prompts-section { display: none; margin-top: 20px; animation: slideDown 0.4s ease; }
+        .prompts-section.active { display: block; }
+        .prompt-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
+        .prompt-box { background: rgba(30, 58, 138, 0.4); border-radius: 15px; padding: 20px; border: 3px solid; }
+        .bad-prompt { border-color: #ef4444; }
+        .good-prompt { border-color: #10b981; }
+        .prompt-label { font-weight: 700; font-size: 1.1em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .bad-prompt .prompt-label { color: #fca5a5; }
+        .bad-prompt .prompt-label::before { content: "❌"; }
+        .good-prompt .prompt-label { color: #6ee7b7; }
+        .good-prompt .prompt-label::before { content: "✅"; }
+        .prompt-text-box {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            color: #cbd5e1;
+            line-height: 1.6;
+            font-style: italic;
+            border-left: 4px solid;
+        }
+        .bad-prompt .prompt-text-box { border-left-color: #ef4444; }
+        .good-prompt .prompt-text-box { border-left-color: #10b981; }
+        .explanation {
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+        .explanation strong { color: #e0e7ff; }
+        .tip-box {
+            background: rgba(59, 130, 246, 0.2);
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .tip-box h3 { color: #60a5fa; margin-bottom: 10px; font-size: 1.3em; }
+        .tip-box p { color: #cbd5e1; line-height: 1.6; }
+        .study-methods { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
+        .study-method-box {
+            background: rgba(30, 58, 138, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            border: 3px solid #10b981;
+        }
+        .method-label {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6ee7b7;
+        }
+        .method-label::before { content: "📚"; font-size: 1.3em; }
+        .framework-box {
+            background: rgba(139, 92, 246, 0.2);
+            border: 2px solid rgba(139, 92, 246, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .framework-box h4 { color: #a78bfa; margin-bottom: 15px; font-size: 1.2em; }
+        .framework-item {
+            background: rgba(30, 58, 138, 0.4);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #a78bfa;
+        }
+        .framework-item strong { color: #c4b5fd; }
+        .back-button {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .back-button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(107, 114, 128, 0.6); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; max-height: 0; } to { opacity: 1; max-height: 3000px; } }
+        @media (max-width: 768px) { .prompt-comparison { grid-template-columns: 1fr; } .game-header h1 { font-size: 2em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <h1>🎮 AI Prompt Engineering Module</h1>
+            <p>Learn to communicate effectively with AI across different subjects</p>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="startScreen" class="game-screen active">
+            <div class="start-screen">
+                <h2>Welcome to Prompt Engineering! 🚀</h2>
+                <p><strong>Choose Your Learning Path:</strong></p>
+                <p>📐 <strong>Math:</strong> Learn how to get homework help without just getting answers</p>
+                <p>🔬 <strong>Science:</strong> Discover effective study methods using AI</p>
+
+                <div class="btn-group">
+                    <button class="btn" onclick="showScreen('mathSection')" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);">
+                        📐 Math Homework Help
+                    </button>
+                    <button class="btn" onclick="showScreen('scienceSection')" style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);">
+                        🔬 Science Study Methods
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Math Section -->
+        <div id="mathSection" class="game-screen">
+            <div class="game-header">
+                <h2>📐 Math Homework Problems</h2>
+                <p>Learn the difference between good and bad AI prompts</p>
+            </div>
+
+            <div class="tip-box">
+                <h3>💡 Key Tip</h3>
+                <p><strong>Good prompts</strong> focus on understanding the process and building skills.<br>
+                <strong>Bad prompts</strong> just seek quick answers without learning.</p>
+            </div>
+
+            <div class="section-card">
+                <span class="problem-number">Problem 1</span>
+                <div class="problem-text">Find the derivative of 3e<sup>x</sup> · 4x<sup>2</sup></div>
+                <button class="toggle-button" onclick="togglePrompts('math', 1)">Show Good vs. Bad Prompts</button>
+                <div class="prompts-section" id="math-prompts-1">
+                    <div class="prompt-comparison">
+                        <div class="prompt-box bad-prompt">
+                            <div class="prompt-label">Bad Prompt</div>
+                            <div class="prompt-text-box">"What's the derivative of 3e^x * 4x^2?"</div>
+                            <div class="explanation"><strong>Why it's bad:</strong> Just asks for answer without learning.</div>
+                        </div>
+                        <div class="prompt-box good-prompt">
+                            <div class="prompt-label">Good Prompt</div>
+                            <div class="prompt-text-box">"I need to find the derivative of 3e^x · 4x^2. Can you explain which differentiation rule I should use and guide me through the steps? I think I need the product rule, but I'm not sure how to apply it with the exponential function."</div>
+                            <div class="explanation"><strong>Why it's good:</strong> Shows thinking, asks for process guidance.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <span class="problem-number">Problem 2</span>
+                <div class="problem-text">Examine the end behavior of (5x<sup>3</sup> - 4x<sup>4</sup>) / (6x<sup>5</sup>)</div>
+                <button class="toggle-button" onclick="togglePrompts('math', 2)">Show Good vs. Bad Prompts</button>
+                <div class="prompts-section" id="math-prompts-2">
+                    <div class="prompt-comparison">
+                        <div class="prompt-box bad-prompt">
+                            <div class="prompt-label">Bad Prompt</div>
+                            <div class="prompt-text-box">"What's the end behavior of (5x^3-4x^4)/(6x^5)?"</div>
+                            <div class="explanation"><strong>Why it's bad:</strong> Too vague, no understanding shown.</div>
+                        </div>
+                        <div class="prompt-box good-prompt">
+                            <div class="prompt-label">Good Prompt</div>
+                            <div class="prompt-text-box">"I'm analyzing the end behavior of (5x^3-4x^4)/(6x^5). I know I should look at the highest degree terms, but can you walk me through the process step by step? What happens as x approaches positive and negative infinity, and why?"</div>
+                            <div class="explanation"><strong>Why it's good:</strong> Shows understanding, seeks reasoning.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <span class="problem-number">Problem 3</span>
+                <div class="problem-text">We are going to fence in a rectangular field. If we look at the field from above, the cost of the vertical sides are $10/ft, the cost of the bottom is $2/ft, and the cost of the top is $7/ft. If we have $700, determine the dimensions of the field that will maximize the enclosed area.</div>
+                <button class="toggle-button" onclick="togglePrompts('math', 3)">Show Good vs. Bad Prompts</button>
+                <div class="prompts-section" id="math-prompts-3">
+                    <div class="prompt-comparison">
+                        <div class="prompt-box bad-prompt">
+                            <div class="prompt-label">Bad Prompt</div>
+                            <div class="prompt-text-box">"Solve this optimization problem with a $700 budget and different fence costs."</div>
+                            <div class="explanation"><strong>Why it's bad:</strong> No setup or engagement with process.</div>
+                        </div>
+                        <div class="prompt-box good-prompt">
+                            <div class="prompt-label">Good Prompt</div>
+                            <div class="prompt-text-box">"I'm working on an optimization problem. I need to maximize the area of a rectangle with a $700 budget where vertical sides cost $10/ft, bottom costs $2/ft, and top costs $7/ft. Can you help me set up the constraint equation and the area function? Then guide me through using calculus to find the maximum - should I use derivatives and critical points?"</div>
+                            <div class="explanation"><strong>Why it's good:</strong> Identifies key elements, asks for method guidance.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <span class="problem-number">Problem 4</span>
+                <div class="problem-text">Air is being pumped into a spherical balloon at a rate of 5 cm<sup>3</sup>/min. Determine the rate at which the radius of the balloon is increasing when the diameter of the balloon is 20 cm.</div>
+                <button class="toggle-button" onclick="togglePrompts('math', 4)">Show Good vs. Bad Prompts</button>
+                <div class="prompts-section" id="math-prompts-4">
+                    <div class="prompt-comparison">
+                        <div class="prompt-box bad-prompt">
+                            <div class="prompt-label">Bad Prompt</div>
+                            <div class="prompt-text-box">"How fast is the radius growing when diameter is 20cm and volume rate is 5 cm^3/min?"</div>
+                            <div class="explanation"><strong>Why it's bad:</strong> No strategy or method shown.</div>
+                        </div>
+                        <div class="prompt-box good-prompt">
+                            <div class="prompt-label">Good Prompt</div>
+                            <div class="prompt-text-box">"I'm solving a related rates problem about a spherical balloon. I know dV/dt = 5 cm^3/min and I need to find dr/dt when diameter = 20 cm (radius = 10 cm). Can you help me set up the relationship between volume and radius for a sphere, then guide me through using implicit differentiation with respect to time? What's the key formula I should start with?"</div>
+                            <div class="explanation"><strong>Why it's good:</strong> Shows setup, demonstrates understanding, asks for proper method.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="back-button" onclick="showScreen('startScreen')">← Back to Menu</button>
+        </div>
+
+        <!-- Science Section -->
+        <div id="scienceSection" class="game-screen">
+            <div class="game-header">
+                <h2>🔬 Science Study Methods</h2>
+                <p>Learn how to use AI effectively for science concepts</p>
+            </div>
+
+            <div class="framework-box">
+                <h4>📋 How to Format a Good AI Prompt</h4>
+                <div class="framework-item"><strong>Action:</strong> What do you want the AI to do? (Explain, Create, Summarize, etc.)</div>
+                <div class="framework-item"><strong>Audience:</strong> Who is this for? (10th grader, beginner, etc.)</div>
+                <div class="framework-item"><strong>Format:</strong> How should it be presented? (Flashcards, diagram, simple terms, etc.)</div>
+            </div>
+
+            <div class="tip-box">
+                <h3>💡 Science Study Tip</h3>
+                <p>Use AI to create different types of study materials for the same concept. This helps reinforce understanding through multiple approaches!</p>
+            </div>
+
+            <div class="section-card">
+                <span class="concept-number">Concept 1</span>
+                <div class="problem-text">Steps of Photosynthesis</div>
+                <button class="toggle-button" onclick="togglePrompts('science', 1)">Show Study Method Prompts</button>
+                <div class="prompts-section" id="science-prompts-1">
+                    <div class="study-methods">
+                        <div class="study-method-box">
+                            <div class="method-label">Study Method 1: Flashcard Set</div>
+                            <div class="prompt-text-box">"Create a set of 10 flashcards about the steps of photosynthesis. For each flashcard, put the question on one side (like 'What happens during the light-dependent reactions?') and the answer on the other side. Make them appropriate for a high school biology student and include the key molecules involved."</div>
+                            <div class="explanation"><strong>Why this works:</strong> Flashcards help with active recall and are perfect for memorizing sequences.</div>
+                        </div>
+                        <div class="study-method-box">
+                            <div class="method-label">Study Method 2: Visual Diagram Guide</div>
+                            <div class="prompt-text-box">"Explain the steps of photosynthesis as if I'm creating a visual diagram. Describe what happens in each step, where it occurs in the chloroplast, what molecules are involved, and use simple arrows to show the flow from one step to the next. Use high school biology level language."</div>
+                            <div class="explanation"><strong>Why this works:</strong> Visual learning helps understand the process flow and spatial relationships.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <span class="concept-number">Concept 2</span>
+                <div class="problem-text">Cell Division: Mitosis vs Meiosis</div>
+                <button class="toggle-button" onclick="togglePrompts('science', 2)">Show Study Method Prompts</button>
+                <div class="prompts-section" id="science-prompts-2">
+                    <div class="study-methods">
+                        <div class="study-method-box">
+                            <div class="method-label">Study Method 1: Comparison Table</div>
+                            <div class="prompt-text-box">"Create a detailed comparison table of mitosis versus meiosis for a high school biology student. Include these categories: number of divisions, number of daughter cells produced, genetic similarity to parent cell, where it occurs in the body, and its biological purpose. Make it easy to study from."</div>
+                            <div class="explanation"><strong>Why this works:</strong> Side-by-side comparisons make differences and similarities clear.</div>
+                        </div>
+                        <div class="study-method-box">
+                            <div class="method-label">Study Method 2: Practice Quiz</div>
+                            <div class="prompt-text-box">"Generate 8 quiz questions that test understanding of the differences between mitosis and meiosis. Mix multiple choice and short answer questions. Include an answer key with brief explanations for each answer. Target high school biology level."</div>
+                            <div class="explanation"><strong>Why this works:</strong> Testing yourself reveals knowledge gaps and strengthens memory.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <span class="concept-number">Concept 3</span>
+                <div class="problem-text">Newton's Laws of Motion</div>
+                <button class="toggle-button" onclick="togglePrompts('science', 3)">Show Study Method Prompts</button>
+                <div class="prompts-section" id="science-prompts-3">
+                    <div class="study-methods">
+                        <div class="study-method-box">
+                            <div class="method-label">Study Method 1: Real-World Examples</div>
+                            <div class="prompt-text-box">"For each of Newton's 3 laws of motion, provide 3 real-world examples that a high school student can observe in their daily life. Explain clearly how each example demonstrates the specific law. Use simple physics terminology that a beginner would understand."</div>
+                            <div class="explanation"><strong>Why this works:</strong> Connecting abstract concepts to everyday experiences improves retention.</div>
+                        </div>
+                        <div class="study-method-box">
+                            <div class="method-label">Study Method 2: Concept Map Structure</div>
+                            <div class="prompt-text-box">"Help me create a concept map for Newton's Laws of Motion. Describe how to structure it with each main law at the center, then create branches for: key terms and definitions, real-world examples, mathematical formulas, and how the laws relate to each other. Explain the relationships between all these concepts."</div>
+                            <div class="explanation"><strong>Why this works:</strong> Concept maps show how ideas connect, helping create a mental framework.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="back-button" onclick="showScreen('startScreen')">← Back to Menu</button>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function togglePrompts(section, number) {
+            const promptsDiv = document.getElementById(`${section}-prompts-${number}`);
+            const button = promptsDiv.previousElementSibling;
+            
+            if (promptsDiv.classList.contains('active')) {
+                promptsDiv.classList.remove('active');
+                button.textContent = button.textContent.replace('Hide', 'Show');
+            } else {
+                promptsDiv.classList.add('active');
+                button.textContent = button.textContent.replace('Show', 'Hide');
+            }
+        }
+    </script>
+</body>
+</html>
