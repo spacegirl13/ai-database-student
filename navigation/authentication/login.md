@@ -119,18 +119,74 @@ show_reading_time: false
 };
     // Function to handle Python login
     window.pythonLogin = function () {
-        const options = {
-            URL: `${pythonURI}/api/authenticate`,
-            callback: pythonDatabase,
-            message: "message",
+        const loginURL = `${pythonURI}/api/authenticate`;
+        const signupURL = `${pythonURI}/api/user/guest`;
+        const userCredentials = JSON.stringify({
+            uid: document.getElementById("uid").value,
+            password: document.getElementById("password").value,
+        });
+        const loginOptions = {
+            ...fetchOptions,
             method: "POST",
-            cache: "no-cache",
-            body: {
-                uid: document.getElementById("uid").value,
-                password: document.getElementById("password").value,
-            }
+            body: userCredentials,
         };
-        login(options);
+
+        console.log("Attempting Python login...");
+        fetch(loginURL, loginOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Invalid login");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Python login successful!", data);
+                pythonDatabase();
+            })
+            .catch(error => {
+                console.error("Python login failed:", error.message);
+                // If login fails, attempt account creation
+                if (error.message === "Invalid login") {
+                    console.log("Attempting to create new Python account...");
+                    const signupData = JSON.stringify({
+                        uid: document.getElementById("uid").value,
+                        password: document.getElementById("password").value,
+                    });
+                    const signupOptions = {
+                        ...fetchOptions,
+                        method: "POST",
+                        body: signupData,
+                    };
+                    fetch(signupURL, signupOptions)
+                        .then(signupResponse => {
+                            if (!signupResponse.ok) {
+                                throw new Error("Account creation failed!");
+                            }
+                            return signupResponse.json();
+                        })
+                        .then(signupResult => {
+                            console.log("Python account creation successful!", signupResult);
+                            alert("Account Created! Logging you in...");
+                            // Retry login after account creation
+                            return fetch(loginURL, loginOptions);
+                        })
+                        .then(newLoginResponse => {
+                            if (!newLoginResponse.ok) {
+                                throw new Error("Login failed after account creation");
+                            }
+                            console.log("Python login successful after account creation!");
+                            return newLoginResponse.json();
+                        })
+                        .then(data => {
+                            console.log("Logged in successfully:", data);
+                            pythonDatabase();
+                        })
+                        .catch(signupError => {
+                            console.error("Error during signup/login:", signupError.message);
+                            document.getElementById("message").textContent = "Signup/Login failed: " + signupError.message;
+                        });
+                }
+            });
     }
     // Function to handle Java login
     window.javaLogin = function () {
