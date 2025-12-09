@@ -1,0 +1,246 @@
+{
+    "cells": [
+        {
+            "cell_type": "raw",
+            "id": "3f7153ac",
+            "metadata": {
+                "vscode": {
+                    "languageId": "raw"
+                }
+            },
+            "source": [
+                "---\n",
+                "layout: post\n",
+                "title: Adding Features to AI Quest\n",
+                "categories: [CSP]\n",
+                "permalink: /csp/ai-database/\n",
+                "---"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "1a2b3c4d",
+            "metadata": {},
+            "source": [
+                "# Enhancing the AI Quest with Database Features\n",
+                "\n",
+                "## Project Overview\n",
+                "\n",
+                "For our improvements of the quest from Trimester 1 of Computer Science, we've decided to build off the **AI Submodule** from the Digital Famine Quest. We're adding six database-driven features to make the quest more interactive, collaborative, and data-informed.\n",
+                "\n",
+                "These features will use **SQLite databases** to hold information of the user, track progress, and create a shared learning experience across the entire class."
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "2b3c4d5e",
+            "metadata": {},
+            "source": [
+                "## The 6 Features\n",
+                "\n",
+                "1. **Leaderboard** - Display top player scores\n",
+                "2. **Feedback Survey** - Collect and show player feedback at the end\n",
+                "3. **Quiz Analytics** - Track which questions students struggle with most\n",
+                "4. **Vault Code Storage** - Auto-save mission completion codes\n",
+                "5. **Recent Prompts Display** - Show the latest 3 prompts from other players\n",
+                "6. **Jokes** - Display funny jokes in between questions"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "b29213a4",
+            "metadata": {},
+            "source": [
+                "## Storyboard \n",
+                "![alt text](IMG_5002.jpg)"
+                "![IMG_5002.jpg](attachment:IMG_5002.jpg)"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "3c4d5e6f",
+            "metadata": {},
+            "source": [
+                "---\n",
+                "\n",
+                "## Feature 1: Leaderboard \n",
+                "\n",
+                "\n",
+                "### Visual Design\n",
+                "A table at the top displaying the 10 highest scores \n",
+                "- Rank position (1-10)\n",
+                "- Player username \n",
+                "- Total final score (including quizzes and games) \n",
+                "\n",
+                "Makes the game more engaging and interactive as people try to beat each others high scores. Adds a competitive element and comparative element to see how you are doing compared to other players!\n",
+                "\n",
+                "### Database Integration\n",
+                "The database stores each player's name and score who played the game or took the quiz. When someone completes all of the topics and the respective quiz or game for that section, their score updates automatically. The leaderboard queries the database to find the top 10 highest scores and displays them in descending order. The other scores are cut off. This involves using the continuous updating aspect of databases as new information is continuously added to the database and we extract updated information from the database to update the leaderboard.\n",
+                "\n",
+                "![alt text](images.jpg)"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "4d5e6f7g",
+            "metadata": {},
+            "source": [
+                "---\n",
+                "\n",
+                "## Feature 2: Feedback Survey \n",
+                "\n",
+                "### Visual Design\n",
+                "A two-part interface:\n",
+                "- **Top section**: Feedback form with star ratings (1-5), category dropdown (Bug/Suggestion/Praise), and text box\n",
+                "- **Bottom section**: Recent feedback cards showing previous responses.\n",
+                "\n",
+                "### Database Integration\n",
+                "At the end of the quest students will be given a survey they can complete and they can submit feedback which gets saved to the database. The system stores their rating, category, comments, and timestamp. Below the form, it displays the 10 most recent feedback entries from other students, creating transparency and showing that feedback is valued."
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "aacc914d",
+            "metadata": {},
+            "source": [
+                "## Images"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "9476ac0d",
+            "metadata": {},
+            "source": [
+                "<img width=\"946\" height=\"632\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/624859ed-1337-427c-91af-00a90b10b406\" /> "
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "d92dd0a2",
+            "metadata": {},
+            "source": [
+                "<img width=\"800\" height=\"602\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/750f606a-04a0-4652-966c-ca5c4a5d967b\" />"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "5e6f7g8h",
+            "metadata": {},
+            "source": [
+                "---\n",
+                "\n",
+                "## Feature 3: Quiz Analytics \n",
+                "\n",
+                "### Visual Design\n",
+                "A data dashboard showing:\n",
+                "- Bar chart ranking questions by difficulty (based on class success rates)\n",
+                "- Color-coded difficulty indicators: 🟢 Easy (>80% correct), 🟡 Medium (60-80%), 🔴 Hard (<60%)\n",
+                "- Each question shows: question text, success rate percentage, and number of attempts\n",
+                "- Class average score displayed prominently at the top\n",
+                "\n",
+                "### Database Integration\n",
+                "Every time a student answers a quiz question, the database records whether they got it right or wrong. The system calculates what percentage of the class answered each question correctly. This shows which concepts the entire class struggles with most, helping teachers identify topics that need more explanation. Students see class-wide data, not individual performance, reducing pressure."
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "6f7g8h9i",
+            "metadata": {},
+            "source": [
+                "---\n",
+                "\n",
+                "## Feature 4: Vault Code Storage \n",
+                "\n",
+                "1.  Purpose\n",
+                "   The autofill system automatically saves and displays mission completion codes so students never need to write them down or enter them manually. It prevents lost codes and makes the vault feel like a secure, polished feature.\n",
+                "\n",
+                "2.  Database Details\n",
+                "   **Table:** `vault_codes`  \n",
+                "   This table stores one row per user per mission:\n",
+                "\n",
+                "   | Field | Meaning |\n",
+                "   |-------|---------|\n",
+                "   | `user_id` | The student using the quest |\n",
+                "   | `mission_number` | Mission 1, 2, or 3 |\n",
+                "   | `code` | The unique mission code |\n",
+                "\n",
+                "   Whenever a mission is completed, the system immediately stores or updates the code in the database.\n",
+                "\n",
+                "3.  How Autofill Works in the Vault\n",
+                "   When the Vault screen loads, the system checks the database for the student's saved mission codes.\n",
+                "\n",
+                "   - **If a code exists:** The slot unlocks and shows the code.  \n",
+                "   - **If no code exists:** The slot stays gray with a 🔒 “Locked” label.  \n",
+                "   - **If all three codes exist:** The final vault PIN appears (code1–code2–code3).\n",
+                "\n",
+                "   No manual input is required from the student at any point.\n",
+                "\n",
+                "4.  Student Experience\n",
+                "   1. Complete a mission → code is saved automatically.  \n",
+                "   2. Open the vault → unlocked slots appear instantly.  \n",
+                "   3. Complete all missions → the final PIN is revealed."
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "8h9i0j1k",
+            "metadata": {},
+            "source": [
+                "---\n",
+                "\n",
+                "## Feature 5: Recent Prompts Display \n",
+                "\n",
+                "### Visual Design\n",
+                "A community prompt feed in the AI interaction section:\n",
+                "- Shows three recent prompts\n",
+                "- Each card displays: player name, the prompt text\n",
+                "- \"Try this prompt\" button to copy text\n",
+                "- Auto-refreshes to show new prompts\n",
+                "\n",
+                "Located right below where students type their own AI prompts.\n",
+                "\n",
+                "### Database Integration\n",
+                "When students submit a prompt to the AI, it gets saved in the database along with a timestamp. The display area queries for the three most recent prompts from all students and shows them. This helps students who are stuck see examples of what questions others are asking, fostering collaboration and giving ideas for how to interact with the AI effectively."
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "c0434eaf",
+            "metadata": {},
+            "source": [
+                "---\n",
+                "## Feature 6: Joke\n",
+                "\n",
+                "When the user completes 3 questions, to give them some motivation to keep progressing forward through the quest and add a fun element, we will display a funny computer science joke on the screen by using databases.\n",
+                "\n",
+                "Eg. \"Why Do Programmers Prefer Dark Mode?\n",
+                "\n",
+                "Because light attracts bugs!\"\n",
+                "\n",
+                "### Database Integration\n",
+                "\n",
+                "A fixed set of jokes will be stored in the database and users can add more jokes to that database at the end with the survey. We will then randomly display jokes from the new database after the user answers 3 questions.\n"
+            ]
+        },
+        {
+            "cell_type": "markdown",
+            "id": "18a09a81",
+            "metadata": {},
+            "source": [
+                "## Splitting Up The Work\n",
+                " - Anishka: Analytics and Recent Prompts Display\n",
+                " - Akshara: Survey and Display previous feedback\n",
+                " - Ruchika: Leaderboard\n",
+                " - Michelle: Joke\n",
+                " - Varada: Autofill Vault Code and Leaderboard Help"
+            ]
+        }
+    ],
+    "metadata": {
+        "language_info": {
+            "name": "python"
+        }
+    },
+    "nbformat": 4,
+    "nbformat_minor": 5
+}
