@@ -685,7 +685,7 @@ date: 2025-10-30
             </div>
         </div>
 
-        <!-- SECTION 4: History -->
+       <!-- SECTION 4: History -->
         <div id="section-4" class="mission-section section-hidden">
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
@@ -695,7 +695,47 @@ date: 2025-10-30
                             and make connections across time periods.</p>
 
                         <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">✅ Effective History Prompts</h4>
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-xl font-bold text-green-300">✅ Effective History Prompts</h4>
+                                <button onclick="toggleHistoryTips()" 
+                                    class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-300 group">
+                                    <span class="text-xl group-hover:scale-110 transition-transform">❓</span>
+                                    <span class="text-sm font-semibold">Pro Tips</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Collapsible Tips Section -->
+                            <div id="history-tips-dropdown" class="hidden overflow-hidden transition-all duration-500 mb-4">
+                                <div class="bg-blue-900/30 border border-blue-500/40 rounded-lg p-5" style="animation: slideDown 0.3s ease-out;">
+                                    <p class="font-semibold text-blue-300 mb-3 flex items-center gap-2">
+                                        <span class="text-xl">💡</span>
+                                        <span>Pro Tips for History:</span>
+                                    </p>
+                                    <ul class="space-y-2 text-gray-200">
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-blue-400 mt-1">•</span>
+                                            <span>Ask for multiple perspectives on historical events</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-blue-400 mt-1">•</span>
+                                            <span>Request connections between historical events and modern issues</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-blue-400 mt-1">•</span>
+                                            <span>Ask AI to create essay outlines or thesis statements</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-blue-400 mt-1">•</span>
+                                            <span>Use AI to generate practice DBQs (Document-Based Questions)</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <span class="text-blue-400 mt-1">•</span>
+                                            <span>Request historical context for better understanding</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
                             <div class="space-y-4">
                                 <div>
                                     <p class="font-semibold text-green-400 mb-2">1. Understand Cause and Effect</p>
@@ -713,23 +753,7 @@ date: 2025-10-30
                                 </div>
 
                                 <div>
-                                    <p class="font-semibold text-green-400 mb-2">2. Compare Historical Events</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Compare and contrast the American Revolution and the
-                                                French Revolution. Create a table showing their similarities and
-                                                differences."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Tell me about revolutions."</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">3. Analyze Primary Sources</p>
+                                    <p class="font-semibold text-green-400 mb-2">2. Analyze Primary Sources</p>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         <div class="bg-green-900/30 p-3 rounded">
                                             <p class="text-xs text-green-300 mb-1">✅ Good:</p>
@@ -742,33 +766,7 @@ date: 2025-10-30
                                         </div>
                                     </div>
                                 </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">4. Create Study Timelines</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Create a timeline of key events during the Civil Rights
-                                                Movement from 1954-1968. Include dates and brief descriptions."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"List Civil Rights events."</p>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
-                        </div>
-
-                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                            <p class="font-semibold">💡 Pro Tips for History:</p>
-                            <ul class="mt-2 space-y-1">
-                                <li>• Ask for multiple perspectives on historical events</li>
-                                <li>• Request connections between historical events and modern issues</li>
-                                <li>• Ask AI to create essay outlines or thesis statements</li>
-                                <li>• Use AI to generate practice DBQs (Document-Based Questions)</li>
-                                <li>• Request historical context for better understanding</li>
-                            </ul>
                         </div>
 
                         <!-- Interactive Activity: Prompt Template Builder -->
