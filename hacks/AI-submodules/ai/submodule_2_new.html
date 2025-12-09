@@ -17,6 +17,17 @@ date: 2025-10-30
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Module 2: Prompt Engineering</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax for rendering LaTeX equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
 
     <style>
         body {
@@ -147,6 +158,27 @@ date: 2025-10-30
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
+
+        /* Math output formatting */
+        #gemini-result-1,
+        #gemini-result-2,
+        #gemini-result-3,
+        #gemini-result-4 {
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* MathJax rendered equations */
+        .MathJax {
+            font-size: 1.1em !important;
+        }
+
+        /* Make bold text in LaTeX explanations stand out */
+        strong {
+            color: #a78bfa;
+            font-weight: 700;
+        }
     </style>
 </head>
 
@@ -260,143 +292,37 @@ date: 2025-10-30
         <div id="section-1" class="mission-section section-hidden">
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
-                    <h2 class="text-3xl font-bold mb-6">🔢 Prompts for Math</h2>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">🔢 Math Practice</h2>
+                        <button onclick="toggleMathTips()" class="text-3xl hover:scale-110 transition-transform"
+                            title="Show Tips">❓</button>
+                    </div>
+
+                    <!-- Collapsible Tips Section -->
+                    <div id="math-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for Math</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-green-900/30 p-3 rounded">
+                                <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                <p>"Find the derivative of 3x⁴ - 2x³ step-by-step. Show all work and explain each step
+                                    using the power rule."</p>
+                            </div>
+                            <div class="bg-red-900/30 p-3 rounded">
+                                <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                <p>"What's the derivative?"</p>
+                            </div>
+                        </div>
+                        <p class="mt-3 text-sm text-blue-200">✨ <strong>Key:</strong> Be specific, ask for step-by-step
+                            explanations, and mention the concept/rule to use.</p>
+                    </div>
+
                     <div class="space-y-6 text-lg">
-                        <p>AI can be a powerful math tutor when you ask the right questions. Learn how to get
-                            step-by-step solutions, conceptual explanations, and practice problems.</p>
+                        <p>Practice solving derivative problems with AI assistance. Click "View Prompt" to see an
+                            effective prompt, then use the Gemini API to check your work.</p>
 
-                        <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">✅ Effective Math Prompts</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">1. Ask for Step-by-Step Solutions</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Solve this quadratic equation step-by-step: 2x² + 5x - 3
-                                                = 0. Explain each step."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Solve 2x² + 5x - 3 = 0"</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">2. Request Conceptual Understanding</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Explain the concept of derivatives in calculus using a
-                                                real-world example, like speed and distance."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"What are derivatives?"</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">3. Get Practice Problems</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Create 5 practice problems on solving systems of linear
-                                                equations with varying difficulty levels."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Give me math problems."</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">4. Check Your Work</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"I solved this problem and got x = 7. Can you verify if
-                                                this is correct and identify any errors in my steps?"</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Is this right?"</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                            <p class="font-semibold">💡 Pro Tips for Math:</p>
-                            <ul class="mt-2 space-y-1">
-                                <li>• Always ask for explanations, not just answers</li>
-                                <li>• Specify your grade level or course (Algebra I, Calculus, etc.)</li>
-                                <li>• Request visual aids like graphs or diagrams when helpful</li>
-                                <li>• Ask AI to create study guides or formula sheets</li>
-                            </ul>
-                        </div>
-
-                        <!-- Interactive Activity: Prompt Builder -->
-                        <div
-                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Interactive: Build Your Math Prompt!
-                            </h4>
-                            <p class="mb-4">Fill in the blanks to create an effective math prompt:</p>
-
-                            <div class="space-y-4 bg-slate-800/50 p-4 rounded-lg">
-                                <div>
-                                    <label class="block text-sm font-semibold mb-2">1. What do you want AI to
-                                        do?</label>
-                                    <select id="math-action"
-                                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white">
-                                        <option value="">-- Select --</option>
-                                        <option value="Solve">Solve</option>
-                                        <option value="Explain">Explain</option>
-                                        <option value="Create practice problems for">Create practice problems for
-                                        </option>
-                                        <option value="Help me understand">Help me understand</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-semibold mb-2">2. Your math topic or
-                                        problem:</label>
-                                    <input type="text" id="math-topic"
-                                        placeholder="e.g., quadratic equations, derivatives, fractions"
-                                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white">
-                                </div>
-
-                                <div>
-                                    <label class="block text-sm font-semibold mb-2">3. Add details (optional):</label>
-                                    <select id="math-detail"
-                                        class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white">
-                                        <option value="">-- Select --</option>
-                                        <option value="step-by-step">step-by-step</option>
-                                        <option value="with examples">with examples</option>
-                                        <option value="in simple terms">in simple terms</option>
-                                        <option value="with a visual diagram">with a visual diagram</option>
-                                    </select>
-                                </div>
-
-                                <button onclick="buildMathPrompt()"
-                                    class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold mt-4">
-                                    ✨ Generate My Prompt
-                                </button>
-
-                                <div id="math-prompt-output"
-                                    class="hidden mt-4 p-4 bg-green-900/30 border border-green-500/50 rounded-lg">
-                                    <p class="text-sm text-green-300 mb-2">Your Generated Prompt:</p>
-                                    <p id="math-prompt-text" class="text-white font-semibold text-lg"></p>
-                                    <button onclick="copyToClipboard('math-prompt-text')"
-                                        class="mt-3 px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
-                                        📋 Copy to Clipboard
-                                    </button>
-                                </div>
-                            </div>
+                        <!-- Questions Container (loaded from database) -->
+                        <div id="math-questions-container" class="space-y-4">
+                            <p class="text-center text-purple-300">Loading questions...</p>
                         </div>
                     </div>
                 </div>
@@ -410,136 +336,35 @@ date: 2025-10-30
         <div id="section-2" class="mission-section section-hidden">
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
-                    <h2 class="text-3xl font-bold mb-6">🔬 Prompts for Science</h2>
-                    <div class="space-y-6 text-lg">
-                        <p>Use AI to explore scientific concepts, understand experiments, and make connections between
-                            different topics in biology, chemistry, physics, and earth science.</p>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">🔬 Science Practice</h2>
+                        <button onclick="toggleScienceTips()" class="text-3xl hover:scale-110 transition-transform"
+                            title="Show Tips">❓</button>
+                    </div>
 
-                        <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">✅ Effective Science Prompts</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">1. Request Simple Explanations</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Explain photosynthesis to a 10th grader using simple
-                                                language and an analogy."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"What is photosynthesis?"</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">2. Connect Concepts to Real Life</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Give me 3 real-world examples of Newton's Third Law of
-                                                Motion that I can observe in daily life."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Explain Newton's Third Law."</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">3. Ask for Experiment Ideas</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Suggest a simple chemistry experiment I can do at home
-                                                to demonstrate acid-base reactions. List materials needed and safety
-                                                precautions."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Give me a chemistry experiment."</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">4. Study for Tests</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Create 10 quiz questions about cell structure and
-                                                function, with answers. Focus on the differences between plant and
-                                                animal cells."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Help me study cells."</p>
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- Collapsible Tips Section -->
+                    <div id="science-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for Science</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-green-900/30 p-3 rounded">
+                                <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                <p>"Explain photosynthesis to a 10th grader. Include the chemical equation, the role of
+                                    chlorophyll, and the two main stages."</p>
+                            </div>
+                            <div class="bg-red-900/30 p-3 rounded">
+                                <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                <p>"What is photosynthesis?"</p>
                             </div>
                         </div>
-
-                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                            <p class="font-semibold">💡 Pro Tips for Science:</p>
-                            <ul class="mt-2 space-y-1">
-                                <li>• Ask for diagrams or visual descriptions of processes</li>
-                                <li>• Request comparisons to understand differences (e.g., mitosis vs. meiosis)</li>
-                                <li>• Ask AI to create study flashcards or concept maps</li>
-                                <li>• Use AI to understand scientific articles or research papers</li>
-                            </ul>
+                        <div class="mt-3 text-xs text-blue-200">
+                            <p><strong>Key:</strong> Be specific, ask for detailed explanations, request examples or
+                                real-world connections</p>
                         </div>
+                    </div>
 
-                        <!-- Interactive Activity: Drag and Drop -->
-                        <div
-                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Interactive: Match the Science Prompt!
-                            </h4>
-                            <p class="mb-4">Drag the prompt elements to create an effective science prompt:</p>
-
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <!-- Draggable Elements -->
-                                <div class="space-y-3">
-                                    <p class="font-semibold text-green-300 mb-3">Drag these elements:</p>
-                                    <div id="science-draggables" class="space-y-2">
-                                        <div draggable="true" ondragstart="drag(event)" id="sci-action"
-                                            class="p-3 bg-purple-600 rounded-lg cursor-move hover:bg-purple-500 transition-colors border-2 border-purple-400">
-                                            <span class="font-semibold">Action:</span> "Explain photosynthesis"
-                                        </div>
-                                        <div draggable="true" ondragstart="drag(event)" id="sci-audience"
-                                            class="p-3 bg-blue-600 rounded-lg cursor-move hover:bg-blue-500 transition-colors border-2 border-blue-400">
-                                            <span class="font-semibold">Audience:</span> "to a 10th grader"
-                                        </div>
-                                        <div draggable="true" ondragstart="drag(event)" id="sci-format"
-                                            class="p-3 bg-green-600 rounded-lg cursor-move hover:bg-green-500 transition-colors border-2 border-green-400">
-                                            <span class="font-semibold">Format:</span> "using simple language and an
-                                            analogy"
-                                        </div>
-                                    </div>
-                                    <button onclick="resetScienceDrag()"
-                                        class="w-full mt-3 px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded text-sm">
-                                        🔄 Reset
-                                    </button>
-                                </div>
-
-                                <!-- Drop Zone -->
-                                <div>
-                                    <p class="font-semibold text-green-300 mb-3">Build your prompt here:</p>
-                                    <div id="science-dropzone" ondrop="drop(event)" ondragover="allowDrop(event)"
-                                        class="min-h-[200px] p-4 bg-slate-800/50 border-2 border-dashed border-green-500/50 rounded-lg">
-                                        <p class="text-gray-400 text-sm mb-2">Drop elements here in order...</p>
-                                        <div id="science-prompt-preview" class="space-y-2"></div>
-                                    </div>
-                                    <div id="science-feedback" class="mt-4 hidden p-3 rounded-lg"></div>
-                                    <button onclick="checkSciencePrompt()"
-                                        class="w-full mt-3 bg-green-600 hover:bg-green-700 py-2 rounded font-semibold">
-                                        ✅ Check My Prompt
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Questions Container (loaded from database) -->
+                    <div id="science-questions-container" class="space-y-4">
+                        <p class="text-center text-purple-300">Loading questions...</p>
                     </div>
                 </div>
                 <button onclick="goToSection(3)"
@@ -552,86 +377,46 @@ date: 2025-10-30
         <div id="section-3" class="mission-section section-hidden">
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
-                    <h2 class="text-3xl font-bold mb-6">💻 Prompts for Computer Science</h2>
-                    <div class="space-y-6 text-lg">
-                        <p>AI can be your coding tutor, helping you learn programming concepts, debug code, understand
-                            algorithms, and build projects.</p>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">💻 Computer Science</h2>
+                        <button onclick="toggleCSTips()" class="text-3xl hover:scale-110 transition-transform"
+                            title="Show Tips">❓</button>
+                    </div>
 
-                        <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">✅ Effective CS Prompts</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">1. Learn Programming Concepts</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Explain how for loops work in Python with 2 simple
-                                                examples. I'm a beginner."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"What are loops?"</p>
-                                        </div>
-                                    </div>
+                    <!-- Collapsible Tips Section -->
+                    <div id="cs-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for CS</h4>
+                        <div class="space-y-3 text-sm">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-green-900/30 p-3 rounded">
+                                    <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                    <p>"Explain how for loops work in Python with 2 simple examples. I'm a beginner."
+                                    </p>
                                 </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">2. Debug Your Code</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"I'm getting an 'IndexError' in this Python code. Can you
-                                                identify the bug and explain how to fix it? [paste code]"</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"My code doesn't work."</p>
-                                        </div>
-                                    </div>
+                                <div class="bg-red-900/30 p-3 rounded">
+                                    <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                    <p>"What are loops?"</p>
                                 </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">3. Get Project Ideas & Guidance</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Suggest a beginner JavaScript project that uses arrays
-                                                and functions. Provide an outline of the steps to build it."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Give me a project idea."</p>
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-green-900/30 p-3 rounded">
+                                    <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                    <p>"I'm getting an 'IndexError' in this Python code. Can you identify the bug and
+                                        explain how to fix it? [paste code]"</p>
                                 </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">4. Understand Algorithms</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Explain the bubble sort algorithm in simple terms. Show
-                                                how it works with the array [5, 2, 8, 1]."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Explain bubble sort."</p>
-                                        </div>
-                                    </div>
+                                <div class="bg-red-900/30 p-3 rounded">
+                                    <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                    <p>"My code doesn't work."</p>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                            <p class="font-semibold">💡 Pro Tips for Computer Science:</p>
-                            <ul class="mt-2 space-y-1">
-                                <li>• Include the programming language in your prompt</li>
-                                <li>• When asking about code, paste the relevant code snippet</li>
-                                <li>• Ask for comments in code to understand each line</li>
-                                <li>• Request multiple solutions to compare different approaches</li>
-                                <li>• Ask AI to create practice coding challenges for you</li>
-                            </ul>
+                        <div class="mt-3 text-xs text-blue-200">
+                            <p><strong>Key:</strong> Include programming language, paste code when debugging, specify
+                                skill level, ask for examples</p>
                         </div>
+                    </div>
+
+                    <div class="space-y-6 text-lg">
 
                         <!-- Interactive Activity: Prompt Analyzer -->
                         <div
@@ -689,87 +474,46 @@ date: 2025-10-30
         <div id="section-4" class="mission-section section-hidden">
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
-                    <h2 class="text-3xl font-bold mb-6">📜 Prompts for History</h2>
-                    <div class="space-y-6 text-lg">
-                        <p>Use AI to explore historical events, understand cause and effect, analyze primary sources,
-                            and make connections across time periods.</p>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">📜 History</h2>
+                        <button onclick="toggleHistoryTips()" class="text-3xl hover:scale-110 transition-transform"
+                            title="Show Tips">❓</button>
+                    </div>
 
-                        <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">✅ Effective History Prompts</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">1. Understand Cause and Effect</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Explain the main causes of World War I in simple terms.
-                                                Include at least 3 causes and how they led to the war."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Why did WWI happen?"</p>
-                                        </div>
-                                    </div>
+                    <!-- Collapsible Tips Section -->
+                    <div id="history-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for History</h4>
+                        <div class="space-y-3 text-sm">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-green-900/30 p-3 rounded">
+                                    <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                    <p>"Explain the main causes of World War I in simple terms. Include at least 3
+                                        causes and how they led to the war."</p>
                                 </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">2. Compare Historical Events</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Compare and contrast the American Revolution and the
-                                                French Revolution. Create a table showing their similarities and
-                                                differences."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"Tell me about revolutions."</p>
-                                        </div>
-                                    </div>
+                                <div class="bg-red-900/30 p-3 rounded">
+                                    <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                    <p>"Why did WWI happen?"</p>
                                 </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">3. Analyze Primary Sources</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Analyze Martin Luther King Jr.'s 'I Have a Dream'
-                                                speech. What were the main themes and rhetorical devices used?"</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"What did MLK say?"</p>
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="bg-green-900/30 p-3 rounded">
+                                    <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                    <p>"Compare and contrast the American Revolution and the French Revolution. Create a
+                                        table showing their similarities and differences."</p>
                                 </div>
-
-                                <div>
-                                    <p class="font-semibold text-green-400 mb-2">4. Create Study Timelines</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="bg-green-900/30 p-3 rounded">
-                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                            <p class="text-sm">"Create a timeline of key events during the Civil Rights
-                                                Movement from 1954-1968. Include dates and brief descriptions."</p>
-                                        </div>
-                                        <div class="bg-red-900/30 p-3 rounded">
-                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                            <p class="text-sm">"List Civil Rights events."</p>
-                                        </div>
-                                    </div>
+                                <div class="bg-red-900/30 p-3 rounded">
+                                    <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                    <p>"Tell me about revolutions."</p>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                            <p class="font-semibold">💡 Pro Tips for History:</p>
-                            <ul class="mt-2 space-y-1">
-                                <li>• Ask for multiple perspectives on historical events</li>
-                                <li>• Request connections between historical events and modern issues</li>
-                                <li>• Ask AI to create essay outlines or thesis statements</li>
-                                <li>• Use AI to generate practice DBQs (Document-Based Questions)</li>
-                                <li>• Request historical context for better understanding</li>
-                            </ul>
+                        <div class="mt-3 text-xs text-blue-200">
+                            <p><strong>Key:</strong> Ask for causes and effects, request comparisons, analyze primary
+                                sources, create timelines with dates</p>
                         </div>
+                    </div>
+
+                    <div class="space-y-6 text-lg">
 
                         <!-- Interactive Activity: Prompt Template Builder -->
                         <div
@@ -1122,7 +866,7 @@ date: 2025-10-30
                     feedEl.innerHTML = data.prompts.map((p, index) => `
                     <div class="prompt-card bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-${color}-300 font-medium text-sm">@student${data.prompts.length - index}</span>
+                            <span class="text-${color}-300 font-medium text-sm">@${p.user_id || 'anonymous'}</span>
                             <button onclick="copyPromptToTextarea('${type}-prompt', '${p.prompt.replace(/'/g, "\\'")}')"
                                 class="px-3 py-1 bg-${color}-600 hover:bg-${color}-700 rounded text-xs text-white transition-colors">Try this prompt</button>
                         </div>
@@ -1153,6 +897,7 @@ date: 2025-10-30
             try {
                 const response = await fetch(`${API_BASE_URL}/test`, {
                     method: 'POST',
+                    credentials: 'include', // Include cookies for authentication
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -1193,6 +938,7 @@ date: 2025-10-30
             try {
                 const response = await fetch(`${API_BASE_URL}/test`, {
                     method: 'POST',
+                    credentials: 'include', // Include cookies for authentication
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -1648,6 +1394,351 @@ date: 2025-10-30
             // Scroll to top when modal opens
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // ==================== MATH SECTION FUNCTIONS ====================
+
+        // Toggle math tips visibility
+        function toggleMathTips() {
+            const tipsEl = document.getElementById('math-tips');
+            if (tipsEl.classList.contains('hidden')) {
+                tipsEl.classList.remove('hidden');
+            } else {
+                tipsEl.classList.add('hidden');
+            }
+        }
+
+        // Load math questions from database
+        async function loadMathQuestions() {
+            try {
+                const response = await fetch('http://localhost:8001/api/math/questions');
+                const data = await response.json();
+
+                if (data.success && data.questions) {
+                    displayMathQuestions(data.questions);
+                } else {
+                    throw new Error('Failed to load questions');
+                }
+            } catch (error) {
+                console.error('Error loading math questions:', error);
+                document.getElementById('math-questions-container').innerHTML =
+                    '<p class="text-center text-red-400">Failed to load questions. Please refresh the page.</p>';
+            }
+        }
+
+        // Display math questions
+        function displayMathQuestions(questions) {
+            const container = document.getElementById('math-questions-container');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const questionHtml = `
+                    <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-purple-300 mb-4">Question ${index + 1}</h3>
+                        <p class="text-lg mb-4">${q.question}</p>
+
+                        <button
+                            onclick="togglePrompt(${q.id})"
+                            id="prompt-btn-${q.id}"
+                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition-all mb-3">
+                            View Prompt
+                        </button>
+
+                        <!-- Prompt Display Area (hidden by default) -->
+                        <div id="prompt-area-${q.id}" class="hidden mt-4">
+                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mb-3">
+                                <p class="text-sm text-blue-300 mb-2">Generated Prompt:</p>
+                                <p id="prompt-text-${q.id}" class="text-white mb-3">${q.prompt_template.replace('{question}', q.question)}</p>
+
+                                <button
+                                    onclick="autofillPrompt(${q.id})"
+                                    class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm mr-2">
+                                    Autofill & Test
+                                </button>
+                                <button
+                                    onclick="copyPrompt(${q.id})"
+                                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm">
+                                    Copy Prompt
+                                </button>
+                            </div>
+
+                            <!-- Gemini API Output Area -->
+                            <div id="gemini-output-${q.id}" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                                <p class="text-sm text-green-300 mb-2">AI Response:</p>
+                                <div id="gemini-result-${q.id}" class="text-white text-sm whitespace-pre-wrap"></div>
+                                <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += questionHtml;
+            });
+        }
+
+        // Toggle prompt visibility
+        function togglePrompt(questionId) {
+            const promptArea = document.getElementById(`prompt-area-${questionId}`);
+            const btn = document.getElementById(`prompt-btn-${questionId}`);
+
+            if (promptArea.classList.contains('hidden')) {
+                promptArea.classList.remove('hidden');
+                btn.textContent = 'Hide Prompt';
+                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                btn.classList.add('bg-red-600', 'hover:bg-red-700');
+            } else {
+                promptArea.classList.add('hidden');
+                btn.textContent = 'View Prompt';
+                btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                // Also hide Gemini output
+                document.getElementById(`gemini-output-${questionId}`).classList.add('hidden');
+            }
+        }
+
+        // Autofill prompt and call Gemini API
+        async function autofillPrompt(questionId) {
+            const promptText = document.getElementById(`prompt-text-${questionId}`).textContent;
+            const outputArea = document.getElementById(`gemini-output-${questionId}`);
+            const resultArea = document.getElementById(`gemini-result-${questionId}`);
+
+            // Show output area with loading message
+            outputArea.classList.remove('hidden');
+            resultArea.textContent = 'Loading AI response...';
+
+            try {
+                const response = await fetch('http://localhost:8001/api/gemini', {
+                    method: 'POST',
+                    credentials: 'include', // Include authentication cookies
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: promptText, // API expects 'text' field, not 'prompt'
+                        prompt: '' // Empty custom prompt to use default behavior
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.text) {
+                    resultArea.textContent = data.text;
+
+                    // Trigger MathJax to render LaTeX equations
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([resultArea]).catch((err) => {
+                            console.error('MathJax rendering error:', err);
+                        });
+                    }
+                } else if (data.message) {
+                    // Show error message from API
+                    resultArea.textContent = `Error: ${data.message}`;
+                } else {
+                    resultArea.textContent = 'Error: No response from AI';
+                }
+            } catch (error) {
+                console.error('Gemini API error:', error);
+                resultArea.textContent = 'Error: Failed to get AI response. Please make sure you are logged in.';
+            }
+        }
+
+        // Copy prompt to clipboard
+        function copyPrompt(questionId) {
+            const promptText = document.getElementById(`prompt-text-${questionId}`).textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                alert('Prompt copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // ==================== SCIENCE SECTION FUNCTIONS ====================
+
+        // Toggle science tips visibility
+        function toggleScienceTips() {
+            const tipsEl = document.getElementById('science-tips');
+            if (tipsEl.classList.contains('hidden')) {
+                tipsEl.classList.remove('hidden');
+            } else {
+                tipsEl.classList.add('hidden');
+            }
+        }
+
+        // Load science questions from database
+        async function loadScienceQuestions() {
+            try {
+                const response = await fetch('http://localhost:8001/api/science/questions');
+                const data = await response.json();
+
+                if (data.success && data.questions) {
+                    displayScienceQuestions(data.questions);
+                } else {
+                    throw new Error('Failed to load questions');
+                }
+            } catch (error) {
+                console.error('Error loading science questions:', error);
+                document.getElementById('science-questions-container').innerHTML =
+                    '<p class="text-center text-red-400">Failed to load questions. Please refresh the page.</p>';
+            }
+        }
+
+        // Display science questions
+        function displayScienceQuestions(questions) {
+            const container = document.getElementById('science-questions-container');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const questionHtml = `
+                    <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-purple-300 mb-4">Question ${index + 1} - ${q.category.charAt(0).toUpperCase() + q.category.slice(1)}</h3>
+                        <p class="text-lg mb-4">${q.question}</p>
+
+                        <button
+                            onclick="toggleSciencePrompt(${q.id})"
+                            id="science-prompt-btn-${q.id}"
+                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition-all mb-3">
+                            View Prompt
+                        </button>
+
+                        <!-- Prompt Display Area (hidden by default) -->
+                        <div id="science-prompt-area-${q.id}" class="hidden mt-4">
+                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mb-3">
+                                <p class="text-sm text-blue-300 mb-2">Generated Prompt:</p>
+                                <p id="science-prompt-text-${q.id}" class="text-white mb-3">${q.prompt_template.replace('{question}', q.question)}</p>
+
+                                <button
+                                    onclick="autofillSciencePrompt(${q.id})"
+                                    class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm mr-2">
+                                    Autofill & Test
+                                </button>
+                                <button
+                                    onclick="copySciencePrompt(${q.id})"
+                                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm">
+                                    Copy Prompt
+                                </button>
+                            </div>
+
+                            <!-- Gemini API Output Area -->
+                            <div id="science-gemini-output-${q.id}" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                                <p class="text-sm text-green-300 mb-2">AI Response:</p>
+                                <div id="science-gemini-result-${q.id}" class="text-white text-sm whitespace-pre-wrap"></div>
+                                <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += questionHtml;
+            });
+        }
+
+        // Toggle science prompt visibility
+        function toggleSciencePrompt(questionId) {
+            const promptArea = document.getElementById(`science-prompt-area-${questionId}`);
+            const btn = document.getElementById(`science-prompt-btn-${questionId}`);
+
+            if (promptArea.classList.contains('hidden')) {
+                promptArea.classList.remove('hidden');
+                btn.textContent = 'Hide Prompt';
+                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                btn.classList.add('bg-red-600', 'hover:bg-red-700');
+            } else {
+                promptArea.classList.add('hidden');
+                btn.textContent = 'View Prompt';
+                btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                // Also hide Gemini output
+                document.getElementById(`science-gemini-output-${questionId}`).classList.add('hidden');
+            }
+        }
+
+        // Autofill science prompt and call Gemini API
+        async function autofillSciencePrompt(questionId) {
+            const promptText = document.getElementById(`science-prompt-text-${questionId}`).textContent;
+            const outputArea = document.getElementById(`science-gemini-output-${questionId}`);
+            const resultArea = document.getElementById(`science-gemini-result-${questionId}`);
+
+            // Show output area with loading message
+            outputArea.classList.remove('hidden');
+            resultArea.textContent = 'Loading AI response...';
+
+            try {
+                const response = await fetch('http://localhost:8001/api/gemini', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: promptText,
+                        prompt: ''
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.text) {
+                    resultArea.textContent = data.text;
+
+                    // Trigger MathJax to render any chemical equations
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([resultArea]).catch((err) => {
+                            console.error('MathJax rendering error:', err);
+                        });
+                    }
+                } else if (data.message) {
+                    resultArea.textContent = `Error: ${data.message}`;
+                } else {
+                    resultArea.textContent = 'Error: No response from AI';
+                }
+            } catch (error) {
+                console.error('Gemini API error:', error);
+                resultArea.textContent = 'Error: Failed to get AI response. Please make sure you are logged in.';
+            }
+        }
+
+        // Copy science prompt to clipboard
+        function copySciencePrompt(questionId) {
+            const promptText = document.getElementById(`science-prompt-text-${questionId}`).textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                alert('Prompt copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // ==================== END SCIENCE SECTION FUNCTIONS ====================
+
+        // Toggle CS tips visibility
+        function toggleCSTips() {
+            const tipsEl = document.getElementById('cs-tips');
+            if (tipsEl.classList.contains('hidden')) {
+                tipsEl.classList.remove('hidden');
+            } else {
+                tipsEl.classList.add('hidden');
+            }
+        }
+
+        // Toggle History tips visibility
+        function toggleHistoryTips() {
+            const tipsEl = document.getElementById('history-tips');
+            if (tipsEl.classList.contains('hidden')) {
+                tipsEl.classList.remove('hidden');
+            } else {
+                tipsEl.classList.add('hidden');
+            }
+        }
+
+        // Load questions when the math or science section is accessed
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load questions immediately if already on math/science section, or when navigating to it
+            const originalGoToSection = window.goToSection;
+            window.goToSection = function (sectionIndex) {
+                originalGoToSection(sectionIndex);
+                if (sectionIndex === 1) { // Math section is section 1
+                    loadMathQuestions();
+                } else if (sectionIndex === 2) { // Science section is section 2
+                    loadScienceQuestions();
+                }
+            };
+        });
     </script>
 
 </body>
