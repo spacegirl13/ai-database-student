@@ -2,7 +2,7 @@
 layout: post
 title: "AI Usage Quest — Module 2: Prompt Engineering"
 description: "Master the art of communicating effectively with AI through strategic prompting"
-permalink: /digital-famine/ai/submodule_2/
+permalink: /digital-famine/ai/submodule_2/copy2/
 categories: [CSP, Submodule, AIUsage]
 tags: [ai, prompts, prompt-engineering, zero-shot, few-shot]
 author: "Debuggers Team - Ruchika Kench, Anishka Sanghvi"
@@ -338,8 +338,11 @@ date: 2025-10-30
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-3xl font-bold">🔬 Science Practice</h2>
-                        <button onclick="toggleScienceTips()" class="text-3xl hover:scale-110 transition-transform"
-                            title="Show Tips">❓</button>
+                        <div class="flex items-center gap-3">
+                            <button onclick="toggleScienceTips()" class="text-3xl hover:scale-110 transition-transform"
+                                title="Show Tips">❓</button>
+                            <button onclick="showScienceSurveyModal()" id="open-science-survey-btn" class="text-2xl hover:scale-105 transition-transform bg-slate-700/30 px-3 py-1 rounded" title="Take Survey">🧪 Survey</button>
+                        </div>
                     </div>
 
                     <!-- Collapsible Tips Section -->
@@ -727,6 +730,37 @@ date: 2025-10-30
     </div>
 
     <!-- FEEDBACK MODAL -->
+    <!-- SCIENCE SURVEY MODAL -->
+    <div id="scienceSurveyModal" class="hidden" style="position: fixed; top: 0; left: 0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.6); z-index: 1000000;">
+        <div style="background:white; max-width:520px; width:90%; border-radius:14px; overflow:hidden;">
+            <div style="padding:18px; background: linear-gradient(90deg,#0ea5e9,#7c3aed); color:white; text-align:center;">
+                <h3 style="margin:0; font-size:20px; font-weight:700;">Quick Science Survey</h3>
+                <p style="margin:6px 0 0 0; opacity:0.95;">Which science topic would you like to learn about?</p>
+            </div>
+            <div style="padding:18px; color:#1f2937;">
+                <form id="scienceSurveyForm">
+                    <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+                        <label style="display:flex; align-items:center; gap:10px;">
+                            <input type="radio" name="scienceTopic" value="biology"> <span>Biology</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:10px;">
+                            <input type="radio" name="scienceTopic" value="chemistry"> <span>Chemistry</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:10px;">
+                            <input type="radio" name="scienceTopic" value="physics"> <span>Physics</span>
+                        </label>
+                    </div>
+
+                    <div style="margin-top:18px; display:flex; gap:10px;">
+                        <button type="button" onclick="submitScienceSurvey()" style="flex:1; padding:12px; background:#10b981; color:white; border-radius:8px; border:none; font-weight:700;">Submit</button>
+                        <button type="button" onclick="closeScienceSurveyModal()" style="flex:1; padding:12px; background:#e5e7eb; color:#1f2937; border-radius:8px; border:1px solid #d1d5db; font-weight:600;">Cancel</button>
+                    </div>
+                    <p id="scienceSurveyMessage" style="margin-top:12px; color:#6b7280; font-size:13px; display:none;"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div id="feedbackModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999;">
         <div class="modal" style="position: relative; z-index: 1000000;">
             <div
@@ -823,6 +857,16 @@ date: 2025-10-30
 
         // Navigation
         function goToSection(n) {
+            // If user tries to open the Science section (2) and hasn't taken the survey,
+            // open the survey modal first and prevent navigation.
+            if (n === 2) {
+                const taken = localStorage.getItem('scienceSurveyTopic');
+                if (!taken) {
+                    showScienceSurveyModal();
+                    return;
+                }
+            }
+
             document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
             document.getElementById('section-' + n).classList.remove('section-hidden');
             document.querySelectorAll('.nav-btn').forEach(b => {
@@ -1048,6 +1092,87 @@ date: 2025-10-30
 
             // Scroll to top when modal opens
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== Science Survey Modal =====
+        function showScienceSurveyModal() {
+            const modal = document.getElementById('scienceSurveyModal');
+            if (!modal) return alert('Survey modal missing.');
+            document.body.style.overflow = 'hidden';
+            modal.classList.remove('hidden');
+            modal.style.display = 'flex';
+        }
+
+        function closeScienceSurveyModal() {
+            const modal = document.getElementById('scienceSurveyModal');
+            if (!modal) return;
+            document.body.style.overflow = '';
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+            // clear message
+            const msg = document.getElementById('scienceSurveyMessage');
+            if (msg) { msg.style.display = 'none'; msg.textContent = ''; }
+        }
+
+        async function submitScienceSurvey() {
+            const form = document.getElementById('scienceSurveyForm');
+            if (!form) return;
+            const formData = new FormData(form);
+            const topic = formData.get('scienceTopic');
+            const msgEl = document.getElementById('scienceSurveyMessage');
+
+            if (!topic) {
+                if (msgEl) { msgEl.style.display = 'block'; msgEl.textContent = 'Please choose a topic.'; }
+                return;
+            }
+
+            // Optimistically store locally so user won't be repeatedly prompted
+            localStorage.setItem('scienceSurveyTopic', topic);
+
+            if (msgEl) { msgEl.style.display = 'block'; msgEl.textContent = 'Submitting...'; }
+
+            try {
+                const resp = await fetch(`${API_BASE_URL}/survey`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topic })
+                });
+
+                if (!resp.ok) throw new Error('Network response not ok');
+
+                const data = await resp.json();
+
+                // If backend returns a redirectUrl, use it.
+                if (data && data.redirectUrl) {
+                    window.location.href = data.redirectUrl;
+                    return;
+                }
+
+                // Fallback redirect mapping if backend doesn't provide a URL
+                const fallback = {
+                    biology: '/science/problems?topic=biology',
+                    chemistry: '/science/problems?topic=chemistry',
+                    physics: '/science/problems?topic=physics'
+                };
+
+                closeScienceSurveyModal();
+                window.location.href = fallback[topic] || '/science/problems?topic=' + encodeURIComponent(topic);
+
+            } catch (err) {
+                console.error('Survey submit error', err);
+                if (msgEl) { msgEl.style.display = 'block'; msgEl.textContent = 'Could not reach server — redirecting locally...'; }
+
+                // fallback redirect even if backend is down
+                const fallback = {
+                    biology: '/science/problems?topic=biology',
+                    chemistry: '/science/problems?topic=chemistry',
+                    physics: '/science/problems?topic=physics'
+                };
+
+                closeScienceSurveyModal();
+                window.location.href = fallback[localStorage.getItem('scienceSurveyTopic')] || '/science/problems?topic=' + encodeURIComponent(localStorage.getItem('scienceSurveyTopic') || 'general');
+            }
         }
 
         // Copy community prompt to textarea
