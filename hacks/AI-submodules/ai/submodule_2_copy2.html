@@ -129,6 +129,10 @@ date: 2025-10-30
             background: #f3f4f6;
         }
 
+        .science-topic-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
 
         /* Footer Styles */
         .module-footer {
@@ -338,11 +342,8 @@ date: 2025-10-30
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-3xl font-bold">🔬 Science Practice</h2>
-                        <div class="flex items-center gap-3">
-                            <button onclick="toggleScienceTips()" class="text-3xl hover:scale-110 transition-transform"
-                                title="Show Tips">❓</button>
-                            <button onclick="showScienceSurveyModal()" id="open-science-survey-btn" class="text-2xl hover:scale-105 transition-transform bg-slate-700/30 px-3 py-1 rounded" title="Take Survey">🧪 Survey</button>
-                        </div>
+                        <button onclick="toggleScienceTips()" class="text-3xl hover:scale-110 transition-transform"
+                            title="Show Tips">❓</button>
                     </div>
 
                     <!-- Collapsible Tips Section -->
@@ -365,9 +366,19 @@ date: 2025-10-30
                         </div>
                     </div>
 
+                    <!-- Survey Button -->
+                    <div class="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border-2 border-purple-500/50 rounded-lg p-6 mb-6">
+                        <h4 class="text-xl font-bold text-purple-300 mb-3">📋 Choose Your Science Topic</h4>
+                        <p class="mb-4">Select a science topic to get personalized questions and prompts!</p>
+                        <button onclick="showScienceSurvey()"
+                            class="w-full bg-purple-600 hover:bg-purple-700 py-3 rounded-lg font-semibold text-lg">
+                            Take Science Survey
+                        </button>
+                    </div>
+
                     <!-- Questions Container (loaded from database) -->
                     <div id="science-questions-container" class="space-y-4">
-                        <p class="text-center text-purple-300">Loading questions...</p>
+                        <p class="text-center text-purple-300">Click "Take Science Survey" above to start!</p>
                     </div>
                 </div>
                 <button onclick="goToSection(3)"
@@ -730,37 +741,6 @@ date: 2025-10-30
     </div>
 
     <!-- FEEDBACK MODAL -->
-    <!-- SCIENCE SURVEY MODAL -->
-    <div id="scienceSurveyModal" class="hidden" style="position: fixed; top: 0; left: 0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.6); z-index: 1000000;">
-        <div style="background:white; max-width:520px; width:90%; border-radius:14px; overflow:hidden;">
-            <div style="padding:18px; background: linear-gradient(90deg,#0ea5e9,#7c3aed); color:white; text-align:center;">
-                <h3 style="margin:0; font-size:20px; font-weight:700;">Quick Science Survey</h3>
-                <p style="margin:6px 0 0 0; opacity:0.95;">Which science topic would you like to learn about?</p>
-            </div>
-            <div style="padding:18px; color:#1f2937;">
-                <form id="scienceSurveyForm">
-                    <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
-                        <label style="display:flex; align-items:center; gap:10px;">
-                            <input type="radio" name="scienceTopic" value="biology"> <span>Biology</span>
-                        </label>
-                        <label style="display:flex; align-items:center; gap:10px;">
-                            <input type="radio" name="scienceTopic" value="chemistry"> <span>Chemistry</span>
-                        </label>
-                        <label style="display:flex; align-items:center; gap:10px;">
-                            <input type="radio" name="scienceTopic" value="physics"> <span>Physics</span>
-                        </label>
-                    </div>
-
-                    <div style="margin-top:18px; display:flex; gap:10px;">
-                        <button type="button" onclick="submitScienceSurvey()" style="flex:1; padding:12px; background:#10b981; color:white; border-radius:8px; border:none; font-weight:700;">Submit</button>
-                        <button type="button" onclick="closeScienceSurveyModal()" style="flex:1; padding:12px; background:#e5e7eb; color:#1f2937; border-radius:8px; border:1px solid #d1d5db; font-weight:600;">Cancel</button>
-                    </div>
-                    <p id="scienceSurveyMessage" style="margin-top:12px; color:#6b7280; font-size:13px; display:none;"></p>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div id="feedbackModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999;">
         <div class="modal" style="position: relative; z-index: 1000000;">
             <div
@@ -838,6 +818,46 @@ date: 2025-10-30
         </div>
     </div>
 
+    <!-- SCIENCE SURVEY MODAL -->
+    <div id="scienceSurveyModal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; background: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center;">
+        <div class="modal" style="position: relative; z-index: 1000000; background: white; width: 90%; max-width: 600px; border-radius: 20px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #8b5cf6, #a78bfa); padding: 30px; text-align: center;">
+                <div style="font-size: 60px; margin-bottom: 10px;">🔬</div>
+                <h2 style="color: white; font-size: 28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                    Choose Your Science Topic
+                </h2>
+                <p style="color: white; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                    Which science topic would you like to learn about?
+                </p>
+            </div>
+
+            <div style="padding: 30px; background: white;">
+                <div style="display: grid; gap: 15px;">
+                    <button onclick="selectScienceTopic('biology')" 
+                        class="science-topic-btn"
+                        style="padding: 20px; background: #10b981; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        🧬 Biology
+                    </button>
+                    <button onclick="selectScienceTopic('chemistry')" 
+                        class="science-topic-btn"
+                        style="padding: 20px; background: #3b82f6; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        ⚗️ Chemistry
+                    </button>
+                    <button onclick="selectScienceTopic('physics')" 
+                        class="science-topic-btn"
+                        style="padding: 20px; background: #8b5cf6; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        ⚡ Physics
+                    </button>
+                </div>
+
+                <button onclick="closeScienceSurvey()"
+                    style="margin-top: 20px; width: 100%; padding: 12px; background: #e5e7eb; color: #1f2937; border: 2px solid #d1d5db; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="module-footer">
         <a href="#" class="footer-link">← Back to AI Quest Home</a>
@@ -857,16 +877,6 @@ date: 2025-10-30
 
         // Navigation
         function goToSection(n) {
-            // If user tries to open the Science section (2) and hasn't taken the survey,
-            // open the survey modal first and prevent navigation.
-            if (n === 2) {
-                const taken = localStorage.getItem('scienceSurveyTopic');
-                if (!taken) {
-                    showScienceSurveyModal();
-                    return;
-                }
-            }
-
             document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
             document.getElementById('section-' + n).classList.remove('section-hidden');
             document.querySelectorAll('.nav-btn').forEach(b => {
@@ -1092,87 +1102,6 @@ date: 2025-10-30
 
             // Scroll to top when modal opens
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // ===== Science Survey Modal =====
-        function showScienceSurveyModal() {
-            const modal = document.getElementById('scienceSurveyModal');
-            if (!modal) return alert('Survey modal missing.');
-            document.body.style.overflow = 'hidden';
-            modal.classList.remove('hidden');
-            modal.style.display = 'flex';
-        }
-
-        function closeScienceSurveyModal() {
-            const modal = document.getElementById('scienceSurveyModal');
-            if (!modal) return;
-            document.body.style.overflow = '';
-            modal.classList.add('hidden');
-            modal.style.display = 'none';
-            // clear message
-            const msg = document.getElementById('scienceSurveyMessage');
-            if (msg) { msg.style.display = 'none'; msg.textContent = ''; }
-        }
-
-        async function submitScienceSurvey() {
-            const form = document.getElementById('scienceSurveyForm');
-            if (!form) return;
-            const formData = new FormData(form);
-            const topic = formData.get('scienceTopic');
-            const msgEl = document.getElementById('scienceSurveyMessage');
-
-            if (!topic) {
-                if (msgEl) { msgEl.style.display = 'block'; msgEl.textContent = 'Please choose a topic.'; }
-                return;
-            }
-
-            // Optimistically store locally so user won't be repeatedly prompted
-            localStorage.setItem('scienceSurveyTopic', topic);
-
-            if (msgEl) { msgEl.style.display = 'block'; msgEl.textContent = 'Submitting...'; }
-
-            try {
-                const resp = await fetch(`${API_BASE_URL}/survey`, {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ topic })
-                });
-
-                if (!resp.ok) throw new Error('Network response not ok');
-
-                const data = await resp.json();
-
-                // If backend returns a redirectUrl, use it.
-                if (data && data.redirectUrl) {
-                    window.location.href = data.redirectUrl;
-                    return;
-                }
-
-                // Fallback redirect mapping if backend doesn't provide a URL
-                const fallback = {
-                    biology: '/science/problems?topic=biology',
-                    chemistry: '/science/problems?topic=chemistry',
-                    physics: '/science/problems?topic=physics'
-                };
-
-                closeScienceSurveyModal();
-                window.location.href = fallback[topic] || '/science/problems?topic=' + encodeURIComponent(topic);
-
-            } catch (err) {
-                console.error('Survey submit error', err);
-                if (msgEl) { msgEl.style.display = 'block'; msgEl.textContent = 'Could not reach server — redirecting locally...'; }
-
-                // fallback redirect even if backend is down
-                const fallback = {
-                    biology: '/science/problems?topic=biology',
-                    chemistry: '/science/problems?topic=chemistry',
-                    physics: '/science/problems?topic=physics'
-                };
-
-                closeScienceSurveyModal();
-                window.location.href = fallback[localStorage.getItem('scienceSurveyTopic')] || '/science/problems?topic=' + encodeURIComponent(localStorage.getItem('scienceSurveyTopic') || 'general');
-            }
         }
 
         // Copy community prompt to textarea
@@ -1473,52 +1402,6 @@ date: 2025-10-30
 
         // Initialize
         updateProgress();
-        function showFeedbackModal() {
-            console.log("showFeedbackModal called");
-            const modal = document.getElementById("feedbackModal");
-            console.log("Modal element:", modal);
-
-            if (!modal) {
-                console.error("Modal not found!");
-                alert("Error: Feedback modal not found. Please refresh the page and try again.");
-                return;
-            }
-
-            // Force visibility with all possible overrides
-            modal.style.display = "flex";
-            modal.style.visibility = "visible";
-            modal.style.opacity = "1";
-            modal.style.zIndex = "99999";
-            modal.style.position = "fixed";
-            modal.style.top = "0";
-            modal.style.left = "0";
-            modal.style.width = "100%";
-            modal.style.height = "100%";
-            modal.style.background = "rgba(0, 0, 0, 0.8)";
-            modal.style.alignItems = "center";
-            modal.style.justifyContent = "center";
-            console.log("Modal display set to flex with overrides");
-
-            // Ensure inner modal box is visible
-            const modalBox = modal.querySelector('.modal');
-            if (modalBox) {
-                modalBox.style.display = "block";
-                modalBox.style.position = "relative";
-                modalBox.style.zIndex = "100000";
-                console.log("Modal box display set to block");
-            }
-
-            // Check if modal is actually visible
-            const rect = modal.getBoundingClientRect();
-            console.log("Modal bounding rect:", rect);
-            console.log("Modal computed style display:", window.getComputedStyle(modal).display);
-
-            // Prevent background scrolling
-            document.body.style.overflow = "hidden";
-
-            // Scroll to top when modal opens
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
 
         // ==================== MATH SECTION FUNCTIONS ====================
 
@@ -1677,6 +1560,100 @@ date: 2025-10-30
 
         // ==================== SCIENCE SECTION FUNCTIONS ====================
 
+        // Show science survey modal
+        function showScienceSurvey() {
+            const modal = document.getElementById('scienceSurveyModal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close science survey modal
+        function closeScienceSurvey() {
+            const modal = document.getElementById('scienceSurveyModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Select science topic and load questions
+        async function selectScienceTopic(topic) {
+            // Close the modal
+            closeScienceSurvey();
+
+            // Show loading message
+            const container = document.getElementById('science-questions-container');
+            container.innerHTML = '<p class="text-center text-purple-300">Loading ' + topic + ' questions...</p>';
+
+            try {
+                // Submit survey selection to backend (use API_BASE_URL)
+                const surveyResponse = await fetch(`${API_BASE_URL}/survey`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ topic: topic })
+                });
+
+                // If backend returns questions inline, use them; otherwise fetch questions endpoint
+                let surveyData = null;
+                try { surveyData = await surveyResponse.json(); } catch (e) { surveyData = null; }
+
+                if (surveyResponse.ok && surveyData && surveyData.success && Array.isArray(surveyData.questions)) {
+                    displayScienceQuestions(surveyData.questions);
+                    return;
+                }
+
+                // Fallback: request questions directly from science API
+                const qResp = await fetch(`http://localhost:8001/api/science/questions?topic=${encodeURIComponent(topic)}`);
+                const qData = await qResp.json();
+                if (qResp.ok && qData.success && Array.isArray(qData.questions)) {
+                    displayScienceQuestions(qData.questions);
+                    return;
+                }
+
+                // As a last resort, generate local fallback questions
+                const fallback = generateLocalScienceQuestions(topic);
+                displayScienceQuestions(fallback);
+
+            } catch (error) {
+                console.error('Error loading science questions:', error);
+                const fallback = generateLocalScienceQuestions(topic);
+                displayScienceQuestions(fallback);
+            }
+        }
+
+        // Local fallback question generator (used when backend is unavailable)
+        function generateLocalScienceQuestions(topic) {
+            const banks = {
+                biology: [
+                    { question: 'Describe the process of cellular respiration and name where it occurs.', answer: 'Cellular respiration produces ATP in mitochondria.' },
+                    { question: 'Explain the role of DNA in heredity and how it is replicated.', answer: 'DNA stores genetic info and is copied before cell division.' },
+                    { question: 'What are the main differences between prokaryotic and eukaryotic cells?', answer: 'Eukaryotes have a nucleus; prokaryotes do not.' }
+                ],
+                chemistry: [
+                    { question: 'Explain the difference between ionic and covalent bonding.', answer: 'Ionic: electron transfer; covalent: electron sharing.' },
+                    { question: 'What is pH and how does it relate to H+ concentration?', answer: 'pH = -log[H+]; lower pH = higher H+.' },
+                    { question: "Describe what a chemical reaction's activation energy is.", answer: 'Energy barrier for a reaction to proceed.' }
+                ],
+                physics: [
+                    { question: "State Newton's three laws of motion and give a short example for each.", answer: '1) Inertia; 2) F=ma; 3) Action–reaction.' },
+                    { question: 'Explain the difference between kinetic and potential energy.', answer: 'Kinetic = motion; potential = stored energy.' },
+                    { question: "What is Ohm's law and what does it relate?", answer: 'V = I * R relates voltage, current, resistance.' }
+                ]
+            };
+
+            const selected = banks[topic] || banks['biology'];
+            return selected.map(q => {
+                const good = `Explain step-by-step how to answer this: ${q.question} Include reasoning for each step.`;
+                const wrong1 = `Give the direct answer to: ${q.question} Provide the final result only.`;
+                const wrong2 = `State the main fact that answers: ${q.question} Keep the response concise.`;
+                const wrong3 = `List the key result for: ${q.question} Provide the single best answer.`;
+                const all = [good, wrong1, wrong2, wrong3];
+                const shuffled = all.sort(() => Math.random() - 0.5);
+                return { id: Math.floor(Math.random()*900000)+100000, category: topic, question: q.question, prompt_template: 'Answer the following question step-by-step: {question}', answer: q.answer, options: shuffled, correct_index: shuffled.indexOf(good) };
+            });
+        }
+
         // Toggle science tips visibility
         function toggleScienceTips() {
             const tipsEl = document.getElementById('science-tips');
@@ -1687,22 +1664,12 @@ date: 2025-10-30
             }
         }
 
-        // Load science questions from database
+        // Load science questions from database (old function - kept for backwards compatibility)
         async function loadScienceQuestions() {
-            try {
-                const response = await fetch('http://localhost:8001/api/science/questions');
-                const data = await response.json();
-
-                if (data.success && data.questions) {
-                    displayScienceQuestions(data.questions);
-                } else {
-                    throw new Error('Failed to load questions');
-                }
-            } catch (error) {
-                console.error('Error loading science questions:', error);
-                document.getElementById('science-questions-container').innerHTML =
-                    '<p class="text-center text-red-400">Failed to load questions. Please refresh the page.</p>';
-            }
+            // This function is now replaced by selectScienceTopic
+            // Keep it empty or redirect to survey
+            const container = document.getElementById('science-questions-container');
+            container.innerHTML = '<p class="text-center text-purple-300">Click "Take Science Survey" above to start!</p>';
         }
 
         // Display science questions
@@ -1860,6 +1827,7 @@ date: 2025-10-30
                 if (sectionIndex === 1) { // Math section is section 1
                     loadMathQuestions();
                 } else if (sectionIndex === 2) { // Science section is section 2
+                    // Don't auto-load, wait for survey
                     loadScienceQuestions();
                 }
             };
