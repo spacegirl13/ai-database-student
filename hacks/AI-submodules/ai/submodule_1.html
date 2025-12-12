@@ -18,13 +18,83 @@ date: 2025-10-30
     }
 
     .poll-container {
-        max-width: 800px;
+        max-width: 900px;
         margin: 40px auto;
         padding: 30px;
         background: rgba(30, 41, 59, 0.95);
         border-radius: 10px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    .table-section {
+        background: rgba(15, 23, 42, 0.9);
+        padding: 25px;
+        margin-bottom: 25px;
+        border-radius: 8px;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .table-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #93c5fd;
+        text-align: center;
+    }
+
+    .survey-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(30, 41, 59, 0.6);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .survey-table thead {
+        background: rgba(59, 130, 246, 0.2);
+    }
+
+    .survey-table th {
+        padding: 12px 8px;
+        text-align: center;
+        color: #93c5fd;
+        font-weight: 600;
+        font-size: 13px;
+        border-bottom: 2px solid rgba(96, 165, 250, 0.3);
+    }
+
+    .survey-table td {
+        padding: 12px 8px;
+        text-align: center;
+        border-bottom: 1px solid rgba(96, 165, 250, 0.1);
+        color: #cbd5e1;
+    }
+
+    .survey-table tbody tr:hover {
+        background: rgba(59, 130, 246, 0.1);
+    }
+
+    .survey-table td:first-child {
+        text-align: left;
+        padding-left: 15px;
+        font-weight: 500;
+        color: #e2e8f0;
+        font-size: 14px;
+    }
+
+    .survey-table th:first-child {
+        text-align: left;
+        padding-left: 15px;
+    }
+
+    .survey-table input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #60a5fa;
+        margin: 0;
     }
 
     .question-block {
@@ -121,6 +191,22 @@ date: 2025-10-30
 
     .submit-btn:active {
         transform: scale(0.98);
+    }
+
+    .autofill-btn {
+        margin-top: 10px;
+        padding: 8px 16px;
+        background-color: #6366f1;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .autofill-btn:hover {
+        background-color: #4f46e5;
     }
 
     .results-container {
@@ -233,124 +319,62 @@ date: 2025-10-30
     <div id="recentFRQs"></div>
 
     <div id="aiPollForm">
-        <!-- English Question -->
-        <div class="question-block">
-            <div class="question-title">1. What AI source do you find the most useful for English work?</div>
-            <div class="option-group">
-                <label class="option-label">
-                    <input type="radio" name="english" value="ChatGPT" required>
-                    ChatGPT
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="english" value="Claude">
-                    Claude
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="english" value="Gemini">
-                    Gemini
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="english" value="Copilot">
-                    Microsoft Copilot
-                </label>
-            </div>
-        </div>
-
-        <!-- Math Question -->
-        <div class="question-block">
-            <div class="question-title">2. What AI source do you find the most useful for Math work?</div>
-            <div class="option-group">
-                <label class="option-label">
-                    <input type="radio" name="math" value="ChatGPT" required>
-                    ChatGPT
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="math" value="Claude">
-                    Claude
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="math" value="Gemini">
-                    Gemini
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="math" value="Copilot">
-                    Microsoft Copilot
-                </label>
-            </div>
-        </div>
-
-        <!-- Science Question -->
-        <div class="question-block">
-            <div class="question-title">3. What AI source do you find the most useful for Science work?</div>
-            <div class="option-group">
-                <label class="option-label">
-                    <input type="radio" name="science" value="ChatGPT" required>
-                    ChatGPT
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="science" value="Claude">
-                    Claude
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="science" value="Gemini">
-                    Gemini
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="science" value="Copilot">
-                    Microsoft Copilot
-                </label>
-            </div>
-        </div>
-
-        <!-- Computer Science Question -->
-        <div class="question-block">
-            <div class="question-title">4. What AI source do you find the most useful for Computer Science work?</div>
-            <div class="option-group">
-                <label class="option-label">
-                    <input type="radio" name="cs" value="ChatGPT" required>
-                    ChatGPT
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="cs" value="Claude">
-                    Claude
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="cs" value="Gemini">
-                    Gemini
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="cs" value="Copilot">
-                    Microsoft Copilot
-                </label>
-            </div>
-        </div>
-
-        <!-- History Question -->
-        <div class="question-block">
-            <div class="question-title">5. What AI source do you find the most useful for History work?</div>
-            <div class="option-group">
-                <label class="option-label">
-                    <input type="radio" name="history" value="ChatGPT" required>
-                    ChatGPT
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="history" value="Claude">
-                    Claude
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="history" value="Gemini">
-                    Gemini
-                </label>
-                <label class="option-label">
-                    <input type="radio" name="history" value="Copilot">
-                    Microsoft Copilot
-                </label>
-            </div>
+        <!-- Table for Multiple Choice Questions -->
+        <div class="table-section">
+            <div class="table-title">What AI source do you find most useful for each subject?</div>
+            <table class="survey-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>ChatGPT</th>
+                        <th>Claude</th>
+                        <th>Gemini</th>
+                        <th>Copilot</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>English</td>
+                        <td><input type="radio" name="english" value="ChatGPT" required></td>
+                        <td><input type="radio" name="english" value="Claude"></td>
+                        <td><input type="radio" name="english" value="Gemini"></td>
+                        <td><input type="radio" name="english" value="Copilot"></td>
+                    </tr>
+                    <tr>
+                        <td>Math</td>
+                        <td><input type="radio" name="math" value="ChatGPT" required></td>
+                        <td><input type="radio" name="math" value="Claude"></td>
+                        <td><input type="radio" name="math" value="Gemini"></td>
+                        <td><input type="radio" name="math" value="Copilot"></td>
+                    </tr>
+                    <tr>
+                        <td>Science</td>
+                        <td><input type="radio" name="science" value="ChatGPT" required></td>
+                        <td><input type="radio" name="science" value="Claude"></td>
+                        <td><input type="radio" name="science" value="Gemini"></td>
+                        <td><input type="radio" name="science" value="Copilot"></td>
+                    </tr>
+                    <tr>
+                        <td>Comp Sci</td>
+                        <td><input type="radio" name="cs" value="ChatGPT" required></td>
+                        <td><input type="radio" name="cs" value="Claude"></td>
+                        <td><input type="radio" name="cs" value="Gemini"></td>
+                        <td><input type="radio" name="cs" value="Copilot"></td>
+                    </tr>
+                    <tr>
+                        <td>History</td>
+                        <td><input type="radio" name="history" value="ChatGPT" required></td>
+                        <td><input type="radio" name="history" value="Claude"></td>
+                        <td><input type="radio" name="history" value="Gemini"></td>
+                        <td><input type="radio" name="history" value="Copilot"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <!-- Yes/No Question -->
         <div class="question-block">
-            <div class="question-title">6. Do you use AI to help you with schoolwork in essays and assignments?</div>
+            <div class="question-title">Do you use AI to help you with schoolwork in essays and assignments?</div>
             <div class="option-group">
                 <label class="option-label">
                     <input type="radio" name="useAI" value="Yes" required>
@@ -365,11 +389,11 @@ date: 2025-10-30
 
         <!-- Free Response Question -->
         <div class="question-block">
-            <div class="question-title">7. Most classes do not want students to use AI. What do you feel about these
+            <div class="question-title">Most classes do not want students to use AI. What do you feel about these
                 policies? How would you want to use AI without having it do everything for you and it being considered
                 cheating?</div>
             <textarea class="frq-textarea" id="frq-textarea" name="frq" placeholder="Share your thoughts here..." required></textarea>
-            <button type="button" onclick="autofillQuestion7()" style="margin-top: 10px; padding: 8px 16px; background-color: #6366f1; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+            <button type="button" onclick="autofillQuestion7()" class="autofill-btn">
                 ✨ Autofill Sample Response
             </button>
         </div>
@@ -421,7 +445,7 @@ date: 2025-10-30
 
 <script>
     // CHANGE THIS TO YOUR FLASK SERVER URL
-    const API_URL = 'http://localhost:8001/api';  // Change to your production URL when deploying
+    const API_URL = 'http://localhost:8001/api';
 
     let charts = {};
 
@@ -496,13 +520,14 @@ date: 2025-10-30
             // Show success message
             document.getElementById('successMessage').style.display = 'block';
 
-            // Hide form and show results
+            // Hide form
             document.getElementById('aiPollForm').style.display = 'none';
+
+            // Show results
             document.getElementById('resultsContainer').style.display = 'block';
 
             // Display results
             displayResults(result.data);
-            // Update the top Recent Student Thoughts section with fresh data
             displayRecentFRQs(result.data.frqs.slice(0, 3), 'recentFRQs');
 
             // Scroll to results
