@@ -237,6 +237,40 @@ date: 2025-10-30
             border-color: #0ebe84;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
+
+        /* Science Topic Survey Modal Styles */
+        #scienceTopicModal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow-y: auto;
+        }
+
+        #scienceTopicModal.modal-show {
+            display: flex !important;
+        }
+
+        #scienceTopicModal .modal {
+            background: white !important;
+            width: 90% !important;
+            max-width: 500px !important;
+            border-radius: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            animation: fadeIn 0.3s ease;
+            position: relative !important;
+            margin: 20px auto !important;
+            display: block !important;
+        }
     </style>
 </head>
 
@@ -418,8 +452,26 @@ date: 2025-10-30
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-3xl font-bold">🔬 Science Practice</h2>
-                        <button onclick="toggleScienceTips()" class="text-3xl hover:scale-110 transition-transform"
-                            title="Show Tips">❓</button>
+                        <div class="flex gap-3">
+                            <button onclick="showScienceTopicModal()"
+                                class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-semibold transition-all"
+                                title="Choose Topic">
+                                🔬 Choose Topic
+                            </button>
+                            <button onclick="toggleScienceTips()" class="text-3xl hover:scale-110 transition-transform"
+                                title="Show Tips">❓</button>
+                        </div>
+                    </div>
+
+                    <!-- Selected Topic Display -->
+                    <div id="science-selected-topic-display" class="hidden mb-4 bg-green-900/20 border border-green-500/30 rounded-lg p-3">
+                        <p class="text-green-300 text-sm">
+                            <span class="font-semibold">Current Topic:</span>
+                            <span id="science-current-topic-name" class="capitalize">All Topics</span>
+                            <button onclick="showScienceTopicModal()" class="ml-3 text-xs underline hover:text-green-200">
+                                Change Topic
+                            </button>
+                        </p>
                     </div>
 
                     <!-- Collapsible Tips Section -->
@@ -498,54 +550,28 @@ date: 2025-10-30
 
                     <div class="space-y-6 text-lg">
 
-                        <!-- Interactive Activity: Prompt Analyzer -->
-                        <div
-                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Interactive: CS Prompt Analyzer!</h4>
-                            <p class="mb-4">Write a coding prompt and get instant feedback on how to improve it:</p>
-
-                            <div class="bg-slate-800/50 p-4 rounded-lg">
-                                <label class="block text-sm font-semibold mb-2">Type your coding prompt here:</label>
-                                <textarea id="cs-prompt-input" rows="4" placeholder="Example: Help me with Python loops"
-                                    class="w-full p-3 rounded bg-slate-700 border border-green-500/30 text-white"></textarea>
-
-                                <div class="grid md:grid-cols-2 gap-3 mt-4">
-                                    <button onclick="analyzeCSPrompt()"
-                                        class="bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold">
-                                        🔍 Analyze Prompt
-                                    </button>
-                                    <button onclick="improveCSPrompt()"
-                                        class="bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold">
-                                        ✨ Auto-Improve
-                                    </button>
-                                </div>
-
-                                <!-- Analysis Results -->
-                                <div id="cs-analysis" class="mt-4 hidden">
-                                    <div class="bg-slate-900/50 border border-purple-500/30 rounded-lg p-4">
-                                        <p class="font-semibold text-purple-300 mb-3">📊 Analysis Results:</p>
-                                        <div id="cs-checklist" class="space-y-2 mb-4"></div>
-                                        <div id="cs-score" class="text-center p-3 rounded-lg font-bold text-xl"></div>
-                                    </div>
-                                </div>
-
-                                <!-- Improved Version -->
-                                <div id="cs-improved" class="mt-4 hidden">
-                                    <div class="bg-green-900/30 border border-green-500/50 rounded-lg p-4">
-                                        <p class="font-semibold text-green-300 mb-2">✅ Improved Version:</p>
-                                        <p id="cs-improved-text" class="text-white p-3 bg-slate-800/50 rounded"></p>
-                                        <button onclick="copyToClipboard('cs-improved-text')"
-                                            class="mt-3 px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
-                                            📋 Copy Improved Prompt
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                        <!-- Activity Selection Buttons -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <button onclick="toggleActivity(1)" id="activity-btn-1"
+                                class="bg-blue-600 hover:bg-blue-700 py-4 px-6 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
+                                <div class="text-lg">📝 Activity 1</div>
+                                <div class="text-sm opacity-90">Fundamentals</div>
+                            </button>
+                            <button onclick="toggleActivity(2)" id="activity-btn-2"
+                                class="bg-purple-600 hover:bg-purple-700 py-4 px-6 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
+                                <div class="text-lg">💻 Activity 2</div>
+                                <div class="text-sm opacity-90">Building Challenges</div>
+                            </button>
+                            <button onclick="toggleActivity(3)" id="activity-btn-3"
+                                class="bg-green-600 hover:bg-green-700 py-4 px-6 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
+                                <div class="text-lg">🎮 Activity 3</div>
+                                <div class="text-sm opacity-90">Prompt Analyzer</div>
+                            </button>
                         </div>
 
-                        <!-- Activity 1: Fill in the Blanks -->
-                        <div class="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 border-2 border-blue-500/50 rounded-lg p-6 mt-6">
-                            <h4 class="text-xl font-bold text-blue-300 mb-4">📝 Activity 1: Fill in the Blanks</h4>
+                        <!-- Activity 1: Fundamentals (Fill in the Blanks) -->
+                        <div id="activity-1" class="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 border-2 border-blue-500/50 rounded-lg p-6 mt-6 hidden">
+                            <h4 class="text-xl font-bold text-blue-300 mb-4">📝 Activity 1: Fundamentals</h4>
                             <p class="mb-4">Complete the code by selecting the correct options from the dropdowns!</p>
 
                             <div class="bg-slate-800/50 p-4 rounded-lg">
@@ -591,9 +617,9 @@ date: 2025-10-30
                             </div>
                         </div>
 
-                        <!-- Activity 2: Write Code from Scratch -->
-                        <div class="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border-2 border-purple-500/50 rounded-lg p-6 mt-6">
-                            <h4 class="text-xl font-bold text-purple-300 mb-4">💻 Activity 2: Write Code from Scratch</h4>
+                        <!-- Activity 2: Building Based on Challenges -->
+                        <div id="activity-2" class="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border-2 border-purple-500/50 rounded-lg p-6 mt-6 hidden">
+                            <h4 class="text-xl font-bold text-purple-300 mb-4">💻 Activity 2: Building Based on Challenges</h4>
                             <p class="mb-4">Write code to solve the problem and run it to check if your output matches!</p>
 
                             <div class="bg-slate-800/50 p-4 rounded-lg">
@@ -649,6 +675,78 @@ date: 2025-10-30
                                         <pre id="write-code-output"
                                             class="bg-slate-900 border border-green-500/30 rounded-lg p-4 text-green-400 font-mono text-sm whitespace-pre-wrap min-h-[100px]"></pre>
                                         <div id="write-code-expected" class="mt-2 text-xs text-gray-400"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity 3: Prompt Analyzer with Code Generation -->
+                        <div id="activity-3" class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6 hidden">
+                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Activity 3: Prompt Analyzer</h4>
+                            <p class="mb-4">Write a coding prompt, get feedback, and generate code using AI!</p>
+
+                            <div class="bg-slate-800/50 p-4 rounded-lg">
+                                <label class="block text-sm font-semibold mb-2">Type your coding prompt here:</label>
+                                <textarea id="cs-prompt-input" rows="4" placeholder="Example: Write a Python function that calculates the factorial of a number"
+                                    class="w-full p-3 rounded bg-slate-700 border border-green-500/30 text-white"></textarea>
+
+                                <div class="grid md:grid-cols-2 gap-3 mt-4">
+                                    <button onclick="analyzeCSPrompt()"
+                                        class="bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold">
+                                        🔍 Analyze Prompt
+                                    </button>
+                                    <button onclick="improveCSPrompt()"
+                                        class="bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold">
+                                        ✨ Auto-Improve
+                                    </button>
+                                </div>
+
+                                <!-- Analysis Results -->
+                                <div id="cs-analysis" class="mt-4 hidden">
+                                    <div class="bg-slate-900/50 border border-purple-500/30 rounded-lg p-4">
+                                        <p class="font-semibold text-purple-300 mb-3">📊 Analysis Results:</p>
+                                        <div id="cs-checklist" class="space-y-2 mb-4"></div>
+                                        <div id="cs-score" class="text-center p-3 rounded-lg font-bold text-xl"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Improved Version -->
+                                <div id="cs-improved" class="mt-4 hidden">
+                                    <div class="bg-green-900/30 border border-green-500/50 rounded-lg p-4">
+                                        <p class="font-semibold text-green-300 mb-2">✅ Improved Version:</p>
+                                        <p id="cs-improved-text" class="text-white p-3 bg-slate-800/50 rounded"></p>
+                                        <div class="grid md:grid-cols-2 gap-3 mt-3">
+                                            <button onclick="copyToClipboard('cs-improved-text')"
+                                                class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                                📋 Copy Improved Prompt
+                                            </button>
+                                            <button onclick="generateCodeFromPrompt()"
+                                                class="px-4 py-2 bg-purple-700 hover:bg-purple-600 rounded text-sm">
+                                                🤖 Generate Code
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Generated Code Section -->
+                                <div id="cs-generated-code" class="mt-4 hidden">
+                                    <div class="bg-purple-900/30 border border-purple-500/50 rounded-lg p-4">
+                                        <p class="font-semibold text-purple-300 mb-2">💻 Generated Code:</p>
+                                        <textarea id="cs-generated-code-editor"
+                                            rows="12"
+                                            class="w-full p-3 rounded bg-slate-900 border border-purple-500/30 text-white font-mono text-sm"
+                                            spellcheck="false"></textarea>
+                                        <button onclick="runGeneratedCode()"
+                                            class="mt-3 px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                            ▶️ Run Code
+                                        </button>
+
+                                        <!-- Output Display -->
+                                        <div id="cs-generated-output-container" class="hidden mt-4">
+                                            <label class="block text-sm font-semibold mb-2">Output:</label>
+                                            <pre id="cs-generated-output"
+                                                class="bg-slate-900 border border-green-500/30 rounded-lg p-4 text-green-400 font-mono text-sm whitespace-pre-wrap min-h-[100px]"></pre>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1024,6 +1122,42 @@ date: 2025-10-30
                 </div>
 
                 <button onclick="closeMathTopicModal()"
+                    style="width: 100%; padding:12px; background:#e5e7eb; color:#1f2937; border:2px solid #d1d5db; border-radius:10px; font-weight:600; font-size: 15px; cursor:pointer;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCIENCE TOPIC SURVEY MODAL -->
+    <div id="scienceTopicModal">
+        <div class="modal">
+            <div style="background: linear-gradient(135deg, #8b5cf6, #ec4899); padding:30px; border-radius:20px 20px 0 0; text-align:center;">
+                <div style="font-size:60px; margin-bottom:10px;">🔬</div>
+                <h2 style="color: white; font-size:28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                    Choose Your Science Topic</h2>
+                <p style="color: white; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">Select a topic to practice</p>
+            </div>
+
+            <div style="padding:30px; background: white;">
+                <div style="display: grid; gap: 15px; margin-bottom: 20px;">
+                    <div class="topic-option science-topic-option" onclick="selectScienceTopic('biology')" id="science-topic-biology">
+                        <div style="font-size: 20px;">🧬 Biology</div>
+                        <div style="font-size: 13px; opacity: 0.9; margin-top: 5px;">Cells, DNA, and life processes</div>
+                    </div>
+
+                    <div class="topic-option science-topic-option" onclick="selectScienceTopic('chemistry')" id="science-topic-chemistry">
+                        <div style="font-size: 20px;">⚗️ Chemistry</div>
+                        <div style="font-size: 13px; opacity: 0.9; margin-top: 5px;">Reactions, bonds, and matter</div>
+                    </div>
+
+                    <div class="topic-option science-topic-option" onclick="selectScienceTopic('physics')" id="science-topic-physics">
+                        <div style="font-size: 20px;">⚛️ Physics</div>
+                        <div style="font-size: 13px; opacity: 0.9; margin-top: 5px;">Forces, energy, and motion</div>
+                    </div>
+                </div>
+
+                <button onclick="closeScienceTopicModal()"
                     style="width: 100%; padding:12px; background:#e5e7eb; color:#1f2937; border:2px solid #d1d5db; border-radius:10px; font-weight:600; font-size: 15px; cursor:pointer;">
                     Cancel
                 </button>
@@ -1457,6 +1591,111 @@ date: 2025-10-30
             }
         }
 
+        // Generate code from improved prompt using Gemini API
+        async function generateCodeFromPrompt() {
+            const improvedPrompt = document.getElementById('cs-improved-text').textContent.trim();
+
+            if (!improvedPrompt) {
+                alert('Please improve the prompt first!');
+                return;
+            }
+
+            try {
+                // Show generating message
+                const codeEditor = document.getElementById('cs-generated-code-editor');
+                const codeSection = document.getElementById('cs-generated-code');
+                codeSection.classList.remove('hidden');
+                codeEditor.value = 'Generating code...';
+
+                // Create a more specific prompt for code generation
+                const codeGenPrompt = improvedPrompt + '\n\nIMPORTANT: Provide ONLY the complete, executable code that will produce output when run. Do not include explanations, pseudocode, or comments about what to fill in. Write actual working code with example values that demonstrates the solution.';
+
+                // Call Gemini API
+                const response = await fetch('http://localhost:8001/api/gemini', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: codeGenPrompt,
+                        prompt: ''
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.text) {
+                    // Extract code from markdown code blocks if present
+                    let code = data.text;
+                    const codeBlockMatch = code.match(/```(?:python|javascript)?\n([\s\S]*?)```/);
+                    if (codeBlockMatch) {
+                        code = codeBlockMatch[1];
+                    }
+
+                    codeEditor.value = code.trim();
+                } else {
+                    codeEditor.value = '// Error: Could not generate code\n' + (data.error || 'Unknown error');
+                }
+
+            } catch (error) {
+                console.error('Gemini API error:', error);
+                document.getElementById('cs-generated-code-editor').value = '// Error: Failed to generate code. Please make sure you are logged in.';
+            }
+        }
+
+        // Run the generated code
+        async function runGeneratedCode() {
+            const code = document.getElementById('cs-generated-code-editor').value.trim();
+
+            if (!code) {
+                alert('No code to run!');
+                return;
+            }
+
+            const outputContainer = document.getElementById('cs-generated-output-container');
+            const outputEl = document.getElementById('cs-generated-output');
+
+            // Show container and set initial message
+            outputContainer.classList.remove('hidden');
+            outputEl.textContent = 'Running code...';
+            outputEl.className = 'bg-slate-900 border border-green-500/30 rounded-lg p-4 font-mono text-sm whitespace-pre-wrap min-h-[100px]';
+
+            try {
+                // Determine language based on code content
+                const isPython = code.includes('def ') || code.includes('import ') || code.includes('print(');
+                const endpoint = isPython
+                    ? 'http://localhost:8001/run/python'
+                    : 'http://localhost:8001/run/javascript';
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code: code })
+                });
+
+                const data = await response.json();
+
+                if (data.output !== undefined) {
+                    outputEl.textContent = data.output || '(no output)';
+                    outputEl.classList.add('text-green-400');
+                } else if (data.error) {
+                    outputEl.textContent = 'Error:\n' + data.error;
+                    outputEl.classList.add('text-red-400');
+                } else {
+                    outputEl.textContent = 'Unknown error occurred';
+                    outputEl.classList.add('text-red-400');
+                }
+
+            } catch (error) {
+                console.error('Error running code:', error);
+                outputEl.textContent = 'Error: Could not run code.\n' + error.message;
+                outputEl.classList.add('text-red-400');
+            }
+        }
+
         // History Prompt Builder
         let selectedHistoryType = null;
 
@@ -1843,6 +2082,51 @@ date: 2025-10-30
 
         // ==================== SCIENCE SECTION FUNCTIONS ====================
 
+        // Global variable to track selected science topic
+        let selectedScienceTopic = null;
+
+        // Show science topic modal
+        function showScienceTopicModal() {
+            const modal = document.getElementById('scienceTopicModal');
+            if (modal) {
+                modal.classList.add('modal-show');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Close science topic modal
+        function closeScienceTopicModal() {
+            const modal = document.getElementById('scienceTopicModal');
+            if (modal) {
+                modal.classList.remove('modal-show');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Select science topic
+        function selectScienceTopic(topic) {
+            // Update selected topic
+            selectedScienceTopic = topic;
+
+            // Update UI to show selected topic
+            document.querySelectorAll('.science-topic-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.getElementById('science-topic-' + topic).classList.add('selected');
+
+            // Update the topic display
+            const topicDisplay = document.getElementById('science-selected-topic-display');
+            const topicNameEl = document.getElementById('science-current-topic-name');
+            topicNameEl.textContent = topic.charAt(0).toUpperCase() + topic.slice(1);
+            topicDisplay.classList.remove('hidden');
+
+            // Close modal
+            closeScienceTopicModal();
+
+            // Reload questions with the selected topic
+            loadScienceQuestions();
+        }
+
         // Toggle science tips visibility
         function toggleScienceTips() {
             const tipsEl = document.getElementById('science-tips');
@@ -1855,12 +2139,35 @@ date: 2025-10-30
 
         // Load science questions from database
         async function loadScienceQuestions() {
+            // Only load questions if a topic has been selected
+            if (!selectedScienceTopic) {
+                console.log('No science topic selected yet, skipping question load');
+                return;
+            }
+
             try {
-                const response = await fetch('http://localhost:8001/api/science/questions');
+                // Load all questions from API
+                let url = 'http://localhost:8001/api/science/questions';
+                console.log('Loading science questions with URL:', url);
+                console.log('Selected topic:', selectedScienceTopic);
+
+                const response = await fetch(url);
                 const data = await response.json();
 
+                console.log('Science response data:', data);
+                console.log('Total questions received:', data.questions ? data.questions.length : 0);
+
                 if (data.success && data.questions) {
-                    displayScienceQuestions(data.questions);
+                    // Filter questions by selected topic on the client side
+                    const filteredQuestions = data.questions.filter(q => q.category === selectedScienceTopic);
+                    console.log('Filtered questions for', selectedScienceTopic + ':', filteredQuestions.length);
+
+                    if (filteredQuestions.length === 0) {
+                        document.getElementById('science-questions-container').innerHTML =
+                            '<div class="text-center p-8 bg-yellow-900/20 rounded-lg border border-yellow-500/30"><p class="text-yellow-300">No questions found for this topic. Try selecting a different topic.</p></div>';
+                    } else {
+                        displayScienceQuestions(filteredQuestions);
+                    }
                 } else {
                     throw new Error('Failed to load questions');
                 }
@@ -2004,6 +2311,23 @@ date: 2025-10-30
                 tipsEl.classList.remove('hidden');
             } else {
                 tipsEl.classList.add('hidden');
+            }
+        }
+
+        // Toggle CS activities
+        function toggleActivity(activityNumber) {
+            const activityEl = document.getElementById('activity-' + activityNumber);
+            const buttonEl = document.getElementById('activity-btn-' + activityNumber);
+
+            // Toggle visibility
+            if (activityEl.classList.contains('hidden')) {
+                activityEl.classList.remove('hidden');
+                // Add active border to button
+                buttonEl.classList.add('border-yellow-400');
+            } else {
+                activityEl.classList.add('hidden');
+                // Remove active border from button
+                buttonEl.classList.remove('border-yellow-400');
             }
         }
 
@@ -2318,8 +2642,9 @@ date: 2025-10-30
 
         // ==================== END CODING QUESTIONS SECTION ====================
 
-        // Track if the user has visited the math section
+        // Track if the user has visited the math and science sections
         let hasVisitedMathSection = false;
+        let hasVisitedScienceSection = false;
 
         // Load questions when the math, science, or CS section is accessed
         document.addEventListener('DOMContentLoaded', () => {
@@ -2335,6 +2660,11 @@ date: 2025-10-30
                     }
                     loadMathQuestions();
                 } else if (sectionIndex === 2) { // Science section is section 2
+                    // Show topic modal on first visit to science section
+                    if (!hasVisitedScienceSection) {
+                        hasVisitedScienceSection = true;
+                        setTimeout(() => showScienceTopicModal(), 300);
+                    }
                     loadScienceQuestions();
                 } else if (sectionIndex === 3) { // Computer Science section is section 3
                     loadCodingQuestions();
