@@ -223,7 +223,7 @@ function loadConceptsDataForModal() {
 - ✅ **Calls:** Called when modal opens
 - ✅ **Output:** Displays concept table with vote counts
 
-akshara- feedback survey FE + BE how they are connected
+git 
 ## Akshara: How the Frontend and Backend of the Feedback Survey are Connected:
 Frontend sends POST request with JSON data
 <img width="1198" height="454" alt="Image" src="https://github.com/user-attachments/assets/845bfcd8-fa1f-4b08-9f0f-db3c76776f5e" />
