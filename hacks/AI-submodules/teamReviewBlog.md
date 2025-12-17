@@ -136,3 +136,14 @@ ruchika- science module- topic filters through to show only questions for that t
 anishka- computer science module- prompt goes to smth smth....
 michelle- questions + jokes- procedure for jokes
 akshara- feedback survey FE + BE how they are connected
+## Akshara: How the Frontend and Backend of the Feedback Survey are Connected:
+Frontend sends POST request with JSON data
+<img width="1198" height="454" alt="Image" src="https://github.com/user-attachments/assets/845bfcd8-fa1f-4b08-9f0f-db3c76776f5e" />
+Backend receives the POST request at matching route:
+<img width="1122" height="188" alt="Image" src="https://github.com/user-attachments/assets/1f6d81b9-85ef-45ec-b335-b4ad596f56bd" />
+Backend validates the exact fields frontend sent:
+<img width="1128" height="210" alt="Image" src="https://github.com/user-attachments/assets/32954fad-f09e-4e65-b66b-678853c8c75f" />
+Backend returns JSON response:
+<img width="1014" height="196" alt="Image" src="https://github.com/user-attachments/assets/b3bceda1-5751-43fd-b921-73ecb4eadb01" />
+Frontend receives and processes backend's response:
+<img width="910" height="240" alt="Image" src="https://github.com/user-attachments/assets/e3402983-f783-4e42-b1de-e9c6681f8b4a" />
