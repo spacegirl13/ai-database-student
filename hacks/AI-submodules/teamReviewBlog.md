@@ -44,7 +44,7 @@ This is shown through "forEach" loop when going through and filtering the data a
 
 When someone completes the survey, a dictionary with their answer and time stamp is created. The latest response becomes the 1st one on the list, and the website displays the 3 more recent responses. 
 
-# Computer Science Section Progress: Building Interactive Coding Tools
+# Computer Science Section Progress: Building Interactive Coding Tools - Anishka
 
 ## Overview of Improvements
 
