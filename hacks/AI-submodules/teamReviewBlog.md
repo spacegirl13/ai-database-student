@@ -40,6 +40,7 @@ The user selects a button to choose which science topic they want to study.
 
 This input goes to the backend and displays the questions according to the science topic of the user's choice. Flexible dataset allows the question to be altered with immediate updates to the frontend.
 
+![Science prompts screenshot]({{site.baseurl}}/hacks/AI-submodules/scitopic.png)
 
 Backend:
 ![Backend flow diagram]({{site.baseurl}}/hacks/AI-submodules/backend.png)
