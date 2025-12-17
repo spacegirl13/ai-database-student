@@ -32,7 +32,17 @@ This is an empty list that stores all student responses to the FRQ.
 
 When someone completes the survey, a dictionary with their answer and time stamp is created. The latest response becomes the 1st one on the list, and the website displays the 3 most recent responses.
 
-ruchika- science module- topic filters through to show only questions for that topic (show array!) talk more about iteration (for each loop)
+## Ruchika: Submodule 2
+### Topic filtering procedure for the Science Module
+The user selects a button to choose which science topic they want to study. 
+![alt text](image.png)
+This input goes to the backend and displays the questions according to the science topic of the user's choice. Flexible dataset allows the question to be altered with immediate updates to the frontend.
+
+Backend:
+![alt text](image-2.png)
+Iteration: shown through "forEach" loop when going through and filtering the data array of questions to show the relevant subject.
+![alt text](image-1.png)
+
 anishka- computer science module- prompt goes to smth smth....
 michelle- questions + jokes- procedure for jokes
 akshara- feedback survey FE + BE how they are connected
