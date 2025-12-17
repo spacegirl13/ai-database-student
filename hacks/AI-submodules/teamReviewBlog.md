@@ -44,8 +44,8 @@ This is shown through "forEach" loop when going through and filtering the data a
 
 When someone completes the survey, a dictionary with their answer and time stamp is created. The latest response becomes the 1st one on the list, and the website displays the 3 more recent responses. 
 
-# Computer Science Section Progress: Building Interactive Coding Tools - Anishka
-
+## Computer Science Section Progress: Building Interactive Coding Tools - Anishka
+---
 ## Overview of Improvements
 
 We transformed our Computer Science learning module from a static reference page into an **interactive coding environment** tailored for student engagement. The original design (screenshot 1) featured basic tips, but lacked hands-on practice. 
@@ -136,6 +136,7 @@ ruchika- science module- topic filters through to show only questions for that t
 anishka- computer science module- prompt goes to smth smth....
 michelle- questions + jokes- procedure for jokes
 
+## Michelle: Procedure for Jokes
 # Check for Understanding - AP Requirements
 
 ## Procedure: `loadConceptsDataForModal`
