@@ -135,6 +135,94 @@ def generate_improved_prompt(prompt):
 ruchika- science module- topic filters through to show only questions for that topic (show array!) talk more about iteration (for each loop)
 anishka- computer science module- prompt goes to smth smth....
 michelle- questions + jokes- procedure for jokes
+
+# Check for Understanding - AP Requirements
+
+## Procedure: `loadConceptsDataForModal`
+
+| Component | Value |
+|-----------|-------|
+| **Name** | `loadConceptsDataForModal` |
+| **Parameters** | None (accesses global variables) |
+| **Return** | void |
+| **Purpose** | Loads AI concepts from backend and displays in table |
+
+---
+
+## Algorithm Components
+
+| Component | Evidence |
+|-----------|----------|
+| **SEQUENCING** | Fetch → Parse → Clear → Loop → Display (7 sequential steps) |
+| **SELECTION** | `if (response.status !== 200)` checks for errors |
+| **ITERATION** | `for (const row of data)` loops through concept array |
+
+---
+
+## Code with AP Requirements
+
+```javascript
+// STUDENT-DEVELOPED PROCEDURE
+function loadConceptsDataForModal() {
+    // SEQUENCING - Step 1: Fetch data
+    fetch(getConceptsURLModal, CONCEPTS_API_CONFIG_MODAL.fetchOptions)
+        .then(response => {
+            // SELECTION - Check if successful
+            if (response.status !== 200) {  // ← SELECTION
+                conceptsErrorModal('GET API response failure');
+                return;
+            }
+            
+            // SEQUENCING - Step 2: Parse JSON
+            response.json().then(data => {
+                // SEQUENCING - Step 3: Clear table
+                conceptsResultContainerModal.innerHTML = '';
+
+                // ITERATION - Loop through list
+                for (const row of data) {  // ← ITERATION
+                    // SEQUENCING - Step 4: Create row
+                    const tr = document.createElement("tr");
+
+                    const concept = document.createElement("td");
+                    concept.innerHTML = row.id + ". " + row.joke;
+
+                    const gotIt = document.createElement("td");
+                    const gotItBtn = document.createElement('button');
+                    gotItBtn.innerHTML = row.haha;
+                    gotItBtn.onclick = function () {
+                        conceptReactionModal(HAHA_KEY_MODAL, 
+                            likeConceptsURLModal + row.id, gotItBtn.id);
+                    };
+                    gotIt.appendChild(gotItBtn);
+
+                    const needHelp = document.createElement("td");
+                    const needHelpBtn = document.createElement('button');
+                    needHelpBtn.innerHTML = row.boohoo;
+                    needHelp.appendChild(needHelpBtn);
+
+                    // SEQUENCING - Step 5: Append to table
+                    tr.appendChild(concept);
+                    tr.appendChild(gotIt);
+                    tr.appendChild(needHelp);
+                    conceptsResultContainerModal.appendChild(tr);
+                }
+            })
+        })
+}
+```
+
+---
+
+
+## ✅ Requirements Met
+
+- ✅ **Input:** Button clicks (Got It / Need Help)
+- ✅ **List:** `data` array from API
+- ✅ **Procedure:** `loadConceptsDataForModal` with algorithm
+- ✅ **Algorithm:** Sequencing + Selection + Iteration
+- ✅ **Calls:** Called when modal opens
+- ✅ **Output:** Displays concept table with vote counts
+
 akshara- feedback survey FE + BE how they are connected
 ## Akshara: How the Frontend and Backend of the Feedback Survey are Connected:
 Frontend sends POST request with JSON data
