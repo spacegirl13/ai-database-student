@@ -10,14 +10,27 @@ date: 2025-10-30
 ---
 # AP CSP Component A Requirements - Code Analysis
 
-Varada: Submodule 1
-<img src="../../../../../AI-database-student/images/teamreviewblog/line25.png" width="300">
+---
+layout: post
+title: "Team Review Blog - Code Analysis"
+categories: [CSP, Team Review]
+---
+
+# AP CSP Component A Requirements - Code Analysis
+
+## Varada: Submodule 1
+
+### List Implementation in Backend
+
+![Line 25 - Empty List]({{site.baseurl}}/images/teamreviewblog/line25.png)
 
 This is an empty list that stores all student responses to the FRQ. 
 
-<img src="../../../../../AI-database-student/images/teamreviewblog/line63.png" width="300">
+### Dictionary Creation and Insertion
 
-When someone completes the survey, a dictionary with their answer and time stamp is created. The latest response becomes the 1st one on the list, and the website displays the 3 more recent responses. 
+![Line 63 - Dictionary Creation]({{site.baseurl}}/images/teamreviewblog/line63.png)
+
+When someone completes the survey, a dictionary with their answer and time stamp is created. The latest response becomes the 1st one on the list, and the website displays the 3 most recent responses.
 
 ruchika- science module- topic filters through to show only questions for that topic (show array!) talk more about iteration (for each loop)
 anishka- computer science module- prompt goes to smth smth....
