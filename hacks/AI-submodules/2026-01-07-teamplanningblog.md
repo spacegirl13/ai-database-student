@@ -76,15 +76,35 @@ Creates positive associations with responsible practices instead of framing them
 
 ## Code Runner (Michelle and Varada)
 
-# Guided Prompt Builder: Teaching Responsible AI Through Scaffolded Learning
+### Guided Prompt Builder: Teaching Responsible AI Through Scaffolded Learning
 
 Our Code Runner feature helps students learn how to write good AI prompts by giving them sentence starters and fill in the blank templates. Instead of staring at a blank box wondering what to write, students get a structured framework that guides them through creating effective and responsible prompts. They fill in the blanks based on their needs, and then the AI generates a response using their completed prompt. This way they're learning what good prompts look like while actually using them.
 
+**Key Features:**
 
-Key Features:
+- Students see partially completed prompts with blanks to fill in, like "I need help understanding [TOPIC]. Please explain it in a way that is [TONE/STYLE] and includes [SPECIFIC REQUIREMENTS]. Make sure to [ETHICAL CONSIDERATION]."
 
-Students see partially completed prompts with blanks to fill in, like "I need help understanding [TOPIC]. Please explain it in a way that is [TONE/STYLE] and includes [SPECIFIC REQUIREMENTS]. Make sure to [ETHICAL CONSIDERATION]."
-The templates consistently include elements like bias consideration, clarity, specificity, and ethical boundaries so students practice responsible AI usage every single time
-Students get immediate feedback because they see how their choices affect the AI's response in real time, creating a direct learning loop.The fill in the blank format naturally gets students thinking about context, audience, and ethical implications without feeling like homework
+- The templates consistently include elements like bias consideration, clarity, specificity, and ethical boundaries so students practice responsible AI usage every single time
 
-Educational Benefits:
+- Students get immediate feedback because they see how their choices affect the AI's response in real time, creating a direct learning loop
+
+- The fill in the blank format naturally gets students thinking about context, audience, and ethical implications without feeling like homework
+
+**Educational Benefits:**
+
+- Students learn by doing instead of just reading theory, with guardrails that prevent common mistakes
+
+- After completing multiple guided prompts, students start to internalize what makes a prompt effective and responsible
+
+- Builds confidence because students have a framework to work within rather than facing a blank screen
+
+- By the time they finish all modules, they've practiced responsible prompt engineering dozens of times and developed real world skills
+
+**Gamification:**
+
+- Students earn the "Intelligent Instructor" badge when they create particularly well structured prompts
+
+- The system evaluates based on specificity, ethical considerations, clear context, and appropriate scope
+
+- Rewards students for actually internalizing lessons rather than just completing modules for completion's sake
+
