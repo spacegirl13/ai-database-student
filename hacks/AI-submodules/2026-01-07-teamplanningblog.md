@@ -75,3 +75,16 @@ Creates positive associations with responsible practices instead of framing them
 ## Survey Staged Data (Anishka)
 
 ## Code Runner (Michelle and Varada)
+
+# Guided Prompt Builder: Teaching Responsible AI Through Scaffolded Learning
+
+Our Code Runner feature helps students learn how to write good AI prompts by giving them sentence starters and fill in the blank templates. Instead of staring at a blank box wondering what to write, students get a structured framework that guides them through creating effective and responsible prompts. They fill in the blanks based on their needs, and then the AI generates a response using their completed prompt. This way they're learning what good prompts look like while actually using them.
+
+
+Key Features:
+
+Students see partially completed prompts with blanks to fill in, like "I need help understanding [TOPIC]. Please explain it in a way that is [TONE/STYLE] and includes [SPECIFIC REQUIREMENTS]. Make sure to [ETHICAL CONSIDERATION]."
+The templates consistently include elements like bias consideration, clarity, specificity, and ethical boundaries so students practice responsible AI usage every single time
+Students get immediate feedback because they see how their choices affect the AI's response in real time, creating a direct learning loop.The fill in the blank format naturally gets students thinking about context, audience, and ethical implications without feeling like homework
+
+Educational Benefits:
