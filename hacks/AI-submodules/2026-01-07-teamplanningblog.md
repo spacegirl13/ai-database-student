@@ -425,7 +425,6 @@ Our Code Runner feature helps students learn how to write good AI prompts by giv
 prompt_constructions table:
 - Template used (beginner/intermediate/advanced)
 - Student's filled-in values for each blank
-- Quality score (0-100 based on completeness and ethics)
 - Time spent creating the prompt
 - Revision count
 ```
@@ -442,7 +441,6 @@ ai_responses table:
 ```
 learning_analytics table:
 - Total prompts created
-- Average quality score over time
 - Current template difficulty level
 - Badges earned and when
 ```
@@ -450,39 +448,12 @@ learning_analytics table:
 ### **How Data Drives Learning:**
 
 **For Students:**
-- See improvement: "Your prompt quality went from 65 to 82!"
 - Track badge progress: "2 more quality prompts until Intelligent Instructor badge"
 - Get personalized suggestions: "You've mastered beginner templates—try intermediate next"
 
 **For Teachers:**
-- Dashboard shows class average quality scores
-- Identifies which students need help (quality scores below 60)
+- Identifies which students need help
 - Reveals which template types work best
-- Shows common mistakes: "67% of students skip ethical considerations"
-
-### **"Intelligent Instructor" Badge Criteria (Data-Driven):**
-
-Badge unlocks when database confirms:
-- ✅ Quality score ≥ 85 on last 5 prompts
-- ✅ Ethical consideration field filled every time (last 10 prompts)
-- ✅ Used at least 3 different template types
-- ✅ Received 80%+ "helpful" ratings on AI responses
-
-### **Complete Data Flow Example:**
-
-```
-Student fills template → POST /api/coderunner/submit-prompt
-↓
-Database: INSERT new prompt (calculates quality_score = 88)
-↓
-Backend checks badge criteria across stored prompts
-↓
-All criteria met → INSERT INTO user_badges
-↓
-Frontend shows: 🎉 "Intelligent Instructor" badge earned!
-↓
-Badge appears on profile permanently
-```
 
 ---
 
