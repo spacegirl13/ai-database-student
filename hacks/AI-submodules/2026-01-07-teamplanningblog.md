@@ -25,6 +25,8 @@ microblog: true
 | **Prodigy Problem Solver** | Complete Submodule 3 | Applied AI knowledge to solve real-world challenges |
 | **Responsible AI Master** | Complete Entire Quest | Achieved comprehensive understanding of ethical AI practices |
 
+<img width="1254" height="1260" alt="Image" src="https://github.com/user-attachments/assets/de5b55a2-4f66-4ea5-aaa4-f162e870fab9" />
+
 ### Special Badges
 
 | Badge Name | Requirement | Description |
@@ -170,9 +172,210 @@ By integrating badges with database persistence, the platform will:
 *Database integration transforms badges from temporary browser decorations into permanent, meaningful credentials that validate student learning and drive engagement with responsible AI principles.*
 
 ## Survey Staged Data (Anishka)
+## Survey Staged Data (Anishka)
+
+### Purpose: Understanding Student AI Tool Usage Patterns
+
+The Submodule 1 survey collects critical data about how students actually use AI tools in their academic work. This data helps identify usage patterns, preferred platforms, and student perspectives on AI policies in education—insights that are essential for teaching responsible AI practices that align with real-world student behavior.
+
+### Survey Data Structure
+
+#### **1. AI Tool Preference Matrix (Multiple Choice Table)**
+Captures which AI platform students prefer for different subjects:
+
+**Data Collected:**
+- Subject areas: English, Math, Science, Computer Science, History
+- AI platforms: ChatGPT, Claude, Gemini, Copilot
+- One selection per subject (radio button constraint)
+
+**Database Schema Requirements:**
+```
+survey_responses table:
+- response_id (primary key)
+- user_id (foreign key)
+- subject (enum: english, math, science, cs, history)
+- preferred_ai_tool (enum: ChatGPT, Claude, Gemini, Copilot)
+- timestamp
+```
+
+**Why This Data Matters:**
+- Reveals subject-specific AI tool preferences (e.g., "Do students prefer Copilot for CS?")
+- Identifies platform dominance across different academic domains
+- Helps educators understand which tools students are most familiar with
+- Enables targeted lessons: "Since 80% use ChatGPT for English, let's address its specific limitations"
+
+#### **2. AI Usage Behavior (Yes/No Question)**
+"Do you use AI to help you with schoolwork in essays and assignments?"
+
+**Data Collected:**
+- Binary response (Yes/No)
+- Links to user profile for demographic analysis
+
+**Database Schema Requirements:**
+```
+survey_responses table:
+- uses_ai_for_schoolwork (boolean)
+- user_id (foreign key to link with other data)
+```
+
+**Why This Data Matters:**
+- Establishes baseline: What percentage of students actively use AI for academics?
+- Identifies potential gap between policy and practice
+- Segments users for personalized learning paths (AI users vs. non-users need different approaches)
+- Correlates with badge completion rates (Do AI users engage more with responsible AI content?)
+
+#### **3. Policy Perspectives (Free Response Question)**
+"Most classes do not want students to use AI. What do you feel about these policies? How would you want to use AI without having it do everything for you and it being considered cheating?"
+
+**Data Collected:**
+- Long-form text response (stored as TEXT datatype)
+- Qualitative insights into student reasoning and ethical frameworks
+
+**Database Schema Requirements:**
+```
+survey_responses table:
+- policy_perspective (TEXT, allows unlimited characters)
+- response_length (integer, for analyzing engagement depth)
+- sentiment_score (optional: AI-analyzed sentiment)
+```
+
+**Why This Data Matters:**
+- **Qualitative insights**: Reveals student reasoning about AI ethics in their own words
+- **Identifies misconceptions**: "Some students think AI detection is perfect—we need to address that"
+- **Thematic analysis**: Common themes like "AI as a tutor vs. AI as a replacement"
+- **Authentic voice**: Direct quotes can inform lesson examples and case studies
+- **Ethical development tracking**: Responses before vs. after completing modules show learning impact
+
+### Data Visualization: Real-Time Bar Graph Display
+
+#### **Interactive Analytics Dashboard**
+
+All survey responses are aggregated and displayed in dynamic bar graphs that update in real-time as students submit their surveys. This visualization serves multiple educational and analytical purposes:
+
+**Graph Types Displayed:**
+
+1. **AI Tool Preference by Subject**
+   - Five grouped bar charts (one per subject)
+   - Four bars per chart (ChatGPT, Claude, Gemini, Copilot)
+   - Y-axis: Number of students who selected each tool
+   - Color-coded bars for easy comparison
+
+2. **Overall AI Usage Distribution**
+   - Simple bar chart showing Yes vs. No responses
+   - Percentage labels on each bar
+   - Updates live as new submissions arrive
+
+**Technical Implementation:**
+```
+Frontend: GET /api/survey/analytics/submodule1
+Backend queries database:
+  SELECT subject, ai_tool, COUNT(*) as count
+  FROM ai_tool_preferences
+  GROUP BY subject, ai_tool
+
+Returns JSON:
+{
+  "english": {"ChatGPT": 45, "Claude": 12, "Gemini": 8, "Copilot": 3},
+  "math": {"ChatGPT": 38, "Claude": 18, "Gemini": 7, "Copilot": 5},
+  ...
+  "usesAI": {"Yes": 52, "No": 16}
+}
+
+Frontend renders using Chart.js or similar library
+Graphs update every time page refreshes or new submission occurs
+```
+
+**Educational Benefits of Visualization:**
+
+✅ **Transparency**: Students see they're contributing to real data collection, not just filling out forms
+
+✅ **Peer comparison**: "Wow, most students prefer ChatGPT for English—maybe I should try it"
+
+✅ **Data literacy**: Students learn how raw survey data transforms into meaningful visualizations
+
+✅ **Immediate feedback**: Seeing their response appear in the graph creates satisfaction and validates participation
+
+✅ **Pattern recognition**: Visual trends are easier to grasp than raw numbers (e.g., "Copilot dominates Computer Science")
+
+✅ **Motivates participation**: "Only 30 responses so far—let me add mine!" encourages survey completion
+
+**Example Dashboard Layout:**
+```
+┌─────────────────────────────────────────────────────┐
+│  📊 Submodule 1 Survey Results (Live)              │
+│                                                     │
+│  Total Responses: 68                               │
+├─────────────────────────────────────────────────────┤
+│  🔹 AI Tool Preferences by Subject                 │
+│                                                     │
+│  English:    [ChatGPT ████████ 45]                │
+│              [Claude ███ 12]                       │
+│              [Gemini ██ 8]                         │
+│              [Copilot █ 3]                         │
+│                                                     │
+│  Math:       [ChatGPT ███████ 38]                 │
+│              [Claude ████ 18]                      │
+│              [Gemini ██ 7]                         │
+│              [Copilot █ 5]                         │
+│                                                     │
+│  [Similar charts for Science, CS, History...]      │
+├─────────────────────────────────────────────────────┤
+│  🔹 Do Students Use AI for Schoolwork?             │
+│                                                     │
+│  Yes: ████████████████ 76% (52 students)          │
+│  No:  █████ 24% (16 students)                     │
+└─────────────────────────────────────────────────────┘
+```
+
+### Database Integration Architecture
+
+#### **Normalized Data Storage**
+```
+users table                survey_responses table              ai_tool_preferences table
+-----------               ---------------------              ------------------------
+user_id                   response_id                        preference_id 
+username                  user_id                            response_id 
+email                     uses_ai_schoolwork                 subject 
+                          policy_perspective                 ai_tool 
+                          completed_at            
+                          badge_awarded 
+```
+
+#### **Data Flow on Survey Submission**
+```
+Student completes survey → Frontend validates all required fields
+↓
+POST /api/survey/submodule1/submit
+↓
+Backend receives:
+{
+  userId: 123,
+  toolPreferences: {
+    english: "ChatGPT",
+    math: "Claude",
+    science: "Gemini",
+    cs: "Copilot",
+    history: "ChatGPT"
+  },
+  usesAI: true,
+  policyPerspective: "I think AI should be allowed as a study tool..."
+}
+↓
+Database transactions (atomic):
+1. INSERT INTO survey_responses (user_id, uses_ai_schoolwork, policy_perspective)
+2. INSERT INTO ai_tool_preferences (5 rows, one per subject)
+3. UPDATE user_badges SET badge_earned = TRUE WHERE badge = "Sensational Surveyor"
+4. TRIGGER analytics cache refresh (updates bar graph data)
+↓
+Response to frontend: {success: true, badgeAwarded: true}
+↓
+UI shows: Badge notification + "Thank you! View your response in the live results below ⬇️"
+↓
+Page redirects to analytics dashboard showing updated bar graphs
+```
+
 
 ## Code Runner (Michelle and Varada)
-
 ### Guided Prompt Builder: Teaching Responsible AI Through Scaffolded Learning
 
 Our Code Runner feature helps students learn how to write good AI prompts by giving them sentence starters and fill in the blank templates. Instead of staring at a blank box wondering what to write, students get a structured framework that guides them through creating effective and responsible prompts. They fill in the blanks based on their needs, and then the AI generates a response using their completed prompt. This way they're learning what good prompts look like while actually using them.
