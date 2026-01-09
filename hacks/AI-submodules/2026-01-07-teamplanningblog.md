@@ -375,12 +375,14 @@ Page redirects to analytics dashboard showing updated bar graphs
 ```
 
 
-## Code Runner (Michelle and Varada)
-### Guided Prompt Builder: Teaching Responsible AI Through Scaffolded Learning
+# Code Runner (Michelle and Varada)
+## Guided Prompt Builder: Teaching Responsible AI Through Scaffolded Learning
 
-Our Code Runner feature helps students learn how to write good AI prompts by giving them sentence starters and fill in the blank templates. Instead of staring at a blank box wondering what to write, students get a structured framework that guides them through creating effective and responsible prompts. They fill in the blanks based on their needs, and then the AI generates a response using their completed prompt. This way they're learning what good prompts look like while actually using them.
+Our Code Runner feature helps students learn how to write good AI prompts by giving them sentence starters and fill-in-the-blank templates. Instead of staring at a blank box wondering what to write, students get a structured framework that guides them through creating effective and responsible prompts. They fill in the blanks based on their needs, and then the AI generates a response using their completed prompt. This way they're learning what good prompts look like while actually using them.
 
-**Key Features:**
+---
+
+## **Key Features:**
 
 - Students see partially completed prompts with blanks to fill in, like "I need help understanding [TOPIC]. Please explain it in a way that is [TONE/STYLE] and includes [SPECIFIC REQUIREMENTS]. Make sure to [ETHICAL CONSIDERATION]."
 
@@ -388,9 +390,11 @@ Our Code Runner feature helps students learn how to write good AI prompts by giv
 
 - Students get immediate feedback because they see how their choices affect the AI's response in real time, creating a direct learning loop
 
-- The fill in the blank format naturally gets students thinking about context, audience, and ethical implications without feeling like homework
+- The fill-in-the-blank format naturally gets students thinking about context, audience, and ethical implications without feeling like homework
 
-**Educational Benefits:**
+---
+
+## **Educational Benefits:**
 
 - Students learn by doing instead of just reading theory, with guardrails that prevent common mistakes
 
@@ -398,13 +402,88 @@ Our Code Runner feature helps students learn how to write good AI prompts by giv
 
 - Builds confidence because students have a framework to work within rather than facing a blank screen
 
-- By the time they finish all modules, they've practiced responsible prompt engineering dozens of times and developed real world skills
+- By the time they finish all modules, they've practiced responsible prompt engineering dozens of times and developed real-world skills
 
-**Gamification:**
+---
 
-- Students earn the "Intelligent Instructor" badge when they create particularly well structured prompts
+## **Gamification:**
+
+- Students earn the "Intelligent Instructor" badge when they create particularly well-structured prompts
 
 - The system evaluates based on specificity, ethical considerations, clear context, and appropriate scope
 
 - Rewards students for actually internalizing lessons rather than just completing modules for completion's sake
 
+---
+
+## 📊 **Database Integration**
+
+### **What We Store:**
+
+**Prompt Construction Data:**
+```
+prompt_constructions table:
+- Template used (beginner/intermediate/advanced)
+- Student's filled-in values for each blank
+- Quality score (0-100 based on completeness and ethics)
+- Time spent creating the prompt
+- Revision count
+```
+
+**Response Tracking:**
+```
+ai_responses table:
+- AI-generated response text
+- Student rating (helpful/not helpful)
+- Whether they regenerated the response
+```
+
+**Progress Metrics:**
+```
+learning_analytics table:
+- Total prompts created
+- Average quality score over time
+- Current template difficulty level
+- Badges earned and when
+```
+
+### **How Data Drives Learning:**
+
+**For Students:**
+- See improvement: "Your prompt quality went from 65 to 82!"
+- Track badge progress: "2 more quality prompts until Intelligent Instructor badge"
+- Get personalized suggestions: "You've mastered beginner templates—try intermediate next"
+
+**For Teachers:**
+- Dashboard shows class average quality scores
+- Identifies which students need help (quality scores below 60)
+- Reveals which template types work best
+- Shows common mistakes: "67% of students skip ethical considerations"
+
+### **"Intelligent Instructor" Badge Criteria (Data-Driven):**
+
+Badge unlocks when database confirms:
+- ✅ Quality score ≥ 85 on last 5 prompts
+- ✅ Ethical consideration field filled every time (last 10 prompts)
+- ✅ Used at least 3 different template types
+- ✅ Received 80%+ "helpful" ratings on AI responses
+
+### **Complete Data Flow Example:**
+
+```
+Student fills template → POST /api/coderunner/submit-prompt
+↓
+Database: INSERT new prompt (calculates quality_score = 88)
+↓
+Backend checks badge criteria across stored prompts
+↓
+All criteria met → INSERT INTO user_badges
+↓
+Frontend shows: 🎉 "Intelligent Instructor" badge earned!
+↓
+Badge appears on profile permanently
+```
+
+---
+
+**This creates a feedback loop: students practice → data tracks improvement → badges reward mastery → students are motivated to improve further.**
