@@ -172,7 +172,6 @@ By integrating badges with database persistence, the platform will:
 *Database integration transforms badges from temporary browser decorations into permanent, meaningful credentials that validate student learning and drive engagement with responsible AI principles.*
 
 ## Survey Staged Data (Anishka)
-## Survey Staged Data (Anishka)
 
 ### Purpose: Understanding Student AI Tool Usage Patterns
 
@@ -375,7 +374,8 @@ Page redirects to analytics dashboard showing updated bar graphs
 ```
 
 
-# Code Runner (Michelle and Varada)
+## Code Runner (Michelle and Varada)
+---
 ## Guided Prompt Builder: Teaching Responsible AI Through Scaffolded Learning
 
 Our Code Runner feature helps students learn how to write good AI prompts by giving them sentence starters and fill-in-the-blank templates. Instead of staring at a blank box wondering what to write, students get a structured framework that guides them through creating effective and responsible prompts. They fill in the blanks based on their needs, and then the AI generates a response using their completed prompt. This way they're learning what good prompts look like while actually using them.
