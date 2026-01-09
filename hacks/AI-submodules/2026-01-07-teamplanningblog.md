@@ -25,6 +25,7 @@ microblog: true
 | **Prodigy Problem Solver** | Complete Submodule 3 | Applied AI knowledge to solve real-world challenges |
 | **Responsible AI Master** | Complete Entire Quest | Achieved comprehensive understanding of ethical AI practices |
 
+
 <img width="1254" height="1260" alt="Image" src="https://github.com/user-attachments/assets/de5b55a2-4f66-4ea5-aaa4-f162e870fab9" />
 
 ### Special Badges
