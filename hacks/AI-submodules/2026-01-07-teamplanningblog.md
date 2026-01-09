@@ -25,9 +25,6 @@ microblog: true
 | **Prodigy Problem Solver** | Complete Submodule 3 | Applied AI knowledge to solve real-world challenges |
 | **Responsible AI Master** | Complete Entire Quest | Achieved comprehensive understanding of ethical AI practices |
 
-
-<img width="1254" height="1260" alt="Image" src="https://github.com/user-attachments/assets/de5b55a2-4f66-4ea5-aaa4-f162e870fab9" />
-
 ### Special Badges
 
 | Badge Name | Requirement | Description |
@@ -35,6 +32,10 @@ microblog: true
 | **Super Smart Genius** | Make the Leaderboard | Ranked among top performers in the platform |
 | **Intelligent Instructor** | Create a "Good" Prompt | Crafted a high-quality, effective AI prompt |
 | **Sensational Surveyor** | Submit the Survey | Provided valuable feedback to improve the platform |
+
+<img width="1044" height="1036" alt="Image" src="https://github.com/user-attachments/assets/6738a950-7a90-494b-9770-61001f80a789" />
+<img width="1030" height="1038" alt="Image" src="https://github.com/user-attachments/assets/c2182af2-6347-436f-afe8-006fb805b797" />
+<img width="1254" height="1260" alt="Image" src="https://github.com/user-attachments/assets/de5b55a2-4f66-4ea5-aaa4-f162e870fab9" />
 
 ---
 
