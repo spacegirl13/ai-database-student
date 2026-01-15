@@ -113,4 +113,11 @@ minima:
     - navigation/blog.md
     - navigation/search.md
     - navigation/about.md
-exclude: [AI-database-flask]
+exclude:
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - Gemfile
+  - Gemfile.lock
+  - AI-database-flask
