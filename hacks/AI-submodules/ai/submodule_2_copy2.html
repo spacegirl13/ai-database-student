@@ -914,7 +914,7 @@ date: 2025-10-30
     <!-- SCRIPTS -->
     <script>
         // API Configuration
-        const API_BASE_URL = 'http://localhost:8001/api/prompts';
+        const API_BASE_URL = 'http://localhost:8402/api/prompts';
 
         // State variables
         let selectedRating = 0;
@@ -1351,7 +1351,7 @@ date: 2025-10-30
             }
 
             try {
-                let url = 'http://localhost:8001/api/math/questions?topic=' + selectedMathTopic;
+                let url = 'http://localhost:8402/api/math/questions?topic=' + selectedMathTopic;
                 console.log('Loading questions with URL:', url);
 
                 const response = await fetch(url);
@@ -1447,7 +1447,7 @@ date: 2025-10-30
             resultArea.textContent = 'Loading AI response...';
 
             try {
-                const response = await fetch('http://localhost:8001/api/gemini', {
+                const response = await fetch('http://localhost:8402/api/gemini', {
                     method: 'POST',
                     credentials: 'include',
                     headers: {
@@ -1517,7 +1517,7 @@ date: 2025-10-30
             closeScienceTopicModal();
 
             try {
-                const response = await fetch('http://localhost:8001/api/prompts/survey', {
+                const response = await fetch('http://localhost:8402/api/prompts/survey', {
                     method: 'POST',
                     credentials: 'include',
                     headers: {
@@ -1558,7 +1558,7 @@ date: 2025-10-30
             }
 
             try {
-                const response = await fetch(`http://localhost:8001/api/science/questions?topic=${topic}`);
+                const response = await fetch(`http://localhost:8402/api/science/questions?topic=${topic}`);
                 const data = await response.json();
 
                 if (data.success && data.questions) {
@@ -1659,7 +1659,7 @@ date: 2025-10-30
             resultArea.textContent = 'Loading AI response...';
 
             try {
-                const response = await fetch('http://localhost:8001/api/gemini', {
+                const response = await fetch('http://localhost:8402/api/gemini', {
                     method: 'POST',
                     credentials: 'include',
                     headers: {

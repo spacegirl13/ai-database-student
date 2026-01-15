@@ -1057,7 +1057,7 @@ date: 2025-10-30
 
     <script>
         // API Configuration - Update when backend is ready
-        const API_URL = 'http://localhost:8001/api/prompt-game';
+        const API_URL = 'http://localhost:8402/api/prompt-game';
 
         // Game State
         let playerName = '';
@@ -1671,7 +1671,7 @@ date: 2025-10-30
 
             // Save feedback to backend
             try {
-                const response = await fetch('http://localhost:8001/api/submodule3/feedback', {
+                const response = await fetch('http://localhost:8402/api/submodule3/feedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1729,7 +1729,7 @@ date: 2025-10-30
 
             // Load recent feedback
             try {
-                const response = await fetch('http://localhost:8001/api/submodule3/feedback/recent');
+                const response = await fetch('http://localhost:8402/api/submodule3/feedback/recent');
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success) {
@@ -1883,7 +1883,7 @@ date: 2025-10-30
 
     // Configuration for the Check for Understanding survey
         const CONCEPTS_API_CONFIG_MODAL = {
-            pythonURI: 'http://127.0.0.1:8001', // Update this to match your backend
+            pythonURI: 'http://127.0.0.1:8402', // Update this to match your backend
             fetchOptions: {
                 mode: 'cors',
                 cache: 'no-cache',
