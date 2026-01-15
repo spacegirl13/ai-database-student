@@ -1278,7 +1278,7 @@ date: 2025-10-30
 
 
         // Navigation
-        function goToSection(n) {
+        window.goToSection = function(n) {
             document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
             document.getElementById('section-' + n).classList.remove('section-hidden');
             document.querySelectorAll('.nav-btn').forEach(b => {
