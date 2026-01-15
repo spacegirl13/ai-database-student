@@ -1706,7 +1706,7 @@ date: 2025-10-30
                 const codeGenPrompt = improvedPrompt + '\n\nIMPORTANT: Provide ONLY the complete, executable code that will produce output when run. Do not include explanations, pseudocode, or comments about what to fill in. Write actual working code with example values that demonstrates the solution.';
 
                 // Call Gemini API
-                const response = await fetch('http://localhost:8402/api/gemini', {
+                const response = await fetch(pythonURI +'/api/gemini', {
                     method: 'POST',
                     credentials: 'include',
                     headers: {
@@ -1760,8 +1760,8 @@ date: 2025-10-30
                 // Determine language based on code content
                 const isPython = code.includes('def ') || code.includes('import ') || code.includes('print(');
                 const endpoint = isPython
-                    ? 'http://localhost:8402/run/python'
-                    : 'http://localhost:8402/run/javascript';
+                    ? pythonURI + '/run/python'
+                    : pythonURI + '/run/javascript';
 
                 const response = await fetch(endpoint, {
                     method: 'POST',
@@ -2156,7 +2156,7 @@ date: 2025-10-30
             responseText.textContent = 'Generating AI response...';
 
             try {
-                const response = await fetch('http://localhost:8402/api/gemini', {
+                const response = await fetch(pythonURI + '/api/gemini', {
                     method: 'POST',
                     credentials: 'include',
                     headers: {
@@ -2315,7 +2315,7 @@ date: 2025-10-30
 
             try {
                 // Build URL with topic filter
-                let url = 'http://localhost:8402/api/math/questions?topic=' + selectedMathTopic;
+                let url = pythonURI + '/api/math/questions?topic=' + selectedMathTopic;
                 console.log('Loading questions with URL:', url);
                 console.log('Selected topic:', selectedMathTopic);
 
@@ -2422,7 +2422,7 @@ date: 2025-10-30
             resultArea.textContent = 'Loading AI response...';
 
             try {
-                const response = await fetch('http://localhost:8402/api/gemini', {
+                const response = await fetch(pythonURI + '/api/gemini', {
                     method: 'POST',
                     credentials: 'include', // Include authentication cookies
                     headers: {
@@ -2534,7 +2534,7 @@ date: 2025-10-30
 
             try {
                 // Load all questions from API
-                let url = 'http://localhost:8402/api/science/questions';
+                let url = pythonURI + '/api/science/questions';
                 console.log('Loading science questions with URL:', url);
                 console.log('Selected topic:', selectedScienceTopic);
 
@@ -2645,7 +2645,7 @@ date: 2025-10-30
             resultArea.textContent = 'Loading AI response...';
 
             try {
-                const response = await fetch('http://localhost:8402/api/gemini', {
+                const response = await fetch(pythonURI + '/api/gemini', {
                     method: 'POST',
                     credentials: 'include',
                     headers: {
@@ -2747,7 +2747,7 @@ date: 2025-10-30
         // Load fill-in-blank questions
         async function loadFillBlankQuestions() {
             try {
-                const response = await fetch('http://localhost:8402/api/coding/fill-in-blank');
+                const response = await fetch(pythonURI + '/api/coding/fill-in-blank');
                 const data = await response.json();
 
                 if (data.success && data.questions) {
@@ -2769,7 +2769,7 @@ date: 2025-10-30
         // Load write-code questions
         async function loadWriteCodeQuestions() {
             try {
-                const response = await fetch('http://localhost:8402/api/coding/write-code');
+                const response = await fetch(pythonURI + '/api/coding/write-code');
                 const data = await response.json();
 
                 if (data.success && data.questions) {
@@ -2983,8 +2983,8 @@ date: 2025-10-30
 
             try {
                 const endpoint = language === 'python'
-                    ? 'http://localhost:8402/run/python'
-                    : 'http://localhost:8402/run/javascript';
+                    ? pythonURI + '/run/python'
+                    : pythonURI + '/run/javascript';
 
                 console.log('Calling endpoint:', endpoint);
 

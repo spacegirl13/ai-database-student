@@ -852,9 +852,11 @@ microblog: true
   updateProgressBar();
 </script>
 
-<script>
+<script type="module">
+  import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+
   // Authentication Configuration
-  const API_BASE_URL = 'http://localhost:8402/api';
+  const API_BASE_URL = pythonURI + '/api';
 
   // DOM Elements - Login/Signup Card
   const loginCard = document.getElementById('login-card');
@@ -908,7 +910,8 @@ microblog: true
   }
 
   // Tab Switching Functions
-  function switchToLogin() {
+  window.switchToLogin = function() {
+
     loginForm.style.display = 'block';
     signupForm.style.display = 'none';
     loginTab.classList.add('active');
@@ -919,7 +922,7 @@ microblog: true
     hideError('signup');
   }
 
-  function switchToSignup() {
+  window.switchToSignup = function() {
     loginForm.style.display = 'none';
     signupForm.style.display = 'block';
     loginTab.classList.remove('active');

@@ -912,7 +912,8 @@ date: 2025-10-30
     </footer>
 
     <!-- SCRIPTS -->
-    <script>
+    <script type="module">
+        
         // API Configuration
         const API_BASE_URL = 'http://localhost:8402/api/prompts';
 
@@ -985,7 +986,7 @@ date: 2025-10-30
             const color = type === 'bad' ? 'red' : 'green';
 
             try {
-                const response = await fetch(`${API_BASE_URL}/${type}`);
+                const response = await fetch(`${API_BASE_URL}/${type}`, fetchOptions);
                 const data = await response.json();
 
                 if (data.success && data.prompts.length > 0) {
