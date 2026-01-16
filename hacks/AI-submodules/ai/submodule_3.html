@@ -10,2004 +10,1876 @@ microblog: true
 date: 2025-10-30
 ---
 
-<!DOCTYPE html>
-<html lang="en">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Prompt Challenge - Test Your Skills!</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
+        min-height: 100vh;
+        padding: 20px;
+        color: #fff;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .game-header {
+        text-align: center;
+        margin-bottom: 30px;
+        animation: fadeInDown 0.6s ease;
+    }
+
+    .game-header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .game-header p {
+        font-size: 1.1em;
+        opacity: 0.9;
+    }
+
+    .game-stats {
+        display: flex;
+        justify-content: space-around;
+        background: rgba(30, 58, 138, 0.4);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(37, 99, 235, 0.3);
+        animation: fadeIn 0.6s ease 0.2s both;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-label {
+        font-size: 0.9em;
+        opacity: 0.8;
+        margin-bottom: 5px;
+    }
+
+    .stat-value {
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    .game-screen {
+        display: none;
+    }
+
+    .game-screen.active {
+        display: block;
+        animation: fadeIn 0.4s ease;
+    }
+
+    .start-screen {
+        background: rgba(15, 23, 42, 0.85);
+        border-radius: 20px;
+        padding: 50px;
+        text-align: center;
+        color: #e0e7ff;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(37, 99, 235, 0.3);
+    }
+
+    .start-screen h2 {
+        color: #60a5fa;
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    .start-screen p {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        line-height: 1.6;
+        color: #cbd5e1;
+    }
+
+    .input-group {
+        margin: 30px 0;
+    }
+
+    .input-group input {
+        width: 100%;
+        max-width: 400px;
+        padding: 15px;
+        font-size: 1.1em;
+        border: 2px solid #3b82f6;
+        border-radius: 10px;
+        text-align: center;
+        background: rgba(30, 58, 138, 0.3);
+        color: #e0e7ff;
+    }
+
+    .input-group input::placeholder {
+        color: rgba(224, 231, 255, 0.5);
+    }
+
+    .btn {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.2em;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    }
+
+    .question-card {
+        background: rgba(15, 23, 42, 0.85);
+        border-radius: 20px;
+        padding: 40px;
+        color: #e0e7ff;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        margin-bottom: 20px;
+        border: 1px solid rgba(37, 99, 235, 0.3);
+    }
+
+    .subject-badge {
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .subject-math {
+        background: #ff6b6b;
+        color: white;
+    }
+
+    .subject-science {
+        background: #4ecdc4;
+        color: white;
+    }
+
+    .subject-history {
+        background: #f9ca24;
+        color: #333;
+    }
+
+    .subject-cs {
+        background: #9b59b6;
+        color: white;
+    }
+
+    .scenario {
+        font-size: 1.3em;
+        font-weight: 600;
+        color: #e0e7ff;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    .prompt-options {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .prompt-option {
+        background: rgba(30, 58, 138, 0.4);
+        border: 3px solid rgba(59, 130, 246, 0.3);
+        border-radius: 15px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+    }
+
+    .prompt-option:hover {
+        border-color: #60a5fa;
+        transform: translateX(10px);
+        box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
+        background: rgba(30, 58, 138, 0.6);
+    }
+
+    .prompt-option.selected {
+        border-color: #60a5fa;
+        background: rgba(59, 130, 246, 0.3);
+    }
+
+    .prompt-option.correct {
+        border-color: #4caf50;
+        background: rgba(76, 175, 80, 0.2);
+        animation: pulse 0.5s;
+    }
+
+    .prompt-option.incorrect {
+        border-color: #f44336;
+        background: rgba(244, 67, 54, 0.2);
+        animation: shake 0.5s;
+    }
+
+    .prompt-option-label {
+        font-weight: bold;
+        color: #60a5fa;
+        margin-bottom: 10px;
+    }
+
+    .prompt-text {
+        color: #cbd5e1;
+        line-height: 1.5;
+    }
+
+    .feedback {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        font-weight: 500;
+        display: none;
+    }
+
+    .feedback.show {
+        display: block;
+        animation: slideIn 0.4s ease;
+    }
+
+    .feedback.correct {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border-left: 4px solid #4caf50;
+    }
+
+    .feedback.incorrect {
+        background: #ffebee;
+        color: #c62828;
+        border-left: 4px solid #f44336;
+    }
+
+    .timer {
+        text-align: center;
+        font-size: 3em;
+        font-weight: bold;
+        color: #60a5fa;
+        margin: 20px 0;
+    }
+
+    .timer.warning {
+        color: #ff6b6b;
+        animation: pulse 1s infinite;
+    }
+
+    .results-screen {
+        background: rgba(15, 23, 42, 0.95);
+        border-radius: 20px;
+        padding: 50px;
+        text-align: center;
+        color: #ffffff;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(37, 99, 235, 0.3);
+    }
+
+    .results-screen h2 {
+        color: #60a5fa;
+        font-size: 2.5em;
+        margin-bottom: 20px;
+    }
+
+    .results-screen p {
+        color: #ffffff;
+    }
+
+    .final-score {
+        font-size: 4em;
+        font-weight: bold;
+        color: #fbbf24;
+        margin: 30px 0;
+    }
+
+    .score-breakdown {
+        background: rgba(30, 58, 138, 0.4);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 15px;
+        padding: 30px;
+        margin: 30px 0;
+        text-align: left;
+    }
+
+    .score-breakdown h3 {
+        color: #60a5fa;
+    }
+
+    .score-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        color: #ffffff;
+    }
+
+    .score-item span {
+        color: #ffffff;
+    }
+
+    .score-item strong {
+        color: #fbbf24;
+    }
+
+    .score-item:last-child {
+        border-bottom: none;
+    }
+
+    .leaderboard {
+        background: rgba(30, 58, 138, 0.4);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: 30px;
+    }
+
+    .leaderboard h3 {
+        color: #60a5fa;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+    }
+
+    .leaderboard-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .rank {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #fbbf24;
+        width: 50px;
+    }
+
+    .rank.first {
+        color: #ffd700;
+    }
+
+    .rank.second {
+        color: #c0c0c0;
+    }
+
+    .rank.third {
+        color: #cd7f32;
+    }
+
+    .player-name {
+        flex: 1;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .player-score {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #fbbf24;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        margin-bottom: 30px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4caf50, #8bc34a);
+        transition: width 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
-            min-height: 100vh;
-            padding: 20px;
-            color: #fff;
+        to {
+            opacity: 1;
         }
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
         }
-
-        .game-header {
-            text-align: center;
-            margin-bottom: 30px;
-            animation: fadeInDown 0.6s ease;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
+    }
 
-        .game-header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
         }
-
-        .game-header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
+    }
 
-        .game-stats {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(30, 58, 138, 0.4);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(37, 99, 235, 0.3);
-            animation: fadeIn 0.6s ease 0.2s both;
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
         }
-
-        .stat-item {
-            text-align: center;
+        50% {
+            transform: scale(1.05);
         }
+    }
 
-        .stat-label {
-            font-size: 0.9em;
-            opacity: 0.8;
-            margin-bottom: 5px;
+    @keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
         }
-
-        .stat-value {
-            font-size: 2em;
-            font-weight: bold;
+        25% {
+            transform: translateX(-10px);
         }
-
-        .game-screen {
-            display: none;
-        }
-
-        .game-screen.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .start-screen {
-            background: rgba(15, 23, 42, 0.85);
-            border-radius: 20px;
-            padding: 50px;
-            text-align: center;
-            color: #e0e7ff;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(37, 99, 235, 0.3);
-        }
-
-        .start-screen h2 {
-            color: #60a5fa;
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-
-        .start-screen p {
-            font-size: 1.1em;
-            margin-bottom: 15px;
-            line-height: 1.6;
-            color: #cbd5e1;
-        }
-
-        .input-group {
-            margin: 30px 0;
-
-            .input-group input {
-                width: 100%;
-                max-width: 400px;
-                padding: 15px;
-                font-size: 1.1em;
-                border: 2px solid #3b82f6;
-                border-radius: 10px;
-                text-align: center;
-                background: rgba(30, 58, 138, 0.3);
-                color: #e0e7ff;
-            }
-
-            .input-group input::placeholder {
-                color: rgba(224, 231, 255, 0.5);
-            }
-
-            .btn {
-                background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-                color: white;
-                border: none;
-                padding: 15px 40px;
-                font-size: 1.2em;
-                border-radius: 10px;
-                cursor: pointer;
-                font-weight: 600;
-                box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-                transition: transform 0.2s, box-shadow 0.2s;
-            }
-
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
-            }
-
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .question-card {
-            background: rgba(15, 23, 42, 0.85);
-            border-radius: 20px;
-            padding: 40px;
-            color: #e0e7ff;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
-            border: 1px solid rgba(37, 99, 235, 0.3);
-        }
-
-        .subject-badge {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .subject-math {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .subject-science {
-            background: #4ecdc4;
-            color: white;
-        }
-
-        .subject-history {
-            background: #f9ca24;
-            color: #333;
-        }
-
-        .subject-cs {
-            background: #9b59b6;
-            color: white;
-        }
-
-        .scenario {
-            font-size: 1.3em;
-            font-weight: 600;
-            color: #e0e7ff;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .prompt-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .prompt-option {
-            background: rgba(30, 58, 138, 0.4);
-            border: 3px solid rgba(59, 130, 246, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .prompt-option:hover {
-            border-color: #60a5fa;
+        75% {
             transform: translateX(10px);
-            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
-            background: rgba(30, 58, 138, 0.6);
         }
-
-        .prompt-option.selected {
-            border-color: #60a5fa;
-            background: rgba(59, 130, 246, 0.3);
-        }
-
-        .prompt-option.correct {
-            border-color: #4caf50;
-            background: rgba(76, 175, 80, 0.2);
-            animation: pulse 0.5s;
-        }
-
-        .prompt-option.incorrect {
-            border-color: #f44336;
-            background: rgba(244, 67, 54, 0.2);
-            animation: shake 0.5s;
-        }
-
-        .prompt-option-label {
-            font-weight: bold;
-            color: #60a5fa;
-            margin-bottom: 10px;
-        }
-
-        .prompt-text {
-            color: #cbd5e1;
-            line-height: 1.5;
-        }
-
-        .feedback {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 10px;
-            font-weight: 500;
-            display: none;
-        }
-
-        .feedback.show {
-            display: block;
-            animation: slideIn 0.4s ease;
-        }
-
-        .feedback.correct {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border-left: 4px solid #4caf50;
-        }
-
-        .feedback.incorrect {
-            background: #ffebee;
-            color: #c62828;
-            border-left: 4px solid #f44336;
-        }
-
-        .timer {
-            text-align: center;
-            font-size: 3em;
-            font-weight: bold;
-            color: #60a5fa;
-            margin: 20px 0;
-        }
-
-        .timer.warning {
-            color: #ff6b6b;
-            animation: pulse 1s infinite;
-        }
-
-        .results-screen {
-            background: rgba(15, 23, 42, 0.95);
-            border-radius: 20px;
-            padding: 50px;
-            text-align: center;
-            color: #ffffff;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(37, 99, 235, 0.3);
-        }
-
-        .results-screen h2 {
-            color: #60a5fa;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-
-        .results-screen p {
-            color: #ffffff;
-        }
-
-        .final-score {
-            font-size: 4em;
-            font-weight: bold;
-            color: #fbbf24;
-            margin: 30px 0;
-        }
-
-        .score-breakdown {
-            background: rgba(30, 58, 138, 0.4);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 15px;
-            padding: 30px;
-            margin: 30px 0;
-            text-align: left;
-        }
-
-        .score-breakdown h3 {
-            color: #60a5fa;
-        }
-
-        .score-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-            color: #ffffff;
-        }
-
-        .score-item span {
-            color: #ffffff;
-        }
-
-        .score-item strong {
-            color: #fbbf24;
-        }
-
-        .score-item:last-child {
-            border-bottom: none;
-        }
-
-        .leaderboard {
-            background: rgba(30, 58, 138, 0.4);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 15px;
-            padding: 30px;
-            margin-top: 30px;
-        }
-
-        .leaderboard h3 {
-            color: #60a5fa;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-        }
-
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-
-        .rank {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #fbbf24;
-            width: 50px;
-        }
-
-        .rank.first {
-            color: #ffd700;
-        }
-
-        .rank.second {
-            color: #c0c0c0;
-        }
-
-        .rank.third {
-            color: #cd7f32;
-        }
-
-        .player-name {
-            flex: 1;
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        .player-score {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #fbbf24;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4caf50, #8bc34a);
-            transition: width 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-10px);
-            }
-
-            75% {
-                transform: translateX(10px);
-            }
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-
-        /* Leaderboard Panel Styles */
-        .leaderboard-panel {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 220px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            z-index: 1000;
-        }
-
-        .panel-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 14px;
-            text-align: center;
-        }
-
-        .panel-title {
-            font-size: 15px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .trophy-icon {
-            width: 18px;
-            height: 18px;
-        }
-
-        .leaderboard-content {
-            max-height: 320px;
-            overflow-y: auto;
-        }
-
-        .leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-
-        .leaderboard-table thead {
-            background: #f8f9fa;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .leaderboard-table th {
-            padding: 9px 11px;
-            text-align: left;
-            font-size: 10px;
-            font-weight: 600;
-            color: #6c757d;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .leaderboard-table th:first-child {
-            width: 60px;
-        }
-
-        .leaderboard-table th:last-child {
-            width: 65px;
-            text-align: right;
-        }
-
-        .leaderboard-table td {
-            padding: 9px 11px;
-            border-bottom: 1px solid #e9ecef;
-            font-size: 12px;
-        }
-
-        .leaderboard-table tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        .rank-cell {
-            font-weight: bold;
-            width: 60px;
-            text-align: center;
-        }
-
-        .rank-1 {
-            color: #ffd700;
-            font-size: 13px;
-        }
-
-        .rank-2 {
-            color: #c0c0c0;
-            font-size: 13px;
-        }
-
-        .rank-3 {
-            color: #cd7f32;
-            font-size: 13px;
-        }
-
-        .name-cell {
-            font-weight: 500;
-            color: #ffffff;
-            font-size: 11px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .score-cell {
-            font-weight: bold;
-            color: #fbbf24;
-            text-align: right;
-            font-size: 12px;
-        }
-
-        .medal {
-            font-size: 14px;
-        }
-
-        /* Drag and Drop Styles */
-        .drag-drop-container {
-            margin-top: 20px;
-        }
-
-        .drag-drop-container p {
-            color: #ffffff;
-        }
-
-        .drag-items {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .drag-item {
-            background: #ffffff;
-            border: 2px solid #3b82f6;
-            border-radius: 10px;
-            padding: 15px;
-            cursor: grab;
-            transition: all 0.3s;
-            user-select: none;
-            color: #000000;
-            font-weight: 500;
-        }
-
-        .drag-item:hover {
-            border-color: #60a5fa;
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-        }
-
-        .drag-item.dragging {
-            opacity: 0.5;
-            cursor: grabbing;
-        }
-
-        .drop-zone {
-            min-height: 80px;
-            border: 3px dashed rgba(59, 130, 246, 0.6);
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: rgba(30, 58, 138, 0.3);
-            transition: all 0.3s;
-        }
-
-        .drop-zone p {
-            color: #94a3af;
-            text-align: center;
-            margin: 10px;
-        }
-
-        .drop-zone.drag-over {
-            border-color: #60a5fa;
-            background: rgba(59, 130, 246, 0.2);
-        }
-
-        .drop-zone .drag-item {
-            cursor: grab;
-            margin-bottom: 5px;
-        }
-
-        .check-order-btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 15px 30px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-        }
-
-        .check-order-btn:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
-        }
-
-        .check-order-btn:disabled {
-            background: #6b7280;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        /* Feedback Modal Styles */
-        #feedbackModal * {
-            box-sizing: border-box !important;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-        }
-
-        #feedbackModal {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            background: rgba(0, 0, 0, 0.9) !important;
-            display: none;
-            align-items: center !important;
-            justify-content: center !important;
-            z-index: 999999 !important;
-            overflow-y: auto;
-            pointer-events: all !important;
-        }
-
-        #feedbackModal .modal {
-            background: white !important;
-            width: 90% !important;
-            max-width: 600px !important;
-            min-width: 300px !important;
-            border-radius: 20px;
-            overflow-y: auto;
-            max-height: 90vh;
-            min-height: 200px !important;
-            animation: fadeInModal 0.3s ease;
-            position: relative !important;
-            margin: 20px auto !important;
-            display: block !important;
-            z-index: 10000000 !important;
-        }
-
-        @keyframes fadeInModal {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .modal-show {
-            display: flex !important;
-        }
-
-        .category-btn {
-            padding: 12px 18px;
-            background: white;
-            color: #1f2937;
-            border: 2px solid #d1d5db;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-        .category-btn:hover {
-            border-color: #8b5cf6;
-            background: #f3f4f6;
-        }
-    </style>
-</head>
-
-<body>
-    <!-- LEADERBOARD PANEL -->
-    <div class="leaderboard-panel">
-        <div class="panel-header">
-            <div class="panel-title">
-                <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                    <path d="M4 22h16"></path>
-                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
-                </svg>
-                Leaderboard
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .leaderboard-panel {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 220px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        z-index: 1000;
+    }
+
+    .panel-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 14px;
+        text-align: center;
+    }
+
+    .panel-title {
+        font-size: 15px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .trophy-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .leaderboard-content {
+        max-height: 320px;
+        overflow-y: auto;
+    }
+
+    .leaderboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .leaderboard-table thead {
+        background: #f8f9fa;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .leaderboard-table th {
+        padding: 9px 11px;
+        text-align: left;
+        font-size: 10px;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .leaderboard-table th:first-child {
+        width: 60px;
+    }
+
+    .leaderboard-table th:last-child {
+        width: 65px;
+        text-align: right;
+    }
+
+    .leaderboard-table td {
+        padding: 9px 11px;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 12px;
+    }
+
+    .leaderboard-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .rank-cell {
+        font-weight: bold;
+        width: 60px;
+        text-align: center;
+    }
+
+    .rank-1 {
+        color: #ffd700;
+        font-size: 13px;
+    }
+
+    .rank-2 {
+        color: #c0c0c0;
+        font-size: 13px;
+    }
+
+    .rank-3 {
+        color: #cd7f32;
+        font-size: 13px;
+    }
+
+    .name-cell {
+        font-weight: 500;
+        color: #ffffff;
+        font-size: 11px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .score-cell {
+        font-weight: bold;
+        color: #fbbf24;
+        text-align: right;
+        font-size: 12px;
+    }
+
+    .medal {
+        font-size: 14px;
+    }
+
+    .drag-drop-container {
+        margin-top: 20px;
+    }
+
+    .drag-drop-container p {
+        color: #ffffff;
+    }
+
+    .drag-items {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .drag-item {
+        background: #ffffff;
+        border: 2px solid #3b82f6;
+        border-radius: 10px;
+        padding: 15px;
+        cursor: grab;
+        transition: all 0.3s;
+        user-select: none;
+        color: #000000;
+        font-weight: 500;
+    }
+
+    .drag-item:hover {
+        border-color: #60a5fa;
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .drag-item.dragging {
+        opacity: 0.5;
+        cursor: grabbing;
+    }
+
+    .drop-zone {
+        min-height: 80px;
+        border: 3px dashed rgba(59, 130, 246, 0.6);
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        background: rgba(30, 58, 138, 0.3);
+        transition: all 0.3s;
+    }
+
+    .drop-zone p {
+        color: #94a3af;
+        text-align: center;
+        margin: 10px;
+    }
+
+    .drop-zone.drag-over {
+        border-color: #60a5fa;
+        background: rgba(59, 130, 246, 0.2);
+    }
+
+    .drop-zone .drag-item {
+        cursor: grab;
+        margin-bottom: 5px;
+    }
+
+    .check-order-btn {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .check-order-btn:hover {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+    }
+
+    .check-order-btn:disabled {
+        background: #6b7280;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    #feedbackModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999999;
+        overflow-y: auto;
+        pointer-events: all;
+    }
+
+    #feedbackModal .modal {
+        background: white;
+        width: 90%;
+        max-width: 600px;
+        min-width: 300px;
+        border-radius: 20px;
+        overflow-y: auto;
+        max-height: 90vh;
+        min-height: 200px;
+        animation: fadeInModal 0.3s ease;
+        position: relative;
+        margin: 20px auto;
+        display: block;
+        z-index: 10000000;
+    }
+
+    @keyframes fadeInModal {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .modal-show {
+        display: flex;
+    }
+
+    .category-btn {
+        padding: 12px 18px;
+        background: white;
+        color: #1f2937;
+        border: 2px solid #d1d5db;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .category-btn:hover {
+        border-color: #8b5cf6;
+        background: #f3f4f6;
+    }
+
+    #conceptsResultModal td {
+        padding: 12px;
+        border-bottom: 1px solid rgba(37, 99, 235, 0.2);
+        color: #cbd5e1;
+    }
+
+    #conceptsResultModal tr:hover {
+        background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    #conceptsResultModal button {
+        padding: 6px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+        min-width: 60px;
+    }
+
+    #conceptsResultModal button:hover {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+
+    #conceptsResultModal tr td:nth-child(2) button {
+        background-color: #10b981;
+        color: white;
+    }
+
+    #conceptsResultModal tr td:nth-child(3) button {
+        background-color: #ef4444;
+        color: white;
+    }
+</style>
+
+<div class="leaderboard-panel">
+    <div class="panel-header">
+        <div class="panel-title">
+            <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+            </svg>
+            Leaderboard
+        </div>
+    </div>
+    <div class="leaderboard-content" id="leaderboardContent">
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th style="text-align: right;">Score</th>
+                </tr>
+            </thead>
+            <tbody id="persistentLeaderboardBody">
+                <tr>
+                    <td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">4</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">5</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">6</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">7</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">8</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">9</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">10</td>
+                    <td class="name-cell">-</td>
+                    <td class="score-cell">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container">
+    <div class="game-header">
+        <h1>🎮 AI Prompt Challenge</h1>
+        <p>Test your prompt engineering skills across Math, Science, History, and Computer Science!</p>
+    </div>
+
+    <div id="startScreen" class="game-screen active">
+        <div class="start-screen">
+            <h2>Welcome to the AI Prompt Challenge! 🚀</h2>
+            <p><strong>How to Play:</strong></p>
+            <p>📝 You'll face 10 scenarios across different subjects</p>
+            <p>⏱️ You have 30 seconds to choose the best AI prompt for each scenario</p>
+            <p>🎯 Get points for correct answers - faster answers = more points!</p>
+            <p>🏆 Compete for the top spot on the leaderboard!</p>
+
+            <div class="input-group">
+                <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" onclick="startGame()">Start Challenge</button>
+                <button class="btn" onclick="skipToCompletion()" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+                    Skip to Complete Module
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameScreen" class="game-screen">
+        <div class="game-stats">
+            <div class="stat-item">
+                <div class="stat-label">Score</div>
+                <div class="stat-value" id="currentScore">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Question</div>
+                <div class="stat-value"><span id="currentQuestion">1</span>/10</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Time</div>
+                <div class="stat-value" id="timer">30</div>
             </div>
         </div>
 
-        <div class="leaderboard-content" id="leaderboardContent">
-            <table class="leaderboard-table">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 10%"></div>
+        </div>
+
+        <div class="question-card">
+            <span class="subject-badge" id="subjectBadge">Math</span>
+            <div class="scenario" id="scenario">Loading...</div>
+            <div class="prompt-options" id="promptOptions"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next Question →</button>
+        </div>
+    </div>
+
+    <div id="resultsScreen" class="game-screen">
+        <div class="results-screen">
+            <h2>🎉 Challenge Complete!</h2>
+            <div class="final-score" id="finalScore">0</div>
+            <p style="font-size: 1.2em; color: #555;">Great job, <span id="finalPlayerName"></span>!</p>
+
+            <div class="score-breakdown">
+                <h3 style="color: #667eea; margin-bottom: 20px;">📊 Your Performance</h3>
+                <div class="score-item">
+                    <span>Correct Answers</span>
+                    <strong id="correctCount">0/10</strong>
+                </div>
+                <div class="score-item">
+                    <span>Math Questions</span>
+                    <strong id="mathScore">0/3</strong>
+                </div>
+                <div class="score-item">
+                    <span>Science Questions</span>
+                    <strong id="scienceScore">0/3</strong>
+                </div>
+                <div class="score-item">
+                    <span>History Questions</span>
+                    <strong id="historyScore">0/2</strong>
+                </div>
+                <div class="score-item">
+                    <span>Computer Science Questions</span>
+                    <strong id="csScore">0/2</strong>
+                </div>
+            </div>
+
+            <div class="leaderboard">
+                <h3>🏆 Top Players</h3>
+                <div id="leaderboardList">
+                    <p style="text-align: center; color: #888;">Loading leaderboard...</p>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" onclick="restartGame()">Play Again</button>
+                <button class="btn" onclick="showFeedbackModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    Complete Module
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="feedbackModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999;">
+    <div class="modal" style="position: relative; z-index: 1000000;">
+        <div style="background: linear-gradient(135deg, #10b981, #34d399); padding:30px; border-radius:20px 20px 0 0; text-align:center;">
+            <div style="font-size:60px; margin-bottom:10px;">🏆</div>
+            <h2 style="color: white; font-size:28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                Congratulations!</h2>
+            <p style="color: white; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">You've completed the submodule</p>
+        </div>
+
+        <div class="modal-content" id="feedbackForm" style="padding:30px; background: white;">
+            <label style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">How would you rate this submodule?</label>
+            <div id="starRating" style="display:flex; gap:10px; justify-content:center; margin:20px 0;">
+                <span class="star" data-rating="1" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                <span class="star" data-rating="2" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                <span class="star" data-rating="3" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                <span class="star" data-rating="4" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+                <span class="star" data-rating="5" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
+            </div>
+
+            <label style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">What category best describes your feedback?</label>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:20px 0;">
+                <button class="category-btn" data-category="content">Content Quality</button>
+                <button class="category-btn" data-category="difficulty">Difficulty Level</button>
+                <button class="category-btn" data-category="engagement">Engagement</button>
+                <button class="category-btn" data-category="clarity">Clarity</button>
+                <button class="category-btn" data-category="pacing">Pacing</button>
+                <button class="category-btn" data-category="other">Other</button>
+            </div>
+
+            <label style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">Additional comments (optional)</label>
+            <textarea id="comments" style="width:100%; border:2px solid #d1d5db; border-radius:10px; padding:12px; min-height:100px; color:#1f2937; background: white; font-size: 16px; font-family: 'Segoe UI', Tahoma, sans-serif;"></textarea>
+
+            <div style="background: #f3f4f6; border-radius: 10px; padding: 20px; margin: 20px 0; border: 2px solid #d1d5db;">
+                <h4 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; font-weight: 700;">📊 Previous Feedback Summary</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
+                    <div>
+                        <p style="margin: 0 0 5px 0; color: #374151; font-weight: 600;">Average Rating:</p>
+                        <p id="averageRatingDisplay" style="margin: 0; color: #059669; font-weight: 700; font-size: 16px;">⭐ 4.5/5 <span style="color: #6b7280; font-weight: 400;">(12 responses)</span></p>
+                    </div>
+                    <div>
+                        <p style="margin: 0 0 5px 0; color: #374151; font-weight: 600;">Recent Feedback:</p>
+                        <p id="recentFeedbackDisplay" style="margin: 0; color: #1f2937; font-weight: 600; font-size: 16px;">"Fun and challenging!"</p>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="submitFeedback()" style="padding:14px; background:#10b981; color:white; border:none; border-radius:10px; font-weight:700; font-size: 16px; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%; margin-top: 10px;">Submit Feedback</button>
+            <button onclick="closeModal()" style="padding:12px; background:#e5e7eb; color:#1f2937; border:2px solid #d1d5db; border-radius:10px; font-weight:600; font-size: 15px; cursor:pointer; width: 100%; margin-top: 10px;">Skip</button>
+        </div>
+
+        <div id="successMessage" class="hidden" style="text-align:center; padding:40px; background: white;">
+            <div style="font-size:80px;">✅</div>
+            <h3 style="font-size:28px; margin-top:10px; color:#1f2937; font-weight: 700;">Thank you!</h3>
+            <p style="color: #6b7280; font-size: 16px; margin: 10px 0 20px 0;">Your feedback helps us improve the module!</p>
+            <button onclick="showCheckForUnderstanding()" style="margin-top:20px; padding:14px 28px; background:#10b981; color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Continue</button>
+        </div>
+    </div>
+</div>
+
+<div id="checkForUnderstandingModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; overflow-y: auto; padding: 20px;">
+    <div style="max-width: 900px; margin: 60px auto; padding: 20px;">
+        <div style="background: rgba(15, 23, 42, 0.95); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid rgba(37, 99, 235, 0.3);">
+            <h2 style="color: #60a5fa; text-align: center; font-size: 2em; margin-bottom: 10px;">
+                ✅ Check for Understanding
+            </h2>
+            <p style="text-align: center; color: #cbd5e1; margin-bottom: 30px; font-size: 1.1em;">
+                Let us know which AI concepts you understand!
+            </p>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
                 <thead>
                     <tr>
-                        <th>Rank</th>
-                        <th>Player</th>
-                        <th style="text-align: right;">Score</th>
+                        <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                            AI Concept
+                        </th>
+                        <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                            Got It ✓
+                        </th>
+                        <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
+                            Need Help ✗
+                        </th>
                     </tr>
                 </thead>
-                <tbody id="persistentLeaderboardBody">
+                <tbody id="conceptsResultModal">
                     <tr>
-                        <td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>
-                        <td class="name-cell">-</td>
-                        <td class="score-cell">-</td>
-                    </tr>
-                    <tr>
-                        <td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>
-                        <td class="name-cell">-</td>
-                        <td class="score-cell">-</td>
-                    </tr>
-                    <tr>
-                        <td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>
-                        <td class="name-cell">-</td>
-                        <td class="score-cell">-</td>
-                    </tr>
-                    <tr>
-                        <td class="rank-cell">4</td>
-                        <td class="name-cell">-</td>
-                        <td class="score-cell">-</td>
-                    </tr>
-                    <tr>
-                        <td class="rank-cell">5</td>
-                        <td class="name-cell">-</td>
-                        <td class="score-cell">-</td>
-                    </tr>
-                    <tr>
-                        <td class="rank-cell">6</td>
-                        <td class="name-cell">-</td>
-                        <td class="score-cell">-</td>
-                    </tr>
-                    <tr>
-                        <td class="rank-cell">7</td>
-                        <td class="name-cell">-</td>
-                        <td class="score-cell">-</td>
-                    </tr>
-                    <tr>
-                        <td class="rank-cell">8</td>
-                        <td class="name-cell">-</td>
-                        <td class="score-cell">-</td>
-                    </tr>
-                    <tr>
-                        <td class="rank-cell">9</td>
-                        <td class="name-cell">-</td>
-                        <td class="score-cell">-</td>
-                    </tr>
-                    <tr>
-                        <td class="rank-cell">10</td>
-                        <td class="name-cell">-</td>
-                        <td class="score-cell">-</td>
+                        <td colspan="3" style="padding: 20px; text-align: center; color: #cbd5e1;">
+                            Loading concepts...
+                        </td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-    </div>
 
-    <div class="container">
-        <div class="game-header">
-            <h1>🎮 AI Prompt Challenge</h1>
-            <p>Test your prompt engineering skills across Math, Science, History, and Computer Science!</p>
-        </div>
-
-        <!-- Start Screen -->
-        <div id="startScreen" class="game-screen active">
-            <div class="start-screen">
-                <h2>Welcome to the AI Prompt Challenge! 🚀</h2>
-                <p><strong>How to Play:</strong></p>
-                <p>📝 You'll face 10 scenarios across different subjects</p>
-                <p>⏱️ You have 30 seconds to choose the best AI prompt for each scenario</p>
-                <p>🎯 Get points for correct answers - faster answers = more points!</p>
-                <p>🏆 Compete for the top spot on the leaderboard!</p>
-
-                <div class="input-group">
-                    <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn" onclick="startGame()">Start Challenge</button>
-                    <button class="btn" onclick="skipToCompletion()" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
-                        Skip to Complete Module
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Game Screen -->
-        <div id="gameScreen" class="game-screen">
-            <div class="game-stats">
-                <div class="stat-item">
-                    <div class="stat-label">Score</div>
-                    <div class="stat-value" id="currentScore">0</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Question</div>
-                    <div class="stat-value"><span id="currentQuestion">1</span>/10</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Time</div>
-                    <div class="stat-value" id="timer">30</div>
-                </div>
-            </div>
-
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressBar" style="width: 10%"></div>
-            </div>
-
-            <div class="question-card">
-                <span class="subject-badge" id="subjectBadge">Math</span>
-                <div class="scenario" id="scenario">Loading...</div>
-
-                <div class="prompt-options" id="promptOptions">
-                    <!-- Options will be inserted here -->
-                </div>
-
-                <div class="feedback" id="feedback"></div>
-            </div>
-
-            <div style="text-align: center;">
-                <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next Question
-                    →</button>
-            </div>
-        </div>
-
-        <!-- Results Screen -->
-        <div id="resultsScreen" class="game-screen">
-            <div class="results-screen">
-                <h2>🎉 Challenge Complete!</h2>
-                <div class="final-score" id="finalScore">0</div>
-                <p style="font-size: 1.2em; color: #555;">Great job, <span id="finalPlayerName"></span>!</p>
-
-                <div class="score-breakdown">
-                    <h3 style="color: #667eea; margin-bottom: 20px;">📊 Your Performance</h3>
-                    <div class="score-item">
-                        <span>Correct Answers</span>
-                        <strong id="correctCount">0/10</strong>
-                    </div>
-                    <div class="score-item">
-                        <span>Math Questions</span>
-                        <strong id="mathScore">0/3</strong>
-                    </div>
-                    <div class="score-item">
-                        <span>Science Questions</span>
-                        <strong id="scienceScore">0/3</strong>
-                    </div>
-                    <div class="score-item">
-                        <span>History Questions</span>
-                        <strong id="historyScore">0/2</strong>
-                    </div>
-                    <div class="score-item">
-                        <span>Computer Science Questions</span>
-                        <strong id="csScore">0/2</strong>
-                    </div>
-                </div>
-
-                <div class="leaderboard">
-                    <h3>🏆 Top Players</h3>
-                    <div id="leaderboardList">
-                        <p style="text-align: center; color: #888;">Loading leaderboard...</p>
-                    </div>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn" onclick="restartGame()">Play Again</button>
-                    <button class="btn" onclick="showFeedbackModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                        Complete Module
-                    </button>
-                </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="../index.html" style="padding:14px 28px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-decoration: none; display: inline-block;">
+                    Back to Home
+                </a>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- FEEDBACK MODAL -->
-    <div id="feedbackModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999;">
-        <div class="modal" style="position: relative; z-index: 1000000;">
-            <div
-                style="background: linear-gradient(135deg, #10b981, #34d399); padding:30px; border-radius:20px 20px 0 0; text-align:center;">
-                <div style="font-size:60px; margin-bottom:10px;">🏆</div>
-                <h2 style="color: white; font-size:28px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                    Congratulations!</h2>
-                <p style="color: white; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">You've completed the
-                    submodule</p>
-            </div>
+<script type="module">
+    import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+    const API_URL = pythonURI + '/api/prompt-game';
 
-            <div class="modal-content" id="feedbackForm" style="padding:30px; background: white;">
-                <label style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">How
-                    would you rate this submodule?</label>
-                <div id="starRating" style="display:flex; gap:10px; justify-content:center; margin:20px 0;">
-                    <span class="star" data-rating="1" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
-                    <span class="star" data-rating="2" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
-                    <span class="star" data-rating="3" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
-                    <span class="star" data-rating="4" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
-                    <span class="star" data-rating="5" style="font-size:40px; cursor:pointer; color:#ddd;">★</span>
-                </div>
+    let playerName = '';
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timeLeft = 30;
+    let timerInterval = null;
+    let selectedAnswer = null;
+    let questionStartTime = 0;
+    let subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
+    let subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
 
-                <label
-                    style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">What
-                    category best describes your feedback?</label>
-                <div
-                    style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:20px 0;">
-                    <button class="category-btn" data-category="content">Content Quality</button>
-                    <button class="category-btn" data-category="difficulty">Difficulty Level</button>
-                    <button class="category-btn" data-category="engagement">Engagement</button>
-                    <button class="category-btn" data-category="clarity">Clarity</button>
-                    <button class="category-btn" data-category="pacing">Pacing</button>
-                    <button class="category-btn" data-category="other">Other</button>
-                </div>
+    let allQuestions = [];
+    let gameQuestions = [];
 
-                <label
-                    style="font-weight:700; color:#1f2937; font-size: 18px; display: block; margin-bottom: 10px;">Additional
-                    comments (optional)</label>
-                <textarea id="comments"
-                    style="width:100%; border:2px solid #d1d5db; border-radius:10px; padding:12px; min-height:100px; color:#1f2937; background: white; font-size: 16px; font-family: 'Segoe UI', Tahoma, sans-serif;"></textarea>
-
-                <div
-                    style="background: #f3f4f6; border-radius: 10px; padding: 20px; margin: 20px 0; border: 2px solid #d1d5db;">
-                    <h4 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; font-weight: 700;">📊 Previous
-                        Feedback Summary</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
-                        <div>
-                            <p style="margin: 0 0 5px 0; color: #374151; font-weight: 600;">Average Rating:</p>
-                            <p id="averageRatingDisplay" style="margin: 0; color: #059669; font-weight: 700; font-size: 16px;">⭐ 4.5/5 <span
-                                    style="color: #6b7280; font-weight: 400;">(12 responses)</span></p>
-                        </div>
-                        <div>
-                            <p style="margin: 0 0 5px 0; color: #374151; font-weight: 600;">Recent Feedback:</p>
-                            <p id="recentFeedbackDisplay" style="margin: 0; color: #1f2937; font-weight: 600; font-size: 16px;">"Fun and
-                                challenging!"</p>
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="submitFeedback()" class="btn-primary w-full mt-6"
-                    style="padding:14px; background:#10b981; color:white; border:none; border-radius:10px; font-weight:700; font-size: 16px; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%; margin-top: 10px;">Submit
-                    Feedback</button>
-                <button onclick="closeModal()" class="btn-secondary w-full mt-3"
-                    style="padding:12px; background:#e5e7eb; color:#1f2937; border:2px solid #d1d5db; border-radius:10px; font-weight:600; font-size: 15px; cursor:pointer; width: 100%; margin-top: 10px;">Skip</button>
-            </div>
-
-            <div id="successMessage" class="hidden" style="text-align:center; padding:40px; background: white;">
-                <div style="font-size:80px;">✅</div>
-                <h3 style="font-size:28px; margin-top:10px; color:#1f2937; font-weight: 700;">Thank you!</h3>
-                <p style="color: #6b7280; font-size: 16px; margin: 10px 0 20px 0;">Your feedback helps us improve the
-                    module!</p>
-                <button onclick="showCheckForUnderstanding()"
-                    style="margin-top:20px; padding:14px 28px; background:#10b981; color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"> Continue </button>
-            </div>
-        </div>
-    </div>
-
-    <script type="module">
-        import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
-        // API Configuration - Update when backend is ready
-        const API_URL = pythonURI + '/api/prompt-game';
-
-        // Game State
-        let playerName = '';
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let timeLeft = 30;
-        let timerInterval = null;
-        let selectedAnswer = null;
-        let questionStartTime = 0;
-        let subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
-        let subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
-
-        // Questions will be loaded from backend
-        let allQuestions = [];
-        let gameQuestions = [];
-
-        // Load questions from backend
-        async function loadQuestionsFromBackend() {
-            try {
-                const response = await fetch(`${API_URL}/questions`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                if (data.success && data.questions) {
-                    allQuestions = data.questions;
-                    return true;
-                } else {
-                    throw new Error('Invalid response format');
-                }
-            } catch (error) {
-                console.error('Error loading questions:', error);
-                alert('Failed to load questions from server. Please make sure the backend is running.');
-                return false;
+    async function loadQuestionsFromBackend() {
+        try {
+            const response = await fetch(`${API_URL}/questions`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        }
-
-        // Load and update persistent leaderboard
-        async function updatePersistentLeaderboard() {
-            try {
-                const response = await fetch(`${API_URL}/leaderboard`);
-                if (!response.ok) return;
-
-                const data = await response.json();
-                if (data.success && data.leaderboard) {
-                    const tbody = document.getElementById('persistentLeaderboardBody');
-                    tbody.innerHTML = '';
-
-                    for (let i = 0; i < 10; i++) {
-                        const entry = data.leaderboard[i];
-                        const tr = document.createElement('tr');
-
-                        let rankHtml = '';
-                        if (i === 0) {
-                            rankHtml = `<td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>`;
-                        } else if (i === 1) {
-                            rankHtml = `<td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>`;
-                        } else if (i === 2) {
-                            rankHtml = `<td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>`;
-                        } else {
-                            rankHtml = `<td class="rank-cell">${i + 1}</td>`;
-                        }
-
-                        if (entry) {
-                            tr.innerHTML = `
-                                ${rankHtml}
-                                <td class="name-cell">${entry.playerName || '-'}</td>
-                                <td class="score-cell">${entry.score || '-'}</td>
-                            `;
-                        } else {
-                            tr.innerHTML = `
-                                ${rankHtml}
-                                <td class="name-cell">-</td>
-                                <td class="score-cell">-</td>
-                            `;
-                        }
-                        tbody.appendChild(tr);
-                    }
-                }
-            } catch (error) {
-                console.error('Error updating leaderboard:', error);
+            const data = await response.json();
+            if (data.success && data.questions) {
+                allQuestions = data.questions;
+                return true;
+            } else {
+                throw new Error('Invalid response format');
             }
-        }
-
-        // Drag and drop state
-        let draggedElement = null;
-        let currentDragItems = [];
-
-        // Initialize drag and drop for a question
-        function initializeDragAndDrop(items) {
-            currentDragItems = shuffleArray(items);
-            const container = document.getElementById('promptOptions');
-
-            container.innerHTML = `
-                <div class="drag-drop-container">
-                    <p style="color: #cbd5e1; margin-bottom: 15px; font-size: 1.1em;">
-                        Drag the items below into the correct order:
-                    </p>
-                    <div class="drag-items" id="dragItems"></div>
-                    <div style="margin-top: 20px;">
-                        <p style="color: #cbd5e1; margin-bottom: 10px; font-weight: bold;">Your Answer:</p>
-                        <div class="drop-zone" id="dropZone">
-                            <p style="color: #94a3af; text-align: center; margin: 10px;">Drop items here</p>
-                        </div>
-                    </div>
-                    <button class="check-order-btn" onclick="checkDragDropAnswer()" id="checkOrderBtn">
-                        Check Answer
-                    </button>
-                </div>
-            `;
-
-            const dragItemsContainer = document.getElementById('dragItems');
-            currentDragItems.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'drag-item';
-                div.draggable = true;
-                div.textContent = item.text;
-                div.dataset.itemId = item.id;
-                div.dataset.index = index;
-
-                div.addEventListener('dragstart', handleDragStart);
-                div.addEventListener('dragend', handleDragEnd);
-
-                dragItemsContainer.appendChild(div);
-            });
-
-            const dropZone = document.getElementById('dropZone');
-            dropZone.addEventListener('dragover', handleDragOver);
-            dropZone.addEventListener('drop', handleDrop);
-            dropZone.addEventListener('dragleave', handleDragLeave);
-        }
-
-        function handleDragStart(e) {
-            draggedElement = e.target;
-            e.target.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-        }
-
-        function handleDragEnd(e) {
-            e.target.classList.remove('dragging');
-        }
-
-        function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-            e.dataTransfer.dropEffect = 'move';
-            e.currentTarget.classList.add('drag-over');
+        } catch (error) {
+            console.error('Error loading questions:', error);
+            alert('Failed to load questions from server. Please make sure the backend is running.');
             return false;
         }
+    }
 
-        function handleDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
-        }
+    async function updatePersistentLeaderboard() {
+        try {
+            const response = await fetch(`${API_URL}/leaderboard`);
+            if (!response.ok) return;
 
-        function handleDrop(e) {
-            if (e.stopPropagation) {
-                e.stopPropagation();
+            const data = await response.json();
+            if (data.success && data.leaderboard) {
+                const tbody = document.getElementById('persistentLeaderboardBody');
+                tbody.innerHTML = '';
+
+                for (let i = 0; i < 10; i++) {
+                    const entry = data.leaderboard[i];
+                    const tr = document.createElement('tr');
+
+                    let rankHtml = '';
+                    if (i === 0) {
+                        rankHtml = `<td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>`;
+                    } else if (i === 1) {
+                        rankHtml = `<td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>`;
+                    } else if (i === 2) {
+                        rankHtml = `<td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>`;
+                    } else {
+                        rankHtml = `<td class="rank-cell">${i + 1}</td>`;
+                    }
+
+                    if (entry) {
+                        tr.innerHTML = `
+                            ${rankHtml}
+                            <td class="name-cell">${entry.playerName || '-'}</td>
+                            <td class="score-cell">${entry.score || '-'}</td>
+                        `;
+                    } else {
+                        tr.innerHTML = `
+                            ${rankHtml}
+                            <td class="name-cell">-</td>
+                            <td class="score-cell">-</td>
+                        `;
+                    }
+                    tbody.appendChild(tr);
+                }
             }
+        } catch (error) {
+            console.error('Error updating leaderboard:', error);
+        }
+    }
+
+    let draggedElement = null;
+    let currentDragItems = [];
+
+    function initializeDragAndDrop(items) {
+        currentDragItems = shuffleArray(items);
+        const container = document.getElementById('promptOptions');
+
+        container.innerHTML = `
+            <div class="drag-drop-container">
+                <p style="color: #cbd5e1; margin-bottom: 15px; font-size: 1.1em;">
+                    Drag the items below into the correct order:
+                </p>
+                <div class="drag-items" id="dragItems"></div>
+                <div style="margin-top: 20px;">
+                    <p style="color: #cbd5e1; margin-bottom: 10px; font-weight: bold;">Your Answer:</p>
+                    <div class="drop-zone" id="dropZone">
+                        <p style="color: #94a3af; text-align: center; margin: 10px;">Drop items here</p>
+                    </div>
+                </div>
+                <button class="check-order-btn" onclick="checkDragDropAnswer()" id="checkOrderBtn">
+                    Check Answer
+                </button>
+            </div>
+        `;
+
+        const dragItemsContainer = document.getElementById('dragItems');
+        currentDragItems.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'drag-item';
+            div.draggable = true;
+            div.textContent = item.text;
+            div.dataset.itemId = item.id;
+            div.dataset.index = index;
+
+            div.addEventListener('dragstart', handleDragStart);
+            div.addEventListener('dragend', handleDragEnd);
+
+            dragItemsContainer.appendChild(div);
+        });
+
+        const dropZone = document.getElementById('dropZone');
+        dropZone.addEventListener('dragover', handleDragOver);
+        dropZone.addEventListener('drop', handleDrop);
+        dropZone.addEventListener('dragleave', handleDragLeave);
+    }
+
+    function handleDragStart(e) {
+        draggedElement = e.target;
+        e.target.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragEnd(e) {
+        e.target.classList.remove('dragging');
+    }
+
+    function handleDragOver(e) {
+        if (e.preventDefault) {
             e.preventDefault();
-
-            const dropZone = e.currentTarget;
-            dropZone.classList.remove('drag-over');
-
-            if (draggedElement) {
-                // Remove placeholder text if present
-                const placeholder = dropZone.querySelector('p');
-                if (placeholder) {
-                    placeholder.remove();
-                }
-
-                // Clone the dragged element
-                const clone = draggedElement.cloneNode(true);
-                clone.draggable = true;
-                clone.addEventListener('dragstart', handleDragStart);
-                clone.addEventListener('dragend', handleDragEnd);
-
-                // Add click to remove
-                clone.addEventListener('click', function() {
-                    this.remove();
-                    if (dropZone.children.length === 0) {
-                        dropZone.innerHTML = '<p style="color: #94a3af; text-align: center; margin: 10px;">Drop items here</p>';
-                    }
-                });
-
-                dropZone.appendChild(clone);
-                draggedElement.remove();
-            }
-
-            return false;
         }
+        e.dataTransfer.dropEffect = 'move';
+        e.currentTarget.classList.add('drag-over');
+        return false;
+    }
 
-        function checkDragDropAnswer() {
-            clearInterval(timerInterval);
+    function handleDragLeave(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
 
-            const dropZone = document.getElementById('dropZone');
-            const droppedItems = Array.from(dropZone.querySelectorAll('.drag-item'));
-
-            if (droppedItems.length === 0) {
-                alert('Please arrange the items first!');
-                return;
-            }
-
-            const question = gameQuestions[currentQuestionIndex];
-            const userOrder = droppedItems.map(item => item.dataset.itemId);
-            const correctOrder = question.correctOrder;
-
-            const isCorrect = JSON.stringify(userOrder) === JSON.stringify(correctOrder);
-
-            let pointsEarned = 0;
-            if (isCorrect) {
-                const timeBonus = Math.floor(timeLeft / 3);
-                pointsEarned = 100 + timeBonus;
-                score += pointsEarned;
-            }
-
-            if (question.subject) {
-                subjectCounts[question.subject]++;
-                if (isCorrect) {
-                    subjectScores[question.subject]++;
-                }
-            }
-
-            document.getElementById('currentScore').textContent = score;
-
-            const feedback = document.getElementById('feedback');
-            if (isCorrect) {
-                feedback.className = 'feedback correct show';
-                feedback.innerHTML = `
-                    <strong>✓ Correct! (+${pointsEarned} points)</strong><br>
-                    ${question.explanation || 'Great job!'}
-                `;
-            } else {
-                feedback.className = 'feedback incorrect show';
-                feedback.innerHTML = `
-                    <strong>✗ Incorrect</strong><br>
-                    The correct order was: ${correctOrder.map(id => {
-                        const item = question.items.find(i => i.id === id);
-                        return item ? item.text : '';
-                    }).join(' → ')}<br><br>
-                    ${question.explanation || ''}
-                `;
-            }
-
-            document.getElementById('checkOrderBtn').disabled = true;
-            document.getElementById('nextBtn').style.display = 'block';
+    function handleDrop(e) {
+        if (e.stopPropagation) {
+            e.stopPropagation();
         }
+        e.preventDefault();
 
-        // Shuffle array helper
-        function shuffleArray(array) {
-            const newArray = [...array];
-            for (let i = newArray.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-            }
-            return newArray;
-        }
+        const dropZone = e.currentTarget;
+        dropZone.classList.remove('drag-over');
 
-        async function startGame() {
-            playerName = document.getElementById('playerName').value.trim();
-            if (!playerName) {
-                alert('Please enter your name!');
-                return;
+        if (draggedElement) {
+            const placeholder = dropZone.querySelector('p');
+            if (placeholder) {
+                placeholder.remove();
             }
 
-            // Load questions from backend if not already loaded
-            if (allQuestions.length === 0) {
-                const loaded = await loadQuestionsFromBackend();
-                if (!loaded) {
-                    return;
-                }
-            }
+            const clone = draggedElement.cloneNode(true);
+            clone.draggable = true;
+            clone.addEventListener('dragstart', handleDragStart);
+            clone.addEventListener('dragend', handleDragEnd);
 
-            // Shuffle and reset
-            gameQuestions = shuffleArray(allQuestions);
-            currentQuestionIndex = 0;
-            score = 0;
-            subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
-            subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
-
-            // Show game screen
-            showScreen('gameScreen');
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            const question = gameQuestions[currentQuestionIndex];
-            selectedAnswer = null;
-            questionStartTime = Date.now();
-
-            // Update UI
-            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
-            document.getElementById('currentScore').textContent = score;
-            document.getElementById('progressBar').style.width = ((currentQuestionIndex + 1) / gameQuestions.length * 100) + '%';
-
-            // Update subject badge
-            const badge = document.getElementById('subjectBadge');
-            if (question.subject) {
-                badge.textContent = question.subject.charAt(0).toUpperCase() + question.subject.slice(1);
-                badge.className = 'subject-badge subject-' + question.subject;
-            } else {
-                badge.textContent = 'General';
-                badge.className = 'subject-badge';
-            }
-
-            // Update scenario/question text
-            const scenarioText = question.question || question.scenario;
-            document.getElementById('scenario').textContent = scenarioText;
-
-            document.getElementById('feedback').classList.remove('show');
-            document.getElementById('nextBtn').style.display = 'none';
-
-            // Handle different question types
-            if (question.type === 'drag_drop') {
-                // Drag and drop question
-                initializeDragAndDrop(question.items);
-            } else {
-                // Multiple choice or ethics question
-                const shuffledOptions = shuffleArray(question.options);
-                const optionsHtml = shuffledOptions.map((option, index) => `
-                    <div class="prompt-option" onclick="selectAnswer(${index})">
-                        <div class="prompt-option-label">Option ${String.fromCharCode(65 + index)}</div>
-                        <div class="prompt-text">${option.text}</div>
-                    </div>
-                `).join('');
-
-                document.getElementById('promptOptions').innerHTML = optionsHtml;
-                window.currentOptions = shuffledOptions;
-            }
-
-            // Start timer
-            startTimer();
-        }
-
-        function startTimer() {
-            timeLeft = 30;
-            document.getElementById('timer').textContent = timeLeft;
-            document.getElementById('timer').classList.remove('warning');
-
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer').textContent = timeLeft;
-
-                if (timeLeft <= 10) {
-                    document.getElementById('timer').classList.add('warning');
-                }
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    if (selectedAnswer === null) {
-                        checkAnswer(-1); // Auto-submit as wrong
-                    }
-                }
-            }, 1000);
-        }
-
-        function selectAnswer(optionIndex) {
-            if (selectedAnswer !== null) return; // Already answered
-
-            selectedAnswer = optionIndex;
-            document.querySelectorAll('.prompt-option').forEach((option, index) => {
-                if (index === optionIndex) {
-                    option.classList.add('selected');
+            clone.addEventListener('click', function() {
+                this.remove();
+                if (dropZone.children.length === 0) {
+                    dropZone.innerHTML = '<p style="color: #94a3af; text-align: center; margin: 10px;">Drop items here</p>';
                 }
             });
 
-            setTimeout(() => checkAnswer(optionIndex), 300);
+            dropZone.appendChild(clone);
+            draggedElement.remove();
         }
 
-        function checkAnswer(optionIndex) {
-            clearInterval(timerInterval);
+        return false;
+    }
 
-            const question = gameQuestions[currentQuestionIndex];
-            const selectedOption = optionIndex >= 0 ? window.currentOptions[optionIndex] : null;
-            const isCorrect = selectedOption && selectedOption.isCorrect;
+    function checkDragDropAnswer() {
+        clearInterval(timerInterval);
 
-            // Calculate points (more points for faster answers)
-            let pointsEarned = 0;
+        const dropZone = document.getElementById('dropZone');
+        const droppedItems = Array.from(dropZone.querySelectorAll('.drag-item'));
+
+        if (droppedItems.length === 0) {
+            alert('Please arrange the items first!');
+            return;
+        }
+
+        const question = gameQuestions[currentQuestionIndex];
+        const userOrder = droppedItems.map(item => item.dataset.itemId);
+        const correctOrder = question.correctOrder;
+
+        const isCorrect = JSON.stringify(userOrder) === JSON.stringify(correctOrder);
+
+        let pointsEarned = 0;
+        if (isCorrect) {
+            const timeBonus = Math.floor(timeLeft / 3);
+            pointsEarned = 100 + timeBonus;
+            score += pointsEarned;
+        }
+
+        if (question.subject) {
+            subjectCounts[question.subject]++;
             if (isCorrect) {
-                const timeBonus = Math.floor(timeLeft / 3); // Up to 10 bonus points
-                pointsEarned = 100 + timeBonus;
-                score += pointsEarned;
-
-                // Track subject score
                 subjectScores[question.subject]++;
             }
-            subjectCounts[question.subject]++;
+        }
 
-            // Update UI
-            document.getElementById('currentScore').textContent = score;
+        document.getElementById('currentScore').textContent = score;
 
-            // Show feedback
-            const feedback = document.getElementById('feedback');
-            const options = document.querySelectorAll('.prompt-option');
+        const feedback = document.getElementById('feedback');
+        if (isCorrect) {
+            feedback.className = 'feedback correct show';
+            feedback.innerHTML = `
+                <strong>✓ Correct! (+${pointsEarned} points)</strong><br>
+                ${question.explanation || 'Great job!'}
+            `;
+        } else {
+            feedback.className = 'feedback incorrect show';
+            feedback.innerHTML = `
+                <strong>✗ Incorrect</strong><br>
+                The correct order was: ${correctOrder.map(id => {
+                    const item = question.items.find(i => i.id === id);
+                    return item ? item.text : '';
+                }).join(' → ')}<br><br>
+                ${question.explanation || ''}
+            `;
+        }
 
-            if (isCorrect) {
-                feedback.className = 'feedback correct show';
-                feedback.innerHTML = `
-                    <strong>✓ Correct! (+${pointsEarned} points)</strong><br>
-                    ${selectedOption.explanation}
+        document.getElementById('checkOrderBtn').disabled = true;
+        document.getElementById('nextBtn').style.display = 'block';
+    }
+
+    function shuffleArray(array) {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+    }
+
+    async function startGame() {
+        playerName = document.getElementById('playerName').value.trim();
+        if (!playerName) {
+            alert('Please enter your name!');
+            return;
+        }
+
+        if (allQuestions.length === 0) {
+            const loaded = await loadQuestionsFromBackend();
+            if (!loaded) {
+                return;
+            }
+        }
+
+        gameQuestions = shuffleArray(allQuestions);
+        currentQuestionIndex = 0;
+        score = 0;
+        subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
+        subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
+
+        showScreen('gameScreen');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const question = gameQuestions[currentQuestionIndex];
+        selectedAnswer = null;
+        questionStartTime = Date.now();
+
+        document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+        document.getElementById('currentScore').textContent = score;
+        document.getElementById('progressBar').style.width = ((currentQuestionIndex + 1) / gameQuestions.length * 100) + '%';
+
+        const badge = document.getElementById('subjectBadge');
+        if (question.subject) {
+            badge.textContent = question.subject.charAt(0).toUpperCase() + question.subject.slice(1);
+            badge.className = 'subject-badge subject-' + question.subject;
+        } else {
+            badge.textContent = 'General';
+            badge.className = 'subject-badge';
+        }
+
+        const scenarioText = question.question || question.scenario;
+        document.getElementById('scenario').textContent = scenarioText;
+
+        document.getElementById('feedback').classList.remove('show');
+        document.getElementById('nextBtn').style.display = 'none';
+
+        if (question.type === 'drag_drop') {
+            initializeDragAndDrop(question.items);
+        } else {
+            const shuffledOptions = shuffleArray(question.options);
+            const optionsHtml = shuffledOptions.map((option, index) => `
+                <div class="prompt-option" onclick="selectAnswer(${index})">
+                    <div class="prompt-option-label">Option ${String.fromCharCode(65 + index)}</div>
+                    <div class="prompt-text">${option.text}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('promptOptions').innerHTML = optionsHtml;
+            window.currentOptions = shuffledOptions;
+        }
+
+        startTimer();
+    }
+
+    function startTimer() {
+        timeLeft = 30;
+        document.getElementById('timer').textContent = timeLeft;
+        document.getElementById('timer').classList.remove('warning');
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').textContent = timeLeft;
+
+            if (timeLeft <= 10) {
+                document.getElementById('timer').classList.add('warning');
+            }
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                if (selectedAnswer === null) {
+                    checkAnswer(-1);
+                }
+            }
+        }, 1000);
+    }
+
+    function selectAnswer(optionIndex) {
+        if (selectedAnswer !== null) return;
+
+        selectedAnswer = optionIndex;
+        document.querySelectorAll('.prompt-option').forEach((option, index) => {
+            if (index === optionIndex) {
+                option.classList.add('selected');
+            }
+        });
+
+        setTimeout(() => checkAnswer(optionIndex), 300);
+    }
+
+    function checkAnswer(optionIndex) {
+        clearInterval(timerInterval);
+
+        const question = gameQuestions[currentQuestionIndex];
+        const selectedOption = optionIndex >= 0 ? window.currentOptions[optionIndex] : null;
+        const isCorrect = selectedOption && selectedOption.isCorrect;
+
+        let pointsEarned = 0;
+        if (isCorrect) {
+            const timeBonus = Math.floor(timeLeft / 3);
+            pointsEarned = 100 + timeBonus;
+            score += pointsEarned;
+
+            subjectScores[question.subject]++;
+        }
+        subjectCounts[question.subject]++;
+
+        document.getElementById('currentScore').textContent = score;
+
+        const feedback = document.getElementById('feedback');
+        const options = document.querySelectorAll('.prompt-option');
+
+        if (isCorrect) {
+            feedback.className = 'feedback correct show';
+            feedback.innerHTML = `
+                <strong>✓ Correct! (+${pointsEarned} points)</strong><br>
+                ${selectedOption.explanation}
+            `;
+            if (optionIndex >= 0) {
+                options[optionIndex].classList.add('correct');
+            }
+        } else {
+            feedback.className = 'feedback incorrect show';
+            const correctOption = window.currentOptions.findIndex(opt => opt.isCorrect);
+            feedback.innerHTML = `
+                <strong>✗ Incorrect</strong><br>
+                ${selectedOption ? selectedOption.explanation : 'Time\'s up!'}
+            `;
+            if (optionIndex >= 0) {
+                options[optionIndex].classList.add('incorrect');
+            }
+            if (correctOption >= 0) {
+                options[correctOption].classList.add('correct');
+            }
+        }
+
+        document.getElementById('nextBtn').style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex >= gameQuestions.length) {
+            endGame();
+        } else {
+            loadQuestion();
+        }
+    }
+
+    async function endGame() {
+        showScreen('resultsScreen');
+
+        document.getElementById('finalScore').textContent = score;
+        document.getElementById('finalPlayerName').textContent = playerName;
+
+        const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
+        document.getElementById('correctCount').textContent = `${correctCount}/${gameQuestions.length}`;
+        document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
+        document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
+        document.getElementById('historyScore').textContent = `${subjectScores.history}/${subjectCounts.history}`;
+        document.getElementById('csScore').textContent = `${subjectScores.cs}/${subjectCounts.cs}`;
+
+        try {
+            await saveScore({
+                playerName: playerName,
+                score: score,
+                correctAnswers: correctCount,
+                subjectScores: subjectScores,
+                timestamp: new Date().toISOString()
+            });
+
+            await updatePersistentLeaderboard();
+        } catch (error) {
+            console.log('Backend not ready yet:', error);
+        }
+
+        loadLeaderboard();
+    }
+
+    async function saveScore(scoreData) {
+        const response = await fetch(`${API_URL}/scores`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(scoreData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save score');
+        }
+
+        return await response.json();
+    }
+
+    async function loadLeaderboard() {
+        try {
+            const response = await fetch(`${API_URL}/leaderboard`);
+            const data = await response.json();
+
+            const leaderboardHtml = data.leaderboard.slice(0, 10).map((entry, index) => {
+                let rankClass = '';
+                if (index === 0) rankClass = 'first';
+                else if (index === 1) rankClass = 'second';
+                else if (index === 2) rankClass = 'third';
+
+                return `
+                    <div class="leaderboard-item">
+                        <div class="rank ${rankClass}">#${index + 1}</div>
+                        <div class="player-name">${entry.playerName}</div>
+                        <div class="player-score">${entry.score}</div>
+                    </div>
                 `;
-                if (optionIndex >= 0) {
-                    options[optionIndex].classList.add('correct');
-                }
-            } else {
-                feedback.className = 'feedback incorrect show';
-                const correctOption = window.currentOptions.findIndex(opt => opt.isCorrect);
-                feedback.innerHTML = `
-                    <strong>✗ Incorrect</strong><br>
-                    ${selectedOption ? selectedOption.explanation : 'Time\'s up!'}
-                `;
-                if (optionIndex >= 0) {
-                    options[optionIndex].classList.add('incorrect');
-                }
-                if (correctOption >= 0) {
-                    options[correctOption].classList.add('correct');
-                }
-            }
+            }).join('');
 
-            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('leaderboardList').innerHTML = leaderboardHtml;
+        } catch (error) {
+            document.getElementById('leaderboardList').innerHTML = `
+                <div class="leaderboard-item">
+                    <div class="rank first">#1</div>
+                    <div class="player-name">${playerName}</div>
+                    <div class="player-score">${score}</div>
+                </div>
+                <p style="text-align: center; color: #888; margin-top: 15px;">
+                    Backend will show all players when connected!
+                </p>
+            `;
+        }
+    }
+
+    function restartGame() {
+        showScreen('startScreen');
+        document.getElementById('playerName').value = playerName;
+    }
+
+    function skipToCompletion() {
+        playerName = document.getElementById('playerName').value.trim();
+        if (!playerName) {
+            alert('Please enter your name first!');
+            return;
         }
 
-        function nextQuestion() {
-            currentQuestionIndex++;
+        showScreen('resultsScreen');
+        document.getElementById('finalScore').textContent = '-';
+        document.getElementById('finalPlayerName').textContent = playerName;
+        document.getElementById('correctCount').textContent = '-';
+        document.getElementById('mathScore').textContent = '-';
+        document.getElementById('scienceScore').textContent = '-';
+        document.getElementById('historyScore').textContent = '-';
+        document.getElementById('csScore').textContent = '-';
 
-            if (currentQuestionIndex >= gameQuestions.length) {
-                endGame();
-            } else {
-                loadQuestion();
+        document.querySelector('.leaderboard').style.display = 'none';
+
+        updatePersistentLeaderboard();
+    }
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.game-screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('playerName').focus();
+
+        document.getElementById('playerName').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                startGame();
             }
-        }
+        });
 
-        async function endGame() {
-            showScreen('resultsScreen');
+        updatePersistentLeaderboard();
 
-            // Update results
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('finalPlayerName').textContent = playerName;
+        setInterval(updatePersistentLeaderboard, 30000);
+    });
 
-            const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
-            document.getElementById('correctCount').textContent = `${correctCount}/${gameQuestions.length}`;
-            document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
-            document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
-            document.getElementById('historyScore').textContent = `${subjectScores.history}/${subjectCounts.history}`;
-            document.getElementById('csScore').textContent = `${subjectScores.cs}/${subjectCounts.cs}`;
+    let selectedRating = 0;
+    let selectedCategory = '';
 
-            // Save score to backend
-            try {
-                await saveScore({
-                    playerName: playerName,
-                    score: score,
-                    correctAnswers: correctCount,
-                    subjectScores: subjectScores,
-                    timestamp: new Date().toISOString()
-                });
+    document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', () => {
+            selectedRating = parseInt(star.dataset.rating);
+            updateStars();
+        });
+    });
 
-                // Update persistent leaderboard panel
-                await updatePersistentLeaderboard();
-            } catch (error) {
-                console.log('Backend not ready yet:', error);
-            }
+    function updateStars() {
+        document.querySelectorAll('.star').forEach(s => {
+            s.style.color = (parseInt(s.dataset.rating) <= selectedRating) ? '#ffd700' : '#ddd';
+        });
+    }
 
-            // Load leaderboard in results screen
-            loadLeaderboard();
-        }
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.category-btn').forEach(b => {
+                b.style.background = 'white';
+                b.style.color = '#1f2937';
+                b.style.borderColor = '#d1d5db';
+            });
+            btn.style.background = '#8b5cf6';
+            btn.style.color = 'white';
+            btn.style.borderColor = '#7c3aed';
+            selectedCategory = btn.dataset.category;
+        });
+    });
 
-        async function saveScore(scoreData) {
-            // This will connect to Flask backend when ready
-            const response = await fetch(`${API_URL}/scores`, {
+    async function submitFeedback() {
+        if (!selectedRating) return alert("Please select a rating");
+        if (!selectedCategory) return alert("Select a category");
+
+        const comments = document.getElementById('comments').value;
+
+        try {
+            const response = await fetch(pythonURI +'/api/submodule3/feedback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(scoreData)
+                body: JSON.stringify({
+                    playerName: playerName,
+                    rating: selectedRating,
+                    category: selectedCategory,
+                    comments: comments
+                })
             });
 
             if (!response.ok) {
-                throw new Error('Failed to save score');
+                throw new Error('Failed to save feedback');
             }
 
-            return await response.json();
+            const data = await response.json();
+            console.log('Feedback saved:', data);
+        } catch (error) {
+            console.error('Error saving feedback:', error);
         }
 
-        async function loadLeaderboard() {
-            try {
-                const response = await fetch(`${API_URL}/leaderboard`);
+        document.getElementById("feedbackForm").classList.add("hidden");
+        document.getElementById("successMessage").classList.remove("hidden");
+    }
+
+    function closeModal() {
+        const modal = document.getElementById("feedbackModal");
+        if (modal) {
+            modal.classList.remove("modal-show");
+            modal.style.display = "none";
+            document.body.style.overflow = "";
+
+            document.getElementById("feedbackForm").classList.remove("hidden");
+            document.getElementById("successMessage").classList.add("hidden");
+            selectedRating = 0;
+            selectedCategory = '';
+            document.getElementById('comments').value = '';
+            updateStars();
+
+            window.location.href = "../index.html";
+        }
+    }
+
+    async function showFeedbackModal() {
+        const modal = document.getElementById("feedbackModal");
+
+        if (!modal) {
+            alert("Error: Feedback modal not found. Please refresh the page and try again.");
+            return;
+        }
+
+        try {
+            const response = await fetch(pythonURI + '/api/submodule3/feedback/recent');
+            if (response.ok) {
                 const data = await response.json();
+                if (data.success) {
+                    const avgRatingElement = document.getElementById('averageRatingDisplay');
+                    if (avgRatingElement) {
+                        avgRatingElement.innerHTML = `⭐ ${data.averageRating}/5 <span style="color: #6b7280; font-weight: 400;">(${data.totalResponses} responses)</span>`;
+                    }
 
-                const leaderboardHtml = data.leaderboard.slice(0, 10).map((entry, index) => {
-                    let rankClass = '';
-                    if (index === 0) rankClass = 'first';
-                    else if (index === 1) rankClass = 'second';
-                    else if (index === 2) rankClass = 'third';
-
-                    return `
-                        <div class="leaderboard-item">
-                            <div class="rank ${rankClass}">#${index + 1}</div>
-                            <div class="player-name">${entry.playerName}</div>
-                            <div class="player-score">${entry.score}</div>
-                        </div>
-                    `;
-                }).join('');
-
-                document.getElementById('leaderboardList').innerHTML = leaderboardHtml;
-            } catch (error) {
-                // Use mock data if backend not ready
-                document.getElementById('leaderboardList').innerHTML = `
-                    <div class="leaderboard-item">
-                        <div class="rank first">#1</div>
-                        <div class="player-name">${playerName}</div>
-                        <div class="player-score">${score}</div>
-                    </div>
-                    <p style="text-align: center; color: #888; margin-top: 15px;">
-                        Backend will show all players when connected!
-                    </p>
-                `;
-            }
-        }
-
-        function restartGame() {
-            showScreen('startScreen');
-            document.getElementById('playerName').value = playerName;
-        }
-
-        function skipToCompletion() {
-            playerName = document.getElementById('playerName').value.trim();
-            if (!playerName) {
-                alert('Please enter your name first!');
-                return;
-            }
-
-            // Show results screen with minimal data
-            showScreen('resultsScreen');
-            document.getElementById('finalScore').textContent = '-';
-            document.getElementById('finalPlayerName').textContent = playerName;
-            document.getElementById('correctCount').textContent = '-';
-            document.getElementById('mathScore').textContent = '-';
-            document.getElementById('scienceScore').textContent = '-';
-            document.getElementById('historyScore').textContent = '-';
-            document.getElementById('csScore').textContent = '-';
-
-            // Hide leaderboard on skip
-            document.querySelector('.leaderboard').style.display = 'none';
-
-            // Still load persistent leaderboard
-            updatePersistentLeaderboard();
-        }
-
-        function showScreen(screenId) {
-            document.querySelectorAll('.game-screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            document.getElementById(screenId).classList.add('active');
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('playerName').focus();
-
-            // Allow Enter key to start
-            document.getElementById('playerName').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    startGame();
-                }
-            });
-
-            // Load persistent leaderboard on page load
-            updatePersistentLeaderboard();
-
-            // Update leaderboard every 30 seconds
-            setInterval(updatePersistentLeaderboard, 30000);
-        });
-
-        // Feedback Modal Functions
-        let selectedRating = 0;
-        let selectedCategory = '';
-
-        document.querySelectorAll('.star').forEach(star => {
-            star.addEventListener('click', () => {
-                selectedRating = parseInt(star.dataset.rating);
-                updateStars();
-            });
-        });
-
-        function updateStars() {
-            document.querySelectorAll('.star').forEach(s => {
-                s.style.color = (parseInt(s.dataset.rating) <= selectedRating) ? '#ffd700' : '#ddd';
-            });
-        }
-
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.category-btn').forEach(b => {
-                    b.style.background = 'white';
-                    b.style.color = '#1f2937';
-                    b.style.borderColor = '#d1d5db';
-                });
-                btn.style.background = '#8b5cf6';
-                btn.style.color = 'white';
-                btn.style.borderColor = '#7c3aed';
-                selectedCategory = btn.dataset.category;
-            });
-        });
-
-        async function submitFeedback() {
-            if (!selectedRating) return alert("Please select a rating");
-            if (!selectedCategory) return alert("Select a category");
-
-            const comments = document.getElementById('comments').value;
-
-            // Save feedback to backend
-            try {
-                const response = await fetch(pythonURI +'/api/submodule3/feedback', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        playerName: playerName,
-                        rating: selectedRating,
-                        category: selectedCategory,
-                        comments: comments
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to save feedback');
-                }
-
-                const data = await response.json();
-                console.log('Feedback saved:', data);
-            } catch (error) {
-                console.error('Error saving feedback:', error);
-                // Still show success message even if save fails
-            }
-
-            document.getElementById("feedbackForm").classList.add("hidden");
-            document.getElementById("successMessage").classList.remove("hidden");
-        }
-
-        function closeModal() {
-            const modal = document.getElementById("feedbackModal");
-            if (modal) {
-                modal.classList.remove("modal-show");
-                modal.style.display = "none";
-                document.body.style.overflow = "";
-
-                // Reset form
-                document.getElementById("feedbackForm").classList.remove("hidden");
-                document.getElementById("successMessage").classList.add("hidden");
-                selectedRating = 0;
-                selectedCategory = '';
-                document.getElementById('comments').value = '';
-                updateStars();
-
-                // Redirect to home page
-                window.location.href = "../index.html";
-            }
-        }
-
-        async function showFeedbackModal() {
-            const modal = document.getElementById("feedbackModal");
-
-            if (!modal) {
-                alert("Error: Feedback modal not found. Please refresh the page and try again.");
-                return;
-            }
-
-            // Load recent feedback
-            try {
-                const response = await fetch(pythonURI + '/api/submodule3/feedback/recent');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        // Update average rating display
-                        const avgRatingElement = document.getElementById('averageRatingDisplay');
-                        if (avgRatingElement) {
-                            avgRatingElement.innerHTML = `⭐ ${data.averageRating}/5 <span style="color: #6b7280; font-weight: 400;">(${data.totalResponses} responses)</span>`;
-                        }
-
-                        // Update most recent feedback comment
-                        const feedbackElement = document.getElementById('recentFeedbackDisplay');
-                        if (feedbackElement) {
-                            if (data.feedback && data.feedback.comments) {
-                                // Truncate long comments
-                                const shortComment = data.feedback.comments.length > 50
-                                    ? data.feedback.comments.substring(0, 50) + '...'
-                                    : data.feedback.comments;
-                                feedbackElement.innerHTML = `"${shortComment}"`;
-                            } else {
-                                feedbackElement.innerHTML = '"No feedback yet"';
-                            }
+                    const feedbackElement = document.getElementById('recentFeedbackDisplay');
+                    if (feedbackElement) {
+                        if (data.feedback && data.feedback.comments) {
+                            const shortComment = data.feedback.comments.length > 50
+                                ? data.feedback.comments.substring(0, 50) + '...'
+                                : data.feedback.comments;
+                            feedbackElement.innerHTML = `"${shortComment}"`;
+                        } else {
+                            feedbackElement.innerHTML = '"No feedback yet"';
                         }
                     }
                 }
-            } catch (error) {
-                console.error('Error loading recent feedback:', error);
-                // Continue showing modal even if loading fails
             }
-
-            // Prevent background scrolling
-            document.body.style.overflow = "hidden";
-
-            // Show modal
-            modal.classList.add("modal-show");
-            modal.style.display = "flex";
-            modal.style.visibility = "visible";
-            modal.style.opacity = "1";
-
-            // Ensure inner modal box is visible
-            const modalBox = modal.querySelector('.modal');
-            if (modalBox) {
-                modalBox.style.display = "block";
-            }
-
-            // Scroll to top when modal opens
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    </script>
-    <!-- Add this section right before the closing </body> tag -->
-
-    <!-- Check for Understanding Section -->
-
-
-    <!-- Check for Understanding Modal -->
-    <div id="checkForUnderstandingModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; overflow-y: auto; padding: 20px;">
-        <div style="max-width: 900px; margin: 60px auto; padding: 20px;">
-            <div style="background: rgba(15, 23, 42, 0.95); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid rgba(37, 99, 235, 0.3);">
-                <h2 style="color: #60a5fa; text-align: center; font-size: 2em; margin-bottom: 10px;">
-                    ✅ Check for Understanding
-                </h2>
-                <p style="text-align: center; color: #cbd5e1; margin-bottom: 30px; font-size: 1.1em;">
-                    Let us know which AI concepts you understand!
-                </p>
-
-                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                    <thead>
-                        <tr>
-                            <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
-                                AI Concept
-                            </th>
-                            <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
-                                Got It ✓
-                            </th>
-                            <th style="background-color: #3b82f6; color: white; padding: 12px; text-align: left; font-weight: 600;">
-                                Need Help ✗
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="conceptsResultModal">
-                        <tr>
-                            <td colspan="3" style="padding: 20px; text-align: center; color: #cbd5e1;">
-                                Loading concepts...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="../index.html" style="padding:14px 28px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-decoration: none; display: inline-block;">
-                        Back to Home
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <style>
-        #conceptsResultModal td {
-            padding: 12px;
-            border-bottom: 1px solid rgba(37, 99, 235, 0.2);
-            color: #cbd5e1;
+        } catch (error) {
+            console.error('Error loading recent feedback:', error);
         }
 
-        #conceptsResultModal tr:hover {
-            background-color: rgba(59, 130, 246, 0.1);
+        document.body.style.overflow = "hidden";
+
+        modal.classList.add("modal-show");
+        modal.style.display = "flex";
+        modal.style.visibility = "visible";
+        modal.style.opacity = "1";
+
+        const modalBox = modal.querySelector('.modal');
+        if (modalBox) {
+            modalBox.style.display = "block";
         }
 
-        #conceptsResultModal button {
-            padding: 6px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
-            min-width: 60px;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showCheckForUnderstanding() {
+        const feedbackModal = document.getElementById("feedbackModal");
+        if (feedbackModal) {
+            feedbackModal.style.display = "none";
         }
 
-        #conceptsResultModal button:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
+        const checkModal = document.getElementById("checkForUnderstandingModal");
+        checkModal.style.display = "block";
+        document.body.style.overflow = "hidden";
 
-        #conceptsResultModal tr td:nth-child(2) button {
-            background-color: #10b981;
-            color: white;
-        }
+        loadConceptsDataForModal();
+    }
 
-        #conceptsResultModal tr td:nth-child(3) button {
-            background-color: #ef4444;
-            color: white;
-        }
-    </style>
+    const conceptsResultContainerModal = document.getElementById("conceptsResultModal");
 
-    <script type="module">
-        import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
-    // STEP 2: Add this function to show the Check for Understanding modal
-        function showCheckForUnderstanding() {
-        // Hide feedback modal
-            const feedbackModal = document.getElementById("feedbackModal");
-            if (feedbackModal) {
-                feedbackModal.style.display = "none";
-            }
+    function loadConceptsDataForModal() {
+        const getConceptsURLModal = pythonURI + '/api/jokes/';
         
-        // Show Check for Understanding modal
-            const checkModal = document.getElementById("checkForUnderstandingModal");
-            checkModal.style.display = "block";
-            document.body.style.overflow = "hidden";
-        
-        // Load the concepts data
-            loadConceptsDataForModal();
+        fetch(getConceptsURLModal, fetchOptions)
+            .then(response => {
+                if (response.status !== 200) {
+                    conceptsErrorModal('GET API response failure: ' + response.status);
+                    return;
+                }
+                response.json().then(data => {
+                    console.log(data);
+                    conceptsResultContainerModal.innerHTML = '';
+
+                    for (const row of data) {
+                        const tr = document.createElement("tr");
+
+                        const concept = document.createElement("td");
+                        concept.innerHTML = row.id + ". " + row.joke;
+
+                        const gotIt = document.createElement("td");
+                        const gotItBtn = document.createElement('button');
+                        gotItBtn.id = 'haha' + row.id + "_modal";
+                        gotItBtn.innerHTML = row.haha;
+                        gotItBtn.onclick = function () {
+                            conceptReactionModal('haha', pythonURI + '/api/jokes/like/' + row.id, gotItBtn.id);
+                        };
+                        gotIt.appendChild(gotItBtn);
+
+                        const needHelp = document.createElement("td");
+                        const needHelpBtn = document.createElement('button');
+                        needHelpBtn.id = 'boohoo' + row.id + "_modal";
+                        needHelpBtn.innerHTML = row.boohoo;
+                        needHelpBtn.onclick = function () {
+                            conceptReactionModal('boohoo', pythonURI + '/api/jokes/jeer/' + row.id, needHelpBtn.id);
+                        };
+                        needHelp.appendChild(needHelpBtn);
+
+                        tr.appendChild(concept);
+                        tr.appendChild(gotIt);
+                        tr.appendChild(needHelp);
+                        conceptsResultContainerModal.appendChild(tr);
+                    }
+                })
+            })
+            .catch(err => {
+                conceptsErrorModal(err + ": " + getConceptsURLModal);
+            });
+    }
+
+    function refreshConceptReactionsModal() {
+        const checkModal = document.getElementById("checkForUnderstandingModal");
+        if (checkModal && checkModal.style.display !== "none") {
+            const getConceptsURLModal = pythonURI + '/api/jokes/';
+            fetch(getConceptsURLModal, fetchOptions)
+                .then(response => response.json())
+                .then(data => {
+                    for (const row of data) {
+                        const gotItBtn = document.getElementById('haha' + row.id + "_modal");
+                        if (gotItBtn) gotItBtn.innerHTML = row.haha;
+                        const needHelpBtn = document.getElementById('boohoo' + row.id + "_modal");
+                        if (needHelpBtn) needHelpBtn.innerHTML = row.boohoo;
+                    }
+                })
+                .catch(err => {
+                    console.error('Refresh error:', err);
+                });
         }
+    }
+    setInterval(refreshConceptReactionsModal, 5000);
 
-    // Configuration for the Check for Understanding survey
-
-        const conceptsResultContainerModal = document.getElementById("conceptsResultModal");
-        const HAHA_KEY_MODAL = "haha";
-        const BOOHOO_KEY_MODAL = "boohoo";
-
-        const conceptsUrlModal = `${CONCEPTS_API_CONFIG_MODAL.pythonURI}/api/jokes`;
-        const getConceptsURLModal = conceptsUrlModal + "/";
-        const likeConceptsURLModal = conceptsUrlModal + "/like/";
-        const jeerConceptsURLModal = conceptsUrlModal + "/jeer/";
-
-        const reactConceptsOptionsModal = {
-            ...CONCEPTS_API_CONFIG_MODAL.fetchOptions,
+    function conceptReactionModal(type, postURL, elemID) {
+        const options = {
+            ...fetchOptions,
             method: 'PUT',
         };
 
-    // Function to load concepts data for modal
-        function loadConceptsDataForModal() {
-            fetch(getConceptsURLModal, CONCEPTS_API_CONFIG_MODAL.fetchOptions)
-                .then(response => {
-                    if (response.status !== 200) {
-                        conceptsErrorModal('GET API response failure: ' + response.status);
-                        return;
+        fetch(postURL, options)
+            .then(response => {
+                if (response.status !== 200) {
+                    conceptsErrorModal("Post API response failure: " + response.status);
+                    return;
+                }
+                response.json().then(data => {
+                    console.log(data);
+                    if (type === 'haha') {
+                        document.getElementById(elemID).innerHTML = data.haha;
+                    } else if (type === 'boohoo') {
+                        document.getElementById(elemID).innerHTML = data.boohoo;
+                    } else {
+                        conceptsErrorModal("unknown type: " + type);
                     }
-                    response.json().then(data => {
-                        console.log(data);
-                        conceptsResultContainerModal.innerHTML = ''; // Clear loading message
-
-                        for (const row of data) {
-                            const tr = document.createElement("tr");
-
-                        // Concept cell
-                            const concept = document.createElement("td");
-                            concept.innerHTML = row.id + ". " + row.joke;
-
-                        // Got It button cell
-                            const gotIt = document.createElement("td");
-                            const gotItBtn = document.createElement('button');
-                            gotItBtn.id = HAHA_KEY_MODAL + row.id + "_modal";
-                            gotItBtn.innerHTML = row.haha;
-                            gotItBtn.onclick = function () {
-                                conceptReactionModal(HAHA_KEY_MODAL, likeConceptsURLModal + row.id, gotItBtn.id);
-                            };
-                            gotIt.appendChild(gotItBtn);
-
-                        // Need Help button cell
-                            const needHelp = document.createElement("td");
-                            const needHelpBtn = document.createElement('button');
-                            needHelpBtn.id = BOOHOO_KEY_MODAL + row.id + "_modal";
-                            needHelpBtn.innerHTML = row.boohoo;
-                            needHelpBtn.onclick = function () {
-                                conceptReactionModal(BOOHOO_KEY_MODAL, jeerConceptsURLModal + row.id, needHelpBtn.id);
-                            };
-                            needHelp.appendChild(needHelpBtn);
-
-                            tr.appendChild(concept);
-                            tr.appendChild(gotIt);
-                            tr.appendChild(needHelp);
-                            conceptsResultContainerModal.appendChild(tr);
-                        }
-                    })
                 })
-                .catch(err => {
-                    conceptsErrorModal(err + ": " + getConceptsURLModal);
-                });
-        }
+            })
+            .catch(err => {
+                conceptsErrorModal(err + " " + postURL);
+            });
+    }
 
-    // Auto-refresh reactions every 5 seconds for modal
-        function refreshConceptReactionsModal() {
-            const checkModal = document.getElementById("checkForUnderstandingModal");
-            if (checkModal && checkModal.style.display !== "none") {
-                fetch(getConceptsURLModal, CONCEPTS_API_CONFIG_MODAL.fetchOptions)
-                    .then(response => response.json())
-                    .then(data => {
-                        for (const row of data) {
-                            const gotItBtn = document.getElementById(HAHA_KEY_MODAL + row.id + "_modal");
-                            if (gotItBtn) gotItBtn.innerHTML = row.haha;
-                            const needHelpBtn = document.getElementById(BOOHOO_KEY_MODAL + row.id + "_modal");
-                            if (needHelpBtn) needHelpBtn.innerHTML = row.boohoo;
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Refresh error:', err);
-                    });
-            }
-        }
-        setInterval(refreshConceptReactionsModal, 5000);
+    function conceptsErrorModal(err) {
+        console.error(err);
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 3;
+        td.style.padding = "15px";
+        td.style.background = "rgba(254, 226, 226, 0.2)";
+        td.style.color = "#ef4444";
+        td.innerHTML = err;
+        tr.appendChild(td);
+        conceptsResultContainerModal.appendChild(tr);
+    }
 
-    // Handle student reactions for modal
-        function conceptReactionModal(type, postURL, elemID) {
-            fetch(postURL, reactConceptsOptionsModal)
-                .then(response => {
-                    if (response.status !== 200) {
-                        conceptsErrorModal("Post API response failure: " + response.status);
-                        return;
-                    }
-                    response.json().then(data => {
-                        console.log(data);
-                        if (type === HAHA_KEY_MODAL) {
-                            document.getElementById(elemID).innerHTML = data.haha;
-                        } else if (type === BOOHOO_KEY_MODAL) {
-                            document.getElementById(elemID).innerHTML = data.boohoo;
-                        } else {
-                            conceptsErrorModal("unknown type: " + type);
-                        }
-                    })
-                })
-                .catch(err => {
-                    conceptsErrorModal(err + " " + postURL);
-                });
-        }
-
-        function conceptsErrorModal(err) {
-            console.error(err);
-            const tr = document.createElement("tr");
-            const td = document.createElement("td");
-            td.colSpan = 3;
-            td.style.padding = "15px";
-            td.style.background = "rgba(254, 226, 226, 0.2)";
-            td.style.color = "#ef4444";
-            td.innerHTML = err;
-            tr.appendChild(td);
-            conceptsResultContainerModal.appendChild(tr);
-        }
-    </script>
-</body>
-
-</html>
+    window.selectAnswer = selectAnswer;
+    window.checkAnswer = checkAnswer;
+    window.nextQuestion = nextQuestion;
+    window.startGame = startGame;
+    window.skipToCompletion = skipToCompletion;
+    window.restartGame = restartGame;
+    window.showFeedbackModal = showFeedbackModal;
+    window.submitFeedback = submitFeedback;
+    window.closeModal = closeModal;
+    window.showCheckForUnderstanding = showCheckForUnderstanding;
+    window.checkDragDropAnswer = checkDragDropAnswer;
+</script>

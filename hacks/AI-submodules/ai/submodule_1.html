@@ -10,10 +10,9 @@ microblog: true
 date: 2025-10-30
 ---
 
-<!-- Add Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<div style="max-width: 900px; margin: 40px auto;">
+<div style="max-width: 900px; margin: 40px auto; padding: 0 1rem;">
     <h1 style="text-align: center; margin-bottom: 30px;">AI Usage Survey</h1>
 
     <div id="successMessage" style="background-color: #28a745; color: white; padding: 15px; border-radius: 6px; text-align: center; margin-bottom: 20px; display: none;">
@@ -23,60 +22,58 @@ date: 2025-10-30
     <div id="recentFRQs"></div>
 
     <div id="aiPollForm">
-        <!-- Table for Multiple Choice Questions -->
         <div style="margin-bottom: 25px;">
             <h3 style="text-align: center; margin-bottom: 20px;">What AI source do you find most useful for each subject?</h3>
-            <table class="default-table">
+            <table class="default-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>ChatGPT</th>
-                        <th>Claude</th>
-                        <th>Gemini</th>
-                        <th>Copilot</th>
+                    <tr style="background-color: rgba(59, 130, 246, 0.2);">
+                        <th style="padding: 12px 8px; text-align: left; border-bottom: 2px solid rgba(96, 165, 250, 0.3);">Subject</th>
+                        <th style="padding: 12px 8px; text-align: center; border-bottom: 2px solid rgba(96, 165, 250, 0.3);">ChatGPT</th>
+                        <th style="padding: 12px 8px; text-align: center; border-bottom: 2px solid rgba(96, 165, 250, 0.3);">Claude</th>
+                        <th style="padding: 12px 8px; text-align: center; border-bottom: 2px solid rgba(96, 165, 250, 0.3);">Gemini</th>
+                        <th style="padding: 12px 8px; text-align: center; border-bottom: 2px solid rgba(96, 165, 250, 0.3);">Copilot</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>English</td>
-                        <td><input type="radio" name="english" value="ChatGPT" required></td>
-                        <td><input type="radio" name="english" value="Claude"></td>
-                        <td><input type="radio" name="english" value="Gemini"></td>
-                        <td><input type="radio" name="english" value="Copilot"></td>
+                        <td style="padding: 12px 8px; text-align: left; font-weight: 500;">English</td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="english" value="ChatGPT" required></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="english" value="Claude"></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="english" value="Gemini"></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="english" value="Copilot"></td>
                     </tr>
                     <tr>
-                        <td>Math</td>
-                        <td><input type="radio" name="math" value="ChatGPT" required></td>
-                        <td><input type="radio" name="math" value="Claude"></td>
-                        <td><input type="radio" name="math" value="Gemini"></td>
-                        <td><input type="radio" name="math" value="Copilot"></td>
+                        <td style="padding: 12px 8px; text-align: left; font-weight: 500;">Math</td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="math" value="ChatGPT" required></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="math" value="Claude"></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="math" value="Gemini"></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="math" value="Copilot"></td>
                     </tr>
                     <tr>
-                        <td>Science</td>
-                        <td><input type="radio" name="science" value="ChatGPT" required></td>
-                        <td><input type="radio" name="science" value="Claude"></td>
-                        <td><input type="radio" name="science" value="Gemini"></td>
-                        <td><input type="radio" name="science" value="Copilot"></td>
+                        <td style="padding: 12px 8px; text-align: left; font-weight: 500;">Science</td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="science" value="ChatGPT" required></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="science" value="Claude"></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="science" value="Gemini"></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="science" value="Copilot"></td>
                     </tr>
                     <tr>
-                        <td>Comp Sci</td>
-                        <td><input type="radio" name="cs" value="ChatGPT" required></td>
-                        <td><input type="radio" name="cs" value="Claude"></td>
-                        <td><input type="radio" name="cs" value="Gemini"></td>
-                        <td><input type="radio" name="cs" value="Copilot"></td>
+                        <td style="padding: 12px 8px; text-align: left; font-weight: 500;">Comp Sci</td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="cs" value="ChatGPT" required></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="cs" value="Claude"></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="cs" value="Gemini"></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="cs" value="Copilot"></td>
                     </tr>
                     <tr>
-                        <td>History</td>
-                        <td><input type="radio" name="history" value="ChatGPT" required></td>
-                        <td><input type="radio" name="history" value="Claude"></td>
-                        <td><input type="radio" name="history" value="Gemini"></td>
-                        <td><input type="radio" name="history" value="Copilot"></td>
+                        <td style="padding: 12px 8px; text-align: left; font-weight: 500;">History</td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="history" value="ChatGPT" required></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="history" value="Claude"></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="history" value="Gemini"></td>
+                        <td style="padding: 12px 8px; text-align: center;"><input type="radio" name="history" value="Copilot"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- Yes/No Question -->
         <div style="margin-bottom: 25px; padding: 20px; border-left: 4px solid #0066cc;">
             <h3 style="margin-bottom: 15px;">Do you use AI to help you with schoolwork in essays and assignments?</h3>
             <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -91,7 +88,6 @@ date: 2025-10-30
             </div>
         </div>
 
-        <!-- Free Response Question -->
         <div style="margin-bottom: 25px; padding: 20px; border-left: 4px solid #0066cc;">
             <h3 style="margin-bottom: 15px;">Most classes do not want students to use AI. What do you feel about these policies? How would you want to use AI without having it do everything for you and it being considered cheating?</h3>
             <textarea id="frq-textarea" name="frq" placeholder="Share your thoughts here..." style="width: 100%; min-height: 150px; padding: 15px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; font-size: 14px; resize: vertical;" required></textarea>
@@ -139,7 +135,6 @@ date: 2025-10-30
         </div>
     </div>
 
-    <!-- Back to Home Button -->
     <div style="text-align: center; margin: 40px 0; padding-bottom: 40px;">
         <a href="../index.html" style="display: inline-block; background-color: #0066cc; color: white; padding: 15px 40px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 16px;">
             ← Back to Home
@@ -153,7 +148,6 @@ date: 2025-10-30
 
     let charts = {};
 
-    // Load survey data when page loads
     async function loadSurveyData() {
         try {
             const response = await fetch(`${API_URL}/survey`);
@@ -164,7 +158,6 @@ date: 2025-10-30
         }
     }
 
-    // Display recent FRQs
     function displayRecentFRQs(frqs, containerId) {
         const container = document.getElementById(containerId);
         if (frqs.length === 0) {
@@ -186,16 +179,13 @@ date: 2025-10-30
         container.innerHTML = html;
     }
 
-    // Autofill Question 7 with a sample response
     function autofillQuestion7() {
         const sampleResponse = "I believe AI policies need to strike a balance between preventing academic dishonesty and allowing students to learn how to use AI as a tool. Rather than banning AI completely, I think we should learn how to use it ethically and responsibly. I would want to use AI as a learning aid—for example, to help me understand difficult concepts, brainstorm ideas, or check my work for errors—but I would still write my own original responses and do my own critical thinking. AI should enhance my learning, not replace it. I think it's important to cite when I've used AI and be transparent about how I've incorporated it into my work.";
         document.getElementById('frq-textarea').value = sampleResponse;
     }
 
-    // Make autofillQuestion7 globally accessible
     window.autofillQuestion7 = autofillQuestion7;
 
-    // Submit survey
     async function submitSurvey() {
         const formData = {
             english: document.querySelector('input[name="english"]:checked')?.value,
@@ -207,7 +197,6 @@ date: 2025-10-30
             frq: document.querySelector('textarea[name="frq"]').value
         };
 
-        // Validate all fields
         if (!formData.english || !formData.math || !formData.science || !formData.cs || !formData.history || !formData.useAI || !formData.frq) {
             alert('Please answer all questions before submitting.');
             return;
@@ -224,20 +213,13 @@ date: 2025-10-30
 
             const result = await response.json();
 
-            // Show success message
             document.getElementById('successMessage').style.display = 'block';
-
-            // Hide form
             document.getElementById('aiPollForm').style.display = 'none';
-
-            // Show results
             document.getElementById('resultsContainer').style.display = 'block';
 
-            // Display results
             displayResults(result.data);
             displayRecentFRQs(result.data.frqs.slice(0, 3), 'recentFRQs');
 
-            // Scroll to results
             window.scrollTo({ top: document.getElementById('resultsContainer').offsetTop - 100, behavior: 'smooth' });
 
         } catch (error) {
@@ -246,10 +228,8 @@ date: 2025-10-30
         }
     }
 
-    // Make submitSurvey globally accessible
     window.submitSurvey = submitSurvey;
 
-    // Display results with charts
     function displayResults(data) {
         createChart('englishChart', 'English', data.english);
         createChart('mathChart', 'Math', data.math);
@@ -259,7 +239,6 @@ date: 2025-10-30
         createChart('useAIChart', 'Use AI', data.useAI);
     }
 
-    // Create bar chart
     function createChart(canvasId, label, data) {
         const ctx = document.getElementById(canvasId);
 
@@ -299,6 +278,5 @@ date: 2025-10-30
         });
     }
 
-    // Load data when page loads
     window.addEventListener('DOMContentLoaded', loadSurveyData);
 </script>
