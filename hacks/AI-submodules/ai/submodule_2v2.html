@@ -1279,12 +1279,35 @@ date: 2025-10-30
     </footer>
 
     <!-- SCRIPTS -->
+    <!-- Load pythonURI from config.js -->
     <script type="module">
         import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
-
-        // Make pythonURI available globally for other scripts
         window.pythonURI = pythonURI;
         window.fetchOptions = fetchOptions;
+    </script>
+
+    <!-- Main script - runs even if module import fails -->
+    <script>
+        // Get pythonURI from window (set by module) or use fallback logic
+        function getPythonURI() {
+            if (window.pythonURI) return window.pythonURI;
+            // Fallback: same logic as config.js
+            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                return "http://localhost:8402";
+            }
+            return "https://aiforstudents.opencodingsociety.com";
+        }
+        var pythonURI = getPythonURI();
+        var fetchOptions = window.fetchOptions || {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'default',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Origin': 'client'
+            }
+        };
 
         // Progress bar update
         function updateProgress() {
