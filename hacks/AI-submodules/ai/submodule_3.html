@@ -1055,9 +1055,10 @@ date: 2025-10-30
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
         // API Configuration - Update when backend is ready
-        const API_URL = 'http://localhost:8402/api/prompt-game';
+        const API_URL = pythonURI + '/api/prompt-game';
 
         // Game State
         let playerName = '';
@@ -1671,7 +1672,7 @@ date: 2025-10-30
 
             // Save feedback to backend
             try {
-                const response = await fetch('http://localhost:8402/api/submodule3/feedback', {
+                const response = await fetch(pythonURI +'/api/submodule3/feedback', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1729,7 +1730,7 @@ date: 2025-10-30
 
             // Load recent feedback
             try {
-                const response = await fetch('http://localhost:8402/api/submodule3/feedback/recent');
+                const response = await fetch(pythonURI + '/api/submodule3/feedback/recent');
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success) {
@@ -1863,7 +1864,8 @@ date: 2025-10-30
         }
     </style>
 
-    <script>
+    <script type="module">
+        import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
     // STEP 2: Add this function to show the Check for Understanding modal
         function showCheckForUnderstanding() {
         // Hide feedback modal
@@ -1882,17 +1884,6 @@ date: 2025-10-30
         }
 
     // Configuration for the Check for Understanding survey
-        const CONCEPTS_API_CONFIG_MODAL = {
-            pythonURI: 'http://127.0.0.1:8402', // Update this to match your backend
-            fetchOptions: {
-                mode: 'cors',
-                cache: 'no-cache',
-                credentials: 'omit',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        };
 
         const conceptsResultContainerModal = document.getElementById("conceptsResultModal");
         const HAHA_KEY_MODAL = "haha";

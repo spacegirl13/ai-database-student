@@ -2453,6 +2453,23 @@ date: 2025-10-30
             }
         }
 
+        // Helper function to format AI response with proper math rendering
+        function formatMathResponse(text) {
+            // Escape HTML but preserve LaTeX delimiters
+            let formatted = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            // Convert markdown-style bold to HTML
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            // Convert newlines to <br> for proper line breaks
+            formatted = formatted.replace(/\n/g, '<br>');
+
+            return formatted;
+        }
+
         // Autofill prompt and call Gemini API
         async function autofillPrompt(questionId) {
             const promptText = document.getElementById(`prompt-text-${questionId}`).textContent;
@@ -2461,7 +2478,7 @@ date: 2025-10-30
 
             // Show output area with loading message
             outputArea.classList.remove('hidden');
-            resultArea.textContent = 'Loading AI response...';
+            resultArea.innerHTML = 'Loading AI response...';
 
             try {
                 const response = await fetch(pythonURI + '/api/gemini', {
@@ -2479,7 +2496,8 @@ date: 2025-10-30
                 const data = await response.json();
 
                 if (data.success && data.text) {
-                    resultArea.textContent = data.text;
+                    // Format the response for proper display
+                    resultArea.innerHTML = formatMathResponse(data.text);
 
                     // Trigger MathJax to render LaTeX equations
                     if (window.MathJax && window.MathJax.typesetPromise) {
@@ -2489,13 +2507,13 @@ date: 2025-10-30
                     }
                 } else if (data.message) {
                     // Show error message from API
-                    resultArea.textContent = `Error: ${data.message}`;
+                    resultArea.innerHTML = `Error: ${data.message}`;
                 } else {
-                    resultArea.textContent = 'Error: No response from AI';
+                    resultArea.innerHTML = 'Error: No response from AI';
                 }
             } catch (error) {
                 console.error('Gemini API error:', error);
-                resultArea.textContent = 'Error: Failed to get AI response. Please make sure you are logged in.';
+                resultArea.innerHTML = 'Error: Failed to get AI response. Please make sure you are logged in.';
             }
         }
 
