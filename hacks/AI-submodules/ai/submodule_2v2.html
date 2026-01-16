@@ -2,7 +2,7 @@
 layout: post
 title: "AI Usage Quest — Module 2: Prompt Engineering"
 description: "Master the art of communicating effectively with AI through strategic prompting"
-permalink: /digital-famine/ai/submodule_2_coderunner/
+permalink: /digital-famine/ai/submodule_2_v2/
 categories: [CSP, Submodule, AIUsage]
 tags: [ai, prompts, prompt-engineering, zero-shot, few-shot]
 author: "Debuggers Team - Ruchika Kench, Anishka Sanghvi"
@@ -23,249 +23,272 @@ date: 2025-10-30
     };
 </script>
 
+<script>
+    // Define goToSection early so buttons work before module loads
+    window.goToSection = function(n) {
+        document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
+        document.getElementById('section-' + n).classList.remove('section-hidden');
+        document.querySelectorAll('.nav-btn').forEach(b => {
+            b.classList.remove('bg-purple-600');
+            b.classList.add('bg-slate-700/50');
+        });
+        var btn = document.querySelector('.nav-btn[data-section="' + n + '"]');
+        if (btn) btn.classList.add('bg-purple-600');
+        var progressBar = document.getElementById('progress-bar');
+        var progressText = document.getElementById('progress-text');
+        if (progressBar && progressText) {
+            var sections = ['section-0', 'section-1', 'section-2', 'section-3', 'section-4', 'section-5'];
+            var progress = ((n + 1) / sections.length) * 100;
+            progressBar.style.width = progress + '%';
+            progressText.textContent = Math.round(progress) + '% completed';
+        }
+        window.scrollTo(0, 0);
+    };
+</script>
+
 <style>
-    body {
-        background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
-        min-height: 100vh;
-    }
-
-    .pulse {
-        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-
-    @keyframes pulse {
-
-        0%,
-        100% {
-            opacity: 1;
+        body {
+            background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
+            min-height: 100vh;
         }
 
-        50% {
-            opacity: .5;
-        }
-    }
-
-    .section-hidden {
-        display: none;
-    }
-
-    /* Feedback Modal Styles */
-    #feedbackModal * {
-        box-sizing: border-box !important;
-        font-family: 'Segoe UI', Tahoma, sans-serif;
-    }
-
-    #feedbackModal {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        background: rgba(0, 0, 0, 0.9) !important;
-        display: none;
-        align-items: center !important;
-        justify-content: center !important;
-        z-index: 999999 !important;
-        overflow-y: auto;
-        pointer-events: all !important;
-    }
-
-    #feedbackModal .modal {
-        background: white !important;
-        width: 90% !important;
-        max-width: 600px !important;
-        min-width: 300px !important;
-        border-radius: 20px;
-        overflow-y: auto;
-        max-height: 90vh;
-        min-height: 200px !important;
-        animation: fadeIn 0.3s ease;
-        position: relative !important;
-        margin: 20px auto !important;
-        display: block !important;
-        z-index: 10000000 !important;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
-        to {
-            opacity: 1;
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
         }
-    }
 
-    .hidden {
-        display: none !important;
-    }
+        .section-hidden {
+            display: none;
+        }
 
-    .modal-show {
-        display: flex !important;
-    }
+        /* Feedback Modal Styles */
+        #feedbackModal * {
+            box-sizing: border-box !important;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
 
-    .category-btn {
-        padding: 12px 18px;
-        background: white;
-        color: #1f2937;
-        border: 2px solid #d1d5db;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-weight: 600;
-        font-size: 15px;
-    }
+        #feedbackModal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow-y: auto;
+            pointer-events: all !important;
+        }
 
-    .category-btn:hover {
-        border-color: #8b5cf6;
-        background: #f3f4f6;
-    }
+        #feedbackModal .modal {
+            background: white !important;
+            width: 90% !important;
+            max-width: 600px !important;
+            min-width: 300px !important;
+            border-radius: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            min-height: 200px !important;
+            animation: fadeIn 0.3s ease;
+            position: relative !important;
+            margin: 20px auto !important;
+            display: block !important;
+            z-index: 10000000 !important;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-show {
+            display: flex !important;
+        }
+
+        .category-btn {
+            padding: 12px 18px;
+            background: white;
+            color: #1f2937;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .category-btn:hover {
+            border-color: #8b5cf6;
+            background: #f3f4f6;
+        }
 
 
-    /* Footer Styles */
-    .module-footer {
-        background: rgba(15, 23, 42, 0.95);
-        border-top: 2px solid rgba(139, 92, 246, 0.3);
-        padding: 2rem;
-        text-align: center;
-        margin-top: 3rem;
-    }
+        /* Footer Styles */
+        .module-footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 2px solid rgba(139, 92, 246, 0.3);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
 
-    .footer-link {
-        display: inline-block;
-        color: #a78bfa;
-        text-decoration: none;
-        font-size: 1.1rem;
-        font-weight: 600;
-        padding: 0.75rem 1.5rem;
-        border: 2px solid rgba(139, 92, 246, 0.4);
-        border-radius: 0.5rem;
-        transition: all 0.2s ease;
-        background: rgba(139, 92, 246, 0.1);
-    }
+        .footer-link {
+            display: inline-block;
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            background: rgba(139, 92, 246, 0.1);
+        }
 
-    .footer-link:hover {
-        background: rgba(139, 92, 246, 0.2);
-        border-color: rgba(139, 92, 246, 0.6);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-    }
+        .footer-link:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
 
-    /* Math output formatting */
-    #gemini-result-1,
-    #gemini-result-2,
-    #gemini-result-3,
-    #gemini-result-4 {
-        line-height: 1.8;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-    }
+        /* Math output formatting */
+        #gemini-result-1,
+        #gemini-result-2,
+        #gemini-result-3,
+        #gemini-result-4 {
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
 
-    /* MathJax rendered equations */
-    .MathJax {
-        font-size: 1.1em !important;
-    }
+        /* MathJax rendered equations */
+        .MathJax {
+            font-size: 1.1em !important;
+        }
 
-    /* Make bold text in LaTeX explanations stand out */
-    strong {
-        color: #a78bfa;
-        font-weight: 700;
-    }
+        /* Make bold text in LaTeX explanations stand out */
+        strong {
+            color: #a78bfa;
+            font-weight: 700;
+        }
 
-    /* Math Topic Survey Modal Styles */
-    #mathTopicModal {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        background: rgba(0, 0, 0, 0.9) !important;
-        display: none;
-        align-items: center !important;
-        justify-content: center !important;
-        z-index: 999999 !important;
-        overflow-y: auto;
-    }
+        /* Math Topic Survey Modal Styles */
+        #mathTopicModal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow-y: auto;
+        }
 
-    #mathTopicModal.modal-show {
-        display: flex !important;
-    }
+        #mathTopicModal.modal-show {
+            display: flex !important;
+        }
 
-    #mathTopicModal .modal {
-        background: white !important;
-        width: 90% !important;
-        max-width: 500px !important;
-        border-radius: 20px;
-        overflow-y: auto;
-        max-height: 90vh;
-        animation: fadeIn 0.3s ease;
-        position: relative !important;
-        margin: 20px auto !important;
-        display: block !important;
-    }
+        #mathTopicModal .modal {
+            background: white !important;
+            width: 90% !important;
+            max-width: 500px !important;
+            border-radius: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            animation: fadeIn 0.3s ease;
+            position: relative !important;
+            margin: 20px auto !important;
+            display: block !important;
+        }
 
-    .topic-option {
-        padding: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: 3px solid transparent;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.3s;
-        text-align: center;
-        font-weight: 600;
-        font-size: 18px;
-    }
+        .topic-option {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: 3px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
 
-    .topic-option:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        border-color: #fbbf24;
-    }
+        .topic-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            border-color: #fbbf24;
+        }
 
-    .topic-option.selected {
-        border-color: #0ebe84;
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    }
+        .topic-option.selected {
+            border-color: #0ebe84;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
 
-    /* Science Topic Survey Modal Styles */
-    #scienceTopicModal {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        background: rgba(0, 0, 0, 0.9) !important;
-        display: none;
-        align-items: center !important;
-        justify-content: center !important;
-        z-index: 999999 !important;
-        overflow-y: auto;
-    }
+        /* Science Topic Survey Modal Styles */
+        #scienceTopicModal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow-y: auto;
+        }
 
-    #scienceTopicModal.modal-show {
-        display: flex !important;
-    }
+        #scienceTopicModal.modal-show {
+            display: flex !important;
+        }
 
-    #scienceTopicModal .modal {
-        background: white !important;
-        width: 90% !important;
-        max-width: 500px !important;
-        border-radius: 20px;
-        overflow-y: auto;
-        max-height: 90vh;
-        animation: fadeIn 0.3s ease;
-        position: relative !important;
-        margin: 20px auto !important;
-        display: block !important;
-    }
-</style>
+        #scienceTopicModal .modal {
+            background: white !important;
+            width: 90% !important;
+            max-width: 500px !important;
+            border-radius: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            animation: fadeIn 0.3s ease;
+            position: relative !important;
+            margin: 20px auto !important;
+            display: block !important;
+        }
+    </style>
 
 <!-- PROGRESS BAR -->
     <div class="max-w-7xl mx-auto px-4 mb-6 pt-4">
@@ -1256,8 +1279,18 @@ date: 2025-10-30
     </footer>
 
     <!-- SCRIPTS -->
+    <!-- Load config first, sets window.pythonURI and window.fetchOptions -->
     <script type="module">
         import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+        window.pythonURI = pythonURI;
+        window.fetchOptions = fetchOptions;
+    </script>
+
+    <script>
+        // Use pythonURI from config or fallback
+        var pythonURI = window.pythonURI || '';
+        var fetchOptions = window.fetchOptions || {};
+
         // Progress bar update
         function updateProgress() {
             const sections = ['section-0', 'section-1', 'section-2', 'section-3', 'section-4', 'section-5'];
@@ -1280,11 +1313,6 @@ date: 2025-10-30
             updateProgress();
             window.scrollTo(0, 0);
         }
-
-        window.goToSection = goToSection;
-        window.showFeedbackModal = showFeedbackModal;
-        window.closeModal = closeModal;
-
 
         // Auto-fill functions
         function autoFillBad() {
