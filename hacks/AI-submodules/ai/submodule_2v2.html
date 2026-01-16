@@ -1279,17 +1279,12 @@ date: 2025-10-30
     </footer>
 
     <!-- SCRIPTS -->
-    <!-- Load config first, sets window.pythonURI and window.fetchOptions -->
     <script type="module">
         import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+
+        // Make pythonURI available globally for other scripts
         window.pythonURI = pythonURI;
         window.fetchOptions = fetchOptions;
-    </script>
-
-    <script>
-        // Use pythonURI from config or fallback
-        var pythonURI = window.pythonURI || '';
-        var fetchOptions = window.fetchOptions || {};
 
         // Progress bar update
         function updateProgress() {
@@ -3052,6 +3047,52 @@ date: 2025-10-30
         }
 
         // ==================== END CODING QUESTIONS SECTION ====================
+
+        // Expose all functions to window for onclick handlers
+        window.goToSection = goToSection;
+        window.showFeedbackModal = showFeedbackModal;
+        window.closeModal = closeModal;
+        window.submitFeedback = submitFeedback;
+        window.autoFillBad = autoFillBad;
+        window.autoFillGood = autoFillGood;
+        window.generateBadPrompt = generateBadPrompt;
+        window.generateGoodPrompt = generateGoodPrompt;
+        window.copyPromptToTextarea = copyPromptToTextarea;
+        window.copyToClipboard = copyToClipboard;
+        window.showLevel = showLevel;
+        window.selectMadLibSubject = selectMadLibSubject;
+        window.generateMadLibPrompt = generateMadLibPrompt;
+        window.testMadLibPrompt = testMadLibPrompt;
+        window.resetMadLib = resetMadLib;
+        window.showMathTopicModal = showMathTopicModal;
+        window.closeMathTopicModal = closeMathTopicModal;
+        window.selectMathTopic = selectMathTopic;
+        window.toggleMathTips = toggleMathTips;
+        window.toggleScienceTips = toggleScienceTips;
+        window.closeScienceTopicModal = closeScienceTopicModal;
+        window.selectScienceTopic = selectScienceTopic;
+        window.toggleCSTips = toggleCSTips;
+        window.toggleActivity = toggleActivity;
+        window.checkFillBlank = checkFillBlank;
+        window.autofillFillBlank = autofillFillBlank;
+        window.showWriteCodeHint = showWriteCodeHint;
+        window.runWriteCode = runWriteCode;
+        window.autofillWriteCode = autofillWriteCode;
+        window.analyzeCSPrompt = analyzeCSPrompt;
+        window.improveCSPrompt = improveCSPrompt;
+        window.generateCodeFromPrompt = generateCodeFromPrompt;
+        window.runGeneratedCode = runGeneratedCode;
+        window.toggleHistoryTips = toggleHistoryTips;
+        window.selectHistoryType = selectHistoryType;
+        window.generateHistoryPrompt = generateHistoryPrompt;
+        window.resetHistoryBuilder = resetHistoryBuilder;
+        window.fillExample = fillExample;
+        window.togglePrompt = togglePrompt;
+        window.autofillPrompt = autofillPrompt;
+        window.copyPrompt = copyPrompt;
+        window.toggleSciencePrompt = toggleSciencePrompt;
+        window.autofillSciencePrompt = autofillSciencePrompt;
+        window.copySciencePrompt = copySciencePrompt;
 
         // Track if the user has visited the math and science sections
         let hasVisitedMathSection = false;
