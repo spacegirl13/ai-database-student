@@ -443,9 +443,10 @@ date: 2025-10-30
     </div>
 </div>
 
-<script>
+<script type="module">
+    import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
     // CHANGE THIS TO YOUR FLASK SERVER URL
-    const API_URL = 'http://localhost:8402/api';
+    const API_URL = pythonURI +'/api';
 
     let charts = {};
 
