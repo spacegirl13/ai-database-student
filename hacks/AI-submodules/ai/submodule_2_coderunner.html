@@ -949,7 +949,7 @@ date: 2025-10-30
                                     <!-- AI Response -->
                                     <div id="madlib-ai-response" class="hidden mt-4 bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
                                         <p class="text-sm text-purple-300 mb-2">AI Response:</p>
-                                        <pre id="madlib-ai-text" class="text-white text-sm whitespace-pre-wrap"></pre>
+                                        <div id="madlib-ai-text" class="text-white text-sm whitespace-pre-wrap"></div>
                                     </div>
                                 </div>
                             </div>
@@ -2656,7 +2656,7 @@ date: 2025-10-30
                 const data = await response.json();
 
                 if (data.success && data.text) {
-                    resultArea.textContent = data.text;
+                    responseText.innerHTML = formatMathResponse(data.text);
 
                     // Trigger MathJax to render any chemical equations
                     if (window.MathJax && window.MathJax.typesetPromise) {
