@@ -870,12 +870,18 @@ date: 2025-10-30
                     <p class="text-lg mb-6">Choose your level and practice writing effective prompts!</p>
 
                     <!-- Level Selection -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
     <button onclick="showLevel('beginner')" id="level-beginner-btn"
         class="level-btn bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 py-6 px-8 rounded-lg font-bold text-xl text-left transition-all border-4 border-transparent">
         <div class="text-3xl mb-2">🌱</div>
         <div>Beginner Level</div>
         <div class="text-sm font-normal opacity-90 mt-1">Fill-in-the-blanks Mad Libs style</div>
+    </button>
+    <button onclick="showLevel('intermediate')" id="level-intermediate-btn"
+        class="level-btn bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 py-6 px-8 rounded-lg font-bold text-xl text-left transition-all border-4 border-transparent">
+        <div class="text-3xl mb-2">📈</div>
+        <div>Intermediate Level</div>
+        <div class="text-sm font-normal opacity-90 mt-1">Guided prompt building with tips</div>
     </button>
     <button onclick="showLevel('advanced')" id="level-advanced-btn"
         class="level-btn bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 py-6 px-8 rounded-lg font-bold text-xl text-left transition-all border-4 border-transparent">
@@ -956,149 +962,262 @@ date: 2025-10-30
                         </div>
                     </div>
 
+                    <!-- Intermediate Level: Guided Prompt Building -->
+                    <div id="intermediate-level" class="hidden">
+                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 mb-6">
+                            <h3 class="text-2xl font-bold text-blue-300 mb-4">📈 Intermediate: Guided Prompt Building</h3>
+                            <p class="mb-4">Learn to write better prompts with guided feedback and structure!</p>
+
+                            <!-- Subject Selection for Intermediate -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-semibold mb-3">Choose a subject:</label>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    <button onclick="selectIntermediateSubject('math')" id="intermediate-math-btn"
+                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
+                                        🔢 Math
+                                    </button>
+                                    <button onclick="selectIntermediateSubject('science')" id="intermediate-science-btn"
+                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
+                                        🔬 Science
+                                    </button>
+                                    <button onclick="selectIntermediateSubject('cs')" id="intermediate-cs-btn"
+                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
+                                        💻 Comp Sci
+                                    </button>
+                                    <button onclick="selectIntermediateSubject('history')" id="intermediate-history-btn"
+                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
+                                        📜 History
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Intermediate Form -->
+                            <div id="intermediate-form" class="hidden">
+                                <!-- Prompt Components Checklist -->
+                                <div class="bg-slate-800/50 rounded-lg p-6 mb-6">
+                                    <h4 class="text-lg font-semibold text-blue-300 mb-4">📋 Prompt Components (Mark as you add them)</h4>
+                                    <div class="space-y-3">
+                                        <label class="flex items-center p-3 bg-slate-700/50 rounded border border-blue-500/20 cursor-pointer hover:bg-slate-700">
+                                            <input type="checkbox" id="intermediate-clarity" class="intermediate-checklist-item w-4 h-4 mr-3" onchange="checkIntermediateProgress()">
+                                            <span>✓ Clear topic/task</span>
+                                        </label>
+                                        <label class="flex items-center p-3 bg-slate-700/50 rounded border border-blue-500/20 cursor-pointer hover:bg-slate-700">
+                                            <input type="checkbox" id="intermediate-audience" class="intermediate-checklist-item w-4 h-4 mr-3" onchange="checkIntermediateProgress()">
+                                            <span>✓ Target audience specified</span>
+                                        </label>
+                                        <label class="flex items-center p-3 bg-slate-700/50 rounded border border-blue-500/20 cursor-pointer hover:bg-slate-700">
+                                            <input type="checkbox" id="intermediate-format" class="intermediate-checklist-item w-4 h-4 mr-3" onchange="checkIntermediateProgress()">
+                                            <span>✓ Desired format/length</span>
+                                        </label>
+                                        <label class="flex items-center p-3 bg-slate-700/50 rounded border border-blue-500/20 cursor-pointer hover:bg-slate-700">
+                                            <input type="checkbox" id="intermediate-tone" class="intermediate-checklist-item w-4 h-4 mr-3" onchange="checkIntermediateProgress()">
+                                            <span>✓ Tone or style specified</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Prompt Writing Area -->
+                                <div class="mb-6">
+                                    <label class="block text-sm font-semibold mb-3">Write your prompt here:</label>
+                                    <textarea id="intermediate-prompt-input" rows="6" placeholder="Example: Write a 200-word explanation of photosynthesis for a 9th grader. Include the inputs and outputs, explain it in simple language, and use an analogy to compare it to something familiar."
+                                        class="w-full p-4 rounded text-white bg-slate-700 border border-blue-500/30 mb-3 font-mono text-sm"></textarea>
+                                </div>
+
+                                <!-- Guidance Tips -->
+                                <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mb-6">
+                                    <h4 class="text-sm font-semibold text-blue-300 mb-3">💡 Tips for a Better Prompt:</h4>
+                                    <ul class="text-sm text-gray-300 space-y-2">
+                                        <li>✓ Start with what you want (action verb: "Explain", "Write", "Create", "Solve")</li>
+                                        <li>✓ Include context or constraints (length, style, audience level)</li>
+                                        <li>✓ Be specific about format (list, essay, code, table, etc.)</li>
+                                        <li>✓ Add requirements (step-by-step, with examples, include citations, etc.)</li>
+                                    </ul>
+                                </div>
+
+                                <div class="grid md:grid-cols-2 gap-3">
+                                    <button onclick="generateIntermediatePrompt()"
+                                        class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold">
+                                        ✨ Generate & Test Prompt
+                                    </button>
+                                    <button onclick="resetIntermediate()"
+                                        class="w-full bg-slate-600 hover:bg-slate-500 py-3 rounded-lg font-semibold">
+                                        🔄 Clear Form
+                                    </button>
+                                </div>
+
+                                <!-- Generated Prompt Display -->
+                                <div id="intermediate-output" class="hidden mt-6">
+                                    <div class="bg-blue-900/30 border border-blue-500/50 rounded-lg p-6 mb-4">
+                                        <p class="text-sm text-blue-300 mb-3">Your Prompt:</p>
+                                        <div id="intermediate-prompt-text" class="text-white text-lg font-semibold mb-4 leading-relaxed bg-slate-800/50 p-4 rounded"></div>
+                                        
+                                        <!-- Analysis -->
+                                        <div id="intermediate-analysis" class="mb-4 p-4 bg-slate-800/50 rounded">
+                                            <h5 class="font-semibold text-blue-300 mb-2">Quality Analysis:</h5>
+                                            <div id="intermediate-analysis-items" class="text-sm space-y-2"></div>
+                                        </div>
+
+                                        <div class="grid md:grid-cols-3 gap-3">
+                                            <button onclick="copyToClipboard('intermediate-prompt-text')"
+                                                class="px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded text-sm">
+                                                📋 Copy Prompt
+                                            </button>
+                                            <button onclick="testIntermediatePrompt()"
+                                                class="px-4 py-2 bg-purple-700 hover:bg-purple-600 rounded text-sm">
+                                                🤖 Test with AI
+                                            </button>
+                                            <button onclick="showIntermediateImprovements()"
+                                                class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                                📈 Get Tips
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- AI Response -->
+                                    <div id="intermediate-ai-response" class="hidden mt-4 bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
+                                        <p class="text-sm text-purple-300 mb-2">AI Response:</p>
+                                        <pre id="intermediate-ai-text" class="text-white text-sm whitespace-pre-wrap"></pre>
+                                    </div>
+
+                                    <!-- Improvement Suggestions -->
+                                    <div id="intermediate-improvements" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                                        <p class="text-sm text-green-300 mb-3">Ways to Improve Your Prompt:</p>
+                                        <ul id="intermediate-improvements-list" class="text-sm text-gray-300 space-y-2"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Advanced Level: Original Content -->
                     <div id="advanced-level" class="hidden">
+                        <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                            <h3 class="text-2xl font-bold text-purple-300 mb-4">🚀 Advanced: Freestyle Prompting</h3>
+                            <p class="mb-4">Test your skills by comparing good vs bad prompts and getting feedback from AI!</p>
 
-                    </p>
+                            <!-- Quick Reference Table -->
+                            <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                                <h4 class="text-xl font-bold text-purple-300 mb-4">📊 Student Prompt Examples by Subject</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full border-collapse bg-slate-900/50 rounded-lg overflow-hidden">
+                                        <thead>
+                                            <tr class="bg-purple-900/30">
+                                                <th class="border border-purple-500/30 p-4 text-left">Subject</th>
+                                                <th class="border border-purple-500/30 p-4 text-left">Effective Prompt Example</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="border border-purple-500/30 p-4"><strong>🔢 Math</strong></td>
+                                                <td class="border border-purple-500/30 p-4 text-sm">"Solve this quadratic equation step-by-step: 2x² + 5x - 3 = 0. Explain each step."</td>
+                                            </tr>
+                                            <tr class="bg-slate-800/30">
+                                                <td class="border border-purple-500/30 p-4"><strong>🔬 Science</strong></td>
+                                                <td class="border border-purple-500/30 p-4 text-sm">"Explain photosynthesis to a 10th grader using simple language and an analogy."</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="border border-purple-500/30 p-4"><strong>💻 Computer Science</strong></td>
+                                                <td class="border border-purple-500/30 p-4 text-sm">"Explain how for loops work in Python with 2 simple examples. I'm a beginner."</td>
+                                            </tr>
+                                            <tr class="bg-slate-800/30">
+                                                <td class="border border-purple-500/30 p-4"><strong>📜 History</strong></td>
+                                                <td class="border border-purple-500/30 p-4 text-sm">"Explain the main causes of World War I in simple terms. Include at least 3 causes."</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 
-                    <!-- Quick Reference Table -->
-                    <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
-                        <h3 class="text-2xl font-bold text-purple-300 mb-4">📊 Student Prompt Examples by Subject</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full border-collapse bg-slate-900/50 rounded-lg overflow-hidden">
-                                <thead>
-                                    <tr class="bg-purple-900/30">
-                                        <th class="border border-purple-500/30 p-4 text-left">Subject</th>
-                                        <th class="border border-purple-500/30 p-4 text-left">Effective Prompt Example
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border border-purple-500/30 p-4"><strong>🔢 Math</strong></td>
-                                        <td class="border border-purple-500/30 p-4 text-sm">"Solve this quadratic
-                                            equation step-by-step: 2x² + 5x - 3 = 0. Explain each step."</td>
-                                    </tr>
-                                    <tr class="bg-slate-800/30">
-                                        <td class="border border-purple-500/30 p-4"><strong>🔬 Science</strong></td>
-                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain photosynthesis to a
-                                            10th grader using simple language and an analogy."</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-purple-500/30 p-4"><strong>💻 Computer Science</strong>
-                                        </td>
-                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain how for loops work
-                                            in Python with 2 simple examples. I'm a beginner."</td>
-                                    </tr>
-                                    <tr class="bg-slate-800/30">
-                                        <td class="border border-purple-500/30 p-4"><strong>📜 History</strong></td>
-                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain the main causes of
-                                            World War I in simple terms. Include at least 3 causes."</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                            <h4 class="text-xl font-bold mb-4 mt-8">✏️ Try It Yourself!</h4>
+                            <p class="text-lg mb-6">See the difference between good and bad prompts! Write both versions and compare the AI responses.</p>
 
-                    <h3 class="text-2xl font-bold mb-4 mt-8">✏️ Try It Yourself!</h3>
-                    <p class="text-lg mb-6">See the difference between good and bad prompts! Write both versions and
-                        compare the AI responses.</p>
+                            <!-- Bad Prompt Section -->
+                            <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6 mb-6">
+                                <h4 class="text-2xl font-bold text-red-300 mb-4">❌ Bad Prompt</h4>
+                                <p class="mb-4 text-gray-300">Write a vague, incomplete, or poorly structured prompt:</p>
+                                <textarea id="bad-prompt" rows="3" placeholder="Example: 'write something about dogs'"
+                                    class="w-full p-3 rounded text-white bg-slate-700 border border-red-500/30 mb-3"></textarea>
+                                <div class="flex gap-2">
+                                    <button onclick="generateBadPrompt()"
+                                        class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold">Generate Bad Response</button>
+                                    <button onclick="autoFillBad()"
+                                        class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                                </div>
 
-                    <!-- Bad Prompt Section -->
-                    <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6 mb-6">
-                        <h3 class="text-2xl font-bold text-red-300 mb-4">❌ Bad Prompt</h3>
-                        <p class="mb-4 text-gray-300">Write a vague, incomplete, or poorly structured prompt:</p>
-                        <textarea id="bad-prompt" rows="3" placeholder="Example: 'write something about dogs'"
-                            class="w-full p-3 rounded text-white bg-slate-700 border border-red-500/30 mb-3"></textarea>
-                        <div class="flex gap-2">
-                            <button onclick="generateBadPrompt()"
-                                class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold">Generate
-                                Bad Response</button>
-                            <button onclick="autoFillBad()"
-                                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
-                        </div>
+                                <div class="mt-4">
+                                    <label class="block font-semibold mb-2 text-red-300">AI Response to Bad Prompt:</label>
+                                    <pre id="output-bad"
+                                        class="bg-slate-900/50 border border-red-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                                </div>
 
-                        <div class="mt-4">
-                            <label class="block font-semibold mb-2 text-red-300">AI Response to Bad Prompt:</label>
-                            <pre id="output-bad"
-                                class="bg-slate-900/50 border border-red-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
-                        </div>
+                                <!-- Community Prompt Feed for Bad Prompts -->
+                                <div class="community-feed mt-6 bg-slate-800/70 border border-red-500/30 rounded-lg p-6">
+                                    <h5 class="text-lg font-semibold text-red-300 mb-4">💬 Student-Submitted Bad Prompts</h5>
+                                    <div id="bad-prompts-feed" class="space-y-4">
+                                        <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- Community Prompt Feed for Bad Prompts -->
-                        <div class="community-feed mt-6 bg-slate-800/70 border border-red-500/30 rounded-lg p-6">
-                            <h4 class="text-lg font-semibold text-red-300 mb-4">💬 Student-Submitted Bad Prompts</h4>
-                            <div id="bad-prompts-feed" class="space-y-4">
-                                <!-- Prompts will be loaded here dynamically -->
-                                <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
+                            <!-- Good Prompt Section -->
+                            <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6 mb-6">
+                                <h4 class="text-2xl font-bold text-green-300 mb-4">✅ Good Prompt</h4>
+                                <p class="mb-4 text-gray-300">Write a clear, specific, and well-structured prompt:</p>
+                                <textarea id="good-prompt" rows="3"
+                                    placeholder="Example: 'Write a 150-word informative paragraph about Golden Retrievers, focusing on their temperament and why they make good family pets.'"
+                                    class="w-full p-3 rounded text-white bg-slate-700 border border-green-500/30 mb-3"></textarea>
+                                <div class="flex gap-2">
+                                    <button onclick="generateGoodPrompt()"
+                                        class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">Generate Good Response</button>
+                                    <button onclick="autoFillGood()"
+                                        class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                                </div>
+
+                                <div class="mt-4">
+                                    <label class="block font-semibold mb-2 text-green-300">AI Response to Good Prompt:</label>
+                                    <pre id="output-good"
+                                        class="bg-slate-900/50 border border-green-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                                </div>
+
+                                <!-- Community Prompt Feed for Good Prompts -->
+                                <div class="community-feed mt-6 bg-slate-800/70 border border-green-500/30 rounded-lg p-6">
+                                    <h5 class="text-lg font-semibold text-green-300 mb-4">💬 Student-Submitted Good Prompts</h5>
+                                    <div id="good-prompts-feed" class="space-y-4">
+                                        <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tips Section -->
+                            <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                                <h4 class="text-xl font-bold text-purple-300 mb-3">💡 What Makes a Good Prompt?</h4>
+                                <ul class="space-y-2 text-gray-300">
+                                    <li>✓ Be specific about what you want</li>
+                                    <li>✓ Include context and desired format</li>
+                                    <li>✓ Use clear, complete sentences</li>
+                                    <li>✓ Specify tone, length, or style if needed</li>
+                                    <li>✗ Avoid vague requests</li>
+                                    <li>✗ Don't use incomplete sentences</li>
+                                    <li>✗ Avoid ambiguous language</li>
+                                </ul>
+                            </div>
+
+                            <!-- Complete Section -->
+                            <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 text-center">
+                                <h3 class="text-2xl font-bold text-blue-300 mb-3">🎉 Challenge Complete!</h3>
+                                <p class="mb-4 text-gray-300">Now you understand the power of good prompting!</p>
+                                <div class="bg-green-900/30 border-2 border-green-500 rounded-lg p-6 mb-4">
+                                    <p class="text-xl font-bold text-green-400 mb-2">🔑 Your Code Number: 6</p>
+                                    <p class="text-sm text-gray-300">Remember this number! You'll need it along with the other module codes to unlock the final challenge.</p>
+                                </div>
+                                <button onclick="showFeedbackModal()"
+                                    class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold">Complete Module</button>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Good Prompt Section -->
-                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6 mb-6">
-                        <h3 class="text-2xl font-bold text-green-300 mb-4">✅ Good Prompt</h3>
-                        <p class="mb-4 text-gray-300">Write a clear, specific, and well-structured prompt:</p>
-                        <textarea id="good-prompt" rows="3"
-                            placeholder="Example: 'Write a 150-word informative paragraph about Golden Retrievers, focusing on their temperament and why they make good family pets.'"
-                            class="w-full p-3 rounded text-white bg-slate-700 border border-green-500/30 mb-3"></textarea>
-                        <div class="flex gap-2">
-                            <button onclick="generateGoodPrompt()"
-                                class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">Generate
-                                Good Response</button>
-                            <button onclick="autoFillGood()"
-                                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
-                        </div>
-
-                        <div class="mt-4">
-                            <label class="block font-semibold mb-2 text-green-300">AI Response to Good Prompt:</label>
-                            <pre id="output-good"
-                                class="bg-slate-900/50 border border-green-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
-                        </div>
-
-                        <!-- Community Prompt Feed for Good Prompts -->
-                        <div class="community-feed mt-6 bg-slate-800/70 border border-green-500/30 rounded-lg p-6">
-                            <h4 class="text-lg font-semibold text-green-300 mb-4">💬 Student-Submitted Good Prompts</h4>
-                            <div id="good-prompts-feed" class="space-y-4">
-                                <!-- Prompts will be loaded here dynamically -->
-                                <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tips Section -->
-                    <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
-                        <h4 class="text-xl font-bold text-purple-300 mb-3">💡 What Makes a Good Prompt?</h4>
-                        <ul class="space-y-2 text-gray-300">
-                            <li>✓ Be specific about what you want</li>
-                            <li>✓ Include context and desired format</li>
-                            <li>✓ Use clear, complete sentences</li>
-                            <li>✓ Specify tone, length, or style if needed</li>
-                            <li>✗ Avoid vague requests</li>
-                            <li>✗ Don't use incomplete sentences</li>
-                            <li>✗ Avoid ambiguous language</li>
-                        </ul>
-                    </div>
-
-                    <!-- Complete Section -->
-                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 text-center">
-                        <h3 class="text-2xl font-bold text-blue-300 mb-3">🎉 Challenge Complete!</h3>
-                        <p class="mb-4 text-gray-300">Now you understand the power of good prompting!</p>
-                        <div class="bg-green-900/30 border-2 border-green-500 rounded-lg p-6 mb-4">
-                            <p class="text-xl font-bold text-green-400 mb-2">🔑 Your Code Number: 6</p>
-                            <p class="text-sm text-gray-300">Remember this number! You'll need it along with the other
-                                module codes to unlock the final challenge.</p>
-                        </div>
-                        <button onclick="showFeedbackModal()"
-                            class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold">Complete
-                            Module</button>
-                        </div>
-                        </div> <!-- Close advanced-level -->
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <!-- FEEDBACK MODAL -->
     <div id="feedbackModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999;">
@@ -1284,6 +1403,13 @@ date: 2025-10-30
         window.goToSection = goToSection;
         window.showFeedbackModal = showFeedbackModal;
         window.closeModal = closeModal;
+        window.showLevel = showLevel;
+        window.selectIntermediateSubject = selectIntermediateSubject;
+        window.generateIntermediatePrompt = generateIntermediatePrompt;
+        window.testIntermediatePrompt = testIntermediatePrompt;
+        window.showIntermediateImprovements = showIntermediateImprovements;
+        window.resetIntermediate = resetIntermediate;
+        window.checkIntermediateProgress = checkIntermediateProgress;
 
 
         // Auto-fill functions
@@ -2042,9 +2168,15 @@ date: 2025-10-30
             // Show appropriate level
             if (level === 'beginner') {
                 document.getElementById('beginner-level').classList.remove('hidden');
+                document.getElementById('intermediate-level').classList.add('hidden');
+                document.getElementById('advanced-level').classList.add('hidden');
+            } else if (level === 'intermediate') {
+                document.getElementById('beginner-level').classList.add('hidden');
+                document.getElementById('intermediate-level').classList.remove('hidden');
                 document.getElementById('advanced-level').classList.add('hidden');
             } else {
                 document.getElementById('beginner-level').classList.add('hidden');
+                document.getElementById('intermediate-level').classList.add('hidden');
                 document.getElementById('advanced-level').classList.remove('hidden');
             }
 
@@ -2195,7 +2327,234 @@ date: 2025-10-30
 
         // ==================== END MAD LIBS SECTION ====================
 
-        // Initialize
+        // ==================== INTERMEDIATE LEVEL FUNCTIONS ====================
+
+        let selectedIntermediateSubject = null;
+
+        // Select subject for intermediate level
+        function selectIntermediateSubject(subject) {
+            selectedIntermediateSubject = subject;
+
+            // Update button styles
+            document.querySelectorAll('.intermediate-subject-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'border-blue-500');
+                btn.classList.add('bg-slate-700', 'border-slate-600');
+            });
+            document.getElementById(`intermediate-${subject}-btn`).classList.add('bg-blue-600', 'border-blue-500');
+            document.getElementById(`intermediate-${subject}-btn`).classList.remove('bg-slate-700', 'border-slate-600');
+
+            // Show form
+            document.getElementById('intermediate-form').classList.remove('hidden');
+            document.getElementById('intermediate-output').classList.add('hidden');
+            resetIntermediateChecklist();
+        }
+
+        // Reset intermediate checklist
+        function resetIntermediateChecklist() {
+            document.querySelectorAll('.intermediate-checklist-item').forEach(item => {
+                item.checked = false;
+            });
+            document.getElementById('intermediate-prompt-input').value = '';
+        }
+
+        // Check intermediate progress
+        function checkIntermediateProgress() {
+            const checkboxes = document.querySelectorAll('.intermediate-checklist-item');
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const total = checkboxes.length;
+
+            // Visually indicate progress
+            checkboxes.forEach(cb => {
+                const label = cb.closest('label');
+                if (cb.checked) {
+                    label.classList.add('bg-blue-700/30', 'border-blue-500');
+                } else {
+                    label.classList.remove('bg-blue-700/30', 'border-blue-500');
+                }
+            });
+
+            return checked;
+        }
+
+        // Generate intermediate prompt with analysis
+        function generateIntermediatePrompt() {
+            const promptText = document.getElementById('intermediate-prompt-input').value.trim();
+
+            if (!promptText) {
+                alert('Please write a prompt in the text area!');
+                return;
+            }
+
+            document.getElementById('intermediate-prompt-text').textContent = promptText;
+
+            // Analyze the prompt
+            const analysis = analyzePromptQuality(promptText);
+            displayPromptAnalysis(analysis);
+
+            document.getElementById('intermediate-output').classList.remove('hidden');
+            document.getElementById('intermediate-ai-response').classList.add('hidden');
+            document.getElementById('intermediate-improvements').classList.add('hidden');
+
+            // Scroll to output
+            setTimeout(() => {
+                document.getElementById('intermediate-output').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        // Analyze prompt quality
+        function analyzePromptQuality(prompt) {
+            const analysis = {
+                score: 0,
+                items: []
+            };
+
+            // Check for clarity
+            if (prompt.length > 50) {
+                analysis.score += 20;
+                analysis.items.push({ text: '✓ Detailed prompt (good length)', positive: true });
+            } else {
+                analysis.items.push({ text: '⚠ Prompt might be too short', positive: false });
+            }
+
+            // Check for action verbs
+            const actionVerbs = ['explain', 'write', 'create', 'solve', 'analyze', 'compare', 'summarize', 'describe', 'design', 'implement'];
+            const hasActionVerb = actionVerbs.some(verb => prompt.toLowerCase().includes(verb));
+            if (hasActionVerb) {
+                analysis.score += 20;
+                analysis.items.push({ text: '✓ Contains clear action verb', positive: true });
+            } else {
+                analysis.items.push({ text: '⚠ Consider starting with an action verb', positive: false });
+            }
+
+            // Check for audience/level specification
+            const audienceKeywords = ['beginner', 'advanced', '10th grader', 'college', 'simple', 'complex', 'professional', 'student'];
+            const hasAudience = audienceKeywords.some(keyword => prompt.toLowerCase().includes(keyword));
+            if (hasAudience) {
+                analysis.score += 20;
+                analysis.items.push({ text: '✓ Specifies target audience/level', positive: true });
+            } else {
+                analysis.items.push({ text: '⚠ Consider specifying who the response is for', positive: false });
+            }
+
+            // Check for format specification
+            const formatKeywords = ['paragraph', 'list', 'table', 'code', 'steps', 'essay', 'bullet', 'numbered', 'with examples', 'include'];
+            const hasFormat = formatKeywords.some(keyword => prompt.toLowerCase().includes(keyword));
+            if (hasFormat) {
+                analysis.score += 20;
+                analysis.items.push({ text: '✓ Specifies desired format/structure', positive: true });
+            } else {
+                analysis.items.push({ text: '⚠ Be specific about the format or structure', positive: false });
+            }
+
+            // Check for constraints/requirements
+            if (prompt.includes('must') || prompt.includes('should') || prompt.includes('include') || /\b(steps?|points?|examples?|reasons?|causes?|effects?)\b/i.test(prompt)) {
+                analysis.score += 20;
+                analysis.items.push({ text: '✓ Includes specific requirements', positive: true });
+            } else {
+                analysis.items.push({ text: '⚠ Add specific requirements or constraints', positive: false });
+            }
+
+            return analysis;
+        }
+
+        // Display prompt analysis
+        function displayPromptAnalysis(analysis) {
+            const analysisContainer = document.getElementById('intermediate-analysis-items');
+            analysisContainer.innerHTML = '';
+
+            analysis.items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = item.positive 
+                    ? 'text-green-300' 
+                    : 'text-yellow-300';
+                div.textContent = item.text;
+                analysisContainer.appendChild(div);
+            });
+
+            // Add score
+            const scoreDiv = document.createElement('div');
+            scoreDiv.className = 'mt-3 pt-3 border-t border-slate-600 font-semibold';
+            scoreDiv.style.color = analysis.score >= 80 ? '#10b981' : analysis.score >= 60 ? '#f59e0b' : '#ef4444';
+            scoreDiv.textContent = `Overall Quality Score: ${analysis.score}/100`;
+            analysisContainer.appendChild(scoreDiv);
+        }
+
+        // Test intermediate prompt with AI
+        async function testIntermediatePrompt() {
+            const promptText = document.getElementById('intermediate-prompt-text').textContent;
+
+            const responseContainer = document.getElementById('intermediate-ai-response');
+            const responseText = document.getElementById('intermediate-ai-text');
+
+            responseContainer.classList.remove('hidden');
+            responseText.textContent = 'Generating AI response...';
+
+            try {
+                const response = await fetch(pythonURI + '/api/gemini', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: promptText,
+                        prompt: ''
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.text) {
+                    responseText.textContent = data.text;
+
+                    // Trigger MathJax if needed
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([responseText]).catch((err) => {
+                            console.error('MathJax rendering error:', err);
+                        });
+                    }
+                } else {
+                    responseText.textContent = 'Error: ' + (data.message || 'Could not generate response');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                responseText.textContent = 'Error: Could not connect to server. Please make sure you are logged in.';
+            }
+        }
+
+        // Show improvements for intermediate prompt
+        function showIntermediateImprovements() {
+            const improvements = [
+                'Add more specific context about what you\'re trying to accomplish',
+                'Include the desired length or amount of detail in the response',
+                'Specify any particular style, tone, or perspective you want',
+                'Break complex requests into multiple smaller, focused prompts',
+                'Include example outputs or formats to clarify what you want'
+            ];
+
+            const improvementsList = document.getElementById('intermediate-improvements-list');
+            improvementsList.innerHTML = '';
+
+            improvements.forEach(improvement => {
+                const li = document.createElement('li');
+                li.textContent = improvement;
+                improvementsList.appendChild(li);
+            });
+
+            document.getElementById('intermediate-improvements').classList.remove('hidden');
+        }
+
+        // Reset intermediate level
+        function resetIntermediate() {
+            selectedIntermediateSubject = null;
+            document.getElementById('intermediate-prompt-input').value = '';
+            document.getElementById('intermediate-output').classList.add('hidden');
+            document.getElementById('intermediate-ai-response').classList.add('hidden');
+            document.getElementById('intermediate-improvements').classList.add('hidden');
+            resetIntermediateChecklist();
+        }
+
+        // ==================== END INTERMEDIATE LEVEL FUNCTIONS ====================
         updateProgress();
         function showFeedbackModal() {
             console.log("showFeedbackModal called");
