@@ -2213,7 +2213,7 @@ date: 2025-10-30
                 const data = await response.json();
 
                 if (data.success && data.text) {
-                    responseText.textContent = data.text;
+                    responseText.innerHTML = formatMathResponse(data.text);
 
                     // Trigger MathJax if needed
                     if (window.MathJax && window.MathJax.typesetPromise) {
