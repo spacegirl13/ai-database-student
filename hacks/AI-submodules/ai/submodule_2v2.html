@@ -2593,8 +2593,8 @@ date: 2025-10-30
             }
 
             try {
-                // Load all questions from API
-                let url = pythonURI + '/api/science/questions';
+                // Load questions filtered by topic from API
+                let url = pythonURI + '/api/science/questions?topic=' + selectedScienceTopic;
                 console.log('Loading science questions with URL:', url);
                 console.log('Selected topic:', selectedScienceTopic);
 
@@ -2602,18 +2602,14 @@ date: 2025-10-30
                 const data = await response.json();
 
                 console.log('Science response data:', data);
-                console.log('Total questions received:', data.questions ? data.questions.length : 0);
+                console.log('Questions received:', data.questions ? data.questions.length : 0);
 
                 if (data.success && data.questions) {
-                    // Filter questions by selected topic on the client side
-                    const filteredQuestions = data.questions.filter(q => q.category === selectedScienceTopic);
-                    console.log('Filtered questions for', selectedScienceTopic + ':', filteredQuestions.length);
-
-                    if (filteredQuestions.length === 0) {
+                    if (data.questions.length === 0) {
                         document.getElementById('science-questions-container').innerHTML =
                             '<div class="text-center p-8 bg-yellow-900/20 rounded-lg border border-yellow-500/30"><p class="text-yellow-300">No questions found for this topic. Try selecting a different topic.</p></div>';
                     } else {
-                        displayScienceQuestions(filteredQuestions);
+                        displayScienceQuestions(data.questions);
                     }
                 } else {
                     throw new Error('Failed to load questions');
