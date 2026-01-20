@@ -893,13 +893,21 @@ date: 2025-10-30
                     <p class="text-lg mb-6">Choose your level and practice writing effective prompts!</p>
 
                     <!-- Level Selection -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
     <button onclick="showLevel('beginner')" id="level-beginner-btn"
         class="level-btn bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 py-6 px-8 rounded-lg font-bold text-xl text-left transition-all border-4 border-transparent">
         <div class="text-3xl mb-2">🌱</div>
         <div>Beginner Level</div>
         <div class="text-sm font-normal opacity-90 mt-1">Fill-in-the-blanks Mad Libs style</div>
     </button>
+    
+    <button onclick="showLevel('intermediate')" id="level-intermediate-btn"
+        class="level-btn bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 py-6 px-8 rounded-lg font-bold text-xl text-left transition-all border-4 border-transparent">
+        <div class="text-3xl mb-2">⚡</div>
+        <div>Intermediate Level</div>
+        <div class="text-sm font-normal opacity-90 mt-1">Build with component blocks</div>
+    </button>
+    
     <button onclick="showLevel('advanced')" id="level-advanced-btn"
         class="level-btn bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 py-6 px-8 rounded-lg font-bold text-xl text-left transition-all border-4 border-transparent">
         <div class="text-3xl mb-2">🚀</div>
@@ -978,7 +986,146 @@ date: 2025-10-30
                             </div>
                         </div>
                     </div>
+                    <!-- Intermediate Level: Building Blocks -->
+                    <div id="intermediate-level" class="hidden">
+                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 mb-6">
+                            <h3 class="text-2xl font-bold text-blue-300 mb-4">⚡ Intermediate: Build Your Prompt</h3>
+                            <p class="mb-4">Choose components and arrange them to create an effective prompt!</p>
 
+                            <!-- Subject Selection -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-semibold mb-3">Choose a subject:</label>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                    <button onclick="selectIntermediateSubject('math')" id="intermediate-math-btn"
+                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
+                                        🔢 Math
+                                    </button>
+                                    <button onclick="selectIntermediateSubject('science')" id="intermediate-science-btn"
+                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
+                                        🔬 Science
+                                    </button>
+                                    <button onclick="selectIntermediateSubject('cs')" id="intermediate-cs-btn"
+                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
+                                        💻 Comp Sci
+                                    </button>
+                                    <button onclick="selectIntermediateSubject('history')" id="intermediate-history-btn"
+                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
+                                        📜 History
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Building Blocks Interface -->
+                            <div id="intermediate-builder" class="hidden">
+                                <!-- Available Components -->
+                                <div class="bg-slate-800/50 rounded-lg p-6 mb-4">
+                                    <h4 class="text-lg font-semibold text-blue-300 mb-4">📦 Available Components (click to add):</h4>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                        <!-- Core Components (Required) -->
+                                        <div class="bg-slate-900/50 rounded-lg p-4 border-2 border-green-500/30">
+                                            <p class="text-green-300 font-semibold mb-3 text-sm">✅ Required Components:</p>
+                                            <div id="intermediate-required-components" class="space-y-2"></div>
+                                        </div>
+
+                                        <!-- Enhancement Components (Optional) -->
+                                        <div class="bg-slate-900/50 rounded-lg p-4 border-2 border-yellow-500/30">
+                                            <p class="text-yellow-300 font-semibold mb-3 text-sm">⭐ Enhancement Components:</p>
+                                            <div id="intermediate-optional-components" class="space-y-2"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Prompt Construction Area -->
+                                    <div class="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-2 border-blue-500/50 rounded-lg p-6">
+                                        <div class="flex justify-between items-center mb-4">
+                                            <h4 class="text-lg font-semibold text-blue-300">🔨 Your Prompt:</h4>
+                                            <div class="flex gap-2">
+                                                <button onclick="getPromptSuggestion()" 
+                                                    class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 rounded text-xs">
+                                                    💡 Get Hint
+                                                </button>
+                                                <button onclick="clearIntermediatePrompt()" 
+                                                    class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-xs">
+                                                    🗑️ Clear
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Drop Zone -->
+                                        <div id="intermediate-prompt-area" 
+                                            class="min-h-[200px] bg-slate-900 border-2 border-dashed border-blue-500/50 rounded-lg p-4 mb-4">
+                                            <p class="text-gray-500 text-center text-sm italic" id="intermediate-placeholder">
+                                                Click components above to add them here...
+                                            </p>
+                                            <div id="intermediate-selected-components" class="space-y-2"></div>
+                                        </div>
+
+                                        <!-- Hint Display -->
+                                        <div id="intermediate-hint" class="hidden bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3 mb-4">
+                                            <p class="text-yellow-300 text-sm"></p>
+                                        </div>
+
+                                        <!-- Progress Indicator -->
+                                        <div class="mb-4">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <span class="text-sm text-gray-400">Completeness:</span>
+                                                <span id="intermediate-progress-text" class="text-sm font-semibold text-blue-300">0/3 Required</span>
+                                            </div>
+                                            <div class="w-full bg-slate-700 rounded-full h-2">
+                                                <div id="intermediate-progress-bar" class="bg-blue-500 h-2 rounded-full transition-all w-0"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Action Buttons -->
+                                        <div class="grid md:grid-cols-3 gap-3">
+                                            <button onclick="analyzeIntermediatePrompt()"
+                                                class="px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded text-sm font-semibold">
+                                                📊 Analyze Quality
+                                            </button>
+                                            <button onclick="generateIntermediatePrompt()" id="intermediate-generate-btn"
+                                                class="px-4 py-3 bg-green-600 hover:bg-green-700 rounded text-sm font-semibold opacity-50 cursor-not-allowed" disabled>
+                                                ✨ Generate Full Prompt
+                                            </button>
+                                            <button onclick="testIntermediatePrompt()" id="intermediate-test-btn"
+                                                class="px-4 py-3 bg-purple-600 hover:bg-purple-700 rounded text-sm font-semibold opacity-50 cursor-not-allowed" disabled>
+                                                🤖 Test with AI
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Analysis Results -->
+                                <div id="intermediate-analysis" class="hidden mt-4 bg-slate-800/50 border border-purple-500/30 rounded-lg p-6">
+                                    <h4 class="text-lg font-semibold text-purple-300 mb-3">📊 Prompt Quality Analysis:</h4>
+                                    <div id="intermediate-analysis-content" class="space-y-3"></div>
+                                </div>
+
+                                <!-- Final Generated Prompt -->
+                                <div id="intermediate-final-output" class="hidden mt-4">
+                                    <div class="bg-green-900/30 border border-green-500/50 rounded-lg p-6">
+                                        <p class="text-sm text-green-300 mb-2">✅ Your Complete Prompt:</p>
+                                        <div id="intermediate-final-text" class="text-white text-lg font-semibold mb-4 leading-relaxed bg-slate-900/50 p-4 rounded"></div>
+                                        <div class="grid md:grid-cols-2 gap-3">
+                                            <button onclick="copyIntermediatePrompt()"
+                                                class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                                📋 Copy Prompt
+                                            </button>
+                                            <button onclick="resetIntermediate()"
+                                                class="px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded text-sm">
+                                                🔄 Start Over
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- AI Response -->
+                                    <div id="intermediate-ai-response" class="hidden mt-4 bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
+                                        <p class="text-sm text-purple-300 mb-2">AI Response:</p>
+                                        <div id="intermediate-ai-text" class="text-white text-sm whitespace-pre-wrap"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Advanced Level: Original Content -->
                     <div id="advanced-level" class="hidden">
 
@@ -1952,7 +2099,425 @@ date: 2025-10-30
         // PASTE IT IN YOUR <script> SECTION
         // RIGHT BEFORE THE LINE: // Initialize
         //                        updateProgress();
+        // ==================== INTERMEDIATE LEVEL FUNCTIONS ====================
 
+        let selectedIntermediateSubject = null;
+        let selectedComponents = [];
+        let intermediateComponents = {
+            math: {
+                required: [
+                    { id: 'topic', label: 'What to solve', placeholder: 'quadratic equation x² + 5x + 6 = 0', category: 'topic' },
+                    { id: 'method', label: 'How to solve', placeholder: 'using the quadratic formula', category: 'method' },
+                    { id: 'explanation', label: 'Show your work', placeholder: 'step-by-step with explanations', category: 'detail' }
+                ],
+                optional: [
+                    { id: 'level', label: 'Difficulty level', placeholder: 'for a beginner', category: 'context' },
+                    { id: 'format', label: 'Output format', placeholder: 'include a graph', category: 'format' },
+                    { id: 'verify', label: 'Verification', placeholder: 'verify the answer at the end', category: 'extra' }
+                ],
+                hints: [
+                    "Start with what you want to solve",
+                    "Specify the method to use",
+                    "Ask for step-by-step explanations",
+                    "Consider adding your skill level",
+                    "Think about how you want the answer formatted"
+                ]
+            },
+            science: {
+                required: [
+                    { id: 'topic', label: 'Science topic', placeholder: 'photosynthesis', category: 'topic' },
+                    { id: 'audience', label: 'Target audience', placeholder: 'for a 10th grader', category: 'context' },
+                    { id: 'details', label: 'What to include', placeholder: 'the chemical equation and process steps', category: 'detail' }
+                ],
+                optional: [
+                    { id: 'analogy', label: 'Use analogies', placeholder: 'include a simple analogy', category: 'extra' },
+                    { id: 'examples', label: 'Real examples', placeholder: 'with real-world examples', category: 'extra' },
+                    { id: 'tone', label: 'Writing style', placeholder: 'using conversational language', category: 'format' }
+                ],
+                hints: [
+                    "State the topic clearly",
+                    "Who is this explanation for?",
+                    "What specific details should be included?",
+                    "Would an analogy help understanding?",
+                    "Should it connect to real-world examples?"
+                ]
+            },
+            cs: {
+                required: [
+                    { id: 'task', label: 'Coding task', placeholder: 'a function to calculate factorial', category: 'topic' },
+                    { id: 'language', label: 'Language', placeholder: 'in Python', category: 'context' },
+                    { id: 'requirements', label: 'Code requirements', placeholder: 'with error handling', category: 'detail' }
+                ],
+                optional: [
+                    { id: 'comments', label: 'Documentation', placeholder: 'include detailed comments', category: 'extra' },
+                    { id: 'tests', label: 'Test cases', placeholder: 'with 3 test cases', category: 'extra' },
+                    { id: 'style', label: 'Code style', placeholder: 'following best practices', category: 'format' }
+                ],
+                hints: [
+                    "What should the code do?",
+                    "Which programming language?",
+                    "What are the key requirements?",
+                    "Should it include comments?",
+                    "Do you need test cases?"
+                ]
+            },
+            history: {
+                required: [
+                    { id: 'event', label: 'Historical event', placeholder: 'the American Revolution', category: 'topic' },
+                    { id: 'focus', label: 'Focus area', placeholder: 'focusing on the main causes', category: 'detail' },
+                    { id: 'details', label: 'Specific details', placeholder: 'include at least 5 key dates', category: 'detail' }
+                ],
+                optional: [
+                    { id: 'format', label: 'Presentation', placeholder: 'in a timeline format', category: 'format' },
+                    { id: 'perspective', label: 'Viewpoint', placeholder: 'from multiple perspectives', category: 'extra' },
+                    { id: 'connection', label: 'Modern relevance', placeholder: 'connect to today\'s world', category: 'extra' }
+                ],
+                hints: [
+                    "Which historical event or period?",
+                    "What aspect should be emphasized?",
+                    "What specific details are needed?",
+                    "How should it be presented?",
+                    "Should it include different perspectives?"
+                ]
+            }
+        };
+
+        // Select intermediate subject
+        function selectIntermediateSubject(subject) {
+            selectedIntermediateSubject = subject;
+            selectedComponents = [];
+
+            // Update button styles
+            document.querySelectorAll('.intermediate-subject-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'border-blue-500');
+                btn.classList.add('bg-slate-700', 'border-slate-600');
+            });
+            document.getElementById(`intermediate-${subject}-btn`).classList.add('bg-blue-600', 'border-blue-500');
+            document.getElementById(`intermediate-${subject}-btn`).classList.remove('bg-slate-700', 'border-slate-600');
+
+            // Load components
+            loadIntermediateComponents();
+
+            // Show builder
+            document.getElementById('intermediate-builder').classList.remove('hidden');
+            document.getElementById('intermediate-analysis').classList.add('hidden');
+            document.getElementById('intermediate-final-output').classList.add('hidden');
+        }
+
+        // Load components for selected subject
+        function loadIntermediateComponents() {
+            const components = intermediateComponents[selectedIntermediateSubject];
+            const requiredContainer = document.getElementById('intermediate-required-components');
+            const optionalContainer = document.getElementById('intermediate-optional-components');
+
+            // Clear containers
+            requiredContainer.innerHTML = '';
+            optionalContainer.innerHTML = '';
+
+            // Load required components
+            components.required.forEach(comp => {
+                requiredContainer.innerHTML += createComponentButton(comp, true);
+            });
+
+            // Load optional components
+            components.optional.forEach(comp => {
+                optionalContainer.innerHTML += createComponentButton(comp, false);
+            });
+
+            updateIntermediateProgress();
+        }
+
+        // Create component button HTML
+        function createComponentButton(comp, required) {
+            const borderColor = required ? 'green' : 'yellow';
+            return `
+                <button onclick="addIntermediateComponent('${comp.id}', ${required})" 
+                    id="comp-btn-${comp.id}"
+                    class="w-full text-left px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded border-2 border-${borderColor}-500/30 transition-all text-sm">
+                    <div class="font-semibold text-${borderColor}-300">${comp.label}</div>
+                    <div class="text-xs text-gray-400 mt-1">${comp.placeholder}</div>
+                </button>
+            `;
+        }
+
+        // Add component to prompt
+        function addIntermediateComponent(compId, required) {
+            const components = [...intermediateComponents[selectedIntermediateSubject].required, 
+                            ...intermediateComponents[selectedIntermediateSubject].optional];
+            const component = components.find(c => c.id === compId);
+
+            // Check if already added
+            if (selectedComponents.find(c => c.id === compId)) {
+                return;
+            }
+
+            selectedComponents.push(component);
+            renderSelectedComponents();
+            updateIntermediateProgress();
+
+            // Disable button
+            const btn = document.getElementById(`comp-btn-${compId}`);
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btn.disabled = true;
+        }
+
+        // Render selected components
+        function renderSelectedComponents() {
+            const container = document.getElementById('intermediate-selected-components');
+            const placeholder = document.getElementById('intermediate-placeholder');
+
+            if (selectedComponents.length === 0) {
+                placeholder.classList.remove('hidden');
+                container.innerHTML = '';
+                return;
+            }
+
+            placeholder.classList.add('hidden');
+            container.innerHTML = selectedComponents.map((comp, index) => `
+                <div class="flex items-start gap-3 bg-slate-800 border border-blue-500/30 rounded-lg p-3">
+                    <div class="flex-1">
+                        <label class="block text-xs font-semibold text-blue-300 mb-1">${comp.label}:</label>
+                        <input type="text" 
+                            id="comp-input-${comp.id}" 
+                            placeholder="${comp.placeholder}"
+                            value="${comp.placeholder}"
+                            class="w-full px-3 py-2 bg-slate-900 border border-blue-500/30 rounded text-white text-sm">
+                    </div>
+                    <button onclick="removeIntermediateComponent('${comp.id}')" 
+                        class="mt-6 px-2 py-1 bg-red-600 hover:bg-red-700 rounded text-xs">
+                        ✕
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Remove component
+        function removeIntermediateComponent(compId) {
+            selectedComponents = selectedComponents.filter(c => c.id !== compId);
+            renderSelectedComponents();
+            updateIntermediateProgress();
+
+            // Re-enable button
+            const btn = document.getElementById(`comp-btn-${compId}`);
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.disabled = false;
+        }
+
+        // Update progress
+        function updateIntermediateProgress() {
+            const requiredComponents = intermediateComponents[selectedIntermediateSubject].required;
+            const requiredCount = selectedComponents.filter(c => 
+                requiredComponents.find(r => r.id === c.id)
+            ).length;
+
+            const total = requiredComponents.length;
+            const percentage = (requiredCount / total) * 100;
+
+            document.getElementById('intermediate-progress-bar').style.width = percentage + '%';
+            document.getElementById('intermediate-progress-text').textContent = `${requiredCount}/${total} Required`;
+
+            // Enable/disable generate button
+            const generateBtn = document.getElementById('intermediate-generate-btn');
+            if (requiredCount === total) {
+                generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                generateBtn.disabled = false;
+            } else {
+                generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                generateBtn.disabled = true;
+            }
+        }
+
+        // Get prompt suggestion
+        function getPromptSuggestion() {
+            const hints = intermediateComponents[selectedIntermediateSubject].hints;
+            const currentHint = hints[selectedComponents.length] || hints[hints.length - 1];
+            
+            const hintDiv = document.getElementById('intermediate-hint');
+            hintDiv.querySelector('p').textContent = '💡 ' + currentHint;
+            hintDiv.classList.remove('hidden');
+
+            setTimeout(() => {
+                hintDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Clear prompt
+        function clearIntermediatePrompt() {
+            if (confirm('Clear all components?')) {
+                // Re-enable all buttons
+                selectedComponents.forEach(comp => {
+                    const btn = document.getElementById(`comp-btn-${comp.id}`);
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    btn.disabled = false;
+                });
+
+                selectedComponents = [];
+                renderSelectedComponents();
+                updateIntermediateProgress();
+                document.getElementById('intermediate-analysis').classList.add('hidden');
+                document.getElementById('intermediate-final-output').classList.add('hidden');
+            }
+        }
+
+        // Analyze intermediate prompt
+        function analyzeIntermediatePrompt() {
+            if (selectedComponents.length === 0) {
+                alert('Add some components first!');
+                return;
+            }
+
+            const requiredComponents = intermediateComponents[selectedIntermediateSubject].required;
+            const hasAllRequired = requiredComponents.every(req => 
+                selectedComponents.find(c => c.id === req.id)
+            );
+
+            const analysisContainer = document.getElementById('intermediate-analysis-content');
+            let score = 0;
+            let feedback = [];
+
+            // Check required components
+            if (hasAllRequired) {
+                score += 60;
+                feedback.push({ icon: '✅', text: 'All required components included', color: 'green' });
+            } else {
+                const missing = requiredComponents.filter(req => 
+                    !selectedComponents.find(c => c.id === req.id)
+                );
+                feedback.push({ 
+                    icon: '❌', 
+                    text: `Missing required: ${missing.map(m => m.label).join(', ')}`, 
+                    color: 'red' 
+                });
+            }
+
+            // Check optional components
+            const optionalCount = selectedComponents.filter(c => 
+                intermediateComponents[selectedIntermediateSubject].optional.find(o => o.id === c.id)
+            ).length;
+            
+            score += optionalCount * 10;
+            if (optionalCount > 0) {
+                feedback.push({ 
+                    icon: '⭐', 
+                    text: `${optionalCount} enhancement component${optionalCount > 1 ? 's' : ''} added`, 
+                    color: 'yellow' 
+                });
+            }
+
+            // Check if inputs are filled
+            const filledInputs = selectedComponents.filter(c => {
+                const input = document.getElementById(`comp-input-${c.id}`);
+                return input && input.value.trim() !== '';
+            }).length;
+
+            if (filledInputs === selectedComponents.length) {
+                score += 20;
+                feedback.push({ icon: '✅', text: 'All fields are filled in', color: 'green' });
+            } else {
+                feedback.push({ icon: '⚠️', text: 'Some fields need more detail', color: 'yellow' });
+            }
+
+            // Display analysis
+            analysisContainer.innerHTML = `
+                <div class="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-lg p-4 mb-3">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold mb-2">${Math.min(score, 100)}/100</div>
+                        <div class="text-sm text-gray-300">Quality Score</div>
+                    </div>
+                </div>
+                ${feedback.map(f => `
+                    <div class="flex items-center gap-3 bg-${f.color}-900/20 border border-${f.color}-500/30 rounded-lg p-3">
+                        <span class="text-xl">${f.icon}</span>
+                        <span class="text-${f.color}-300">${f.text}</span>
+                    </div>
+                `).join('')}
+            `;
+
+            document.getElementById('intermediate-analysis').classList.remove('hidden');
+        }
+
+        // Generate intermediate prompt
+        function generateIntermediatePrompt() {
+            const promptParts = selectedComponents.map(comp => {
+                const input = document.getElementById(`comp-input-${comp.id}`);
+                return input ? input.value.trim() : comp.placeholder;
+            });
+
+            const fullPrompt = promptParts.join(' ');
+            
+            document.getElementById('intermediate-final-text').textContent = fullPrompt;
+            document.getElementById('intermediate-final-output').classList.remove('hidden');
+
+            // Enable test button
+            const testBtn = document.getElementById('intermediate-test-btn');
+            testBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            testBtn.disabled = false;
+        }
+
+        // Test intermediate prompt
+        async function testIntermediatePrompt() {
+            const promptText = document.getElementById('intermediate-final-text').textContent;
+            const responseContainer = document.getElementById('intermediate-ai-response');
+            const responseText = document.getElementById('intermediate-ai-text');
+
+            responseContainer.classList.remove('hidden');
+            responseText.innerHTML = 'Generating AI response...';
+
+            try {
+                const response = await fetch(pythonURI + '/api/gemini', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: promptText,
+                        prompt: ''
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.text) {
+                    responseText.innerHTML = formatMathResponse(data.text);
+
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        window.MathJax.typesetPromise([responseText]).catch((err) => {
+                            console.error('MathJax rendering error:', err);
+                        });
+                    }
+                } else {
+                    responseText.innerHTML = 'Error: ' + (data.message || 'Could not generate response');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                responseText.innerHTML = 'Error: Could not connect to server. Please make sure you are logged in.';
+            }
+        }
+
+        // Copy intermediate prompt
+        function copyIntermediatePrompt() {
+            const promptText = document.getElementById('intermediate-final-text').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                alert('Prompt copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // Reset intermediate
+        function resetIntermediate() {
+            clearIntermediatePrompt();
+            document.getElementById('intermediate-builder').classList.add('hidden');
+            selectedIntermediateSubject = null;
+            
+            document.querySelectorAll('.intermediate-subject-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'border-blue-500');
+                btn.classList.add('bg-slate-700', 'border-slate-600');
+            });
+        }
+
+        // ==================== END INTERMEDIATE LEVEL FUNCTIONS ====================
         // ==================== MAD LIBS PROMPT BUILDER ====================
 
         let selectedMadLibSubject = null;
@@ -2086,13 +2651,10 @@ date: 2025-10-30
             document.getElementById(`level-${level}-btn`).classList.add('border-yellow-400');
 
             // Show appropriate level
-            if (level === 'beginner') {
-                document.getElementById('beginner-level').classList.remove('hidden');
-                document.getElementById('advanced-level').classList.add('hidden');
-            } else {
-                document.getElementById('beginner-level').classList.add('hidden');
-                document.getElementById('advanced-level').classList.remove('hidden');
-            }
+            document.getElementById('beginner-level').classList.add('hidden');
+            document.getElementById('intermediate-level').classList.add('hidden');
+            document.getElementById('advanced-level').classList.add('hidden');
+            document.getElementById(`${level}-level`).classList.remove('hidden');
 
             window.scrollTo({ top: document.getElementById('section-5').offsetTop - 100, behavior: 'smooth' });
         }
@@ -3130,6 +3692,16 @@ date: 2025-10-30
         window.toggleSciencePrompt = toggleSciencePrompt;
         window.autofillSciencePrompt = autofillSciencePrompt;
         window.copySciencePrompt = copySciencePrompt;
+        window.selectIntermediateSubject = selectIntermediateSubject;
+        window.addIntermediateComponent = addIntermediateComponent;
+        window.removeIntermediateComponent = removeIntermediateComponent;
+        window.getPromptSuggestion = getPromptSuggestion;
+        window.clearIntermediatePrompt = clearIntermediatePrompt;
+        window.analyzeIntermediatePrompt = analyzeIntermediatePrompt;
+        window.generateIntermediatePrompt = generateIntermediatePrompt;
+        window.testIntermediatePrompt = testIntermediatePrompt;
+        window.copyIntermediatePrompt = copyIntermediatePrompt;
+        window.resetIntermediate = resetIntermediate;
 
         // Track if the user has visited the math and science sections
         let hasVisitedMathSection = false;
