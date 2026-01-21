@@ -15,6 +15,81 @@ date: 2025-10-30
         overflow-x: auto;
         margin-bottom: 25px;
     }
+    #badgeDisplay {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 200px;
+        background: white;
+        border: 2px solid #333;
+        padding: 10px;
+        z-index: 10000;
+    }
+
+    #badgeDisplay h3 {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .badge-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        padding: 5px;
+        border: 1px solid #ddd;
+    }
+
+    .badge-item img {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+    }
+
+    .badge-item span {
+        font-size: 11px;
+        flex: 1;
+    }
+
+    /* Badge Notification Popup */
+    #badgeNotification {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 3px solid gold;
+        padding: 30px;
+        z-index: 10001;
+        display: none;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    #badgeNotification.show {
+        display: block;
+    }
+
+    #badgeNotification img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 15px;
+    }
+
+    #badgeNotification h2 {
+        margin: 0 0 10px 0;
+        color: gold;
+    }
+
+    #badgeNotification button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: #0066cc;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
 
     .default-table {
         width: 100%;
@@ -67,7 +142,21 @@ date: 2025-10-30
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Badge Display Box -->
+<div id="badgeDisplay">
+    <h3>Badges</h3>
+    <div id="badgeList">
+        <p style="font-size: 11px; color: #999;">No badges yet</p>
+    </div>
+</div>
 
+<!-- Badge Notification Popup -->
+<div id="badgeNotification">
+    <img id="badgeNotificationImage" src="" alt="Badge">
+    <h2 id="badgeNotificationName"></h2>
+    <p id="badgeNotificationDescription"></p>
+    <button onclick="closeBadgeNotification()">Awesome!</button>
+</div>
 <div style="max-width: 900px; margin: 40px auto;">
     <h1 style="text-align: center; margin-bottom: 30px;">AI Usage Survey</h1>
 
@@ -203,8 +292,68 @@ date: 2025-10-30
 <script type="module">
     import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
     const API_URL = pythonURI + '/api';
+    // === BADGE SYSTEM ===
+    let earnedBadges = [];
 
-    let charts = {};
+    async function loadUserBadges() {
+        try {
+            const response = await fetch(`${pythonURI}/api/badges/my-badges`, {
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.badges) {
+                    earnedBadges = data.badges;
+                    updateBadgeDisplay();
+                }
+            }
+        } catch (error) {
+            console.error('Error loading badges:', error);
+        }
+    }
+
+    function updateBadgeDisplay() {
+        const badgeList = document.getElementById('badgeList');
+        
+        if (earnedBadges.length === 0) {
+            badgeList.innerHTML = '<p style="font-size: 11px; color: #999;">No badges yet</p>';
+            return;
+        }
+        
+        badgeList.innerHTML = earnedBadges.map(badge => `
+            <div class="badge-item">
+                <img src="${badge.image_url}" alt="${badge.name}">
+                <span>${badge.name}</span>
+            </div>
+        `).join('');
+    }
+
+    function showBadgeNotification(badge) {
+        const notification = document.getElementById('badgeNotification');
+        document.getElementById('badgeNotificationImage').src = badge.image_url;
+        document.getElementById('badgeNotificationName').textContent = badge.name;
+        document.getElementById('badgeNotificationDescription').textContent = badge.description;
+        notification.classList.add('show');
+    }
+
+    function closeBadgeNotification() {
+        document.getElementById('badgeNotification').classList.remove('show');
+    }
+
+    function handleBadgeAward(responseData) {
+        if (responseData.badge_awarded === true && responseData.badge) {
+            const badge = responseData.badge;
+            
+            if (!earnedBadges.find(b => b.id === badge.id)) {
+                earnedBadges.push(badge);
+                updateBadgeDisplay();
+                showBadgeNotification(badge);
+            }
+        }
+    }
+    // === END BADGE SYSTEM ===
+        let charts = {};
 
     async function loadSurveyData() {
         try {
@@ -277,6 +426,7 @@ date: 2025-10-30
             if (!response.ok) throw new Error('Failed to submit');
 
             const result = await response.json();
+            handleBadgeAward(result);
             console.log('API response:', result);
 
             // Handle both {data: {...}} and direct {...} response structures
@@ -356,4 +506,5 @@ date: 2025-10-30
     }
 
     window.addEventListener('DOMContentLoaded', loadSurveyData);
+    loadUserBadges();
 </script>

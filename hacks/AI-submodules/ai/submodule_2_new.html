@@ -77,7 +77,91 @@ date: 2025-10-30
             overflow-y: auto;
             pointer-events: all !important;
         }
+        /* Badge Display Box - Upper Right Corner */
+            #badgeDisplay {
+            position: fixed !important;
+            top: 20px !important;
+            right: 20px !important;
+            width: 200px !important;
+            background: white !important;
+            border: 2px solid #333 !important;
+            padding: 10px !important;
+            z-index: 10000 !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
 
+        #badgeDisplay h3 {
+        margin: 0 0 10px 0 !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
+        color: #000 !important;
+        }
+
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .badge-item img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .badge-item span {
+            font-size: 11px;
+            flex: 1;
+            color: #000;
+        }
+
+        /* Badge Notification Popup */
+        #badgeNotification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 3px solid gold;
+            padding: 30px;
+            z-index: 10001;
+            display: none;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        #badgeNotification.show {
+            display: block;
+        }
+
+        #badgeNotification img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 15px;
+        }
+
+        #badgeNotification h2 {
+            margin: 0 0 10px 0;
+            color: gold;
+        }
+
+        #badgeNotification p {
+            color: #000;
+        }
+
+        #badgeNotification button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
         #feedbackModal .modal {
             background: white !important;
             width: 90% !important;
@@ -275,7 +359,21 @@ date: 2025-10-30
 </head>
 
 <body class="text-white">
+<!-- Badge Display Box -->
+    <div id="badgeDisplay">
+        <h3>Badges</h3>
+        <div id="badgeList">
+            <p style="font-size: 11px; color: #999;">No badges yet</p>
+        </div>
+    </div>
 
+    <!-- Badge Notification Popup -->
+    <div id="badgeNotification">
+        <img id="badgeNotificationImage" src="" alt="Badge">
+        <h2 id="badgeNotificationName"></h2>
+        <p id="badgeNotificationDescription"></p>
+        <button onclick="closeBadgeNotification()">Awesome!</button>
+    </div>
     <!-- PROGRESS BAR -->
     <div class="max-w-7xl mx-auto px-4 mb-6 pt-4">
         <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
@@ -340,7 +438,7 @@ date: 2025-10-30
                 </button>
             </div>
         </div>
-
+        
         <!-- SECTION 0: Introduction -->
         <div id="section-0" class="mission-section">
             <div class="space-y-6">
@@ -616,7 +714,7 @@ date: 2025-10-30
                                 </div>
                             </div>
                         </div>
-
+                        
                         <!-- Activity 2: Building Based on Challenges -->
                         <div id="activity-2" class="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border-2 border-purple-500/50 rounded-lg p-6 mt-6 hidden">
                             <h4 class="text-xl font-bold text-purple-300 mb-4">💻 Activity 2: Building Based on Challenges</h4>
@@ -1172,6 +1270,67 @@ date: 2025-10-30
 
     <!-- SCRIPTS -->
     <script>
+    // === BADGE SYSTEM ===
+        let earnedBadges = [];
+
+        async function loadUserBadges() {
+            try {
+                const response = await fetch('http://localhost:8402/api/badges/my-badges', {
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.badges) {
+                        earnedBadges = data.badges;
+                        updateBadgeDisplay();
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading badges:', error);
+            }
+        }
+
+        function updateBadgeDisplay() {
+            const badgeList = document.getElementById('badgeList');
+            
+            if (earnedBadges.length === 0) {
+                badgeList.innerHTML = '<p style="font-size: 11px; color: #999;">No badges yet</p>';
+                return;
+            }
+            
+            badgeList.innerHTML = earnedBadges.map(badge => `
+                <div class="badge-item">
+                    <img src="${badge.image_url}" alt="${badge.name}">
+                    <span>${badge.name}</span>
+                </div>
+            `).join('');
+        }
+
+        function showBadgeNotification(badge) {
+            const notification = document.getElementById('badgeNotification');
+            document.getElementById('badgeNotificationImage').src = badge.image_url;
+            document.getElementById('badgeNotificationName').textContent = badge.name;
+            document.getElementById('badgeNotificationDescription').textContent = badge.description;
+            notification.classList.add('show');
+        }
+
+        function closeBadgeNotification() {
+            document.getElementById('badgeNotification').classList.remove('show');
+        }
+
+        function handleBadgeAward(responseData) {
+            if (responseData.badge_awarded === true && responseData.badge) {
+                const badge = responseData.badge;
+                
+                if (!earnedBadges.find(b => b.id === badge.id)) {
+                    earnedBadges.push(badge);
+                    updateBadgeDisplay();
+                    showBadgeNotification(badge);
+                }
+            }
+        }
+        // === END BADGE SYSTEM ===
         // Progress bar update
         function updateProgress() {
             const sections = ['section-0', 'section-1', 'section-2', 'section-3', 'section-4', 'section-5'];
@@ -1314,6 +1473,7 @@ date: 2025-10-30
                 }
 
                 const data = await response.json();
+                handleBadgeAward(data);
                 outputEl.textContent = data.response;
 
                 // Reload the good prompts feed to show the new prompt
@@ -1330,6 +1490,7 @@ date: 2025-10-30
         window.addEventListener('DOMContentLoaded', () => {
             loadPrompts('bad');
             loadPrompts('good');
+            loadUserBadges();
         });
 
         // Feedback modal
@@ -2661,6 +2822,8 @@ async function completeSubmodule2() {
         }
 
         const result = await response.json();
+        handleBadgeAward(result);
+
 
         if (result.badge_awarded === true && result.badge) {
             alert(`Congratulations! Badge Earned: ${result.badge.name}`);

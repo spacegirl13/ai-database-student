@@ -41,7 +41,88 @@ date: 2025-10-30
         margin-bottom: 10px;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
+    /* Badge Display Box - Upper Right Corner */
+    #badgeDisplay {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 200px;
+        background: white;
+        border: 2px solid #333;
+        padding: 10px;
+        z-index: 10000;
+    }
 
+    #badgeDisplay h3 {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        font-weight: bold;
+        color: #000;
+    }
+
+    .badge-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        padding: 5px;
+        border: 1px solid #ddd;
+    }
+
+    .badge-item img {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+    }
+
+    .badge-item span {
+        font-size: 11px;
+        flex: 1;
+        color: #000;
+    }
+
+    /* Badge Notification Popup */
+    #badgeNotification {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 3px solid gold;
+        padding: 30px;
+        z-index: 10001;
+        display: none;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    #badgeNotification.show {
+        display: block;
+    }
+
+    #badgeNotification img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 15px;
+    }
+
+    #badgeNotification h2 {
+        margin: 0 0 10px 0;
+        color: gold;
+    }
+
+    #badgeNotification p {
+        color: #000;
+    }
+
+    #badgeNotification button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background: #0066cc;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
     .game-header p {
         font-size: 1.1em;
         opacity: 0.9;
@@ -785,6 +866,21 @@ date: 2025-10-30
         color: white;
     }
 </style>
+<!-- Badge Display Box -->
+<div id="badgeDisplay">
+    <h3>Badges</h3>
+    <div id="badgeList">
+        <p style="font-size: 11px; color: #999;">No badges yet</p>
+    </div>
+</div>
+
+<!-- Badge Notification Popup -->
+<div id="badgeNotification">
+    <img id="badgeNotificationImage" src="" alt="Badge">
+    <h2 id="badgeNotificationName"></h2>
+    <p id="badgeNotificationDescription"></p>
+    <button onclick="closeBadgeNotification()">Awesome!</button>
+</div>
 
 <div class="leaderboard-panel">
     <div class="panel-header">
@@ -1076,7 +1172,67 @@ date: 2025-10-30
 <script type="module">
     import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
     const API_URL = pythonURI + '/api/prompt-game';
+    // === BADGE SYSTEM ===
+    let earnedBadges = [];
 
+    async function loadUserBadges() {
+        try {
+            const response = await fetch('http://localhost:8402/api/badges/my-badges', {
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.badges) {
+                    earnedBadges = data.badges;
+                    updateBadgeDisplay();
+                }
+            }
+        } catch (error) {
+            console.error('Error loading badges:', error);
+        }
+    }
+
+    function updateBadgeDisplay() {
+        const badgeList = document.getElementById('badgeList');
+        
+        if (earnedBadges.length === 0) {
+            badgeList.innerHTML = '<p style="font-size: 11px; color: #999;">No badges yet</p>';
+            return;
+        }
+        
+        badgeList.innerHTML = earnedBadges.map(badge => `
+            <div class="badge-item">
+                <img src="${badge.image_url}" alt="${badge.name}">
+                <span>${badge.name}</span>
+            </div>
+        `).join('');
+    }
+
+    function showBadgeNotification(badge) {
+        const notification = document.getElementById('badgeNotification');
+        document.getElementById('badgeNotificationImage').src = badge.image_url;
+        document.getElementById('badgeNotificationName').textContent = badge.name;
+        document.getElementById('badgeNotificationDescription').textContent = badge.description;
+        notification.classList.add('show');
+    }
+
+    function closeBadgeNotification() {
+        document.getElementById('badgeNotification').classList.remove('show');
+    }
+
+    function handleBadgeAward(responseData) {
+        if (responseData.badge_awarded === true && responseData.badge) {
+            const badge = responseData.badge;
+            
+            if (!earnedBadges.find(b => b.id === badge.id)) {
+                earnedBadges.push(badge);
+                updateBadgeDisplay();
+                showBadgeNotification(badge);
+            }
+        }
+    }
+    // === END BADGE SYSTEM ===
     let playerName = '';
     let currentQuestionIndex = 0;
     let score = 0;
@@ -1515,6 +1671,7 @@ date: 2025-10-30
         });
 
         const result = await response.json();
+        handleBadgeAward(result);
 
         // Show badge notification if awarded
         if (result.badge_awarded === true && result.badge) {
@@ -1616,6 +1773,7 @@ date: 2025-10-30
 
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('playerName').focus();
+        loadUserBadges();
 
         document.getElementById('playerName').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -1761,6 +1919,7 @@ date: 2025-10-30
     }
 
     function showCheckForUnderstanding() {
+        completeSubmodule3();
         const feedbackModal = document.getElementById("feedbackModal");
         if (feedbackModal) {
             feedbackModal.style.display = "none";
@@ -1772,7 +1931,22 @@ date: 2025-10-30
 
         loadConceptsDataForModal();
     }
+    async function completeSubmodule3() {
+        try {
+            const response = await fetch(pythonURI + '/api/prompt-game/complete', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' }
+            });
 
+            if (response.ok) {
+                const result = await response.json();
+                handleBadgeAward(result);
+            }
+        } catch (error) {
+            console.error('Error completing submodule:', error);
+        }
+    }
     const conceptsResultContainerModal = document.getElementById("conceptsResultModal");
 
     function loadConceptsDataForModal() {
