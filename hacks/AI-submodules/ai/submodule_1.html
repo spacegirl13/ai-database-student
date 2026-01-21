@@ -245,96 +245,49 @@ date: 2025-10-30
     window.autofillQuestion7 = autofillQuestion7;
 
     async function submitSurvey() {
-        const formData = {
-            english: document.querySelector('input[name="english"]:checked')?.value,
-            math: document.querySelector('input[name="math"]:checked')?.value,
-            science: document.querySelector('input[name="science"]:checked')?.value,
-            cs: document.querySelector('input[name="cs"]:checked')?.value,
-            history: document.querySelector('input[name="history"]:checked')?.value,
-            useAI: document.querySelector('input[name="useAI"]:checked')?.value,
-            frq: document.querySelector('textarea[name="frq"]').value
-        };
+    const formData = {
+        english: document.querySelector('input[name="english"]:checked')?.value,
+        math: document.querySelector('input[name="math"]:checked')?.value,
+        science: document.querySelector('input[name="science"]:checked')?.value,
+        cs: document.querySelector('input[name="cs"]:checked')?.value,
+        history: document.querySelector('input[name="history"]:checked')?.value,
+        useAI: document.querySelector('input[name="useAI"]:checked')?.value,
+        frq: document.querySelector('textarea[name="frq"]').value
+    };
 
-        if (!formData.english || !formData.math || !formData.science || !formData.cs || !formData.history || !formData.useAI || !formData.frq) {
-            alert('Please answer all questions before submitting.');
-            return;
-        }
-
-        try {
-            const response = await fetch(`${API_URL}/survey`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-
-            if (!response.ok) throw new Error('Failed to submit');
-
-            const result = await response.json();
-
-            document.getElementById('successMessage').style.display = 'block';
-            document.getElementById('aiPollForm').style.display = 'none';
-            document.getElementById('resultsContainer').style.display = 'block';
-
-            displayResults(result.data);
-            displayRecentFRQs(result.data.frqs.slice(0, 3), 'recentFRQs');
-
-            window.scrollTo({ top: document.getElementById('resultsContainer').offsetTop - 100, behavior: 'smooth' });
-
-        } catch (error) {
-            console.error('Error:', error);
-            alert('There was an error submitting your survey. Please make sure the Flask server is running at ' + API_URL);
-        }
+    if (!formData.english || !formData.math || !formData.science || !formData.cs || !formData.history || !formData.useAI || !formData.frq) {
+        alert('Please answer all questions before submitting.');
+        return;
     }
 
-    window.submitSurvey = submitSurvey;
-
-    function displayResults(data) {
-        createChart('englishChart', 'English', data.english);
-        createChart('mathChart', 'Math', data.math);
-        createChart('scienceChart', 'Science', data.science);
-        createChart('csChart', 'Computer Science', data.cs);
-        createChart('historyChart', 'History', data.history);
-        createChart('useAIChart', 'Use AI', data.useAI);
-    }
-
-    function createChart(canvasId, label, data) {
-        const ctx = document.getElementById(canvasId);
-
-        if (charts[canvasId]) {
-            charts[canvasId].destroy();
-        }
-
-        charts[canvasId] = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(data),
-                datasets: [{
-                    label: 'Votes',
-                    data: Object.values(data),
-                    backgroundColor: '#0066cc',
-                    borderColor: '#0052a3',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
-            }
+    try {
+        const response = await fetch(`${API_URL}/survey`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',  //FIXED: This should be on its own line
+            body: JSON.stringify(formData)
         });
-    }
 
-    window.addEventListener('DOMContentLoaded', loadSurveyData);
-</script>
+        if (!response.ok) throw new Error('Failed to submit');
+
+        const result = await response.json();
+
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('aiPollForm').style.display = 'none';
+        document.getElementById('resultsContainer').style.display = 'block';
+
+        displayResults(result.data);
+        displayRecentFRQs(result.data.frqs.slice(0, 3), 'recentFRQs');
+
+        // FIXED: Badge notification should be here, properly indented
+        if (result.badge_awarded) {
+            alert(`Badge Earned: ${result.badge_awarded.name}!`);
+        }
+
+        window.scrollTo({ top: document.getElementById('resultsContainer').offsetTop - 100, behavior: 'smooth' });
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error submitting your survey. Please make sure the Flask server is running at ' + API_URL);
+    }
+}

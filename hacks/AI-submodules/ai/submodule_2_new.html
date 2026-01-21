@@ -1087,7 +1087,7 @@ date: 2025-10-30
                 <h3 style="font-size:28px; margin-top:10px; color:#1f2937; font-weight: 700;">Thank you!</h3>
                 <p style="color: #6b7280; font-size: 16px; margin: 10px 0 20px 0;">Your feedback helps us improve the
                     module!</p>
-                <button onclick="closeModal()"
+                <<button onclick="completeSubmodule2()"
                     style="margin-top:20px; padding:14px 28px; background:#10b981; color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Continue</button>
             </div>
         </div>
@@ -2647,30 +2647,66 @@ date: 2025-10-30
         let hasVisitedScienceSection = false;
 
         // Load questions when the math, science, or CS section is accessed
-        document.addEventListener('DOMContentLoaded', () => {
-            // Load questions immediately if already on math/science/cs section, or when navigating to it
-            const originalGoToSection = window.goToSection;
-            window.goToSection = function (sectionIndex) {
-                originalGoToSection(sectionIndex);
-                if (sectionIndex === 1) { // Math section is section 1
-                    // Show topic modal on first visit to math section
-                    if (!hasVisitedMathSection) {
-                        hasVisitedMathSection = true;
-                        setTimeout(() => showMathTopicModal(), 300);
-                    }
-                    loadMathQuestions();
-                } else if (sectionIndex === 2) { // Science section is section 2
-                    // Show topic modal on first visit to science section
-                    if (!hasVisitedScienceSection) {
-                        hasVisitedScienceSection = true;
-                        setTimeout(() => showScienceTopicModal(), 300);
-                    }
-                    loadScienceQuestions();
-                } else if (sectionIndex === 3) { // Computer Science section is section 3
-                    loadCodingQuestions();
-                }
-            };
+        // ==================== BADGE COMPLETION FUNCTION ====================
+async function completeSubmodule2() {
+    try {
+        const response = await fetch('http://localhost:8402/api/prompts/complete', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' }
         });
+
+        if (!response.ok) {
+            throw new Error('Failed to complete submodule');
+        }
+
+        const result = await response.json();
+
+        if (result.badge_awarded) {
+            alert(`Congratulations! Badge Earned: ${result.badge.name}`);
+        }
+
+        // Close the modal
+        closeModal();
+
+        // Redirect after a short delay
+        setTimeout(() => {
+            window.location.href = '../index.html';
+        }, 2000);
+
+    } catch (error) {
+        console.error('Error completing submodule:', error);
+        alert('Module completed, but there was an issue awarding the badge. Please check your login status.');
+        closeModal();
+    }
+}
+
+// Load questions when the math, science, or CS section is accessed
+document.addEventListener('DOMContentLoaded', () => {
+    // Load questions immediately if already on math/science/cs section, or when navigating to it
+    const originalGoToSection = window.goToSection;
+    window.goToSection = function (sectionIndex) {
+        originalGoToSection(sectionIndex);
+        if (sectionIndex === 1) { // Math section is section 1
+            // Show topic modal on first visit to math section
+            if (!hasVisitedMathSection) {
+                hasVisitedMathSection = true;
+                setTimeout(() => showMathTopicModal(), 300);
+            }
+            loadMathQuestions();
+        } else if (sectionIndex === 2) { // Science section is section 2
+            // Show topic modal on first visit to science section
+            if (!hasVisitedScienceSection) {
+                hasVisitedScienceSection = true;
+                setTimeout(() => showScienceTopicModal(), 300);
+            }
+            loadScienceQuestions();
+        } else if (sectionIndex === 3) { // Computer Science section is section 3
+            loadCodingQuestions();
+        }
+    };
+});
+
     </script>
 
 </body>
