@@ -245,49 +245,137 @@ date: 2025-10-30
     window.autofillQuestion7 = autofillQuestion7;
 
     async function submitSurvey() {
-    const formData = {
-        english: document.querySelector('input[name="english"]:checked')?.value,
-        math: document.querySelector('input[name="math"]:checked')?.value,
-        science: document.querySelector('input[name="science"]:checked')?.value,
-        cs: document.querySelector('input[name="cs"]:checked')?.value,
-        history: document.querySelector('input[name="history"]:checked')?.value,
-        useAI: document.querySelector('input[name="useAI"]:checked')?.value,
-        frq: document.querySelector('textarea[name="frq"]').value
-    };
+        const formData = {
+            english: document.querySelector('input[name="english"]:checked')?.value,
+            math: document.querySelector('input[name="math"]:checked')?.value,
+            science: document.querySelector('input[name="science"]:checked')?.value,
+            cs: document.querySelector('input[name="cs"]:checked')?.value,
+            history: document.querySelector('input[name="history"]:checked')?.value,
+            useAI: document.querySelector('input[name="useAI"]:checked')?.value,
+            frq: document.querySelector('textarea[name="frq"]').value
+        };
 
-    if (!formData.english || !formData.math || !formData.science || !formData.cs || !formData.history || !formData.useAI || !formData.frq) {
-        alert('Please answer all questions before submitting.');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_URL}/survey`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',  //FIXED: This should be on its own line
-            body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) throw new Error('Failed to submit');
-
-        const result = await response.json();
-
-        document.getElementById('successMessage').style.display = 'block';
-        document.getElementById('aiPollForm').style.display = 'none';
-        document.getElementById('resultsContainer').style.display = 'block';
-
-        displayResults(result.data);
-        displayRecentFRQs(result.data.frqs.slice(0, 3), 'recentFRQs');
-
-        // FIXED: Badge notification should be here, properly indented
-        if (result.badge_awarded) {
-            alert(`Badge Earned: ${result.badge_awarded.name}!`);
+        if (!formData.english || !formData.math || !formData.science || !formData.cs || !formData.history || !formData.useAI || !formData.frq) {
+            alert('Please answer all questions before submitting.');
+            return;
         }
 
-        window.scrollTo({ top: document.getElementById('resultsContainer').offsetTop - 100, behavior: 'smooth' });
+        try {
+            const response = await fetch(`${API_URL}/survey`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(formData)
+            });
 
-    } catch (error) {
-        console.error('Error:', error);
-        alert('There was an error submitting your survey. Please make sure the Flask server is running at ' + API_URL);
+            if (!response.ok) throw new Error('Failed to submit');
+
+            const result = await response.json();
+
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('aiPollForm').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'block';
+
+            displayResults(result.data);
+            displayRecentFRQs(result.data.frqs.slice(0, 3), 'recentFRQs');
+
+            if (result.badge_awarded) {
+                alert(`Badge Earned: ${result.badge_awarded.name}!`);
+            }
+
+            window.scrollTo({ top: document.getElementById('resultsContainer').offsetTop - 100, behavior: 'smooth' });
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('There was an error submitting your survey. Please make sure the Flask server is running at ' + API_URL);
+        }
     }
-}
+
+    function displayResults(data) {
+        // Destroy old charts if they exist
+        Object.values(charts).forEach(chart => {
+            if (chart) chart.destroy();
+        });
+        
+        // Colors for each AI tool
+        const colors = {
+            'ChatGPT': '#10a37f',
+            'Claude': '#CC785C',
+            'Gemini': '#4285f4',
+            'Copilot': '#0078d4'
+        };
+        
+        // Make charts for each subject
+        const subjects = ['english', 'math', 'science', 'cs', 'history'];
+        
+        subjects.forEach(subject => {
+            const canvas = document.getElementById(`${subject}Chart`);
+            if (canvas) {
+                const subjectData = data.subjects[subject];
+                charts[subject] = new Chart(canvas, {
+                    type: 'bar',
+                    data: {
+                        labels: ['ChatGPT', 'Claude', 'Gemini', 'Copilot'],
+                        datasets: [{
+                            label: 'Number of Students',
+                            data: [
+                                subjectData['ChatGPT'] || 0,
+                                subjectData['Claude'] || 0,
+                                subjectData['Gemini'] || 0,
+                                subjectData['Copilot'] || 0
+                            ],
+                            backgroundColor: [
+                                colors['ChatGPT'],
+                                colors['Claude'],
+                                colors['Gemini'],
+                                colors['Copilot']
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Make pie chart for "Do you use AI?"
+        const useAICanvas = document.getElementById('useAIChart');
+        if (useAICanvas) {
+            charts.useAI = new Chart(useAICanvas, {
+                type: 'pie',
+                data: {
+                    labels: ['Yes', 'No'],
+                    datasets: [{
+                        data: [
+                            data.use_ai['Yes'] || 0,
+                            data.use_ai['No'] || 0
+                        ],
+                        backgroundColor: ['#0066cc', '#ff6b6b']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+    }
+
+    window.submitSurvey = submitSurvey;
+    window.displayResults = displayResults;
+
+    // Load survey data when page loads
+    loadSurveyData();
+</script>
