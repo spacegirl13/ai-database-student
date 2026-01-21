@@ -986,146 +986,512 @@ date: 2025-10-30
                             </div>
                         </div>
                     </div>
-                    <!-- Intermediate Level: Building Blocks -->
-                    <div id="intermediate-level" class="hidden">
-                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 mb-6">
-                            <h3 class="text-2xl font-bold text-blue-300 mb-4">⚡ Intermediate: Build Your Prompt</h3>
-                            <p class="mb-4">Choose components and arrange them to create an effective prompt!</p>
+                   <!-- INTERMEDIATE LEVEL: Prompt Improvement Challenge -->
+<div id="intermediate-level" class="hidden">
+    <div class="bg-orange-900/20 border border-orange-500/30 rounded-lg p-6 mb-6">
+        <h3 class="text-2xl font-bold text-orange-300 mb-4">🎯 Intermediate: Prompt Improvement Challenge</h3>
+        <p class="mb-6">You're given a weak prompt. Rewrite it to make it better, then test it with AI to see how much you improved!</p>
 
-                            <!-- Subject Selection -->
-                            <div class="mb-6">
-                                <label class="block text-sm font-semibold mb-3">Choose a subject:</label>
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                    <button onclick="selectIntermediateSubject('math')" id="intermediate-math-btn"
-                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
-                                        🔢 Math
-                                    </button>
-                                    <button onclick="selectIntermediateSubject('science')" id="intermediate-science-btn"
-                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
-                                        🔬 Science
-                                    </button>
-                                    <button onclick="selectIntermediateSubject('cs')" id="intermediate-cs-btn"
-                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
-                                        💻 Comp Sci
-                                    </button>
-                                    <button onclick="selectIntermediateSubject('history')" id="intermediate-history-btn"
-                                        class="intermediate-subject-btn bg-slate-700 hover:bg-blue-600 py-3 rounded-lg border-2 border-slate-600 transition-all">
-                                        📜 History
-                                    </button>
-                                </div>
-                            </div>
+        <!-- Subject Selection -->
+        <div class="mb-6">
+            <label class="block text-sm font-semibold mb-3">Choose a challenge:</label>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <button onclick="selectInterChallenge('math')" id="inter-math-btn"
+                    class="inter-subject-btn bg-slate-700 hover:bg-orange-600 py-3 rounded-lg border-2 border-slate-600 transition-all font-semibold">
+                    🔢 Math
+                </button>
+                <button onclick="selectInterChallenge('science')" id="inter-science-btn"
+                    class="inter-subject-btn bg-slate-700 hover:bg-orange-600 py-3 rounded-lg border-2 border-slate-600 transition-all font-semibold">
+                    🔬 Science
+                </button>
+                <button onclick="selectInterChallenge('cs')" id="inter-cs-btn"
+                    class="inter-subject-btn bg-slate-700 hover:bg-orange-600 py-3 rounded-lg border-2 border-slate-600 transition-all font-semibold">
+                    💻 Comp Sci
+                </button>
+                <button onclick="selectInterChallenge('history')" id="inter-history-btn"
+                    class="inter-subject-btn bg-slate-700 hover:bg-orange-600 py-3 rounded-lg border-2 border-slate-600 transition-all font-semibold">
+                    📜 History
+                </button>
+            </div>
+        </div>
 
-                            <!-- Building Blocks Interface -->
-                            <div id="intermediate-builder" class="hidden">
-                                <!-- Available Components -->
-                                <div class="bg-slate-800/50 rounded-lg p-6 mb-4">
-                                    <h4 class="text-lg font-semibold text-blue-300 mb-4">📦 Available Components (click to add):</h4>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                        <!-- Core Components (Required) -->
-                                        <div class="bg-slate-900/50 rounded-lg p-4 border-2 border-green-500/30">
-                                            <p class="text-green-300 font-semibold mb-3 text-sm">✅ Required Components:</p>
-                                            <div id="intermediate-required-components" class="space-y-2"></div>
-                                        </div>
+        <!-- Main Challenge Area -->
+        <div id="inter-challenge" class="hidden">
+            <!-- Three Column Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                
+                <!-- LEFT: Weak Prompt (Given) -->
+                <div class="bg-red-900/20 border-2 border-red-500/40 rounded-lg p-5">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-2xl">❌</span>
+                        <h4 class="text-lg font-bold text-red-300">Weak Prompt (Given)</h4>
+                    </div>
+                    <div class="bg-slate-800/50 rounded-lg p-4 min-h-[150px]">
+                        <p id="weak-prompt-display" class="text-gray-300 text-base leading-relaxed font-medium"></p>
+                    </div>
+                    <div class="mt-3 text-xs text-red-400 space-y-1">
+                        <p>❌ Too vague</p>
+                        <p>❌ No context</p>
+                        <p>❌ Missing details</p>
+                    </div>
+                </div>
 
-                                        <!-- Enhancement Components (Optional) -->
-                                        <div class="bg-slate-900/50 rounded-lg p-4 border-2 border-yellow-500/30">
-                                            <p class="text-yellow-300 font-semibold mb-3 text-sm">⭐ Enhancement Components:</p>
-                                            <div id="intermediate-optional-components" class="space-y-2"></div>
-                                        </div>
-                                    </div>
+                <!-- MIDDLE: Student's Improved Version -->
+                <div class="bg-orange-900/20 border-2 border-orange-500/40 rounded-lg p-5">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-2xl">✏️</span>
+                        <h4 class="text-lg font-bold text-orange-300">Your Improved Version</h4>
+                    </div>
+                    
+                    <textarea id="student-improved-prompt" 
+                        rows="6" 
+                        placeholder="Rewrite the prompt here to make it better..."
+                        class="w-full p-4 rounded-lg bg-slate-800 border-2 border-orange-500/50 text-white text-sm resize-none focus:border-orange-400 focus:outline-none"
+                        oninput="analyzeStudentPrompt()"></textarea>
 
-                                    <!-- Prompt Construction Area -->
-                                    <div class="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-2 border-blue-500/50 rounded-lg p-6">
-                                        <div class="flex justify-between items-center mb-4">
-                                            <h4 class="text-lg font-semibold text-blue-300">🔨 Your Prompt:</h4>
-                                            <div class="flex gap-2">
-                                                <button onclick="getPromptSuggestion()" 
-                                                    class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 rounded text-xs">
-                                                    💡 Get Hint
-                                                </button>
-                                                <button onclick="clearIntermediatePrompt()" 
-                                                    class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-xs">
-                                                    🗑️ Clear
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <!-- Drop Zone -->
-                                        <div id="intermediate-prompt-area" 
-                                            class="min-h-[200px] bg-slate-900 border-2 border-dashed border-blue-500/50 rounded-lg p-4 mb-4">
-                                            <p class="text-gray-500 text-center text-sm italic" id="intermediate-placeholder">
-                                                Click components above to add them here...
-                                            </p>
-                                            <div id="intermediate-selected-components" class="space-y-2"></div>
-                                        </div>
-
-                                        <!-- Hint Display -->
-                                        <div id="intermediate-hint" class="hidden bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3 mb-4">
-                                            <p class="text-yellow-300 text-sm"></p>
-                                        </div>
-
-                                        <!-- Progress Indicator -->
-                                        <div class="mb-4">
-                                            <div class="flex justify-between items-center mb-2">
-                                                <span class="text-sm text-gray-400">Completeness:</span>
-                                                <span id="intermediate-progress-text" class="text-sm font-semibold text-blue-300">0/3 Required</span>
-                                            </div>
-                                            <div class="w-full bg-slate-700 rounded-full h-2">
-                                                <div id="intermediate-progress-bar" class="bg-blue-500 h-2 rounded-full transition-all w-0"></div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Action Buttons -->
-                                        <div class="grid md:grid-cols-3 gap-3">
-                                            <button onclick="analyzeIntermediatePrompt()"
-                                                class="px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded text-sm font-semibold">
-                                                📊 Analyze Quality
-                                            </button>
-                                            <button onclick="generateIntermediatePrompt()" id="intermediate-generate-btn"
-                                                class="px-4 py-3 bg-green-600 hover:bg-green-700 rounded text-sm font-semibold opacity-50 cursor-not-allowed" disabled>
-                                                ✨ Generate Full Prompt
-                                            </button>
-                                            <button onclick="testIntermediatePrompt()" id="intermediate-test-btn"
-                                                class="px-4 py-3 bg-purple-600 hover:bg-purple-700 rounded text-sm font-semibold opacity-50 cursor-not-allowed" disabled>
-                                                🤖 Test with AI
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Analysis Results -->
-                                <div id="intermediate-analysis" class="hidden mt-4 bg-slate-800/50 border border-purple-500/30 rounded-lg p-6">
-                                    <h4 class="text-lg font-semibold text-purple-300 mb-3">📊 Prompt Quality Analysis:</h4>
-                                    <div id="intermediate-analysis-content" class="space-y-3"></div>
-                                </div>
-
-                                <!-- Final Generated Prompt -->
-                                <div id="intermediate-final-output" class="hidden mt-4">
-                                    <div class="bg-green-900/30 border border-green-500/50 rounded-lg p-6">
-                                        <p class="text-sm text-green-300 mb-2">✅ Your Complete Prompt:</p>
-                                        <div id="intermediate-final-text" class="text-white text-lg font-semibold mb-4 leading-relaxed bg-slate-900/50 p-4 rounded"></div>
-                                        <div class="grid md:grid-cols-2 gap-3">
-                                            <button onclick="copyIntermediatePrompt()"
-                                                class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
-                                                📋 Copy Prompt
-                                            </button>
-                                            <button onclick="resetIntermediate()"
-                                                class="px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded text-sm">
-                                                🔄 Start Over
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- AI Response -->
-                                    <div id="intermediate-ai-response" class="hidden mt-4 bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
-                                        <p class="text-sm text-purple-300 mb-2">AI Response:</p>
-                                        <div id="intermediate-ai-text" class="text-white text-sm whitespace-pre-wrap"></div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="mt-4 space-y-2">
+                        <button onclick="getHint()" 
+                            class="w-full bg-yellow-600 hover:bg-yellow-700 py-2 rounded-lg font-semibold transition-all text-sm">
+                            💡 Get Hint
+                        </button>
+                        
+                        <!-- Hint Display -->
+                        <div id="hint-display" class="hidden bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-3 text-xs text-yellow-200">
                         </div>
                     </div>
+                </div>
+
+                <!-- RIGHT: Quality Analysis -->
+                <div class="bg-blue-900/20 border-2 border-blue-500/40 rounded-lg p-5">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-2xl">📊</span>
+                        <h4 class="text-lg font-bold text-blue-300">Analysis</h4>
+                    </div>
+                    
+                    <!-- Quality Score -->
+                    <div class="mb-4 p-4 bg-slate-800/70 rounded-lg border border-blue-500/30">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-semibold">Quality Score:</span>
+                            <span id="quality-score" class="text-3xl font-bold text-gray-400">--</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-4">
+                            <div id="quality-bar" class="bg-gray-500 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Improvement Checklist -->
+                    <div class="space-y-2 text-sm">
+                        <div id="check-specificity" class="flex items-center gap-2 text-gray-400">
+                            <span class="text-lg">⚪</span>
+                            <span>Specificity</span>
+                        </div>
+                        <div id="check-context" class="flex items-center gap-2 text-gray-400">
+                            <span class="text-lg">⚪</span>
+                            <span>Context provided</span>
+                        </div>
+                        <div id="check-detail" class="flex items-center gap-2 text-gray-400">
+                            <span class="text-lg">⚪</span>
+                            <span>Detail level</span>
+                        </div>
+                        <div id="check-length" class="flex items-center gap-2 text-gray-400">
+                            <span class="text-lg">⚪</span>
+                            <span>Sufficient length</span>
+                        </div>
+                    </div>
+
+                    <!-- Feedback -->
+                    <div id="feedback-display" class="mt-4 p-3 bg-slate-800/50 rounded-lg text-xs text-gray-400 min-h-[60px]">
+                        <p>Start typing to see feedback...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+                <button onclick="testWithAI()" 
+                    class="bg-green-600 hover:bg-green-700 py-4 rounded-lg font-bold text-lg transition-all">
+                    🤖 Test My Improved Prompt with AI
+                </button>
+                <button onclick="showAnswer()" 
+                    class="bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-bold text-lg transition-all">
+                    ✅ Show Example Answer
+                </button>
+            </div>
+
+            <!-- AI Response Section -->
+            <div id="inter-ai-response" class="hidden mb-6">
+                <div class="bg-green-900/20 border-2 border-green-500/40 rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-xl font-bold text-green-300">AI Response to Your Prompt:</h4>
+                        <span id="response-quality" class="text-sm font-semibold"></span>
+                    </div>
+                    <div id="inter-ai-text" class="bg-slate-900/50 rounded-lg p-5 text-white text-sm whitespace-pre-wrap min-h-[120px]"></div>
+                    
+                    <!-- Response Analysis -->
+                    <div id="response-analysis" class="mt-4 p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+                        <p class="font-semibold text-blue-300 mb-2">Response Quality:</p>
+                        <p id="response-feedback" class="text-sm text-gray-300"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example Answer Section -->
+            <div id="example-answer" class="hidden">
+                <div class="bg-purple-900/20 border-2 border-purple-500/40 rounded-lg p-6">
+                    <h4 class="text-xl font-bold text-purple-300 mb-4">Example Improved Prompt:</h4>
+                    <div class="bg-slate-800/70 rounded-lg p-5 mb-4">
+                        <p id="example-prompt-text" class="text-white text-base leading-relaxed"></p>
+                    </div>
+                    
+                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                        <p class="font-semibold text-green-300 mb-2">Why this is better:</p>
+                        <div id="example-explanation" class="text-sm text-gray-300 space-y-2"></div>
+                    </div>
+
+                    <button onclick="tryAnotherChallenge()" 
+                        class="mt-4 w-full bg-orange-600 hover:bg-orange-700 py-3 rounded-lg font-semibold">
+                        🎲 Try Another Challenge
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ==================== INTERMEDIATE LEVEL - MANUAL IMPROVEMENT ====================
+
+let currentInterChallenge = null;
+let hintsUsed = 0;
+
+const interChallenges = {
+    math: {
+        weak: "help with math",
+        example: "I need help solving quadratic equations using the quadratic formula. I'm a high school algebra student preparing for my midterm exam. Please show me each step with explanations, include an example problem, and explain common mistakes to avoid.",
+        hints: [
+            "Make it more specific - what type of math problem?",
+            "Add context - who are you and why do you need this?",
+            "Request specific details - what should the explanation include?"
+        ],
+        keywords: {
+            specific: ['quadratic', 'equation', 'formula', 'derivative', 'integral', 'geometry', 'algebra', 'calculus'],
+            context: ['student', 'grade', 'class', 'test', 'exam', 'homework', 'studying'],
+            detail: ['step', 'explain', 'example', 'show', 'include', 'detail', 'mistake', 'common']
+        },
+        explanation: [
+            "✅ Specifies the exact math topic (quadratic equations)",
+            "✅ Mentions the method (quadratic formula)",
+            "✅ Provides context (high school algebra student, midterm prep)",
+            "✅ Requests step-by-step explanations",
+            "✅ Asks for examples and common mistakes"
+        ]
+    },
+    science: {
+        weak: "explain photosynthesis",
+        example: "Explain the light-dependent and light-independent reactions in photosynthesis to a 10th grade biology student. I need to understand this for my upcoming quiz on cellular processes. Include the chemical equations, describe the role of chlorophyll, explain where each stage occurs in the chloroplast, and provide a real-world analogy.",
+        hints: [
+            "Be more specific about which aspect of photosynthesis",
+            "Who is the audience? What's your background level?",
+            "What specific information should be included in the explanation?"
+        ],
+        keywords: {
+            specific: ['light-dependent', 'light-independent', 'reaction', 'chloroplast', 'cellular', 'chemical'],
+            context: ['grade', 'student', 'class', 'quiz', 'test', 'biology', 'understand'],
+            detail: ['equation', 'role', 'explain', 'describe', 'include', 'analogy', 'example']
+        },
+        explanation: [
+            "✅ Specifies which aspects (light-dependent and light-independent reactions)",
+            "✅ Defines audience level (10th grade biology student)",
+            "✅ Provides purpose (upcoming quiz on cellular processes)",
+            "✅ Lists specific details needed (equations, chlorophyll role, location)",
+            "✅ Requests helpful teaching tools (real-world analogy)"
+        ]
+    },
+    cs: {
+        weak: "code help",
+        example: "In Python, help me write a function that finds the largest number in a list. I'm a beginner programmer taking my first Python course and working on a homework assignment about lists and loops. Include detailed comments explaining each line, provide 2-3 test cases with expected outputs, and explain the time complexity.",
+        hints: [
+            "What programming language and what specific task?",
+            "What's your experience level and why do you need this?",
+            "What should be included in the code (comments, examples, etc.)?"
+        ],
+        keywords: {
+            specific: ['python', 'function', 'list', 'loop', 'array', 'javascript', 'java', 'algorithm'],
+            context: ['beginner', 'course', 'class', 'homework', 'assignment', 'learning', 'student'],
+            detail: ['comment', 'explain', 'example', 'test', 'case', 'output', 'complexity']
+        },
+        explanation: [
+            "✅ Specifies language (Python) and exact task (find largest number)",
+            "✅ Provides experience level (beginner, first Python course)",
+            "✅ Gives context (homework assignment on lists and loops)",
+            "✅ Requests detailed comments on each line",
+            "✅ Asks for test cases and complexity explanation"
+        ]
+    },
+    history: {
+        weak: "tell me about the war",
+        example: "Explain the main political, economic, and social causes that led to World War I. I'm writing a 5-paragraph essay for my AP European History class analyzing the origins of WWI. Include at least 3 major causes with specific examples, mention key dates and figures, explain how these causes interconnected, and discuss different historical perspectives.",
+        hints: [
+            "Which war? What specific aspect are you interested in?",
+            "What's your purpose and academic level?",
+            "What kind of information and depth do you need?"
+        ],
+        keywords: {
+            specific: ['world war', 'wwi', 'cause', 'political', 'economic', 'social', 'origin'],
+            context: ['essay', 'class', 'AP', 'history', 'writing', 'analyzing', 'student'],
+            detail: ['specific', 'example', 'date', 'figure', 'explain', 'perspective', 'interconnect']
+        },
+        explanation: [
+            "✅ Specifies which war and what aspects (WWI causes - political, economic, social)",
+            "✅ Provides academic context (AP European History essay)",
+            "✅ States the purpose (analyzing origins)",
+            "✅ Requests specific number of causes with examples",
+            "✅ Asks for dates, key figures, interconnections, and multiple perspectives"
+        ]
+    }
+};
+
+function selectInterChallenge(subject) {
+    currentInterChallenge = subject;
+    hintsUsed = 0;
+
+    // Update button styles
+    document.querySelectorAll('.inter-subject-btn').forEach(btn => {
+        btn.classList.remove('bg-orange-600', 'border-orange-500');
+        btn.classList.add('bg-slate-700', 'border-slate-600');
+    });
+    document.getElementById(`inter-${subject}-btn`).classList.add('bg-orange-600', 'border-orange-500');
+    document.getElementById(`inter-${subject}-btn`).classList.remove('bg-slate-700', 'border-slate-600');
+
+    // Reset UI
+    document.getElementById('student-improved-prompt').value = '';
+    document.getElementById('hint-display').classList.add('hidden');
+    document.getElementById('inter-ai-response').classList.add('hidden');
+    document.getElementById('example-answer').classList.add('hidden');
+    
+    // Show challenge
+    document.getElementById('inter-challenge').classList.remove('hidden');
+    
+    // Display weak prompt
+    const challenge = interChallenges[currentInterChallenge];
+    document.getElementById('weak-prompt-display').textContent = challenge.weak;
+    
+    // Reset analysis
+    resetAnalysis();
+}
+
+function resetAnalysis() {
+    document.getElementById('quality-score').textContent = '--';
+    document.getElementById('quality-bar').style.width = '0%';
+    document.getElementById('quality-bar').className = 'bg-gray-500 h-4 rounded-full transition-all duration-500';
+    
+    ['check-specificity', 'check-context', 'check-detail', 'check-length'].forEach(id => {
+        const el = document.getElementById(id);
+        el.className = 'flex items-center gap-2 text-gray-400';
+        el.querySelector('span').textContent = '⚪';
+    });
+    
+    document.getElementById('feedback-display').innerHTML = '<p>Start typing to see feedback...</p>';
+}
+
+function analyzeStudentPrompt() {
+    const studentPrompt = document.getElementById('student-improved-prompt').value.trim();
+    
+    if (!studentPrompt) {
+        resetAnalysis();
+        return;
+    }
+    
+    const challenge = interChallenges[currentInterChallenge];
+    const lowerPrompt = studentPrompt.toLowerCase();
+    
+    let score = 0;
+    let checks = {
+        specificity: false,
+        context: false,
+        detail: false,
+        length: false
+    };
+    
+    // Check specificity
+    if (challenge.keywords.specific.some(kw => lowerPrompt.includes(kw))) {
+        checks.specificity = true;
+        score += 25;
+    }
+    
+    // Check context
+    if (challenge.keywords.context.some(kw => lowerPrompt.includes(kw))) {
+        checks.context = true;
+        score += 25;
+    }
+    
+    // Check detail
+    if (challenge.keywords.detail.some(kw => lowerPrompt.includes(kw))) {
+        checks.detail = true;
+        score += 25;
+    }
+    
+    // Check length
+    if (studentPrompt.length > 50) {
+        checks.length = true;
+        score += 25;
+    }
+    
+    // Update UI
+    updateCheck('check-specificity', checks.specificity);
+    updateCheck('check-context', checks.context);
+    updateCheck('check-detail', checks.detail);
+    updateCheck('check-length', checks.length);
+    
+    // Update score
+    document.getElementById('quality-score').textContent = score + '%';
+    document.getElementById('quality-bar').style.width = score + '%';
+    
+    if (score >= 75) {
+        document.getElementById('quality-bar').className = 'bg-green-500 h-4 rounded-full transition-all duration-500';
+        document.getElementById('quality-score').className = 'text-3xl font-bold text-green-400';
+    } else if (score >= 50) {
+        document.getElementById('quality-bar').className = 'bg-yellow-500 h-4 rounded-full transition-all duration-500';
+        document.getElementById('quality-score').className = 'text-3xl font-bold text-yellow-400';
+    } else {
+        document.getElementById('quality-bar').className = 'bg-red-500 h-4 rounded-full transition-all duration-500';
+        document.getElementById('quality-score').className = 'text-3xl font-bold text-red-400';
+    }
+    
+    // Update feedback
+    let feedback = [];
+    if (!checks.specificity) feedback.push("❌ Add more specific details about the topic");
+    if (!checks.context) feedback.push("❌ Provide context about yourself and your purpose");
+    if (!checks.detail) feedback.push("❌ Specify what details you want included");
+    if (!checks.length) feedback.push("❌ Your prompt is too short - add more information");
+    
+    if (score === 100) {
+        feedback = ["✅ Excellent! Your prompt looks great!"];
+    } else if (score >= 75) {
+        feedback = ["🎯 Good job! " + (feedback.length > 0 ? "Consider: " + feedback.join(", ") : "")];
+    }
+    
+    document.getElementById('feedback-display').innerHTML = feedback.map(f => `<p>${f}</p>`).join('');
+}
+
+function updateCheck(id, passed) {
+    const el = document.getElementById(id);
+    if (passed) {
+        el.className = 'flex items-center gap-2 text-green-400';
+        el.querySelector('span').textContent = '✅';
+    } else {
+        el.className = 'flex items-center gap-2 text-gray-400';
+        el.querySelector('span').textContent = '⚪';
+    }
+}
+
+function getHint() {
+    const challenge = interChallenges[currentInterChallenge];
+    const hintEl = document.getElementById('hint-display');
+    
+    if (hintsUsed >= challenge.hints.length) {
+        hintEl.className = 'bg-blue-900/30 border border-blue-500/50 rounded-lg p-3 text-xs text-blue-200';
+        hintEl.textContent = "💡 No more hints! Try using the 'Show Example Answer' button.";
+        hintEl.classList.remove('hidden');
+        return;
+    }
+    
+    hintEl.className = 'bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-3 text-xs text-yellow-200';
+    hintEl.textContent = `💡 Hint ${hintsUsed + 1}: ${challenge.hints[hintsUsed]}`;
+    hintEl.classList.remove('hidden');
+    hintsUsed++;
+}
+
+async function testWithAI() {
+    const studentPrompt = document.getElementById('student-improved-prompt').value.trim();
+    
+    if (!studentPrompt) {
+        alert('Please write your improved prompt first!');
+        return;
+    }
+    
+    const responseContainer = document.getElementById('inter-ai-response');
+    const responseText = document.getElementById('inter-ai-text');
+    
+    responseContainer.classList.remove('hidden');
+    responseText.textContent = 'Generating AI response...';
+    
+    try {
+        const response = await fetch(pythonURI + '/api/gemini', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                text: studentPrompt,
+                prompt: ''
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success && data.text) {
+            responseText.textContent = data.text;
+            
+            // Analyze response quality
+            const score = parseInt(document.getElementById('quality-score').textContent);
+            const feedbackEl = document.getElementById('response-feedback');
+            const qualityEl = document.getElementById('response-quality');
+            
+            if (score >= 75) {
+                feedbackEl.textContent = "✅ Great! Your improved prompt produced a detailed, helpful response. The AI understood exactly what you needed.";
+                qualityEl.textContent = "High Quality Response";
+                qualityEl.className = "text-sm font-semibold text-green-400";
+            } else if (score >= 50) {
+                feedbackEl.textContent = "⚠️ Good effort! The response is okay, but with more detail in your prompt, you could get an even better answer.";
+                qualityEl.textContent = "Moderate Quality Response";
+                qualityEl.className = "text-sm font-semibold text-yellow-400";
+            } else {
+                feedbackEl.textContent = "❌ The response might be too generic. Try improving your prompt with more specificity and context.";
+                qualityEl.textContent = "Basic Response";
+                qualityEl.className = "text-sm font-semibold text-red-400";
+            }
+        } else {
+            responseText.textContent = 'Error: ' + (data.message || 'Could not generate response');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        responseText.textContent = 'Error: Could not connect to server. Please make sure you are logged in.';
+    }
+    
+    setTimeout(() => {
+        responseContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+}
+
+function showAnswer() {
+    const challenge = interChallenges[currentInterChallenge];
+    
+    document.getElementById('example-prompt-text').textContent = challenge.example;
+    document.getElementById('example-explanation').innerHTML = challenge.explanation.map(e => `<p>${e}</p>`).join('');
+    
+    document.getElementById('example-answer').classList.remove('hidden');
+    
+    setTimeout(() => {
+        document.getElementById('example-answer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+}
+
+function tryAnotherChallenge() {
+    const subjects = ['math', 'science', 'cs', 'history'];
+    const otherSubjects = subjects.filter(s => s !== currentInterChallenge);
+    const randomSubject = otherSubjects[Math.floor(Math.random() * otherSubjects.length)];
+    
+    selectInterChallenge(randomSubject);
+    window.scrollTo({ top: document.getElementById('section-5').offsetTop - 100, behavior: 'smooth' });
+}
+
+// ==================== END INTERMEDIATE LEVEL ====================
+</script>
+
+                
+                  
                     <!-- Advanced Level: Original Content -->
                     <div id="advanced-level" class="hidden">
 
