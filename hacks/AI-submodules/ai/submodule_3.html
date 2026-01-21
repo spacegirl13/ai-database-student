@@ -1486,34 +1486,49 @@ date: 2025-10-30
     }
 
     async function endGame() {
-        showScreen('resultsScreen');
+    showScreen('resultsScreen');
 
-        document.getElementById('finalScore').textContent = score;
-        document.getElementById('finalPlayerName').textContent = playerName;
+    document.getElementById('finalScore').textContent = score;
+    document.getElementById('finalPlayerName').textContent = playerName;
 
-        const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
-        document.getElementById('correctCount').textContent = `${correctCount}/${gameQuestions.length}`;
-        document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
-        document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
-        document.getElementById('historyScore').textContent = `${subjectScores.history}/${subjectCounts.history}`;
-        document.getElementById('csScore').textContent = `${subjectScores.cs}/${subjectCounts.cs}`;
+    const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
+    document.getElementById('correctCount').textContent = `${correctCount}/${gameQuestions.length}`;
+    document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
+    document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
+    document.getElementById('historyScore').textContent = `${subjectScores.history}/${subjectCounts.history}`;
+    document.getElementById('csScore').textContent = `${subjectScores.cs}/${subjectCounts.cs}`;
 
-        try {
-            await saveScore({
+    try {
+        const response = await fetch(`${API_URL}/scores`, {
+            method: 'POST',
+            credentials: 'include',  // Important for badge award
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
                 playerName: playerName,
                 score: score,
                 correctAnswers: correctCount,
                 subjectScores: subjectScores,
                 timestamp: new Date().toISOString()
-            });
+            })
+        });
 
-            await updatePersistentLeaderboard();
-        } catch (error) {
-            console.log('Backend not ready yet:', error);
+        const result = await response.json();
+
+        // Show badge notification if awarded
+        if (result.badge_awarded) {
+            alert(`Badge Earned: ${result.badge_awarded.name}!`);
         }
 
-        loadLeaderboard();
+        await updatePersistentLeaderboard();
+
+    } catch (error) {
+        console.log('Error saving score:', error);
     }
+
+    loadLeaderboard();
+}
 
     async function saveScore(scoreData) {
         const response = await fetch(`${API_URL}/scores`, {
