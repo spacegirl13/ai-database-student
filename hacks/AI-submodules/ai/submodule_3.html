@@ -1517,8 +1517,8 @@ date: 2025-10-30
         const result = await response.json();
 
         // Show badge notification if awarded
-        if (result.badge_awarded) {
-            alert(`Badge Earned: ${result.badge_awarded.name}!`);
+        if (result.badge_awarded === true && result.badge) {
+            alert(`Badge Earned: ${result.badge.name}!`);
         }
 
         await updatePersistentLeaderboard();
