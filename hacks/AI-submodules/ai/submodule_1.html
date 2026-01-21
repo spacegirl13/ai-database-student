@@ -271,16 +271,20 @@ date: 2025-10-30
             if (!response.ok) throw new Error('Failed to submit');
 
             const result = await response.json();
+            console.log('API response:', result);
+
+            // Handle both {data: {...}} and direct {...} response structures
+            const surveyData = result.data || result;
 
             document.getElementById('successMessage').style.display = 'block';
             document.getElementById('aiPollForm').style.display = 'none';
             document.getElementById('resultsContainer').style.display = 'block';
 
-            displayResults(result.data);
-            displayRecentFRQs(result.data.frqs.slice(0, 3), 'recentFRQs');
-
-            if (result.badge_awarded) {
-                alert(`Badge Earned: ${result.badge_awarded.name}!`);
+            if (surveyData && surveyData.english) {
+                displayResults(surveyData);
+            }
+            if (surveyData && surveyData.frqs) {
+                displayRecentFRQs(surveyData.frqs.slice(0, 3), 'recentFRQs');
             }
 
             window.scrollTo({ top: document.getElementById('resultsContainer').offsetTop - 100, behavior: 'smooth' });
@@ -291,91 +295,55 @@ date: 2025-10-30
         }
     }
 
+    window.submitSurvey = submitSurvey;
+
     function displayResults(data) {
-        // Destroy old charts if they exist
-        Object.values(charts).forEach(chart => {
-            if (chart) chart.destroy();
-        });
-        
-        // Colors for each AI tool
-        const colors = {
-            'ChatGPT': '#10a37f',
-            'Claude': '#CC785C',
-            'Gemini': '#4285f4',
-            'Copilot': '#0078d4'
-        };
-        
-        // Make charts for each subject
-        const subjects = ['english', 'math', 'science', 'cs', 'history'];
-        
-        subjects.forEach(subject => {
-            const canvas = document.getElementById(`${subject}Chart`);
-            if (canvas) {
-                const subjectData = data.subjects[subject];
-                charts[subject] = new Chart(canvas, {
-                    type: 'bar',
-                    data: {
-                        labels: ['ChatGPT', 'Claude', 'Gemini', 'Copilot'],
-                        datasets: [{
-                            label: 'Number of Students',
-                            data: [
-                                subjectData['ChatGPT'] || 0,
-                                subjectData['Claude'] || 0,
-                                subjectData['Gemini'] || 0,
-                                subjectData['Copilot'] || 0
-                            ],
-                            backgroundColor: [
-                                colors['ChatGPT'],
-                                colors['Claude'],
-                                colors['Gemini'],
-                                colors['Copilot']
-                            ]
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: { stepSize: 1 }
-                            }
-                        },
-                        plugins: {
-                            legend: { display: false }
-                        }
-                    }
-                });
-            }
-        });
-        
-        // Make pie chart for "Do you use AI?"
-        const useAICanvas = document.getElementById('useAIChart');
-        if (useAICanvas) {
-            charts.useAI = new Chart(useAICanvas, {
-                type: 'pie',
-                data: {
-                    labels: ['Yes', 'No'],
-                    datasets: [{
-                        data: [
-                            data.use_ai['Yes'] || 0,
-                            data.use_ai['No'] || 0
-                        ],
-                        backgroundColor: ['#0066cc', '#ff6b6b']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
-                }
-            });
-        }
+        createChart('englishChart', 'English', data.english);
+        createChart('mathChart', 'Math', data.math);
+        createChart('scienceChart', 'Science', data.science);
+        createChart('csChart', 'Computer Science', data.cs);
+        createChart('historyChart', 'History', data.history);
+        createChart('useAIChart', 'Use AI', data.useAI);
     }
 
-    window.submitSurvey = submitSurvey;
-    window.displayResults = displayResults;
+    function createChart(canvasId, label, data) {
+        const ctx = document.getElementById(canvasId);
 
-    // Load survey data when page loads
-    loadSurveyData();
+        if (charts[canvasId]) {
+            charts[canvasId].destroy();
+        }
+
+        charts[canvasId] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data),
+                datasets: [{
+                    label: 'Votes',
+                    data: Object.values(data),
+                    backgroundColor: '#0066cc',
+                    borderColor: '#0052a3',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', loadSurveyData);
 </script>
