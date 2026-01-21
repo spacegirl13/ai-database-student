@@ -2662,7 +2662,7 @@ async function completeSubmodule2() {
 
         const result = await response.json();
 
-        if (result.badge_awarded) {
+        if (result.badge_awarded === true && result.badge) {
             alert(`Congratulations! Badge Earned: ${result.badge.name}`);
         }
 
