@@ -541,11 +541,6 @@ date: 2025-10-30
 
                 <!-- Questions Container in 2x2 Grid (loaded from database) -->
                 <div id="math-questions-container" class="grid grid-cols-2 gap-3">
-                    <div class="text-center p-4 bg-slate-700/30 rounded-lg border-2 border-dashed border-purple-500/30 col-span-2">
-                        <div class="text-3xl mb-2">📚</div>
-                        <p class="text-purple-300 text-sm font-semibold mb-1">Math questions will appear in a 2x2 grid</p>
-                        <p class="text-gray-400 text-xs">Four questions side by side - no scrolling needed!</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -598,7 +593,14 @@ function toggleMathTips() {
 
 // Load math questions from database
 async function loadMathQuestions() {
+    // Only load questions if a topic has been selected
+    if (!selectedMathTopic) {
+        console.log('No topic selected yet, skipping question load');
+        return;
+    }
+
     try {
+        // Build URL with topic filter
         let url = pythonURI + '/api/math/questions?topic=' + selectedMathTopic;
         console.log('Loading questions with URL:', url);
         console.log('Selected topic:', selectedMathTopic);
@@ -690,18 +692,25 @@ function togglePrompt(questionId) {
         btn.textContent = 'View Prompt';
         btn.classList.remove('bg-red-600', 'hover:bg-red-700');
         btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+        // Also hide Gemini output
         document.getElementById(`gemini-output-${questionId}`).classList.add('hidden');
     }
 }
 
 // Helper function to format AI response with proper math rendering
 function formatMathResponse(text) {
+    // Escape HTML but preserve LaTeX delimiters
     let formatted = text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
+
+    // Convert markdown-style bold to HTML
     formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Convert newlines to <br> for proper line breaks
     formatted = formatted.replace(/\n/g, '<br>');
+
     return formatted;
 }
 
@@ -711,32 +720,37 @@ async function autofillPrompt(questionId) {
     const outputArea = document.getElementById(`gemini-output-${questionId}`);
     const resultArea = document.getElementById(`gemini-result-${questionId}`);
 
+    // Show output area with loading message
     outputArea.classList.remove('hidden');
     resultArea.innerHTML = 'Loading AI response...';
 
     try {
         const response = await fetch(pythonURI + '/api/gemini', {
             method: 'POST',
-            credentials: 'include',
+            credentials: 'include', // Include authentication cookies
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                text: promptText,
-                prompt: ''
+                text: promptText, // API expects 'text' field, not 'prompt'
+                prompt: '' // Empty custom prompt to use default behavior
             })
         });
 
         const data = await response.json();
 
         if (data.success && data.text) {
+            // Format the response for proper display
             resultArea.innerHTML = formatMathResponse(data.text);
+
+            // Trigger MathJax to render LaTeX equations
             if (window.MathJax && window.MathJax.typesetPromise) {
                 window.MathJax.typesetPromise([resultArea]).catch((err) => {
                     console.error('MathJax rendering error:', err);
                 });
             }
         } else if (data.message) {
+            // Show error message from API
             resultArea.innerHTML = `Error: ${data.message}`;
         } else {
             resultArea.innerHTML = 'Error: No response from AI';
@@ -765,6 +779,34 @@ window.loadMathQuestions = loadMathQuestions;
 window.togglePrompt = togglePrompt;
 window.autofillPrompt = autofillPrompt;
 window.copyPrompt = copyPrompt;
+
+// Track if the user has visited the math section
+let hasVisitedMathSection = false;
+
+// Load questions when the math section is accessed
+document.addEventListener('DOMContentLoaded', () => {
+    // Load questions immediately if already on math section, or when navigating to it
+    const originalGoToSection = window.goToSection;
+    window.goToSection = function (sectionIndex) {
+        originalGoToSection(sectionIndex);
+        if (sectionIndex === 1) { // Math section is section 1
+            // Load questions automatically when visiting math section
+            if (!hasVisitedMathSection) {
+                hasVisitedMathSection = true;
+            }
+            loadMathQuestions();
+        } else if (sectionIndex === 2) { // Science section is section 2
+            // Keep original science behavior
+            if (!window.hasVisitedScienceSection) {
+                window.hasVisitedScienceSection = true;
+                setTimeout(() => window.showScienceTopicModal(), 300);
+            }
+            loadScienceQuestions();
+        } else if (sectionIndex === 3) { // Computer Science section is section 3
+            loadCodingQuestions();
+        }
+    };
+});
 </script>
 
         <!-- SECTION 2: Science -->
