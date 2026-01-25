@@ -3824,48 +3824,8 @@ function tryAnotherChallenge() {
             }
         };
 
-        // Show level
-function showLevel(level) {
-    console.log('showLevel called with:', level);
-    
-    // Update button styles
-    document.querySelectorAll('.level-btn').forEach(btn => {
-        btn.classList.remove('border-yellow-400');
-    });
-    const selectedBtn = document.getElementById(`level-${level}-btn`);
-    if (selectedBtn) {
-        selectedBtn.classList.add('border-yellow-400');
-    }
+       
 
-    // Hide all levels first
-    const beginnerDiv = document.getElementById('beginner-level');
-    const intermediateDiv = document.getElementById('intermediate-level');
-    const advancedDiv = document.getElementById('advanced-level');
-    
-    if (beginnerDiv) beginnerDiv.classList.add('hidden');
-    if (intermediateDiv) intermediateDiv.classList.add('hidden');
-    if (advancedDiv) advancedDiv.classList.add('hidden');
-    
-    // Show selected level
-    const levelDiv = document.getElementById(`${level}-level`);
-    if (levelDiv) {
-        levelDiv.classList.remove('hidden');
-        console.log('Showing level:', level);
-    } else {
-        console.error('Level div not found:', `${level}-level`);
-    }
-
-    // Scroll to section
-    setTimeout(() => {
-        const section5 = document.getElementById('section-5');
-        if (section5) {
-            window.scrollTo({ 
-                top: section5.offsetTop - 100, 
-                behavior: 'smooth' 
-            });
-        }
-    }, 100);
-}
         // Select Mad Lib subject
         function selectMadLibSubject(subject) {
             selectedMadLibSubject = subject;
@@ -4635,6 +4595,46 @@ function showLevel(level) {
         }
 
         // ==================== END CODING QUESTIONS SECTION ====================
+
+        // Show level
+function showLevel(level) {
+    console.log('showLevel called with:', level);
+    
+    // Update button styles
+    document.querySelectorAll('.level-btn').forEach(btn => {
+        btn.classList.remove('border-yellow-400');
+    });
+    const selectedBtn = document.getElementById(`level-${level}-btn`);
+    if (selectedBtn) {
+        selectedBtn.classList.add('border-yellow-400');
+    }
+
+    // Hide all levels first
+    const beginnerDiv = document.getElementById('beginner-level');
+    const intermediateDiv = document.getElementById('intermediate-level');
+    const advancedDiv = document.getElementById('advanced-level'); if (beginnerDiv) beginnerDiv.classList.add('hidden');
+    if (intermediateDiv) intermediateDiv.classList.add('hidden');
+    if (advancedDiv) advancedDiv.classList.add('hidden');
+    
+    // Show selected level
+    const levelDiv = document.getElementById(`${level}-level`);
+    if (levelDiv) {
+        levelDiv.classList.remove('hidden');
+        console.log('Showing level:', level);
+    } else {
+        console.error('Level div not found:', `${level}-level`);
+    }
+
+    // Scroll to section
+    setTimeout(() => {
+        const section5 = document.getElementById('section-5'); if (section5) {
+            window.scrollTo({ 
+                top: section5.offsetTop - 100, 
+                behavior: 'smooth' 
+            });
+        }
+    }, 100);
+}
 
         // Expose all functions to window for onclick handlers
         window.goToSection = goToSection;
