@@ -854,6 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         <!-- Questions Container in 2x2 Grid (loaded from database) -->
                         <div id="science-questions-container" class="grid grid-cols-2 gap-3">
+                            <div class="col-span-2 text-center p-8 bg-slate-700/50 rounded-lg"><p class="text-purple-300">Loading questions...</p></div>
                         </div>
                     </div>
                 </div>
@@ -3921,7 +3922,11 @@ function tryAnotherChallenge() {
         // Toggle inline topic selector
         function toggleScienceTopicSelector() {
             const selector = document.getElementById('inline-science-topic-selector');
-            selector.classList.toggle('hidden');
+            if (selector) {
+                selector.classList.toggle('hidden');
+            } else {
+                console.error('Selector element not found');
+            }
         }
 
         // Select science topic inline (no modal)
@@ -3934,12 +3939,19 @@ function tryAnotherChallenge() {
                 'chemistry': 'Chemistry',
                 'physics': 'Physics'
             };
-            document.getElementById('current-science-topic').textContent = topicNames[topic];
+            const topicDisplay = document.getElementById('current-science-topic');
+            if (topicDisplay) {
+                topicDisplay.textContent = topicNames[topic];
+            }
             
             // Hide selector
-            document.getElementById('inline-science-topic-selector').classList.add('hidden');
+            const selector = document.getElementById('inline-science-topic-selector');
+            if (selector) {
+                selector.classList.add('hidden');
+            }
             
             // Reload questions
+            console.log('Loading questions for topic:', topic);
             loadScienceQuestions();
         }
 
@@ -3994,24 +4006,23 @@ function tryAnotherChallenge() {
                 if (data.success && data.questions) {
                     if (data.questions.length === 0) {
                         document.getElementById('science-questions-container').innerHTML =
-                            '<div class="text-center p-8 bg-yellow-900/20 rounded-lg border border-yellow-500/30"><p class="text-yellow-300">No questions found for this topic. Try selecting a different topic.</p></div>';
+                            '<div class="text-center p-8 bg-yellow-900/20 rounded-lg border border-yellow-500/30 col-span-2"><p class="text-yellow-300">No questions found for this topic. Try selecting a different topic.</p></div>';
                     } else {
                         displayScienceQuestions(data.questions);
                     }
                 } else {
-                    throw new Error('Failed to load questions');
+                    throw new Error('Failed to load questions - invalid response');
                 }
             } catch (error) {
                 console.error('Error loading science questions:', error);
-                document.getElementById('science-questions-container').innerHTML =
-                    '<p class="text-center text-red-400">Failed to load questions. Please refresh the page.</p>';
+                const container = document.getElementById('science-questions-container');
+                if (container) {
+                    container.innerHTML =
+                        '<div class="col-span-2 text-center p-8 bg-red-900/20 rounded-lg border border-red-500/30"><p class="text-red-400 mb-2">Error loading questions</p><p class="text-xs text-gray-400">' + error.message + '</p></div>';
+                }
             }
         }
 
-        // Display science questions
-        function displayScienceQuestions(questions) {
-            const container = document.getElementById('science-questions-container');
-            container.innerHTML = '';
         // Display science questions
         function displayScienceQuestions(questions) {
             const container = document.getElementById('science-questions-container');
@@ -4553,8 +4564,8 @@ function tryAnotherChallenge() {
                     }
                     loadMathQuestions();
                 } else if (sectionIndex === 2) { // Science section is section 2
-                    // No need to show modal on first visit - science has default topic
-                    loadScienceQuestions();
+                    // Load questions with default topic
+                    setTimeout(() => loadScienceQuestions(), 100);
                 } else if (sectionIndex === 3) { // Computer Science section is section 3
                     loadCodingQuestions();
                 }
