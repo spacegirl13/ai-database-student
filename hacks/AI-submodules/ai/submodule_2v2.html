@@ -497,60 +497,275 @@ date: 2025-10-30
         </div>
 
         <!-- SECTION 1: Math -->
-        <div id="section-1" class="mission-section section-hidden">
-            <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-2xl font-bold">🔢 Math Practice</h2>
-                        <button onclick="toggleMathTips()" class="text-2xl hover:scale-110 transition-transform"
-                            title="Show Tips">❓</button>
+<div id="section-1" class="mission-section section-hidden">
+    <div class="space-y-6">
+        <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">🔢 Math Practice</h2>
+                <div class="flex gap-2 items-center">
+                    <span class="text-sm text-purple-300">Topic: <span id="current-math-topic" class="font-semibold">Trigonometry</span></span>
+                    <button onclick="toggleTopicSelector()" class="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm" title="Change Topic">Change Topic</button>
+                    <button onclick="toggleMathTips()" class="text-2xl hover:scale-110 transition-transform"
+                        title="Show Tips">❓</button>
+                </div>
+            </div>
+
+            <!-- Inline Topic Selector (hidden by default) -->
+            <div id="inline-topic-selector" class="hidden mb-4 bg-purple-900/20 border border-purple-500/30 rounded-lg p-3">
+                <p class="text-sm font-semibold mb-2">Choose a topic:</p>
+                <div class="flex gap-2">
+                    <button onclick="selectMathTopicInline('derivatives')" class="px-3 py-1 text-sm bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">Derivatives</button>
+                    <button onclick="selectMathTopicInline('fractions')" class="px-3 py-1 text-sm bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">Fractions</button>
+                    <button onclick="selectMathTopicInline('trig')" class="px-3 py-1 text-sm bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">Trigonometry</button>
+                </div>
+            </div>
+
+            <!-- Collapsible Tips Section -->
+            <div id="math-tips" class="hidden mb-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                <h4 class="text-sm font-bold text-blue-300 mb-2">💡 Good vs Bad Prompts for Math</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                    <div class="bg-green-900/30 p-2 rounded">
+                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                        <p class="text-xs">"Find the derivative of 3x⁴ - 2x³ step-by-step. Show all work and explain each step using the power rule."</p>
                     </div>
-
-                    <!-- Selected Topic Display -->
-                    <div id="selected-topic-display" class="hidden mb-4 bg-green-900/20 border border-green-500/30 rounded-lg p-3">
-                        <p class="text-green-300 text-sm">
-                            <span class="font-semibold">Current Topic:</span>
-                            <span id="current-topic-name" class="capitalize">All Topics</span>
-                            <button onclick="showMathTopicModal()" class="ml-3 text-xs underline hover:text-green-200">
-                                Change Topic
-                            </button>
-                        </p>
-                    </div>
-
-                    <!-- Collapsible Tips Section -->
-                    <div id="math-tips" class="hidden mb-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
-                        <h4 class="text-sm font-bold text-blue-300 mb-2">💡 Good vs Bad Prompts for Math</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                            <div class="bg-green-900/30 p-2 rounded">
-                                <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                <p class="text-xs">"Find the derivative of 3x⁴ - 2x³ step-by-step. Show all work and explain each step using the power rule."</p>
-                            </div>
-                            <div class="bg-red-900/30 p-2 rounded">
-                                <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                <p class="text-xs">"What's the derivative?"</p>
-                            </div>
-                        </div>
-                        <p class="mt-2 text-xs text-blue-200">✨ <strong>Key:</strong> Be specific, ask for step-by-step explanations, and mention the concept/rule to use.</p>
-                    </div>
-
-                    <div class="space-y-3 text-sm">
-                        <p class="text-xs">Practice solving math problems with AI assistance. Click "View Prompt" to see an effective prompt, then use the Gemini API to check your work.</p>
-
-                        <!-- Questions Container in 2x2 Grid (loaded from database) -->
-                        <div id="math-questions-container" class="grid grid-cols-2 gap-3">
-                            <div class="text-center p-4 bg-slate-700/30 rounded-lg border-2 border-dashed border-purple-500/30 col-span-2">
-                                <div class="text-3xl mb-2">📚</div>
-                                <p class="text-purple-300 text-sm font-semibold mb-1">Math questions will appear in a 2x2 grid</p>
-                                <p class="text-gray-400 text-xs">Four questions side by side - no scrolling needed!</p>
-                            </div>
-                        </div>
+                    <div class="bg-red-900/30 p-2 rounded">
+                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                        <p class="text-xs">"What's the derivative?"</p>
                     </div>
                 </div>
-                <button onclick="window.goToSection(2)"
-                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
-                    Science</button>
+                <p class="mt-2 text-xs text-blue-200">✨ <strong>Key:</strong> Be specific, ask for step-by-step explanations, and mention the concept/rule to use.</p>
+            </div>
+
+            <div class="space-y-3 text-sm">
+                <p class="text-xs">Practice solving math problems with AI assistance. Click "View Prompt" to see an effective prompt, then use the Gemini API to check your work.</p>
+
+                <!-- Questions Container in 2x2 Grid (loaded from database) -->
+                <div id="math-questions-container" class="grid grid-cols-2 gap-3">
+                    <div class="text-center p-4 bg-slate-700/30 rounded-lg border-2 border-dashed border-purple-500/30 col-span-2">
+                        <div class="text-3xl mb-2">📚</div>
+                        <p class="text-purple-300 text-sm font-semibold mb-1">Math questions will appear in a 2x2 grid</p>
+                        <p class="text-gray-400 text-xs">Four questions side by side - no scrolling needed!</p>
+                    </div>
+                </div>
             </div>
         </div>
+        <button onclick="window.goToSection(2)"
+            class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
+            Science</button>
+    </div>
+</div>
+
+<script>
+// ==================== MATH SECTION FUNCTIONS ====================
+
+// Global variable to track selected math topic
+let selectedMathTopic = 'trig'; // Default to trigonometry
+
+// Toggle inline topic selector
+function toggleTopicSelector() {
+    const selector = document.getElementById('inline-topic-selector');
+    selector.classList.toggle('hidden');
+}
+
+// Select math topic inline (no modal)
+function selectMathTopicInline(topic) {
+    selectedMathTopic = topic;
+    
+    // Update displayed topic name
+    const topicNames = {
+        'derivatives': 'Derivatives',
+        'fractions': 'Fractions',
+        'trig': 'Trigonometry'
+    };
+    document.getElementById('current-math-topic').textContent = topicNames[topic];
+    
+    // Hide selector
+    document.getElementById('inline-topic-selector').classList.add('hidden');
+    
+    // Reload questions
+    loadMathQuestions();
+}
+
+// Toggle math tips visibility
+function toggleMathTips() {
+    const tipsEl = document.getElementById('math-tips');
+    if (tipsEl.classList.contains('hidden')) {
+        tipsEl.classList.remove('hidden');
+    } else {
+        tipsEl.classList.add('hidden');
+    }
+}
+
+// Load math questions from database
+async function loadMathQuestions() {
+    try {
+        let url = pythonURI + '/api/math/questions?topic=' + selectedMathTopic;
+        console.log('Loading questions with URL:', url);
+        console.log('Selected topic:', selectedMathTopic);
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        console.log('Response data:', data);
+        console.log('Number of questions received:', data.questions ? data.questions.length : 0);
+
+        if (data.success && data.questions) {
+            if (data.questions.length === 0) {
+                document.getElementById('math-questions-container').innerHTML =
+                    '<p class="text-center text-yellow-400">No questions found for this topic.</p>';
+            } else {
+                displayMathQuestions(data.questions);
+            }
+        } else {
+            throw new Error('Failed to load questions');
+        }
+    } catch (error) {
+        console.error('Error loading math questions:', error);
+        document.getElementById('math-questions-container').innerHTML =
+            '<p class="text-center text-red-400">Failed to load questions. Please refresh the page.</p>';
+    }
+}
+
+// Display math questions
+function displayMathQuestions(questions) {
+    const container = document.getElementById('math-questions-container');
+    container.innerHTML = '';
+
+    questions.forEach((q, index) => {
+        const questionHtml = `
+            <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-purple-300 mb-4">Question ${index + 1}</h3>
+                <p class="text-lg mb-4">${q.question}</p>
+
+                <button
+                    onclick="togglePrompt(${q.id})"
+                    id="prompt-btn-${q.id}"
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition-all mb-3">
+                    View Prompt
+                </button>
+
+                <!-- Prompt Display Area (hidden by default) -->
+                <div id="prompt-area-${q.id}" class="hidden mt-4">
+                    <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mb-3">
+                        <p class="text-sm text-blue-300 mb-2">Generated Prompt:</p>
+                        <p id="prompt-text-${q.id}" class="text-white mb-3">${q.prompt_template.replace('{question}', q.question)}</p>
+
+                        <button
+                            onclick="autofillPrompt(${q.id})"
+                            class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm mr-2">
+                            Autofill & Test
+                        </button>
+                        <button
+                            onclick="copyPrompt(${q.id})"
+                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm">
+                            Copy Prompt
+                        </button>
+                    </div>
+
+                    <!-- Gemini API Output Area -->
+                    <div id="gemini-output-${q.id}" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                        <p class="text-sm text-green-300 mb-2">AI Response:</p>
+                        <div id="gemini-result-${q.id}" class="text-white text-sm whitespace-pre-wrap"></div>
+                        <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.innerHTML += questionHtml;
+    });
+}
+
+// Toggle prompt visibility
+function togglePrompt(questionId) {
+    const promptArea = document.getElementById(`prompt-area-${questionId}`);
+    const btn = document.getElementById(`prompt-btn-${questionId}`);
+
+    if (promptArea.classList.contains('hidden')) {
+        promptArea.classList.remove('hidden');
+        btn.textContent = 'Hide Prompt';
+        btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+        btn.classList.add('bg-red-600', 'hover:bg-red-700');
+    } else {
+        promptArea.classList.add('hidden');
+        btn.textContent = 'View Prompt';
+        btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+        btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+        document.getElementById(`gemini-output-${questionId}`).classList.add('hidden');
+    }
+}
+
+// Helper function to format AI response with proper math rendering
+function formatMathResponse(text) {
+    let formatted = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    formatted = formatted.replace(/\n/g, '<br>');
+    return formatted;
+}
+
+// Autofill prompt and call Gemini API
+async function autofillPrompt(questionId) {
+    const promptText = document.getElementById(`prompt-text-${questionId}`).textContent;
+    const outputArea = document.getElementById(`gemini-output-${questionId}`);
+    const resultArea = document.getElementById(`gemini-result-${questionId}`);
+
+    outputArea.classList.remove('hidden');
+    resultArea.innerHTML = 'Loading AI response...';
+
+    try {
+        const response = await fetch(pythonURI + '/api/gemini', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                text: promptText,
+                prompt: ''
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.text) {
+            resultArea.innerHTML = formatMathResponse(data.text);
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([resultArea]).catch((err) => {
+                    console.error('MathJax rendering error:', err);
+                });
+            }
+        } else if (data.message) {
+            resultArea.innerHTML = `Error: ${data.message}`;
+        } else {
+            resultArea.innerHTML = 'Error: No response from AI';
+        }
+    } catch (error) {
+        console.error('Gemini API error:', error);
+        resultArea.innerHTML = 'Error: Failed to get AI response. Please make sure you are logged in.';
+    }
+}
+
+// Copy prompt to clipboard
+function copyPrompt(questionId) {
+    const promptText = document.getElementById(`prompt-text-${questionId}`).textContent;
+    navigator.clipboard.writeText(promptText).then(() => {
+        alert('Prompt copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+    });
+}
+
+// Expose functions to window
+window.toggleTopicSelector = toggleTopicSelector;
+window.selectMathTopicInline = selectMathTopicInline;
+window.toggleMathTips = toggleMathTips;
+window.loadMathQuestions = loadMathQuestions;
+window.togglePrompt = togglePrompt;
+window.autofillPrompt = autofillPrompt;
+window.copyPrompt = copyPrompt;
+</script>
 
         <!-- SECTION 2: Science -->
         <div id="section-2" class="mission-section section-hidden">
