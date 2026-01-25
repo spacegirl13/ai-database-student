@@ -558,6 +558,8 @@ let selectedMathTopic = 'trig'; // Default to trigonometry
 
 // Global variable to track selected science topic
 let selectedScienceTopic = 'biology'; // Default to biology
+let scienceQuestionsData = []; // Store all questions
+let scienceQuestionsRevealed = 4; // Show 4 at a time
 
 // Toggle inline topic selector
 function toggleTopicSelector() {
@@ -617,6 +619,7 @@ function toggleScienceTopicSelector() {
 // Select science topic inline
 function selectScienceTopicInline(topic) {
     selectedScienceTopic = topic;
+    scienceQuestionsRevealed = 4; // Reset to show first 4 when changing topic
     
     const topicNames = {
         'biology': 'Biology',
@@ -854,16 +857,22 @@ async function loadScienceQuestions() {
     };
     
     if (sampleQuestions[selectedScienceTopic]) {
-        displayScienceQuestions(sampleQuestions[selectedScienceTopic]);
+        scienceQuestionsData = sampleQuestions[selectedScienceTopic];
+        scienceQuestionsRevealed = 4; // Reset counter when loading new questions
+        displayScienceQuestions();
     }
 }
 
-// Display science questions in grid
-function displayScienceQuestions(questions) {
+// Display science questions in grid (with pagination)
+function displayScienceQuestions() {
+    const questions = scienceQuestionsData;
     const container = document.getElementById('science-questions-container');
     container.innerHTML = '';
 
-    questions.forEach((q, index) => {
+    // Only show the questions up to the revealed count
+    const visibleQuestions = questions.slice(0, scienceQuestionsRevealed);
+    
+    visibleQuestions.forEach((q, index) => {
         const questionHtml = `
             <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
                 <h3 class="font-bold text-purple-300 mb-4" style="font-size: 15px;">Question ${index + 1}</h3>
@@ -903,6 +912,25 @@ function displayScienceQuestions(questions) {
         `;
         container.innerHTML += questionHtml;
     });
+    
+    // Add "Reveal More" button if there are more questions
+    if (scienceQuestionsRevealed < questions.length) {
+        const revealButton = `
+            <div class="col-span-2 flex justify-center mt-4">
+                <button onclick="revealMoreScienceQuestions()" 
+                    class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold transition-all">
+                    ✨ Reveal 4 More Questions
+                </button>
+            </div>
+        `;
+        container.innerHTML += revealButton;
+    }
+}
+
+// Reveal more science questions
+function revealMoreScienceQuestions() {
+    scienceQuestionsRevealed += 4;
+    displayScienceQuestions();
 }
 
 // Toggle science prompt visibility
@@ -995,6 +1023,7 @@ window.toggleScienceTips = toggleScienceTips;
 window.toggleSciencePrompt = toggleSciencePrompt;
 window.autofillSciencePrompt = autofillSciencePrompt;
 window.copySciencePrompt = copySciencePrompt;
+window.revealMoreScienceQuestions = revealMoreScienceQuestions;
 window.togglePrompt = togglePrompt;
 window.autofillPrompt = autofillPrompt;
 window.copyPrompt = copyPrompt;
