@@ -1588,35 +1588,35 @@ window.resetHistoryBuilder = resetHistoryBuilder;
 </script>
 
         <!-- SECTION 5: Interactive Challenge -->
-        <div id="section-5" class="mission-section section-hidden">
-            <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
-                    <h2 class="text-xl font-bold mb-6">🎯 Interactive Prompt Challenge</h2>
-                    <p class="text-lg mb-6">Choose your level and practice writing effective prompts!</p>
+       <div id="section-5" class="mission-section section-hidden">
+    <div class="space-y-6">
+        <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+            <h2 class="text-xl font-bold mb-6">🎯 Interactive Prompt Challenge</h2>
+            <p class="text-lg mb-6">Choose your level and practice writing effective prompts!</p>
 
-                  <!-- Level Selection -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-    <button onclick="showLevel('beginner')" id="level-beginner-btn"
-        class="level-btn bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 py-3 px-4 rounded-lg font-semibold text-base text-left transition-all border-2 border-transparent">
-        <div class="text-xl mb-1">🌱</div>
-        <div>Beginner Level</div>
-        <div class="text-xs font-normal opacity-90 mt-1">Fill-in-the-blanks Mad Libs style</div>
-    </button>
-    
-    <button onclick="showLevel('intermediate')" id="level-intermediate-btn"
-        class="level-btn bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 py-3 px-4 rounded-lg font-semibold text-base text-left transition-all border-2 border-transparent">
-        <div class="text-xl mb-1">⚡</div>
-        <div>Intermediate Level</div>
-        <div class="text-xs font-normal opacity-90 mt-1">Improve weak prompts</div>
-    </button>
-    
-    <button onclick="showLevel('advanced')" id="level-advanced-btn"
-        class="level-btn bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 py-3 px-4 rounded-lg font-semibold text-base text-left transition-all border-2 border-transparent">
-        <div class="text-xl mb-1">🚀</div>
-        <div>Advanced Level</div>
-        <div class="text-xs font-normal opacity-90 mt-1">Write complete prompts from scratch</div>
-    </button>
-</div>
+            <!-- Level Selection -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <button onclick="showLevel('beginner')" id="level-beginner-btn"
+                    class="level-btn bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 py-2 px-3 rounded-lg font-semibold text-sm text-left transition-all border-2 border-transparent">
+                    <div class="text-lg mb-1">🌱</div>
+                    <div class="text-sm">Beginner Level</div>
+                    <div class="text-xs font-normal opacity-90 mt-1">Fill-in-the-blanks Mad Libs style</div>
+                </button>
+                
+                <button onclick="showLevel('intermediate')" id="level-intermediate-btn"
+                    class="level-btn bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 py-2 px-3 rounded-lg font-semibold text-sm text-left transition-all border-2 border-transparent">
+                    <div class="text-lg mb-1">⚡</div>
+                    <div class="text-sm">Intermediate Level</div>
+                    <div class="text-xs font-normal opacity-90 mt-1">Improve weak prompts</div>
+                </button>
+                
+                <button onclick="showLevel('advanced')" id="level-advanced-btn"
+                    class="level-btn bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 py-2 px-3 rounded-lg font-semibold text-sm text-left transition-all border-2 border-transparent">
+                    <div class="text-lg mb-1">🚀</div>
+                    <div class="text-sm">Advanced Level</div>
+                    <div class="text-xs font-normal opacity-90 mt-1">Write complete prompts from scratch</div>
+                </button>
+            </div>
                     </div>
 
                     <!-- Beginner Level: Mad Libs -->
@@ -3825,22 +3825,47 @@ function tryAnotherChallenge() {
         };
 
         // Show level
-        function showLevel(level) {
-            // Update button styles
-            document.querySelectorAll('.level-btn').forEach(btn => {
-                btn.classList.remove('border-yellow-400');
+function showLevel(level) {
+    console.log('showLevel called with:', level);
+    
+    // Update button styles
+    document.querySelectorAll('.level-btn').forEach(btn => {
+        btn.classList.remove('border-yellow-400');
+    });
+    const selectedBtn = document.getElementById(`level-${level}-btn`);
+    if (selectedBtn) {
+        selectedBtn.classList.add('border-yellow-400');
+    }
+
+    // Hide all levels first
+    const beginnerDiv = document.getElementById('beginner-level');
+    const intermediateDiv = document.getElementById('intermediate-level');
+    const advancedDiv = document.getElementById('advanced-level');
+    
+    if (beginnerDiv) beginnerDiv.classList.add('hidden');
+    if (intermediateDiv) intermediateDiv.classList.add('hidden');
+    if (advancedDiv) advancedDiv.classList.add('hidden');
+    
+    // Show selected level
+    const levelDiv = document.getElementById(`${level}-level`);
+    if (levelDiv) {
+        levelDiv.classList.remove('hidden');
+        console.log('Showing level:', level);
+    } else {
+        console.error('Level div not found:', `${level}-level`);
+    }
+
+    // Scroll to section
+    setTimeout(() => {
+        const section5 = document.getElementById('section-5');
+        if (section5) {
+            window.scrollTo({ 
+                top: section5.offsetTop - 100, 
+                behavior: 'smooth' 
             });
-            document.getElementById(`level-${level}-btn`).classList.add('border-yellow-400');
-
-            // Show appropriate level
-            document.getElementById('beginner-level').classList.add('hidden');
-            document.getElementById('intermediate-level').classList.add('hidden');
-            document.getElementById('advanced-level').classList.add('hidden');
-            document.getElementById(`${level}-level`).classList.remove('hidden');
-
-            window.scrollTo({ top: document.getElementById('section-5').offsetTop - 100, behavior: 'smooth' });
         }
-
+    }, 100);
+}
         // Select Mad Lib subject
         function selectMadLibSubject(subject) {
             selectedMadLibSubject = subject;
