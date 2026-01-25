@@ -801,7 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.hasVisitedScienceSection = true;
                 setTimeout(() => window.showScienceTopicModal(), 300);
             }
-            loadScienceQuestions();
+            // Don't call loadScienceQuestions here - it will be called after topic is selected
         } else if (sectionIndex === 3) { // Computer Science section is section 3
             loadCodingQuestions();
         }
