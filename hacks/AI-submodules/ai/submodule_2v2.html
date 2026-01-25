@@ -11,6 +11,7 @@ date: 2025-10-30
 ---
 
 <script src="https://cdn.tailwindcss.com"></script>
+<!-- MathJax for rendering LaTeX equations -->
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script>
@@ -23,6 +24,7 @@ date: 2025-10-30
 </script>
 
 <script>
+    // Define goToSection early so buttons work before module loads
     window.goToSection = function(n) {
         document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
         document.getElementById('section-' + n).classList.remove('section-hidden');
@@ -31,10 +33,7 @@ date: 2025-10-30
             b.classList.add('bg-slate-700/50');
         });
         var btn = document.querySelector('.nav-btn[data-section="' + n + '"]');
-        if (btn) {
-            btn.classList.add('bg-purple-600');
-            btn.classList.remove('bg-slate-700/50');
-        }
+        if (btn) btn.classList.add('bg-purple-600');
         var progressBar = document.getElementById('progress-bar');
         var progressText = document.getElementById('progress-text');
         if (progressBar && progressText) {
@@ -48,187 +47,337 @@ date: 2025-10-30
 </script>
 
 <style>
-    body {
-        background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
-        min-height: 100vh;
-        font-size: 13px;
-    }
-    
-    /* Sticky Navigation */
-    .sticky-nav {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: rgba(15, 23, 42, 0.95);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(139, 92, 246, 0.3);
-    }
-    
-    /* Dropdown Menus */
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #1e293b;
-        min-width: 150px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-        border-radius: 6px;
-        margin-top: 4px;
-    }
-    
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
-    
-    .dropdown-content button {
-        color: white;
-        padding: 8px 12px;
-        text-decoration: none;
-        display: block;
-        width: 100%;
-        text-align: left;
-        border: none;
-        background: transparent;
-        font-size: 12px;
-    }
-    
-    .dropdown-content button:hover {
-        background-color: #334155;
-        border-radius: 4px;
-    }
-    
-    /* Badge Display */
-    #badgeDisplay {
-        position: fixed !important;
-        top: 20px !important;
-        right: 20px !important;
-        width: 180px !important;
-        background: white !important;
-        border: 2px solid #333 !important;
-        padding: 8px !important;
-        z-index: 10000 !important;
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        border-radius: 8px;
-    }
-
-    #badgeDisplay h3 {
-        margin: 0 0 8px 0 !important;
-        font-size: 12px !important;
-        font-weight: bold !important;
-        color: #000 !important;
-    }
-
-    .badge-item {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-bottom: 6px;
-        padding: 4px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-    }
-
-    .badge-item img {
-        width: 24px;
-        height: 24px;
-        object-fit: contain;
-    }
-
-    .badge-item span {
-        font-size: 10px;
-        flex: 1;
-        color: #000;
-    }
-
-    #badgeNotification {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        border: 3px solid gold;
-        padding: 24px;
-        z-index: 10001;
-        display: none;
-        text-align: center;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        border-radius: 12px;
-    }
-
-    #badgeNotification.show {
-        display: block;
-    }
-
-    #badgeNotification img {
-        width: 80px;
-        height: 80px;
-        margin-bottom: 12px;
-    }
-
-    #badgeNotification h2 {
-        margin: 0 0 8px 0;
-        color: gold;
-        font-size: 18px;
-    }
-
-    #badgeNotification p {
-        color: #000;
-        font-size: 12px;
-    }
-
-    #badgeNotification button {
-        margin-top: 12px;
-        padding: 8px 16px;
-        background: #0066cc;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 6px;
-        font-size: 12px;
-    }
-    
-    .section-hidden {
-        display: none;
-    }
-    
-    /* Question Grid - 2x2 Layout */
-    .question-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-    }
-    
-    /* Font Sizes */
-    h1 { font-size: 18px; }
-    h2 { font-size: 16px; }
-    h3 { font-size: 14px; }
-    h4 { font-size: 13px; }
-    p, label { font-size: 12px; }
-    button { font-size: 12px; padding: 6px 12px; }
-    textarea, input, select { font-size: 12px; }
-    
-    @media (max-width: 768px) {
-        .question-grid {
-            grid-template-columns: 1fr;
+        body {
+            background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
+            min-height: 100vh;
         }
+        /* Badge Display Box - Upper Right Corner */
         #badgeDisplay {
-            width: 140px !important;
+            position: fixed !important;
+            top: 20px !important;
+            right: 20px !important;
+            width: 200px !important;
+            background: white !important;
+            border: 2px solid #333 !important;
+            padding: 10px !important;
+            z-index: 10000 !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
-    }
-</style>
 
+        #badgeDisplay h3 {
+            margin: 0 0 10px 0 !important;
+            font-size: 14px !important;
+            font-weight: bold !important;
+            color: #000 !important;
+        }
+
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .badge-item img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .badge-item span {
+            font-size: 11px;
+            flex: 1;
+            color: #000;
+        }
+
+        /* Badge Notification Popup */
+        #badgeNotification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 3px solid gold;
+            padding: 30px;
+            z-index: 10001;
+            display: none;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        #badgeNotification.show {
+            display: block;
+        }
+
+        #badgeNotification img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 15px;
+        }
+
+        #badgeNotification h2 {
+            margin: 0 0 10px 0;
+            color: gold;
+        }
+
+        #badgeNotification p {
+            color: #000;
+        }
+
+        #badgeNotification button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
+        }
+
+        .section-hidden {
+            display: none;
+        }
+
+        /* Feedback Modal Styles */
+        #feedbackModal * {
+            box-sizing: border-box !important;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        #feedbackModal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow-y: auto;
+            pointer-events: all !important;
+        }
+
+        #feedbackModal .modal {
+            background: white !important;
+            width: 90% !important;
+            max-width: 600px !important;
+            min-width: 300px !important;
+            border-radius: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            min-height: 200px !important;
+            animation: fadeIn 0.3s ease;
+            position: relative !important;
+            margin: 20px auto !important;
+            display: block !important;
+            z-index: 10000000 !important;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .modal-show {
+            display: flex !important;
+        }
+
+        .category-btn {
+            padding: 12px 18px;
+            background: white;
+            color: #1f2937;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .category-btn:hover {
+            border-color: #8b5cf6;
+            background: #f3f4f6;
+        }
+
+
+        /* Footer Styles */
+        .module-footer {
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 2px solid rgba(139, 92, 246, 0.3);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer-link {
+            display: inline-block;
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .footer-link:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Math output formatting */
+        #gemini-result-1,
+        #gemini-result-2,
+        #gemini-result-3,
+        #gemini-result-4 {
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* MathJax rendered equations */
+        .MathJax {
+            font-size: 1.1em !important;
+        }
+
+        /* Make bold text in LaTeX explanations stand out */
+        strong {
+            color: #a78bfa;
+            font-weight: 700;
+        }
+
+        /* Math Topic Survey Modal Styles */
+        #mathTopicModal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow-y: auto;
+        }
+
+        #mathTopicModal.modal-show {
+            display: flex !important;
+        }
+
+        #mathTopicModal .modal {
+            background: white !important;
+            width: 90% !important;
+            max-width: 500px !important;
+            border-radius: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            animation: fadeIn 0.3s ease;
+            position: relative !important;
+            margin: 20px auto !important;
+            display: block !important;
+        }
+
+        .topic-option {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: 3px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .topic-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            border-color: #fbbf24;
+        }
+
+        .topic-option.selected {
+            border-color: #0ebe84;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        /* Science Topic Survey Modal Styles */
+        #scienceTopicModal {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            overflow-y: auto;
+        }
+
+        #scienceTopicModal.modal-show {
+            display: flex !important;
+        }
+
+        #scienceTopicModal .modal {
+            background: white !important;
+            width: 90% !important;
+            max-width: 500px !important;
+            border-radius: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
+            animation: fadeIn 0.3s ease;
+            position: relative !important;
+            margin: 20px auto !important;
+            display: block !important;
+        }
+    </style>
 <!-- Badge Display Box -->
 <div id="badgeDisplay">
     <h3>Badges</h3>
     <div id="badgeList">
-        <p style="font-size: 10px; color: #999;">No badges yet</p>
+        <p style="font-size: 11px; color: #999;">No badges yet</p>
     </div>
 </div>
 
@@ -239,518 +388,234 @@ date: 2025-10-30
     <p id="badgeNotificationDescription"></p>
     <button onclick="closeBadgeNotification()">Awesome!</button>
 </div>
-
-<!-- STICKY NAVIGATION -->
-<div class="sticky-nav">
-    <div class="max-w-7xl mx-auto px-4 py-2">
-        <div class="flex items-center justify-between">
-            <h1 class="font-bold text-white">Module 2: Prompt Engineering</h1>
-            <div class="flex items-center gap-2">
-                <button onclick="window.goToSection(0)" class="nav-btn px-3 py-1 rounded transition-all bg-purple-600 text-xs text-white" data-section="0">Intro</button>
-                
-                <div class="dropdown">
-                    <button class="nav-btn px-3 py-1 rounded transition-all bg-slate-700/50 text-xs text-white" data-section="1">Math</button>
-                    <div class="dropdown-content">
-                        <button onclick="selectMathTopic('derivatives'); window.goToSection(1);">Derivatives</button>
-                        <button onclick="selectMathTopic('fractions'); window.goToSection(1);">Fractions</button>
-                        <button onclick="selectMathTopic('trig'); window.goToSection(1);">Trigonometry</button>
-                    </div>
-                </div>
-                
-                <div class="dropdown">
-                    <button class="nav-btn px-3 py-1 rounded transition-all bg-slate-700/50 text-xs text-white" data-section="2">Science</button>
-                    <div class="dropdown-content">
-                        <button onclick="selectScienceTopic('biology'); window.goToSection(2);">Biology</button>
-                        <button onclick="selectScienceTopic('chemistry'); window.goToSection(2);">Chemistry</button>
-                        <button onclick="selectScienceTopic('physics'); window.goToSection(2);">Physics</button>
-                    </div>
-                </div>
-                
-                <button onclick="window.goToSection(3)" class="nav-btn px-3 py-1 rounded transition-all bg-slate-700/50 text-xs text-white" data-section="3">Comp Sci</button>
-                <button onclick="window.goToSection(4)" class="nav-btn px-3 py-1 rounded transition-all bg-slate-700/50 text-xs text-white" data-section="4">History</button>
-                <button onclick="window.goToSection(5)" class="nav-btn px-3 py-1 rounded transition-all bg-slate-700/50 text-xs text-white" data-section="5">Challenge</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- PROGRESS BAR -->
-<div class="max-w-7xl mx-auto px-4 mt-3 mb-3">
-    <div class="w-full bg-slate-700 rounded-full h-2">
-        <div id="progress-bar" class="bg-purple-500 h-2 w-0 transition-all rounded-full"></div>
+    <div class="max-w-7xl mx-auto px-4 mb-6 pt-4">
+        <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
+            <div id="progress-bar" class="bg-purple-500 h-4 w-0 transition-all"></div>
+        </div>
+        <p id="progress-text" class="text-right text-sm text-purple-300 mt-1">0% completed</p>
     </div>
-    <p id="progress-text" class="text-right text-xs text-purple-300 mt-1">0% completed</p>
-</div>
 
-<div class="max-w-7xl mx-auto px-4 py-3">
 
-<!-- SECTION 0: Introduction -->
-<div id="section-0" class="mission-section">
-    <div class="bg-slate-800/70 backdrop-blur border border-purple-500/50 rounded-lg p-5">
-        <h2 class="font-bold text-purple-400 mb-3">Prompt Engineering</h2>
-        <p class="mb-3">Master the art of communicating effectively with AI through strategic prompting.</p>
-        
-        <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-4">
-            <h3 class="font-semibold text-purple-300 mb-2">How AI Responds to Prompts</h3>
-            <p class="mb-3">Generative AI uses two key technologies:</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div class="bg-slate-800/50 p-3 rounded-lg">
-                    <p class="text-purple-400 font-semibold mb-1 text-xs">Natural Language Processing</p>
-                    <p class="text-xs">Helps AI understand and respond to human language naturally.</p>
-                </div>
-                <div class="bg-slate-800/50 p-3 rounded-lg">
-                    <p class="text-purple-400 font-semibold mb-1 text-xs">Machine Learning</p>
-                    <p class="text-xs">Enables AI to learn from input and improve responses.</p>
-                </div>
-            </div>
+    <!-- MODULE HEADER -->
+    <div class="border-b border-purple-500/30 bg-slate-900/50 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <h1 class="text-4xl font-bold text-center mb-2">AI Usage Quest</h1>
+            <p class="text-center text-purple-300 text-lg">Module 2: Prompt Engineering</p>
         </div>
-        
-        <button onclick="window.goToSection(1)" class="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-lg font-semibold mt-4">Begin Learning</button>
     </div>
-</div>
 
-<!-- SECTION 1: Math -->
-<div id="section-1" class="mission-section section-hidden">
-    <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-5">
-        <div class="flex justify-between items-center mb-3">
-            <h2 class="font-bold">Math Practice</h2>
-            <span id="current-math-topic" class="text-purple-300 text-xs">Topic: None Selected</span>
-        </div>
-        
-        <div id="math-questions-container" class="question-grid">
-            <div class="col-span-2 text-center p-6 bg-slate-700/30 rounded-lg border-2 border-dashed border-purple-500/30">
-                <p class="text-purple-300 text-xs">Select a topic from the Math dropdown menu above</p>
-            </div>
-        </div>
-        
-        <button onclick="window.goToSection(2)" class="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-lg font-semibold mt-4">Continue to Science</button>
-    </div>
-</div>
-
-<!-- SECTION 2: Science -->
-<div id="section-2" class="mission-section section-hidden">
-    <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-5">
-        <div class="flex justify-between items-center mb-3">
-            <h2 class="font-bold">Science Practice</h2>
-            <span id="current-science-topic" class="text-purple-300 text-xs">Topic: None Selected</span>
-        </div>
-        
-        <div id="science-questions-container" class="question-grid">
-            <div class="col-span-2 text-center p-6 bg-slate-700/30 rounded-lg border-2 border-dashed border-purple-500/30">
-                <p class="text-purple-300 text-xs">Select a topic from the Science dropdown menu above</p>
-            </div>
-        </div>
-        
-        <button onclick="window.goToSection(3)" class="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-lg font-semibold mt-4">Continue to Computer Science</button>
-    </div>
-</div>
-
-</div>
-
-<!-- SCRIPTS -->
-<script type="module">
-    import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
-    window.pythonURI = pythonURI;
-    window.fetchOptions = fetchOptions;
-</script>
-
-<script>
-// Get pythonURI
-function getPythonURI() {
-    if (window.pythonURI) return window.pythonURI;
-    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-        return "http://localhost:8402";
-    }
-    return "https://aistudybuddy.opencodingsociety.com";
-}
-var pythonURI = getPythonURI();
-var fetchOptions = window.fetchOptions || {
-    method: 'GET',
-    mode: 'cors',
-    cache: 'default',
-    credentials: 'include',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-Origin': 'client'
-    }
-};
-
-// Badge System
-let earnedBadges = [];
-
-async function loadUserBadges() {
-    try {
-        const response = await fetch(pythonURI + '/api/badges/my-badges', {
-            credentials: 'include'
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            if (data.success && data.badges) {
-                earnedBadges = data.badges;
-                updateBadgeDisplay();
-            }
-        }
-    } catch (error) {
-        console.error('Error loading badges:', error);
-    }
-}
-
-function updateBadgeDisplay() {
-    const badgeList = document.getElementById('badgeList');
-    
-    if (earnedBadges.length === 0) {
-        badgeList.innerHTML = '<p style="font-size: 10px; color: #999;">No badges yet</p>';
-        return;
-    }
-    
-    badgeList.innerHTML = earnedBadges.map(badge => `
-        <div class="badge-item">
-            <img src="${badge.image_url}" alt="${badge.name}">
-            <span>${badge.name}</span>
-        </div>
-    `).join('');
-}
-
-function showBadgeNotification(badge) {
-    const notification = document.getElementById('badgeNotification');
-    document.getElementById('badgeNotificationImage').src = badge.image_url;
-    document.getElementById('badgeNotificationName').textContent = badge.name;
-    document.getElementById('badgeNotificationDescription').textContent = badge.description;
-    notification.classList.add('show');
-}
-
-function closeBadgeNotification() {
-    document.getElementById('badgeNotification').classList.remove('show');
-}
-
-function handleBadgeAward(responseData) {
-    if (responseData.badge_awarded === true && responseData.badge) {
-        const badge = responseData.badge;
-        
-        if (!earnedBadges.find(b => b.id === badge.id)) {
-            earnedBadges.push(badge);
-            updateBadgeDisplay();
-            showBadgeNotification(badge);
-        }
-    }
-}
-
-// Math Section
-let selectedMathTopic = null;
-
-function selectMathTopic(topic) {
-    selectedMathTopic = topic;
-    document.getElementById('current-math-topic').textContent = 'Topic: ' + topic.charAt(0).toUpperCase() + topic.slice(1);
-    loadMathQuestions();
-}
-
-async function loadMathQuestions() {
-    if (!selectedMathTopic) return;
-    
-    try {
-        let url = pythonURI + '/api/math/questions?topic=' + selectedMathTopic;
-        const response = await fetch(url);
-        const data = await response.json();
-        
-        if (data.success && data.questions) {
-            if (data.questions.length === 0) {
-                document.getElementById('math-questions-container').innerHTML =
-                    '<p class="text-center text-yellow-400 text-xs col-span-2">No questions found for this topic.</p>';
-            } else {
-                displayMathQuestions(data.questions.slice(0, 4)); // Show max 4 for grid
-            }
-        } else {
-            throw new Error('Failed to load questions');
-        }
-    } catch (error) {
-        console.error('Error loading math questions:', error);
-        document.getElementById('math-questions-container').innerHTML =
-            '<p class="text-center text-red-400 text-xs col-span-2">Failed to load questions.</p>';
-    }
-}
-
-function displayMathQuestions(questions) {
-    const container = document.getElementById('math-questions-container');
-    container.innerHTML = '';
-    
-    questions.forEach((q, index) => {
-        const questionHtml = `
-            <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-3">
-                <h3 class="font-bold text-purple-300 mb-2">Question ${index + 1}</h3>
-                <p class="mb-3 text-xs">${q.question}</p>
-                <button onclick="togglePrompt(${q.id})" id="prompt-btn-${q.id}" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded font-semibold transition-all text-xs">
-                    View Prompt
+    <!-- NAVIGATION + CONTENT -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="bg-slate-800/50 backdrop-blur border border-purple-500/30 rounded-lg p-6 mb-8">
+            <div class="flex items-center justify-between overflow-x-auto pb-2 gap-2">
+                <button onclick="window.goToSection(0)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-purple-600"
+                    data-section="0">
+                    <span class="text-2xl mb-1">✍️</span>
+                    <span class="text-xs text-center">Intro</span>
                 </button>
-                
-                <div id="prompt-area-${q.id}" class="hidden mt-3">
-                    <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mb-2">
-                        <p class="text-xs text-blue-300 mb-1">Generated Prompt:</p>
-                        <p id="prompt-text-${q.id}" class="text-white mb-2 text-xs">${q.prompt_template.replace('{question}', q.question)}</p>
-                        
-                        <button onclick="autofillPrompt(${q.id})" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-xs mr-2">
-                            Test
-                        </button>
-                        <button onclick="copyPrompt(${q.id})" class="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded text-xs">
-                            Copy
-                        </button>
-                    </div>
-                    
-                    <div id="gemini-output-${q.id}" class="hidden mt-2 bg-green-900/20 border border-green-500/30 rounded-lg p-3">
-                        <p class="text-xs text-green-300 mb-1">AI Response:</p>
-                        <div id="gemini-result-${q.id}" class="text-white text-xs whitespace-pre-wrap"></div>
-                        <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
-                    </div>
-                </div>
-            </div>
-        `;
-        container.innerHTML += questionHtml;
-    });
-}
-
-function togglePrompt(questionId) {
-    const promptArea = document.getElementById(`prompt-area-${questionId}`);
-    const btn = document.getElementById(`prompt-btn-${questionId}`);
-
-    if (promptArea.classList.contains('hidden')) {
-        promptArea.classList.remove('hidden');
-        btn.textContent = 'Hide Prompt';
-        btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-        btn.classList.add('bg-red-600', 'hover:bg-red-700');
-    } else {
-        promptArea.classList.add('hidden');
-        btn.textContent = 'View Prompt';
-        btn.classList.remove('bg-red-600', 'hover:bg-red-700');
-        btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-        document.getElementById(`gemini-output-${questionId}`).classList.add('hidden');
-    }
-}
-
-function formatMathResponse(text) {
-    let formatted = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    formatted = formatted.replace(/\n/g, '<br>');
-    return formatted;
-}
-
-async function autofillPrompt(questionId) {
-    const promptText = document.getElementById(`prompt-text-${questionId}`).textContent;
-    const outputArea = document.getElementById(`gemini-output-${questionId}`);
-    const resultArea = document.getElementById(`gemini-result-${questionId}`);
-
-    outputArea.classList.remove('hidden');
-    resultArea.innerHTML = 'Loading AI response...';
-
-    try {
-        const response = await fetch(pythonURI + '/api/gemini', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                text: promptText,
-                prompt: ''
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.success && data.text) {
-            resultArea.innerHTML = formatMathResponse(data.text);
-
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([resultArea]).catch((err) => {
-                    console.error('MathJax rendering error:', err);
-                });
-            }
-        } else if (data.message) {
-            resultArea.innerHTML = `Error: ${data.message}`;
-        } else {
-            resultArea.innerHTML = 'Error: No response from AI';
-        }
-    } catch (error) {
-        console.error('Gemini API error:', error);
-        resultArea.innerHTML = 'Error: Failed to get AI response. Please make sure you are logged in.';
-    }
-}
-
-function copyPrompt(questionId) {
-    const promptText = document.getElementById(`prompt-text-${questionId}`).textContent;
-    navigator.clipboard.writeText(promptText).then(() => {
-        alert('Prompt copied to clipboard!');
-    }).catch(err => {
-        console.error('Failed to copy:', err);
-    });
-}
-
-// Science Section
-let selectedScienceTopic = null;
-
-window.showScienceTopicModal = function() {
-    const modal = document.getElementById('scienceTopicModal');
-    if (modal) {
-        modal.classList.add('modal-show');
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-function selectScienceTopic(topic) {
-    selectedScienceTopic = topic;
-    document.getElementById('current-science-topic').textContent = 'Topic: ' + topic.charAt(0).toUpperCase() + topic.slice(1);
-    loadScienceQuestions();
-}
-
-async function loadScienceQuestions() {
-    if (!selectedScienceTopic) return;
-
-    try {
-        let url = pythonURI + '/api/science/questions?topic=' + selectedScienceTopic;
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data.success && data.questions) {
-            if (data.questions.length === 0) {
-                document.getElementById('science-questions-container').innerHTML =
-                    '<div class="text-center p-6 bg-yellow-900/20 rounded-lg border border-yellow-500/30 col-span-2"><p class="text-yellow-300 text-xs">No questions found for this topic.</p></div>';
-            } else {
-                displayScienceQuestions(data.questions.slice(0, 4));
-            }
-        } else {
-            throw new Error('Failed to load questions');
-        }
-    } catch (error) {
-        console.error('Error loading science questions:', error);
-        document.getElementById('science-questions-container').innerHTML =
-            '<p class="text-center text-red-400 text-xs col-span-2">Failed to load questions.</p>';
-    }
-}
-
-function displayScienceQuestions(questions) {
-    const container = document.getElementById('science-questions-container');
-    container.innerHTML = '';
-
-    questions.forEach((q, index) => {
-        const questionHtml = `
-            <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-3">
-                <h3 class="font-bold text-purple-300 mb-2">Question ${index + 1}</h3>
-                <p class="mb-3 text-xs">${q.question}</p>
-
-                <button onclick="toggleSciencePrompt(${q.id})" id="science-prompt-btn-${q.id}" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded font-semibold transition-all text-xs">
-                    View Prompt
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="window.goToSection(1)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="1">
+                    <span class="text-2xl mb-1">🔢</span>
+                    <span class="text-xs text-center">Math</span>
                 </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="window.goToSection(2)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="2">
+                    <span class="text-2xl mb-1">🔬</span>
+                    <span class="text-xs text-center">Science</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="window.goToSection(3)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="3">
+                    <span class="text-2xl mb-1">💻</span>
+                    <span class="text-xs text-center">Comp Sci</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="window.goToSection(4)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="4">
+                    <span class="text-2xl mb-1">📜</span>
+                    <span class="text-xs text-center">History</span>
+                </button>
+                <div class="w-8 h-0.5 bg-purple-500/30"></div>
+                <button onclick="window.goToSection(5)"
+                    class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-slate-700/50"
+                    data-section="5">
+                    <span class="text-2xl mb-1">⚡</span>
+                    <span class="text-xs text-center">Challenge</span>
+                </button>
+            </div>
+        </div>
 
-                <div id="science-prompt-area-${q.id}" class="hidden mt-3">
-                    <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mb-2">
-                        <p class="text-xs text-blue-300 mb-1">Generated Prompt:</p>
-                        <p id="science-prompt-text-${q.id}" class="text-white mb-2 text-xs">${q.prompt_template.replace('{question}', q.question)}</p>
-
-                        <button onclick="autofillSciencePrompt(${q.id})" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-xs mr-2">
-                            Test
-                        </button>
-                        <button onclick="copySciencePrompt(${q.id})" class="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded text-xs">
-                            Copy
-                        </button>
+        <!-- SECTION 0: Introduction -->
+        <div id="section-0" class="mission-section">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/50 rounded-lg p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-4xl pulse">✍️</span>
+                        <h2 class="text-3xl font-bold text-purple-400">Prompt Engineering</h2>
                     </div>
+                    <div class="space-y-4 text-lg">
+                        <div class="flex justify-center my-6">
+                            <img src="{{ '/images/digital-famine/textPrompts.png' | prepend: site.baseurl }}"
+                                alt="Prompt Engineering Illustration"
+                                class="rounded-lg border border-purple-500/30 max-w-2xl w-full">
+                        </div>
 
-                    <div id="science-gemini-output-${q.id}" class="hidden mt-2 bg-green-900/20 border border-green-500/30 rounded-lg p-3">
-                        <p class="text-xs text-green-300 mb-1">AI Response:</p>
-                        <div id="science-gemini-result-${q.id}" class="text-white text-xs whitespace-pre-wrap"></div>
-                        <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
+                        <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-6 mt-6">
+                            <h3 class="text-xl font-semibold text-purple-300 mb-3">How AI Responds to Prompts</h3>
+                            <p class="mb-4">Generative AI like ChatGPT and Claude use two key technologies:</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-800/50 p-4 rounded-lg">
+                                    <p class="text-purple-400 font-semibold mb-2">🗣️ Natural Language Processing</p>
+                                    <p class="text-sm">Helps AI understand and respond to human language naturally, like
+                                        talking to another person.</p>
+                                </div>
+                                <div class="bg-slate-800/50 p-4 rounded-lg">
+                                    <p class="text-purple-400 font-semibold mb-2">🧠 Machine Learning</p>
+                                    <p class="text-sm">Enables AI to learn from your input and improve its responses
+                                        over time.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <button onclick="window.goToSection(1)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Begin
+                    Learning</button>
             </div>
-        `;
-        container.innerHTML += questionHtml;
-    });
-}
+        </div>
 
-function toggleSciencePrompt(questionId) {
-    const promptArea = document.getElementById(`science-prompt-area-${questionId}`);
-    const btn = document.getElementById(`science-prompt-btn-${questionId}`);
+        <!-- SECTION 1: Math -->
+        <div id="section-1" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">🔢 Math Practice</h2>
+                        <div class="flex gap-3">
+                            <button onclick="showMathTopicModal()"
+                                class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-semibold transition-all"
+                                title="Choose Topic">
+                                📚 Choose Topic
+                            </button>
+                            <button onclick="toggleMathTips()" class="text-3xl hover:scale-110 transition-transform"
+                                title="Show Tips">❓</button>
+                        </div>
+                    </div>
 
-    if (promptArea.classList.contains('hidden')) {
-        promptArea.classList.remove('hidden');
-        btn.textContent = 'Hide Prompt';
-        btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-        btn.classList.add('bg-red-600', 'hover:bg-red-700');
-    } else {
-        promptArea.classList.add('hidden');
-        btn.textContent = 'View Prompt';
-        btn.classList.remove('bg-red-600', 'hover:bg-red-700');
-        btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-        document.getElementById(`science-gemini-output-${questionId}`).classList.add('hidden');
-    }
-}
+                    <!-- Selected Topic Display -->
+                    <div id="selected-topic-display" class="hidden mb-4 bg-green-900/20 border border-green-500/30 rounded-lg p-3">
+                        <p class="text-green-300 text-sm">
+                            <span class="font-semibold">Current Topic:</span>
+                            <span id="current-topic-name" class="capitalize">All Topics</span>
+                            <button onclick="showMathTopicModal()" class="ml-3 text-xs underline hover:text-green-200">
+                                Change Topic
+                            </button>
+                        </p>
+                    </div>
 
-async function autofillSciencePrompt(questionId) {
-    const promptText = document.getElementById(`science-prompt-text-${questionId}`).textContent;
-    const outputArea = document.getElementById(`science-gemini-output-${questionId}`);
-    const resultArea = document.getElementById(`science-gemini-result-${questionId}`);
+                    <!-- Collapsible Tips Section -->
+                    <div id="math-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for Math</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-green-900/30 p-3 rounded">
+                                <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                <p>"Find the derivative of 3x⁴ - 2x³ step-by-step. Show all work and explain each step
+                                    using the power rule."</p>
+                            </div>
+                            <div class="bg-red-900/30 p-3 rounded">
+                                <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                <p>"What's the derivative?"</p>
+                            </div>
+                        </div>
+                        <p class="mt-3 text-sm text-blue-200">✨ <strong>Key:</strong> Be specific, ask for step-by-step
+                            explanations, and mention the concept/rule to use.</p>
+                    </div>
 
-    outputArea.classList.remove('hidden');
-    resultArea.textContent = 'Loading AI response...';
+                    <div class="space-y-6 text-lg">
+                        <p>Practice solving math problems with AI assistance. Click "View Prompt" to see an
+                            effective prompt, then use the Gemini API to check your work.</p>
 
-    try {
-        const response = await fetch(pythonURI + '/api/gemini', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                text: promptText,
-                prompt: ''
-            })
-        });
+                        <!-- Questions Container (loaded from database) -->
+                        <div id="math-questions-container" class="space-y-4">
+                            <div class="text-center p-8 bg-slate-700/30 rounded-lg border-2 border-dashed border-purple-500/30">
+                                <div class="text-5xl mb-4">📚</div>
+                                <p class="text-purple-300 text-lg font-semibold mb-2">Choose a topic to get started!</p>
+                                <p class="text-gray-400 text-sm">Click "Choose Topic" above to select what you'd like to practice.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="window.goToSection(2)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
+                    Science</button>
+            </div>
+        </div>
 
-        const data = await response.json();
+        <!-- SECTION 2: Science -->
+        <div id="section-2" class="mission-section section-hidden">
+            <div class="space-y-6">
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">🔬 Science Practice</h2>
+                        <div class="flex gap-3">
+                            <button onclick="window.showScienceTopicModal()"
+                                class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-semibold transition-all"
+                                title="Choose Topic">
+                                🔬 Choose Topic
+                            </button>
+                            <button onclick="toggleScienceTips()" class="text-3xl hover:scale-110 transition-transform"
+                                title="Show Tips">❓</button>
+                        </div>
+                    </div>
 
-        if (data.success && data.text) {
-            resultArea.textContent = data.text;
+                    <!-- Selected Topic Display -->
+                    <div id="science-selected-topic-display" class="hidden mb-4 bg-green-900/20 border border-green-500/30 rounded-lg p-3">
+                        <p class="text-green-300 text-sm">
+                            <span class="font-semibold">Current Topic:</span>
+                            <span id="science-current-topic-name" class="capitalize">All Topics</span>
+                            <button onclick="window.showScienceTopicModal()" class="ml-3 text-xs underline hover:text-green-200">
+                                Change Topic
+                            </button>
+                        </p>
+                    </div>
 
-            if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([resultArea]).catch((err) => {
-                    console.error('MathJax rendering error:', err);
-                });
-            }
-        } else if (data.message) {
-            resultArea.textContent = `Error: ${data.message}`;
-        } else {
-            resultArea.textContent = 'Error: No response from AI';
-        }
-    } catch (error) {
-        console.error('Gemini API error:', error);
-        resultArea.textContent = 'Error: Failed to get AI response. Please make sure you are logged in.';
-    }
-}
+                    <!-- Collapsible Tips Section -->
+                    <div id="science-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for Science</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="bg-green-900/30 p-3 rounded">
+                                <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                <p>"Explain photosynthesis to a 10th grader. Include the chemical equation, the role of
+                                    chlorophyll, and the two main stages."</p>
+                            </div>
+                            <div class="bg-red-900/30 p-3 rounded">
+                                <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                <p>"What is photosynthesis?"</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-xs text-blue-200">
+                            <p><strong>Key:</strong> Be specific, ask for detailed explanations, request examples or
+                                real-world connections</p>
+                        </div>
+                    </div>
 
-function copySciencePrompt(questionId) {
-    const promptText = document.getElementById(`science-prompt-text-${questionId}`).textContent;
-    navigator.clipboard.writeText(promptText).then(() => {
-        alert('Prompt copied to clipboard!');
-    }).catch(err => {
-        console.error('Failed to copy:', err);
-    });
-}
-
-// Expose functions to window
-window.selectMathTopic = selectMathTopic;
-window.togglePrompt = togglePrompt;
-window.autofillPrompt = autofillPrompt;
-window.copyPrompt = copyPrompt;
-window.selectScienceTopic = selectScienceTopic;
-window.toggleSciencePrompt = toggleSciencePrompt;
-window.autofillSciencePrompt = autofillSciencePrompt;
-window.copySciencePrompt = copySciencePrompt;
-
-// Initialize
-loadUserBadges();
-window.goToSection(0);
-</script>
+                    <!-- Questions Container (loaded from database) -->
+                    <div id="science-questions-container" class="space-y-4">
+                        <p class="text-center text-purple-300">Loading questions...</p>
+                    </div>
+                </div>
+                <button onclick="window.goToSection(3)"
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
+                    Computer Science</button>
+            </div>
+        </div>
 
         <!-- SECTION 3: Computer Science -->
         <div id="section-3" class="mission-section section-hidden">
