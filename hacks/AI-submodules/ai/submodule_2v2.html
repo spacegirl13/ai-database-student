@@ -813,11 +813,102 @@ function copyPrompt(questionId) {
     });
 }
 
+// Load science questions with sample fallback
+async function loadScienceQuestions() {
+    if (!selectedScienceTopic) {
+        console.log('No science topic selected yet, skipping question load');
+        return;
+    }
+
+    try {
+        let url = pythonURI + '/api/science/questions?topic=' + selectedScienceTopic;
+        console.log('Loading science questions with URL:', url);
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.success && data.questions && data.questions.length > 0) {
+            displayScienceQuestions(data.questions);
+            return;
+        }
+    } catch (error) {
+        console.error('API error, using sample questions:', error);
+    }
+
+    // Fallback to sample questions
+    const sampleQuestions = {
+        'biology': [
+            {id: 1, question: 'Explain photosynthesis and the role of chlorophyll', prompt_template: 'Explain photosynthesis in detail. Include the role of chlorophyll, the chemical equation, and the two main stages (light-dependent and light-independent reactions).', answer: 'Photosynthesis is the process by which plants convert light energy into chemical energy.'},
+            {id: 2, question: 'What is cellular respiration?', prompt_template: 'Explain cellular respiration step-by-step. Include aerobic and anaerobic respiration, the role of ATP, and the electron transport chain.', answer: 'Cellular respiration is the process by which cells break down glucose to produce ATP.'}
+        ],
+        'chemistry': [
+            {id: 1, question: 'Explain ionic bonding', prompt_template: 'Explain ionic bonding with examples. Include how electrons are transferred, the formation of ions, and the electrostatic attraction between them.', answer: 'Ionic bonding occurs when electrons are transferred from one atom to another.'},
+            {id: 2, question: 'What is the pH scale?', prompt_template: 'Explain the pH scale. Include the range of pH values, how they relate to hydrogen ion concentration, and examples of acids, bases, and neutral substances.', answer: 'The pH scale measures how acidic or basic a substance is.'}
+        ],
+        'physics': [
+            {id: 1, question: 'What is Newtons first law of motion?', prompt_template: 'Explain Newtons first law of motion. Include the concept of inertia, real-world examples, and why it matters in physics.', answer: 'Newtons first law states that an object at rest stays at rest unless acted upon by a force.'},
+            {id: 2, question: 'Explain the concept of velocity', prompt_template: 'Explain velocity in detail. Differentiate between velocity and speed, include the formula for calculating velocity, and provide real-world examples.', answer: 'Velocity is the rate of change of position in a specific direction.'}
+        ]
+    };
+    
+    if (sampleQuestions[selectedScienceTopic]) {
+        displayScienceQuestions(sampleQuestions[selectedScienceTopic]);
+    }
+}
+
+// Display science questions in grid
+function displayScienceQuestions(questions) {
+    const container = document.getElementById('science-questions-container');
+    container.innerHTML = '';
+
+    questions.forEach((q, index) => {
+        const questionHtml = `
+            <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
+                <h3 class="font-bold text-purple-300 mb-4" style="font-size: 15px;">Question ${index + 1}</h3>
+                <p class="text-sm mb-4">${q.question}</p>
+
+                <button
+                    onclick="toggleSciencePrompt(${q.id})"
+                    id="science-prompt-btn-${q.id}"
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition-all mb-3">
+                    View Prompt
+                </button>
+
+                <div id="science-prompt-area-${q.id}" class="hidden mt-4">
+                    <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mb-3">
+                        <p class="text-sm text-blue-300 mb-2">Generated Prompt:</p>
+                        <p id="science-prompt-text-${q.id}" class="text-white mb-3">${q.prompt_template.replace('{question}', q.question)}</p>
+
+                        <button
+                            onclick="autofillSciencePrompt(${q.id})"
+                            class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm mr-2">
+                            Autofill & Test
+                        </button>
+                        <button
+                            onclick="copySciencePrompt(${q.id})"
+                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm">
+                            Copy Prompt
+                        </button>
+                    </div>
+
+                    <div id="science-gemini-output-${q.id}" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                        <p class="text-sm text-green-300 mb-2">AI Response:</p>
+                        <div id="science-gemini-result-${q.id}" class="text-white text-sm whitespace-pre-wrap"></div>
+                        <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.innerHTML += questionHtml;
+    });
+}
+
 // Expose functions to window
 window.toggleTopicSelector = toggleTopicSelector;
 window.selectMathTopicInline = selectMathTopicInline;
 window.toggleMathTips = toggleMathTips;
 window.loadMathQuestions = loadMathQuestions;
+window.loadScienceQuestions = loadScienceQuestions;
+window.displayScienceQuestions = displayScienceQuestions;
 window.togglePrompt = togglePrompt;
 window.autofillPrompt = autofillPrompt;
 window.copyPrompt = copyPrompt;
@@ -838,12 +929,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             loadMathQuestions();
         } else if (sectionIndex === 2) { // Science section is section 2
-            // Keep original science behavior
-            if (!window.hasVisitedScienceSection) {
-                window.hasVisitedScienceSection = true;
-                setTimeout(() => window.showScienceTopicModal(), 300);
-            }
-            // Questions will load after user selects a topic in the modal
+            // Load science questions immediately
+            loadScienceQuestions();
         } else if (sectionIndex === 3) { // Computer Science section is section 3
             loadCodingQuestions();
         }
