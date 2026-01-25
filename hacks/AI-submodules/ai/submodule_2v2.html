@@ -395,14 +395,14 @@ date: 2025-10-30
 </div>
 
     <!-- MODULE HEADER - TITLE ONLY -->
-    <div class="bg-slate-900/50 backdrop-blur py-6">
+    <div class="bg-slate-900/50 backdrop-blur py-2">
         <div class="max-w-7xl mx-auto px-4">
-            <p class="text-center text-purple-300 text-3xl font-bold">Module 2: Prompt Engineering</p>
+            <p class="text-center text-purple-300 text-xl font-bold">Module 2: Prompt Engineering</p>
         </div>
     </div>
 
 <!-- PROGRESS BAR -->
-    <div class="max-w-7xl mx-auto px-4 mb-6 pt-4">
+    <div class="max-w-7xl mx-auto px-4 mb-2 pt-2">
         <div class="w-full bg-slate-700 rounded-full h-4 overflow-hidden">
             <div id="progress-bar" class="bg-purple-500 h-4 w-0 transition-all"></div>
         </div>
@@ -410,9 +410,9 @@ date: 2025-10-30
     </div>
 
     <!-- NAVIGATION + CONTENT -->
-    <div class="max-w-7xl mx-auto px-4 py-8">
-        <div class="bg-slate-800/50 backdrop-blur border border-purple-500/30 rounded-lg p-6 mb-8">
-            <div class="flex items-center justify-between overflow-x-auto pb-2 gap-2">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+        <div class="bg-slate-800/50 backdrop-blur border border-purple-500/30 rounded-lg p-3 mb-6">
+            <div class="flex items-center justify-between overflow-x-auto pb-1 gap-1">
                 <button onclick="window.goToSection(0)"
                     class="nav-btn flex flex-col items-center min-w-[100px] px-3 py-2 rounded-lg transition-all bg-purple-600"
                     data-section="0">
@@ -499,18 +499,11 @@ date: 2025-10-30
         <!-- SECTION 1: Math -->
         <div id="section-1" class="mission-section section-hidden">
             <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-3xl font-bold">🔢 Math Practice</h2>
-                        <div class="flex gap-3">
-                            <button onclick="showMathTopicModal()"
-                                class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-semibold transition-all"
-                                title="Choose Topic">
-                                📚 Choose Topic
-                            </button>
-                            <button onclick="toggleMathTips()" class="text-3xl hover:scale-110 transition-transform"
-                                title="Show Tips">❓</button>
-                        </div>
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold">🔢 Math Practice</h2>
+                        <button onclick="toggleMathTips()" class="text-2xl hover:scale-110 transition-transform"
+                            title="Show Tips">❓</button>
                     </div>
 
                     <!-- Selected Topic Display -->
@@ -525,33 +518,30 @@ date: 2025-10-30
                     </div>
 
                     <!-- Collapsible Tips Section -->
-                    <div id="math-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for Math</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                            <div class="bg-green-900/30 p-3 rounded">
+                    <div id="math-tips" class="hidden mb-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                        <h4 class="text-sm font-bold text-blue-300 mb-2">💡 Good vs Bad Prompts for Math</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                            <div class="bg-green-900/30 p-2 rounded">
                                 <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                <p>"Find the derivative of 3x⁴ - 2x³ step-by-step. Show all work and explain each step
-                                    using the power rule."</p>
+                                <p class="text-xs">"Find the derivative of 3x⁴ - 2x³ step-by-step. Show all work and explain each step using the power rule."</p>
                             </div>
-                            <div class="bg-red-900/30 p-3 rounded">
+                            <div class="bg-red-900/30 p-2 rounded">
                                 <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                <p>"What's the derivative?"</p>
+                                <p class="text-xs">"What's the derivative?"</p>
                             </div>
                         </div>
-                        <p class="mt-3 text-sm text-blue-200">✨ <strong>Key:</strong> Be specific, ask for step-by-step
-                            explanations, and mention the concept/rule to use.</p>
+                        <p class="mt-2 text-xs text-blue-200">✨ <strong>Key:</strong> Be specific, ask for step-by-step explanations, and mention the concept/rule to use.</p>
                     </div>
 
-                    <div class="space-y-6 text-lg">
-                        <p>Practice solving math problems with AI assistance. Click "View Prompt" to see an
-                            effective prompt, then use the Gemini API to check your work.</p>
+                    <div class="space-y-3 text-sm">
+                        <p class="text-xs">Practice solving math problems with AI assistance. Click "View Prompt" to see an effective prompt, then use the Gemini API to check your work.</p>
 
-                        <!-- Questions Container (loaded from database) -->
-                        <div id="math-questions-container" class="space-y-4">
-                            <div class="text-center p-8 bg-slate-700/30 rounded-lg border-2 border-dashed border-purple-500/30">
-                                <div class="text-5xl mb-4">📚</div>
-                                <p class="text-purple-300 text-lg font-semibold mb-2">Choose a topic to get started!</p>
-                                <p class="text-gray-400 text-sm">Click "Choose Topic" above to select what you'd like to practice.</p>
+                        <!-- Questions Container in 2x2 Grid (loaded from database) -->
+                        <div id="math-questions-container" class="grid grid-cols-2 gap-3">
+                            <div class="text-center p-4 bg-slate-700/30 rounded-lg border-2 border-dashed border-purple-500/30 col-span-2">
+                                <div class="text-3xl mb-2">📚</div>
+                                <p class="text-purple-300 text-sm font-semibold mb-1">Math questions will appear in a 2x2 grid</p>
+                                <p class="text-gray-400 text-xs">Four questions side by side - no scrolling needed!</p>
                             </div>
                         </div>
                     </div>
