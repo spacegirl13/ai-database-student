@@ -4278,6 +4278,13 @@ function tryAnotherChallenge() {
                 activityEl.classList.remove('hidden');
                 // Add active border to button
                 buttonEl.classList.add('border-yellow-400');
+                
+                // Load questions for the activity
+                if (activityNumber === 1) {
+                    loadFillBlankQuestion();
+                } else if (activityNumber === 2) {
+                    loadWriteCodeQuestion();
+                }
             } else {
                 activityEl.classList.add('hidden');
                 // Remove active border from button
@@ -4663,6 +4670,9 @@ function showLevel(level) {
         window.selectScienceTopic = selectScienceTopic;
         window.toggleCSTips = toggleCSTips;
         window.toggleActivity = toggleActivity;
+        window.loadCodingQuestions = loadCodingQuestions;
+        window.loadFillBlankQuestion = loadFillBlankQuestion;
+        window.loadWriteCodeQuestion = loadWriteCodeQuestion;
         window.checkFillBlank = checkFillBlank;
         window.autofillFillBlank = autofillFillBlank;
         window.showWriteCodeHint = showWriteCodeHint;
@@ -4694,6 +4704,12 @@ function showLevel(level) {
         window.testIntermediatePrompt = testIntermediatePrompt;
         window.copyIntermediatePrompt = copyIntermediatePrompt;
         window.resetIntermediate = resetIntermediate;
+        window.selectInterChallenge = selectInterChallenge;
+        window.testWithAI = testWithAI;
+        window.showAnswer = showAnswer;
+        window.tryAnotherChallenge = tryAnotherChallenge;
+        window.getHint = getHint;
+        window.analyzeStudentPrompt = analyzeStudentPrompt;
 
         // Track if the user has visited the math and science sections
         let hasVisitedMathSection = false;
