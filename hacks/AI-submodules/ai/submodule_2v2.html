@@ -4278,13 +4278,6 @@ function tryAnotherChallenge() {
                 activityEl.classList.remove('hidden');
                 // Add active border to button
                 buttonEl.classList.add('border-yellow-400');
-                
-                // Load questions for the activity
-                if (activityNumber === 1) {
-                    loadFillBlankQuestion();
-                } else if (activityNumber === 2) {
-                    loadWriteCodeQuestion();
-                }
             } else {
                 activityEl.classList.add('hidden');
                 // Remove active border from button
@@ -4334,9 +4327,50 @@ function tryAnotherChallenge() {
                         option.textContent = `${q.language.toUpperCase()}: ${q.title}`;
                         selector.appendChild(option);
                     });
+                    return; // Success, no need for fallback
                 }
             } catch (error) {
                 console.error('Error loading fill-blank questions:', error);
+            }
+
+            // Fallback to sample questions
+            fillBlankQuestions = [
+                {
+                    id: 1,
+                    language: 'python',
+                    title: 'Simple Function',
+                    description: 'Complete the Python function that adds two numbers',
+                    code_template: 'def add(a, b):\n    return {{operation}}\n\nresult = add(5, 3)\nprint(result)',
+                    blanks: {
+                        operation: {
+                            correct: 'a + b',
+                            options: ['a + b', 'a - b', 'a * b', 'a / b']
+                        }
+                    }
+                },
+                {
+                    id: 2,
+                    language: 'python',
+                    title: 'Loop Structure',
+                    description: 'Complete the for loop that prints numbers',
+                    code_template: 'for i in {{range}}:\n    print(i)',
+                    blanks: {
+                        range: {
+                            correct: 'range(5)',
+                            options: ['range(5)', 'range(1, 5)', '[1,2,3,4,5]', '5']
+                        }
+                    }
+                }
+            ];
+            
+            const selector = document.getElementById('fill-blank-selector');
+            if (selector) {
+                fillBlankQuestions.forEach(q => {
+                    const option = document.createElement('option');
+                    option.value = q.id;
+                    option.textContent = `${q.language.toUpperCase()}: ${q.title}`;
+                    selector.appendChild(option);
+                });
             }
         }
 
@@ -4356,9 +4390,42 @@ function tryAnotherChallenge() {
                         option.textContent = `${q.language.toUpperCase()}: ${q.title}`;
                         selector.appendChild(option);
                     });
+                    return; // Success, no need for fallback
                 }
             } catch (error) {
                 console.error('Error loading write-code questions:', error);
+            }
+
+            // Fallback to sample questions
+            writeCodeQuestions = [
+                {
+                    id: 1,
+                    language: 'python',
+                    title: 'Calculate Sum',
+                    description: 'Write a function that calculates the sum of numbers in a list',
+                    hint: 'Use a loop or the built-in sum() function',
+                    solution: 'def calculate_sum(numbers):\n    return sum(numbers)\n\nresult = calculate_sum([1, 2, 3, 4, 5])\nprint(result)  # Output: 15',
+                    expected_output: '15'
+                },
+                {
+                    id: 2,
+                    language: 'python',
+                    title: 'Count Vowels',
+                    description: 'Write a function that counts the number of vowels in a string',
+                    hint: 'Loop through each character and check if it\'s a vowel',
+                    solution: 'def count_vowels(text):\n    vowels = "aeiouAEIOU"\n    return sum(1 for char in text if char in vowels)\n\nprint(count_vowels("Hello World"))  # Output: 3',
+                    expected_output: '3'
+                }
+            ];
+            
+            const selector = document.getElementById('write-code-selector');
+            if (selector) {
+                writeCodeQuestions.forEach(q => {
+                    const option = document.createElement('option');
+                    option.value = q.id;
+                    option.textContent = `${q.language.toUpperCase()}: ${q.title}`;
+                    selector.appendChild(option);
+                });
             }
         }
 
