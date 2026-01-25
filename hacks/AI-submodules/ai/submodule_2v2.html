@@ -539,8 +539,8 @@ date: 2025-10-30
             <div class="space-y-3 text-sm">
                 <p class="text-xs">Practice solving math problems with AI assistance. Click "View Prompt" to see an effective prompt, then use the Gemini API to check your work.</p>
 
-                <!-- Questions Container in single column (loaded from database) -->
-                <div id="math-questions-container" class="space-y-3">
+                <!-- Questions Container in 2x2 Grid (loaded from database) -->
+                <div id="math-questions-container" class="grid grid-cols-2 gap-3">
                 </div>
             </div>
         </div>
@@ -635,39 +635,39 @@ function displayMathQuestions(questions) {
 
     questions.forEach((q, index) => {
         const questionHtml = `
-            <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-3">
-                <h3 class="font-bold text-purple-300 mb-2" style="font-size: 15px;">Question ${index + 1}</h3>
-                <p class="text-xs mb-3">${q.question}</p>
+            <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
+                <h3 class="font-bold text-purple-300 mb-4" style="font-size: 15px;">Question ${index + 1}</h3>
+                <p class="text-sm mb-4">${q.question}</p>
 
                 <button
                     onclick="togglePrompt(${q.id})"
                     id="prompt-btn-${q.id}"
-                    class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-xs font-semibold transition-all mb-2">
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition-all mb-3">
                     View Prompt
                 </button>
 
                 <!-- Prompt Display Area (hidden by default) -->
-                <div id="prompt-area-${q.id}" class="hidden mt-2">
-                    <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mb-2">
-                        <p class="text-xs text-blue-300 mb-2">Prompt:</p>
-                        <p id="prompt-text-${q.id}" class="text-white text-xs mb-2">${q.prompt_template.replace('{question}', q.question)}</p>
+                <div id="prompt-area-${q.id}" class="hidden mt-4">
+                    <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mb-3">
+                        <p class="text-sm text-blue-300 mb-2">Generated Prompt:</p>
+                        <p id="prompt-text-${q.id}" class="text-white mb-3">${q.prompt_template.replace('{question}', q.question)}</p>
 
                         <button
                             onclick="autofillPrompt(${q.id})"
-                            class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-xs mr-2">
+                            class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm mr-2">
                             Autofill & Test
                         </button>
                         <button
                             onclick="copyPrompt(${q.id})"
-                            class="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded text-xs">
-                            Copy
+                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm">
+                            Copy Prompt
                         </button>
                     </div>
 
                     <!-- Gemini API Output Area -->
-                    <div id="gemini-output-${q.id}" class="hidden mt-2 bg-green-900/20 border border-green-500/30 rounded-lg p-3">
-                        <p class="text-xs text-green-300 mb-2">AI Response:</p>
-                        <div id="gemini-result-${q.id}" class="text-white text-xs whitespace-pre-wrap max-h-40 overflow-y-auto"></div>
+                    <div id="gemini-output-${q.id}" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                        <p class="text-sm text-green-300 mb-2">AI Response:</p>
+                        <div id="gemini-result-${q.id}" class="text-white text-sm whitespace-pre-wrap"></div>
                         <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
                     </div>
                 </div>
@@ -801,7 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.hasVisitedScienceSection = true;
                 setTimeout(() => window.showScienceTopicModal(), 300);
             }
-            // Don't call loadScienceQuestions here - it will be called after topic is selected
+            loadScienceQuestions();
         } else if (sectionIndex === 3) { // Computer Science section is section 3
             loadCodingQuestions();
         }
@@ -815,7 +815,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-lg font-bold">🔬 Science Practice</h2>
+                        <h2 class="text-3xl font-bold">🔬 Science Practice</h2>
                         <div class="flex gap-3">
                             <button onclick="window.showScienceTopicModal()"
                                 class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-semibold transition-all"
@@ -828,8 +828,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                     <!-- Selected Topic Display -->
-                    <div id="science-selected-topic-display" class="hidden mb-4 bg-green-900/20 border border-green-500/30 rounded-lg p-2">
-                        <p class="text-green-300 text-xs">
+                    <div id="science-selected-topic-display" class="hidden mb-4 bg-green-900/20 border border-green-500/30 rounded-lg p-3">
+                        <p class="text-green-300 text-sm">
                             <span class="font-semibold">Current Topic:</span>
                             <span id="science-current-topic-name" class="capitalize">All Topics</span>
                             <button onclick="window.showScienceTopicModal()" class="ml-3 text-xs underline hover:text-green-200">
@@ -874,7 +874,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-lg font-bold">💻 Computer Science</h2>
+                        <h2 class="text-3xl font-bold">💻 Computer Science</h2>
                         <button onclick="toggleCSTips()" class="text-3xl hover:scale-110 transition-transform"
                             title="Show Tips">❓</button>
                     </div>
@@ -917,19 +917,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         <!-- Activity Selection Buttons -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <button onclick="toggleActivity(1)" id="activity-btn-1"
-                                class="bg-blue-600 hover:bg-blue-700 py-2 px-3 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
-                                <div class="text-sm">📝 Activity 1</div>
-                                <div class="text-xs opacity-90">Fundamentals</div>
+                                class="bg-blue-600 hover:bg-blue-700 py-4 px-6 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
+                                <div class="text-lg">📝 Activity 1</div>
+                                <div class="text-sm opacity-90">Fundamentals</div>
                             </button>
                             <button onclick="toggleActivity(2)" id="activity-btn-2"
-                                class="bg-purple-600 hover:bg-purple-700 py-2 px-3 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
-                                <div class="text-sm">💻 Activity 2</div>
-                                <div class="text-xs opacity-90">Building Challenges</div>
+                                class="bg-purple-600 hover:bg-purple-700 py-4 px-6 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
+                                <div class="text-lg">💻 Activity 2</div>
+                                <div class="text-sm opacity-90">Building Challenges</div>
                             </button>
                             <button onclick="toggleActivity(3)" id="activity-btn-3"
-                                class="bg-green-600 hover:bg-green-700 py-2 px-3 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
-                                <div class="text-sm">🎮 Activity 3</div>
-                                <div class="text-xs opacity-90">Prompt Analyzer</div>
+                                class="bg-green-600 hover:bg-green-700 py-4 px-6 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
+                                <div class="text-lg">🎮 Activity 3</div>
+                                <div class="text-sm opacity-90">Prompt Analyzer</div>
                             </button>
                         </div>
 
