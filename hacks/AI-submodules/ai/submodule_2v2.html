@@ -59,9 +59,100 @@ date: 2025-10-30
         }
 
         body {
-            background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             min-height: 100vh;
         }
+
+        /* Brighten up all sections */
+        .bg-slate-800\/70 {
+            background-color: rgba(30, 41, 59, 0.5) !important;
+            border: 2px solid rgba(139, 92, 246, 0.6) !important;
+        }
+
+        .bg-slate-700\/50 {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3)) !important;
+            border: 1px solid rgba(139, 92, 246, 0.5) !important;
+        }
+
+        /* Vibrant button colors */
+        .bg-purple-600 {
+            background: linear-gradient(135deg, #a855f7 0%, #d946ef 100%) !important;
+        }
+
+        .bg-purple-600:hover {
+            background: linear-gradient(135deg, #9333ea 0%, #c026d3 100%) !important;
+        }
+
+        .bg-blue-600 {
+            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%) !important;
+        }
+
+        .bg-blue-600:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%) !important;
+        }
+
+        .bg-green-600 {
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%) !important;
+        }
+
+        .bg-green-600:hover {
+            background: linear-gradient(135deg, #059669 0%, #0d9488 100%) !important;
+        }
+
+        .bg-yellow-600 {
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%) !important;
+        }
+
+        .bg-orange-600 {
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 100%) !important;
+        }
+
+        /* Brighten text */
+        .text-purple-300 {
+            color: #e9d5ff !important;
+        }
+
+        .text-purple-400 {
+            color: #d8b4fe !important;
+        }
+
+        .text-blue-300 {
+            color: #93c5fd !important;
+        }
+
+        .text-green-300 {
+            color: #86efac !important;
+        }
+
+        /* Dropdown styling */
+        #math-dropdown,
+        #science-dropdown {
+            background: linear-gradient(135deg, rgba(30, 27, 82, 0.95), rgba(59, 130, 246, 0.3)) !important;
+            border: 2px solid rgba(168, 85, 247, 0.8) !important;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4) !important;
+        }
+
+        #math-dropdown button,
+        #science-dropdown button {
+            background: transparent !important;
+            color: #e9d5ff !important;
+            border: none !important;
+            transition: all 0.3s ease !important;
+        }
+
+        #math-dropdown button:hover,
+        #science-dropdown button:hover {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(139, 92, 246, 0.4)) !important;
+            color: #fbbf24 !important;
+            padding-left: 12px !important;
+        }
+
+        /* Section title colors */
+        h2 {
+            color: #e9d5ff !important;
+            text-shadow: 0 2px 8px rgba(139, 92, 246, 0.3) !important;
+        }
+</style>
         /* Badge Display Box - Upper Right Corner */
         #badgeDisplay {
             position: fixed !important;
@@ -3381,6 +3472,9 @@ function tryAnotherChallenge() {
         // Toggle math dropdown
         function toggleMathDropdown() {
             const dropdown = document.getElementById('math-dropdown');
+            const sciDropdown = document.getElementById('science-dropdown');
+            // Close science dropdown if open
+            if (sciDropdown) sciDropdown.classList.add('hidden');
             dropdown.classList.toggle('hidden');
         }
 
@@ -3389,6 +3483,15 @@ function tryAnotherChallenge() {
             const dropdown = document.getElementById('math-dropdown');
             dropdown.classList.add('hidden');
         }
+
+        // Close math dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const mathBtn = event.target.closest('[onclick*="toggleMathDropdown"]');
+            const mathDropdown = document.getElementById('math-dropdown');
+            if (!mathBtn && mathDropdown && !mathDropdown.contains(event.target)) {
+                mathDropdown.classList.add('hidden');
+            }
+        });
 
         // Show math topic modal
         function showMathTopicModal() {
@@ -3597,6 +3700,9 @@ function tryAnotherChallenge() {
         // Toggle science dropdown
         function toggleScienceDropdown() {
             const dropdown = document.getElementById('science-dropdown');
+            const mathDropdown = document.getElementById('math-dropdown');
+            // Close math dropdown if open
+            if (mathDropdown) mathDropdown.classList.add('hidden');
             dropdown.classList.toggle('hidden');
         }
 
@@ -3605,6 +3711,15 @@ function tryAnotherChallenge() {
             const dropdown = document.getElementById('science-dropdown');
             dropdown.classList.add('hidden');
         }
+
+        // Close science dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const sciBtn = event.target.closest('[onclick*="toggleScienceDropdown"]');
+            const sciDropdown = document.getElementById('science-dropdown');
+            if (!sciBtn && sciDropdown && !sciDropdown.contains(event.target)) {
+                sciDropdown.classList.add('hidden');
+            }
+        });
 
         // Show science topic modal
         window.showScienceTopicModal = function() {
