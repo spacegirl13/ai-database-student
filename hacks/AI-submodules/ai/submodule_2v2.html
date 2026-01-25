@@ -501,7 +501,7 @@ date: 2025-10-30
     <div class="space-y-6">
         <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-6">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold">🔢 Math Practice</h2>
+                <h2 class="text-lg font-bold">🔢 Math Practice</h2>
                 <div class="flex gap-2 items-center">
                     <span class="text-sm text-purple-300">Topic: <span id="current-math-topic" class="font-semibold">Trigonometry</span></span>
                     <button onclick="toggleTopicSelector()" class="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm" title="Change Topic">Change Topic</button>
@@ -636,8 +636,8 @@ function displayMathQuestions(questions) {
     questions.forEach((q, index) => {
         const questionHtml = `
             <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
-                <h3 class="text-xl font-bold text-purple-300 mb-4">Question ${index + 1}</h3>
-                <p class="text-lg mb-4">${q.question}</p>
+                <h3 class="text-sm font-bold text-purple-300 mb-4">Question ${index + 1}</h3>
+                <p class="text-sm mb-4">${q.question}</p>
 
                 <button
                     onclick="togglePrompt(${q.id})"
