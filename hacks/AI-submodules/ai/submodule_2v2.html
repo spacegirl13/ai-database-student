@@ -1334,9 +1334,10 @@ document.addEventListener('DOMContentLoaded', () => {
 <div id="section-4" class="mission-section section-hidden">
     <div class="space-y-6">
         <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-4">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-sm font-bold">📜 History</h2>
-                <button onclick="toggleHistoryTips()" class="text-2xl hover:scale-110 transition-transform"
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-lg pulse">📜</span>
+                <h2 class="text-sm font-bold text-purple-400">History</h2>
+                <button onclick="toggleHistoryTips()" class="ml-auto text-2xl hover:scale-110 transition-transform"
                     title="Show Tips">❓</button>
             </div>
 
@@ -1586,11 +1587,11 @@ window.copyHistoryPrompt = copyHistoryPrompt;
 window.resetHistoryBuilder = resetHistoryBuilder;
 </script>
 
- <!-- SECTION 5: Interactive Challenge -->
+        <!-- SECTION 5: Interactive Challenge -->
         <div id="section-5" class="mission-section section-hidden">
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
-                    <h2 class="text-3xl font-bold mb-6">🎯 Interactive Prompt Challenge</h2>
+                    <h2 class="text-xl font-bold mb-6">🎯 Interactive Prompt Challenge</h2>
                     <p class="text-lg mb-6">Choose your level and practice writing effective prompts!</p>
 
                   <!-- Level Selection -->
@@ -4270,225 +4271,7 @@ function tryAnotherChallenge() {
             });
         }
 
-        // ==================== SCIENCE SECTION FUNCTIONS ====================
-
-        // Global variable to track selected science topic
-        let selectedScienceTopic = null;
-
-        // Show science topic modal
-        window.showScienceTopicModal = function() {
-            const modal = document.getElementById('scienceTopicModal');
-            if (modal) {
-                modal.classList.add('modal-show');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        // Close science topic modal
-        function closeScienceTopicModal() {
-            const modal = document.getElementById('scienceTopicModal');
-            if (modal) {
-                modal.classList.remove('modal-show');
-                document.body.style.overflow = '';
-            }
-        }
-
-        // Select science topic
-        function selectScienceTopic(topic) {
-            // Update selected topic
-            selectedScienceTopic = topic;
-
-            // Update UI to show selected topic
-            document.querySelectorAll('.science-topic-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            document.getElementById('science-topic-' + topic).classList.add('selected');
-
-            // Update the topic display
-            const topicDisplay = document.getElementById('science-selected-topic-display');
-            const topicNameEl = document.getElementById('science-current-topic-name');
-            topicNameEl.textContent = topic.charAt(0).toUpperCase() + topic.slice(1);
-            topicDisplay.classList.remove('hidden');
-
-            // Close modal
-            closeScienceTopicModal();
-
-            // Reload questions with the selected topic
-            loadScienceQuestions();
-        }
-
-        // Toggle science tips visibility
-        function toggleScienceTips() {
-            const tipsEl = document.getElementById('science-tips');
-            if (tipsEl.classList.contains('hidden')) {
-                tipsEl.classList.remove('hidden');
-            } else {
-                tipsEl.classList.add('hidden');
-            }
-        }
-
-        // Load science questions from database
-        async function loadScienceQuestions() {
-            // Only load questions if a topic has been selected
-            if (!selectedScienceTopic) {
-                console.log('No science topic selected yet, skipping question load');
-                return;
-            }
-
-            try {
-                // Load questions filtered by topic from API
-                let url = pythonURI + '/api/science/questions?topic=' + selectedScienceTopic;
-                console.log('Loading science questions with URL:', url);
-                console.log('Selected topic:', selectedScienceTopic);
-
-                const response = await fetch(url);
-                const data = await response.json();
-
-                console.log('Science response data:', data);
-                console.log('Questions received:', data.questions ? data.questions.length : 0);
-
-                if (data.success && data.questions) {
-                    if (data.questions.length === 0) {
-                        document.getElementById('science-questions-container').innerHTML =
-                            '<div class="text-center p-8 bg-yellow-900/20 rounded-lg border border-yellow-500/30"><p class="text-yellow-300">No questions found for this topic. Try selecting a different topic.</p></div>';
-                    } else {
-                        displayScienceQuestions(data.questions);
-                    }
-                } else {
-                    throw new Error('Failed to load questions');
-                }
-            } catch (error) {
-                console.error('Error loading science questions:', error);
-                document.getElementById('science-questions-container').innerHTML =
-                    '<p class="text-center text-red-400">Failed to load questions. Please refresh the page.</p>';
-            }
-        }
-
-        // Display science questions
-        function displayScienceQuestions(questions) {
-            const container = document.getElementById('science-questions-container');
-            container.innerHTML = '';
-
-            questions.forEach((q, index) => {
-                const questionHtml = `
-                    <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
-                        <h3 class="text-xl font-bold text-purple-300 mb-4">Question ${index + 1} - ${q.category.charAt(0).toUpperCase() + q.category.slice(1)}</h3>
-                        <p class="text-lg mb-4">${q.question}</p>
-
-                        <button
-                            onclick="toggleSciencePrompt(${q.id})"
-                            id="science-prompt-btn-${q.id}"
-                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition-all mb-3">
-                            View Prompt
-                        </button>
-
-                        <!-- Prompt Display Area (hidden by default) -->
-                        <div id="science-prompt-area-${q.id}" class="hidden mt-4">
-                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mb-3">
-                                <p class="text-sm text-blue-300 mb-2">Generated Prompt:</p>
-                                <p id="science-prompt-text-${q.id}" class="text-white mb-3">${q.prompt_template.replace('{question}', q.question)}</p>
-
-                                <button
-                                    onclick="autofillSciencePrompt(${q.id})"
-                                    class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm mr-2">
-                                    Autofill & Test
-                                </button>
-                                <button
-                                    onclick="copySciencePrompt(${q.id})"
-                                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm">
-                                    Copy Prompt
-                                </button>
-                            </div>
-
-                            <!-- Gemini API Output Area -->
-                            <div id="science-gemini-output-${q.id}" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
-                                <p class="text-sm text-green-300 mb-2">AI Response:</p>
-                                <div id="science-gemini-result-${q.id}" class="text-white text-sm whitespace-pre-wrap"></div>
-                                <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += questionHtml;
-            });
-        }
-
-        // Toggle science prompt visibility
-        function toggleSciencePrompt(questionId) {
-            const promptArea = document.getElementById(`science-prompt-area-${questionId}`);
-            const btn = document.getElementById(`science-prompt-btn-${questionId}`);
-
-            if (promptArea.classList.contains('hidden')) {
-                promptArea.classList.remove('hidden');
-                btn.textContent = 'Hide Prompt';
-                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                btn.classList.add('bg-red-600', 'hover:bg-red-700');
-            } else {
-                promptArea.classList.add('hidden');
-                btn.textContent = 'View Prompt';
-                btn.classList.remove('bg-red-600', 'hover:bg-red-700');
-                btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                // Also hide Gemini output
-                document.getElementById(`science-gemini-output-${questionId}`).classList.add('hidden');
-            }
-        }
-
-        // Autofill science prompt and call Gemini API
-        async function autofillSciencePrompt(questionId) {
-            const promptText = document.getElementById(`science-prompt-text-${questionId}`).textContent;
-            const outputArea = document.getElementById(`science-gemini-output-${questionId}`);
-            const resultArea = document.getElementById(`science-gemini-result-${questionId}`);
-
-            // Show output area with loading message
-            outputArea.classList.remove('hidden');
-            resultArea.textContent = 'Loading AI response...';
-
-            try {
-                const response = await fetch(pythonURI + '/api/gemini', {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        text: promptText,
-                        prompt: ''
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.success && data.text) {
-                    resultArea.textContent = data.text;
-
-                    // Trigger MathJax to render any chemical equations
-                    if (window.MathJax && window.MathJax.typesetPromise) {
-                        window.MathJax.typesetPromise([resultArea]).catch((err) => {
-                            console.error('MathJax rendering error:', err);
-                        });
-                    }
-                } else if (data.message) {
-                    resultArea.textContent = `Error: ${data.message}`;
-                } else {
-                    resultArea.textContent = 'Error: No response from AI';
-                }
-            } catch (error) {
-                console.error('Gemini API error:', error);
-                resultArea.textContent = 'Error: Failed to get AI response. Please make sure you are logged in.';
-            }
-        }
-
-        // Copy science prompt to clipboard
-        function copySciencePrompt(questionId) {
-            const promptText = document.getElementById(`science-prompt-text-${questionId}`).textContent;
-            navigator.clipboard.writeText(promptText).then(() => {
-                alert('Prompt copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-            });
-        }
-
-        // ==================== END SCIENCE SECTION FUNCTIONS ====================
+        // Science section functions are defined at top level
 
         // Toggle CS tips visibility
         function toggleCSTips() {
@@ -4848,6 +4631,8 @@ function tryAnotherChallenge() {
         window.closeMathTopicModal = closeMathTopicModal;
         window.selectMathTopic = selectMathTopic;
         window.toggleMathTips = toggleMathTips;
+        window.toggleScienceTopicSelector = toggleScienceTopicSelector;
+        window.selectScienceTopicInline = selectScienceTopicInline;
         window.toggleScienceTips = toggleScienceTips;
         window.closeScienceTopicModal = closeScienceTopicModal;
         window.selectScienceTopic = selectScienceTopic;
@@ -4870,6 +4655,7 @@ function tryAnotherChallenge() {
         window.togglePrompt = togglePrompt;
         window.autofillPrompt = autofillPrompt;
         window.copyPrompt = copyPrompt;
+        window.loadScienceQuestions = loadScienceQuestions;
         window.toggleSciencePrompt = toggleSciencePrompt;
         window.autofillSciencePrompt = autofillSciencePrompt;
         window.copySciencePrompt = copySciencePrompt;
@@ -4902,12 +4688,8 @@ function tryAnotherChallenge() {
                     }
                     loadMathQuestions();
                 } else if (sectionIndex === 2) { // Science section is section 2
-                    // Show topic modal on first visit to science section
-                    if (!hasVisitedScienceSection) {
-                        hasVisitedScienceSection = true;
-                        setTimeout(() => window.showScienceTopicModal(), 300);
-                    }
-                    loadScienceQuestions();
+                    // Load questions with default topic
+                    setTimeout(() => loadScienceQuestions(), 100);
                 } else if (sectionIndex === 3) { // Computer Science section is section 3
                     loadCodingQuestions();
                 }
