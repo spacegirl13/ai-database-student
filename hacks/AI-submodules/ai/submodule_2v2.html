@@ -1330,115 +1330,261 @@ document.addEventListener('DOMContentLoaded', () => {
                                
             
 
-        <!-- SECTION 4: History -->
-        <div id="section-4" class="mission-section section-hidden">
-            <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-base font-bold">📜 History</h2>
-                        <button onclick="toggleHistoryTips()" class="text-3xl hover:scale-110 transition-transform"
-                            title="Show Tips">❓</button>
-                    </div>
+       <!-- SECTION 4: History -->
+<div id="section-4" class="mission-section section-hidden">
+    <div class="space-y-6">
+        <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm font-bold">📜 History</h2>
+                <button onclick="toggleHistoryTips()" class="text-2xl hover:scale-110 transition-transform"
+                    title="Show Tips">❓</button>
+            </div>
 
-                    <!-- Collapsible Tips Section -->
-                    <div id="history-tips" class="hidden mb-3 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
-                        <h4 class="text-sm font-bold text-blue-300 mb-2">💡 Good vs Bad Prompts for History</h4>
-                        <div class="space-y-3 text-sm">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div class="bg-green-900/30 p-3 rounded">
-                                    <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                    <p>"Explain the main causes of World War I in simple terms. Include at least 3
-                                        causes and how they led to the war."</p>
-                                </div>
-                                <div class="bg-red-900/30 p-3 rounded">
-                                    <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                    <p>"Why did WWI happen?"</p>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div class="bg-green-900/30 p-3 rounded">
-                                    <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                    <p>"Compare and contrast the American Revolution and the French Revolution. Create a
-                                        table showing their similarities and differences."</p>
-                                </div>
-                                <div class="bg-red-900/30 p-3 rounded">
-                                    <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                    <p>"Tell me about revolutions."</p>
-                                </div>
-                            </div>
+            <!-- Collapsible Tips Section -->
+            <div id="history-tips" class="hidden mb-3 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                <h4 class="text-xs font-bold text-blue-300 mb-2">💡 Good vs Bad Prompts for History</h4>
+                <div class="space-y-3 text-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="bg-green-900/30 p-3 rounded">
+                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                            <p class="text-xs">Explain the main causes of World War I in simple terms. Include at least 3
+                                causes and how they led to the war.</p>
                         </div>
-                        <div class="mt-3 text-xs text-blue-200">
-                            <p><strong>Key:</strong> Ask for causes and effects, request comparisons, analyze primary
-                                sources, create timelines with dates</p>
+                        <div class="bg-red-900/30 p-3 rounded">
+                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                            <p class="text-xs">Why did WWI happen?</p>
                         </div>
                     </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="bg-green-900/30 p-3 rounded">
+                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                            <p class="text-xs">Compare and contrast the American Revolution and the French Revolution. Create a
+                                table showing their similarities and differences.</p>
+                        </div>
+                        <div class="bg-red-900/30 p-3 rounded">
+                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                            <p class="text-xs">Tell me about revolutions.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3 text-xs text-blue-200">
+                    <p><strong>Key:</strong> Ask for causes and effects, request comparisons, analyze primary
+                        sources, create timelines with dates</p>
+                </div>
+            </div>
 
-                    <div class="space-y-3 text-sm">
+            <div class="space-y-3 text-sm">
 
-                        <!-- Interactive Activity: Prompt Template Builder -->
-                        <div
-                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-4 mt-3">
-                            <h4 class="text-sm font-bold text-green-300 mb-2">🎮 Interactive: History Prompt Builder!</h4>
-                            <p class="mb-3 text-xs">Choose your prompt type and fill in the details to create an effective history prompt:</p>
+                <!-- Interactive Activity: Prompt Template Builder -->
+                <div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-4 mt-3">
+                    <h4 class="text-xs font-bold text-green-300 mb-2">🎮 Interactive: History Prompt Builder!</h4>
+                    <p class="mb-3 text-xs">Choose your prompt type and fill in the details to create an effective history prompt:</p>
 
-                            <div class="bg-slate-800/50 p-3 rounded-lg space-y-3">
-                                <!-- Prompt Type Selection -->
-                                <div>
-                                    <label class="block text-xs font-semibold mb-2">1. Select prompt type:</label>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <button type="button" onclick="selectHistoryType('cause')" id="hist-cause-btn"
-                                            class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                            <span style="font-size: 14px;">🔍 Cause & Effect</span>
-                                        </button>
-                                        <button type="button" onclick="selectHistoryType('compare')" id="hist-compare-btn"
-                                            class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                            <span style="font-size: 14px;">⚖️ Compare Events</span>
-                                        </button>
-                                        <button type="button" onclick="selectHistoryType('analyze')" id="hist-analyze-btn"
-                                            class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                            <span style="font-size: 14px;">📜 Analyze Source</span>
-                                        </button>
-                                        <button type="button" onclick="selectHistoryType('timeline')" id="hist-timeline-btn"
-                                            class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                            <span style="font-size: 14px;">📅 Create Timeline</span>
-                                        </button>
-                                    </div>
-                                </div>
+                    <div class="bg-slate-800/50 p-3 rounded-lg space-y-3">
+                        <!-- Prompt Type Selection -->
+                        <div>
+                            <label class="block text-xs font-semibold mb-2">1. Select prompt type:</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" onclick="selectHistoryType('cause')" id="hist-cause-btn"
+                                    class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
+                                    <span class="text-xs">🔍 Cause & Effect</span>
+                                </button>
+                                <button type="button" onclick="selectHistoryType('compare')" id="hist-compare-btn"
+                                    class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
+                                    <span class="text-xs">⚖️ Compare Events</span>
+                                </button>
+                                <button type="button" onclick="selectHistoryType('analyze')" id="hist-analyze-btn"
+                                    class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
+                                    <span class="text-xs">📜 Analyze Source</span>
+                                </button>
+                                <button type="button" onclick="selectHistoryType('timeline')" id="hist-timeline-btn"
+                                    class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
+                                    <span class="text-xs">📅 Create Timeline</span>
+                                </button>
+                            </div>
+                        </div>
 
-                                <!-- Template Form (changes based on type) -->
-                                <div id="history-template-form" class="hidden space-y-2">
-                                    <div id="history-inputs"></div>
-                                    <button type="button" onclick="generateHistoryPrompt()"
-                                        class="w-full bg-green-600 hover:bg-green-700 py-2 rounded-lg font-semibold text-xs mt-2">
-                                        ✨ Generate Prompt
-                                    </button>
-                                </div>
+                        <!-- Template Form (changes based on type) -->
+                        <div id="history-template-form" class="hidden space-y-2">
+                            <div id="history-inputs"></div>
+                            <button type="button" onclick="generateHistoryPrompt()"
+                                class="w-full bg-green-600 hover:bg-green-700 py-2 rounded-lg font-semibold text-xs mt-2">
+                                ✨ Generate Prompt
+                            </button>
+                        </div>
 
-                                <!-- Generated Prompt Display -->
-                                <div id="history-output"
-                                    class="hidden mt-3 p-3 bg-green-900/30 border border-green-500/50 rounded-lg">
-                                    <p class="text-xs text-green-300 mb-2">Your Generated History Prompt:</p>
-                                    <p id="history-prompt-text" class="text-white font-semibold text-xs mb-2"></p>
-                                    <div class="flex gap-2">
-                                        <button type="button" onclick="copyToClipboard('history-prompt-text')"
-                                            class="flex-1 px-3 py-1 bg-green-700 hover:bg-green-600 rounded text-xs">
-                                            📋 Copy Prompt
-                                        </button>
-                                        <button type="button" onclick="resetHistoryBuilder()"
-                                            class="flex-1 px-3 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs">
-                                            🔄 Start Over
-                                        </button>
-                                    </div>
-                                </div>
+                        <!-- Generated Prompt Display -->
+                        <div id="history-output"
+                            class="hidden mt-3 p-3 bg-green-900/30 border border-green-500/50 rounded-lg">
+                            <p class="text-xs text-green-300 mb-2">Your Generated History Prompt:</p>
+                            <p id="history-prompt-text" class="text-white font-semibold text-xs mb-2"></p>
+                            <div class="flex gap-2">
+                                <button type="button" onclick="copyHistoryPrompt()"
+                                    class="flex-1 px-3 py-1 bg-green-700 hover:bg-green-600 rounded text-xs">
+                                    📋 Copy Prompt
+                                </button>
+                                <button type="button" onclick="resetHistoryBuilder()"
+                                    class="flex-1 px-3 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs">
+                                    🔄 Start Over
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button onclick="window.goToSection(5)"
-                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Try the
-                    Interactive Challenge</button>
             </div>
         </div>
+        <button onclick="window.goToSection(5)"
+            class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Try the
+            Interactive Challenge</button>
+    </div>
+</div>
+
+<script>
+// History Section Functions
+
+// Toggle History tips visibility
+function toggleHistoryTips() {
+    const tipsEl = document.getElementById('history-tips');
+    if (tipsEl.classList.contains('hidden')) {
+        tipsEl.classList.remove('hidden');
+    } else {
+        tipsEl.classList.add('hidden');
+    }
+}
+
+// History Prompt Builder
+let selectedHistoryType = null;
+
+function selectHistoryType(type) {
+    selectedHistoryType = type;
+
+    // Update button styles
+    document.querySelectorAll('.history-type-btn').forEach(btn => {
+        btn.classList.remove('bg-purple-600');
+        btn.classList.add('bg-slate-700');
+    });
+    document.getElementById(`hist-${type}-btn`).classList.add('bg-purple-600');
+    document.getElementById(`hist-${type}-btn`).classList.remove('bg-slate-700');
+
+    // Show form with appropriate inputs
+    const form = document.getElementById('history-template-form');
+    const inputs = document.getElementById('history-inputs');
+
+    let html = '';
+    switch (type) {
+        case 'cause':
+            html = `
+            <label class="block text-xs font-semibold mb-2">Historical Event:</label>
+            <input type="text" id="hist-event" placeholder="e.g., World War I"
+                class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white mb-3 text-xs">
+            <label class="block text-xs font-semibold mb-2">Number of causes to include:</label>
+            <select id="hist-count" class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white text-xs">
+                <option value="3">3 causes</option>
+                <option value="5">5 causes</option>
+            </select>
+        `;
+            break;
+        case 'compare':
+            html = `
+            <label class="block text-xs font-semibold mb-2">First Event:</label>
+            <input type="text" id="hist-event1" placeholder="e.g., American Revolution"
+                class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white mb-3 text-xs">
+            <label class="block text-xs font-semibold mb-2">Second Event:</label>
+            <input type="text" id="hist-event2" placeholder="e.g., French Revolution"
+                class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white text-xs">
+        `;
+            break;
+        case 'analyze':
+            html = `
+            <label class="block text-xs font-semibold mb-2">Source/Document:</label>
+            <input type="text" id="hist-source" placeholder="e.g., Gettysburg Address"
+                class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white mb-3 text-xs">
+            <label class="block text-xs font-semibold mb-2">Focus on:</label>
+            <select id="hist-focus" class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white text-xs">
+                <option value="main themes">Main themes</option>
+                <option value="historical context">Historical context</option>
+                <option value="rhetorical devices">Rhetorical devices</option>
+            </select>
+        `;
+            break;
+        case 'timeline':
+            html = `
+            <label class="block text-xs font-semibold mb-2">Topic/Period:</label>
+            <input type="text" id="hist-period" placeholder="e.g., Civil Rights Movement"
+                class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white mb-3 text-xs">
+            <label class="block text-xs font-semibold mb-2">Time Range:</label>
+            <input type="text" id="hist-range" placeholder="e.g., 1954-1968"
+                class="w-full p-2 rounded bg-slate-700 border border-green-500/30 text-white text-xs">
+        `;
+            break;
+    }
+
+    inputs.innerHTML = html;
+    form.classList.remove('hidden');
+    document.getElementById('history-output').classList.add('hidden');
+}
+
+function generateHistoryPrompt() {
+    let prompt = '';
+
+    switch (selectedHistoryType) {
+        case 'cause':
+            const event = document.getElementById('hist-event').value;
+            const count = document.getElementById('hist-count').value;
+            if (!event) { alert('Please enter an event!'); return; }
+            prompt = `Explain the main causes of ${event} in simple terms. Include at least ${count} causes and how they led to the event.`;
+            break;
+        case 'compare':
+            const event1 = document.getElementById('hist-event1').value;
+            const event2 = document.getElementById('hist-event2').value;
+            if (!event1 || !event2) { alert('Please enter both events!'); return; }
+            prompt = `Compare and contrast the ${event1} and the ${event2}. Create a table showing their similarities and differences.`;
+            break;
+        case 'analyze':
+            const source = document.getElementById('hist-source').value;
+            const focus = document.getElementById('hist-focus').value;
+            if (!source) { alert('Please enter a source!'); return; }
+            prompt = `Analyze the ${source}. Focus on the ${focus} used in the document.`;
+            break;
+        case 'timeline':
+            const period = document.getElementById('hist-period').value;
+            const range = document.getElementById('hist-range').value;
+            if (!period || !range) { alert('Please fill in all fields!'); return; }
+            prompt = `Create a timeline of key events during the ${period} from ${range}. Include dates and brief descriptions.`;
+            break;
+    }
+
+    document.getElementById('history-prompt-text').textContent = prompt;
+    document.getElementById('history-output').classList.remove('hidden');
+}
+
+function copyHistoryPrompt() {
+    const promptText = document.getElementById('history-prompt-text').textContent;
+    navigator.clipboard.writeText(promptText).then(() => {
+        alert('Prompt copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy. Please try again.');
+    });
+}
+
+function resetHistoryBuilder() {
+    selectedHistoryType = null;
+    document.getElementById('history-template-form').classList.add('hidden');
+    document.getElementById('history-output').classList.add('hidden');
+    document.querySelectorAll('.history-type-btn').forEach(btn => {
+        btn.classList.remove('bg-purple-600');
+        btn.classList.add('bg-slate-700');
+    });
+}
+
+// Expose functions to window for onclick handlers
+window.toggleHistoryTips = toggleHistoryTips;
+window.selectHistoryType = selectHistoryType;
+window.generateHistoryPrompt = generateHistoryPrompt;
+window.copyHistoryPrompt = copyHistoryPrompt;
+window.resetHistoryBuilder = resetHistoryBuilder;
+</script>
 
         <!-- SECTION 5: Interactive Challenge -->
         <div id="section-5" class="mission-section section-hidden">
