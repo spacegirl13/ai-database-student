@@ -812,54 +812,49 @@ document.addEventListener('DOMContentLoaded', () => {
  <!-- SECTION 2: Science -->
         <div id="section-2" class="mission-section section-hidden">
             <div class="space-y-6">
-                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-3xl font-bold">🔬 Science Practice</h2>
-                        <div class="flex gap-3">
-                            <button onclick="window.showScienceTopicModal()"
-                                class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-semibold transition-all"
-                                title="Choose Topic">
-                                🔬 Choose Topic
-                            </button>
-                            <button onclick="toggleScienceTips()" class="text-3xl hover:scale-110 transition-transform"
+                <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold">🔬 Science Practice</h2>
+                        <div class="flex gap-2 items-center">
+                            <span class="text-sm text-purple-300">Topic: <span id="current-science-topic" class="font-semibold">Biology</span></span>
+                            <button onclick="toggleScienceTopicSelector()" class="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm" title="Change Topic">Change Topic</button>
+                            <button onclick="toggleScienceTips()" class="text-2xl hover:scale-110 transition-transform"
                                 title="Show Tips">❓</button>
                         </div>
                     </div>
 
-                    <!-- Selected Topic Display -->
-                    <div id="science-selected-topic-display" class="hidden mb-4 bg-green-900/20 border border-green-500/30 rounded-lg p-3">
-                        <p class="text-green-300 text-sm">
-                            <span class="font-semibold">Current Topic:</span>
-                            <span id="science-current-topic-name" class="capitalize">All Topics</span>
-                            <button onclick="window.showScienceTopicModal()" class="ml-3 text-xs underline hover:text-green-200">
-                                Change Topic
-                            </button>
-                        </p>
+                    <!-- Inline Topic Selector (hidden by default) -->
+                    <div id="inline-science-topic-selector" class="hidden mb-4 bg-purple-900/20 border border-purple-500/30 rounded-lg p-3">
+                        <p class="text-sm font-semibold mb-2">Choose a topic:</p>
+                        <div class="flex gap-2">
+                            <button onclick="selectScienceTopicInline('biology')" class="px-3 py-1 text-sm bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">Biology</button>
+                            <button onclick="selectScienceTopicInline('chemistry')" class="px-3 py-1 text-sm bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">Chemistry</button>
+                            <button onclick="selectScienceTopicInline('physics')" class="px-3 py-1 text-sm bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">Physics</button>
+                        </div>
                     </div>
 
                     <!-- Collapsible Tips Section -->
-                    <div id="science-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for Science</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                            <div class="bg-green-900/30 p-3 rounded">
+                    <div id="science-tips" class="hidden mb-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                        <h4 class="text-sm font-bold text-blue-300 mb-2">💡 Good vs Bad Prompts for Science</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                            <div class="bg-green-900/30 p-2 rounded">
                                 <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                <p>"Explain photosynthesis to a 10th grader. Include the chemical equation, the role of
-                                    chlorophyll, and the two main stages."</p>
+                                <p class="text-xs">"Explain photosynthesis to a 10th grader. Include the chemical equation, the role of chlorophyll, and the two main stages."</p>
                             </div>
-                            <div class="bg-red-900/30 p-3 rounded">
+                            <div class="bg-red-900/30 p-2 rounded">
                                 <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                <p>"What is photosynthesis?"</p>
+                                <p class="text-xs">"What is photosynthesis?"</p>
                             </div>
                         </div>
-                        <div class="mt-3 text-xs text-blue-200">
-                            <p><strong>Key:</strong> Be specific, ask for detailed explanations, request examples or
-                                real-world connections</p>
-                        </div>
+                        <p class="mt-2 text-xs text-blue-200">✨ <strong>Key:</strong> Be specific, ask for step-by-step explanations, and request real-world examples.</p>
                     </div>
 
-                    <!-- Questions Container (loaded from database) -->
-                    <div id="science-questions-container" class="space-y-4">
-                        <p class="text-center text-purple-300">Loading questions...</p>
+                    <div class="space-y-3 text-sm">
+                        <p class="text-xs">Practice solving science problems with AI assistance. Click "View Prompt" to see an effective prompt, then use the Gemini API to check your work.</p>
+
+                        <!-- Questions Container in 2x2 Grid (loaded from database) -->
+                        <div id="science-questions-container" class="grid grid-cols-2 gap-3">
+                        </div>
                     </div>
                 </div>
                 <button onclick="window.goToSection(3)"
@@ -3921,48 +3916,49 @@ function tryAnotherChallenge() {
         // ==================== SCIENCE SECTION FUNCTIONS ====================
 
         // Global variable to track selected science topic
-        let selectedScienceTopic = null;
+        let selectedScienceTopic = 'biology'; // Default to biology, like math defaults to trig
 
-        // Show science topic modal
-        window.showScienceTopicModal = function() {
-            const modal = document.getElementById('scienceTopicModal');
-            if (modal) {
-                modal.classList.add('modal-show');
-                document.body.style.overflow = 'hidden';
-            }
+        // Toggle inline topic selector
+        function toggleScienceTopicSelector() {
+            const selector = document.getElementById('inline-science-topic-selector');
+            selector.classList.toggle('hidden');
         }
 
-        // Close science topic modal
-        function closeScienceTopicModal() {
-            const modal = document.getElementById('scienceTopicModal');
-            if (modal) {
-                modal.classList.remove('modal-show');
-                document.body.style.overflow = '';
-            }
-        }
-
-        // Select science topic
-        function selectScienceTopic(topic) {
-            // Update selected topic
+        // Select science topic inline (no modal)
+        function selectScienceTopicInline(topic) {
             selectedScienceTopic = topic;
-
-            // Update UI to show selected topic
-            document.querySelectorAll('.science-topic-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            document.getElementById('science-topic-' + topic).classList.add('selected');
-
-            // Update the topic display
-            const topicDisplay = document.getElementById('science-selected-topic-display');
-            const topicNameEl = document.getElementById('science-current-topic-name');
-            topicNameEl.textContent = topic.charAt(0).toUpperCase() + topic.slice(1);
-            topicDisplay.classList.remove('hidden');
-
-            // Close modal
-            closeScienceTopicModal();
-
-            // Reload questions with the selected topic
+            
+            // Update displayed topic name
+            const topicNames = {
+                'biology': 'Biology',
+                'chemistry': 'Chemistry',
+                'physics': 'Physics'
+            };
+            document.getElementById('current-science-topic').textContent = topicNames[topic];
+            
+            // Hide selector
+            document.getElementById('inline-science-topic-selector').classList.add('hidden');
+            
+            // Reload questions
             loadScienceQuestions();
+        }
+
+        // Show science topic modal (kept for backward compatibility)
+        window.showScienceTopicModal = function() {
+            toggleScienceTopicSelector();
+        }
+
+        // Close science topic modal (kept for backward compatibility)
+        function closeScienceTopicModal() {
+            const selector = document.getElementById('inline-science-topic-selector');
+            if (selector && !selector.classList.contains('hidden')) {
+                selector.classList.add('hidden');
+            }
+        }
+
+        // Select science topic (kept for backward compatibility)
+        function selectScienceTopic(topic) {
+            selectScienceTopicInline(topic);
         }
 
         // Toggle science tips visibility
@@ -4016,12 +4012,16 @@ function tryAnotherChallenge() {
         function displayScienceQuestions(questions) {
             const container = document.getElementById('science-questions-container');
             container.innerHTML = '';
+        // Display science questions
+        function displayScienceQuestions(questions) {
+            const container = document.getElementById('science-questions-container');
+            container.innerHTML = '';
 
             questions.forEach((q, index) => {
                 const questionHtml = `
                     <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
-                        <h3 class="text-xl font-bold text-purple-300 mb-4">Question ${index + 1} - ${q.category.charAt(0).toUpperCase() + q.category.slice(1)}</h3>
-                        <p class="text-lg mb-4">${q.question}</p>
+                        <h3 class="font-bold text-purple-300 mb-4" style="font-size: 15px;">Question ${index + 1}</h3>
+                        <p class="text-sm mb-4">${q.question}</p>
 
                         <button
                             onclick="toggleSciencePrompt(${q.id})"
@@ -4496,6 +4496,8 @@ function tryAnotherChallenge() {
         window.closeMathTopicModal = closeMathTopicModal;
         window.selectMathTopic = selectMathTopic;
         window.toggleMathTips = toggleMathTips;
+        window.toggleScienceTopicSelector = toggleScienceTopicSelector;
+        window.selectScienceTopicInline = selectScienceTopicInline;
         window.toggleScienceTips = toggleScienceTips;
         window.closeScienceTopicModal = closeScienceTopicModal;
         window.selectScienceTopic = selectScienceTopic;
@@ -4518,6 +4520,7 @@ function tryAnotherChallenge() {
         window.togglePrompt = togglePrompt;
         window.autofillPrompt = autofillPrompt;
         window.copyPrompt = copyPrompt;
+        window.loadScienceQuestions = loadScienceQuestions;
         window.toggleSciencePrompt = toggleSciencePrompt;
         window.autofillSciencePrompt = autofillSciencePrompt;
         window.copySciencePrompt = copySciencePrompt;
@@ -4550,11 +4553,7 @@ function tryAnotherChallenge() {
                     }
                     loadMathQuestions();
                 } else if (sectionIndex === 2) { // Science section is section 2
-                    // Show topic modal on first visit to science section
-                    if (!hasVisitedScienceSection) {
-                        hasVisitedScienceSection = true;
-                        setTimeout(() => window.showScienceTopicModal(), 300);
-                    }
+                    // No need to show modal on first visit - science has default topic
                     loadScienceQuestions();
                 } else if (sectionIndex === 3) { // Computer Science section is section 3
                     loadCodingQuestions();
