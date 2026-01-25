@@ -863,7 +863,8 @@ function displayScienceQuestions(questions) {
     const container = document.getElementById('science-questions-container');
     container.innerHTML = '';
 
-    questions.forEach((q, index) => {
+    // Show only the first 4 questions
+    questions.slice(0, 4).forEach((q, index) => {
         const questionHtml = `
             <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
                 <h3 class="font-bold text-purple-300 mb-4" style="font-size: 15px;">Question ${index + 1}</h3>
