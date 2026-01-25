@@ -591,6 +591,48 @@ function toggleMathTips() {
     }
 }
 
+// Toggle science tips visibility
+function toggleScienceTips() {
+    const tipsEl = document.getElementById('science-tips');
+    if (tipsEl) {
+        if (tipsEl.classList.contains('hidden')) {
+            tipsEl.classList.remove('hidden');
+        } else {
+            tipsEl.classList.add('hidden');
+        }
+    }
+}
+
+// Toggle inline topic selector for science
+function toggleScienceTopicSelector() {
+    const selector = document.getElementById('inline-science-topic-selector');
+    if (selector) {
+        selector.classList.toggle('hidden');
+    }
+}
+
+// Select science topic inline
+function selectScienceTopicInline(topic) {
+    selectedScienceTopic = topic;
+    
+    const topicNames = {
+        'biology': 'Biology',
+        'chemistry': 'Chemistry',
+        'physics': 'Physics'
+    };
+    const topicDisplay = document.getElementById('current-science-topic');
+    if (topicDisplay) {
+        topicDisplay.textContent = topicNames[topic];
+    }
+    
+    const selector = document.getElementById('inline-science-topic-selector');
+    if (selector) {
+        selector.classList.add('hidden');
+    }
+    
+    loadScienceQuestions();
+}
+
 // Load math questions from database
 async function loadMathQuestions() {
     // Only load questions if a topic has been selected
@@ -3919,42 +3961,6 @@ function tryAnotherChallenge() {
         // Global variable to track selected science topic
         let selectedScienceTopic = 'biology'; // Default to biology, like math defaults to trig
 
-        // Toggle inline topic selector
-        function toggleScienceTopicSelector() {
-            const selector = document.getElementById('inline-science-topic-selector');
-            if (selector) {
-                selector.classList.toggle('hidden');
-            } else {
-                console.error('Selector element not found');
-            }
-        }
-
-        // Select science topic inline (no modal)
-        function selectScienceTopicInline(topic) {
-            selectedScienceTopic = topic;
-            
-            // Update displayed topic name
-            const topicNames = {
-                'biology': 'Biology',
-                'chemistry': 'Chemistry',
-                'physics': 'Physics'
-            };
-            const topicDisplay = document.getElementById('current-science-topic');
-            if (topicDisplay) {
-                topicDisplay.textContent = topicNames[topic];
-            }
-            
-            // Hide selector
-            const selector = document.getElementById('inline-science-topic-selector');
-            if (selector) {
-                selector.classList.add('hidden');
-            }
-            
-            // Reload questions
-            console.log('Loading questions for topic:', topic);
-            loadScienceQuestions();
-        }
-
         // Show science topic modal (kept for backward compatibility)
         window.showScienceTopicModal = function() {
             toggleScienceTopicSelector();
@@ -3971,16 +3977,6 @@ function tryAnotherChallenge() {
         // Select science topic (kept for backward compatibility)
         function selectScienceTopic(topic) {
             selectScienceTopicInline(topic);
-        }
-
-        // Toggle science tips visibility
-        function toggleScienceTips() {
-            const tipsEl = document.getElementById('science-tips');
-            if (tipsEl.classList.contains('hidden')) {
-                tipsEl.classList.remove('hidden');
-            } else {
-                tipsEl.classList.add('hidden');
-            }
         }
 
         // Load science questions from database
@@ -4015,10 +4011,32 @@ function tryAnotherChallenge() {
                 }
             } catch (error) {
                 console.error('Error loading science questions:', error);
-                const container = document.getElementById('science-questions-container');
-                if (container) {
-                    container.innerHTML =
-                        '<div class="col-span-2 text-center p-8 bg-red-900/20 rounded-lg border border-red-500/30"><p class="text-red-400 mb-2">Error loading questions</p><p class="text-xs text-gray-400">' + error.message + '</p></div>';
+                console.error('Full error:', error);
+                console.log('Falling back to sample questions');
+                // Fall back to sample questions
+                const sampleQuestions = {
+                    'biology': [
+                        {id: 1, question: 'Explain photosynthesis and the role of chlorophyll', prompt_template: 'Explain photosynthesis in detail. Include the role of chlorophyll, the chemical equation, and the two main stages (light-dependent and light-independent reactions).', answer: 'Photosynthesis is the process by which plants convert light energy into chemical energy.'},
+                        {id: 2, question: 'What is cellular respiration?', prompt_template: 'Explain cellular respiration step-by-step. Include aerobic and anaerobic respiration, the role of ATP, and the electron transport chain.', answer: 'Cellular respiration is the process by which cells break down glucose to produce ATP.'}
+                    ],
+                    'chemistry': [
+                        {id: 1, question: 'Explain ionic bonding', prompt_template: 'Explain ionic bonding with examples. Include how electrons are transferred, the formation of ions, and the electrostatic attraction between them.', answer: 'Ionic bonding occurs when electrons are transferred from one atom to another.'},
+                        {id: 2, question: 'What is the pH scale?', prompt_template: 'Explain the pH scale. Include the range of pH values, how they relate to hydrogen ion concentration, and examples of acids, bases, and neutral substances.', answer: 'The pH scale measures how acidic or basic a substance is.'}
+                    ],
+                    'physics': [
+                        {id: 1, question: 'What is Newtons first law of motion?', prompt_template: 'Explain Newtons first law of motion. Include the concept of inertia, real-world examples, and why it matters in physics.', answer: 'Newtons first law states that an object at rest stays at rest unless acted upon by a force.'},
+                        {id: 2, question: 'Explain the concept of velocity', prompt_template: 'Explain velocity in detail. Differentiate between velocity and speed, include the formula for calculating velocity, and provide real-world examples.', answer: 'Velocity is the rate of change of position in a specific direction.'}
+                    ]
+                };
+                
+                if (sampleQuestions[selectedScienceTopic]) {
+                    displayScienceQuestions(sampleQuestions[selectedScienceTopic]);
+                } else {
+                    const container = document.getElementById('science-questions-container');
+                    if (container) {
+                        container.innerHTML =
+                            '<div class="col-span-2 text-center p-8 bg-red-900/20 rounded-lg border border-red-500/30"><p class="text-red-400 mb-2">Error loading questions</p><p class="text-xs text-gray-400">' + error.message + '</p></div>';
+                    }
                 }
             }
         }
