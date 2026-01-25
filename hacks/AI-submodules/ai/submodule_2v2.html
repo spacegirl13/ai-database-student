@@ -639,6 +639,18 @@ function selectScienceTopicInline(topic) {
     loadScienceQuestions();
 }
 
+// Toggle history tips visibility
+function toggleHistoryTips() {
+    const tipsEl = document.getElementById('history-tips');
+    if (tipsEl) {
+        if (tipsEl.classList.contains('hidden')) {
+            tipsEl.classList.remove('hidden');
+        } else {
+            tipsEl.classList.add('hidden');
+        }
+    }
+}
+
 // Load math questions from database
 async function loadMathQuestions() {
     // Only load questions if a topic has been selected
@@ -1024,6 +1036,7 @@ window.toggleSciencePrompt = toggleSciencePrompt;
 window.autofillSciencePrompt = autofillSciencePrompt;
 window.copySciencePrompt = copySciencePrompt;
 window.revealMoreScienceQuestions = revealMoreScienceQuestions;
+window.toggleHistoryTips = toggleHistoryTips;
 window.togglePrompt = togglePrompt;
 window.autofillPrompt = autofillPrompt;
 window.copyPrompt = copyPrompt;
@@ -1368,14 +1381,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <div id="section-4" class="mission-section section-hidden">
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-bold">📜 History</h2>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-bold">📜 History Prompt Builder</h2>
                         <button onclick="toggleHistoryTips()" class="text-3xl hover:scale-110 transition-transform"
                             title="Show Tips">❓</button>
                     </div>
 
                     <!-- Collapsible Tips Section -->
-                    <div id="history-tips" class="hidden mb-3 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                    <div id="history-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
                         <h4 class="text-sm font-bold text-blue-300 mb-2">💡 Good vs Bad Prompts for History</h4>
                         <div class="space-y-3 text-sm">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -1407,63 +1420,79 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
 
-                    <div class="space-y-3 text-sm">
+                    <div class="space-y-4 text-sm">
+                        <p class="text-xs text-gray-300">Select a prompt type below and fill in the details to create an effective history prompt:</p>
+                        
+                        <!-- 4-Box Grid Layout -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Box 1: Cause & Effect -->
+                            <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-4 cursor-pointer hover:border-purple-500/60 hover:bg-slate-700/70 transition-all"
+                                onclick="selectHistoryType('cause')">
+                                <h3 class="font-bold text-purple-300 mb-2 text-center">🔍 Cause & Effect</h3>
+                                <p class="text-xs text-gray-300 text-center mb-3">Analyze what caused something to happen and what happened as a result</p>
+                                <button id="hist-cause-btn" class="w-full bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded text-xs font-semibold transition-colors"
+                                    onclick="selectHistoryType('cause'); event.stopPropagation();">
+                                    Select This
+                                </button>
+                            </div>
 
-                        <!-- Interactive Activity: Prompt Template Builder -->
-                        <div
-                            class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-4 mt-3">
-                            <h4 class="text-sm font-bold text-green-300 mb-2">🎮 Interactive: History Prompt Builder!</h4>
-                            <p class="mb-3 text-xs">Choose your prompt type and fill in the details to create an effective history prompt:</p>
+                            <!-- Box 2: Compare Events -->
+                            <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-4 cursor-pointer hover:border-purple-500/60 hover:bg-slate-700/70 transition-all"
+                                onclick="selectHistoryType('compare')">
+                                <h3 class="font-bold text-purple-300 mb-2 text-center">⚖️ Compare Events</h3>
+                                <p class="text-xs text-gray-300 text-center mb-3">Find similarities and differences between two historical events</p>
+                                <button id="hist-compare-btn" class="w-full bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded text-xs font-semibold transition-colors"
+                                    onclick="selectHistoryType('compare'); event.stopPropagation();">
+                                    Select This
+                                </button>
+                            </div>
 
-                            <div class="bg-slate-800/50 p-3 rounded-lg space-y-3">
-                                <!-- Prompt Type Selection -->
-                                <div>
-                                    <label class="block text-xs font-semibold mb-2">1. Select prompt type:</label>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <button onclick="selectHistoryType('cause')" id="hist-cause-btn"
-                                            class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                            <span style="font-size: 14px;">🔍 Cause & Effect</span>
-                                        </button>
-                                        <button onclick="selectHistoryType('compare')" id="hist-compare-btn"
-                                            class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                            <span style="font-size: 14px;">⚖️ Compare Events</span>
-                                        </button>
-                                        <button onclick="selectHistoryType('analyze')" id="hist-analyze-btn"
-                                            class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                            <span style="font-size: 14px;">📜 Analyze Source</span>
-                                        </button>
-                                        <button onclick="selectHistoryType('timeline')" id="hist-timeline-btn"
-                                            class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                            <span style="font-size: 14px;">📅 Create Timeline</span>
-                                        </button>
-                                    </div>
-                                </div>
+                            <!-- Box 3: Analyze Source -->
+                            <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-4 cursor-pointer hover:border-purple-500/60 hover:bg-slate-700/70 transition-all"
+                                onclick="selectHistoryType('analyze')">
+                                <h3 class="font-bold text-purple-300 mb-2 text-center">📜 Analyze Source</h3>
+                                <p class="text-xs text-gray-300 text-center mb-3">Examine a primary source document or artifact to understand history</p>
+                                <button id="hist-analyze-btn" class="w-full bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded text-xs font-semibold transition-colors"
+                                    onclick="selectHistoryType('analyze'); event.stopPropagation();">
+                                    Select This
+                                </button>
+                            </div>
 
-                                <!-- Template Form (changes based on type) -->
-                                <div id="history-template-form" class="hidden space-y-2">
-                                    <div id="history-inputs"></div>
-                                    <button onclick="generateHistoryPrompt()"
-                                        class="w-full bg-green-600 hover:bg-green-700 py-2 rounded-lg font-semibold text-xs mt-2">
-                                        ✨ Generate Prompt
-                                    </button>
-                                </div>
+                            <!-- Box 4: Create Timeline -->
+                            <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-4 cursor-pointer hover:border-purple-500/60 hover:bg-slate-700/70 transition-all"
+                                onclick="selectHistoryType('timeline')">
+                                <h3 class="font-bold text-purple-300 mb-2 text-center">📅 Create Timeline</h3>
+                                <p class="text-xs text-gray-300 text-center mb-3">Build a chronological sequence of important historical events</p>
+                                <button id="hist-timeline-btn" class="w-full bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded text-xs font-semibold transition-colors"
+                                    onclick="selectHistoryType('timeline'); event.stopPropagation();">
+                                    Select This
+                                </button>
+                            </div>
+                        </div>
 
-                                <!-- Generated Prompt Display -->
-                                <div id="history-output"
-                                    class="hidden mt-3 p-3 bg-green-900/30 border border-green-500/50 rounded-lg">
-                                    <p class="text-xs text-green-300 mb-2">Your Generated History Prompt:</p>
-                                    <p id="history-prompt-text" class="text-white font-semibold text-xs mb-2"></p>
-                                    <div class="flex gap-2">
-                                        <button onclick="copyToClipboard('history-prompt-text')"
-                                            class="flex-1 px-3 py-1 bg-green-700 hover:bg-green-600 rounded text-xs">
-                                            📋 Copy Prompt
-                                        </button>
-                                        <button onclick="resetHistoryBuilder()"
-                                            class="flex-1 px-3 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs">
-                                            🔄 Start Over
-                                        </button>
-                                    </div>
-                                </div>
+                        <!-- Template Form (changes based on type) -->
+                        <div id="history-template-form" class="hidden mt-4 bg-slate-700/50 border border-green-500/30 rounded-lg p-4 space-y-3">
+                            <div id="history-inputs"></div>
+                            <button onclick="generateHistoryPrompt()"
+                                class="w-full bg-green-600 hover:bg-green-700 py-2 rounded-lg font-semibold text-sm transition-colors">
+                                ✨ Generate Prompt
+                            </button>
+                        </div>
+
+                        <!-- Generated Prompt Display -->
+                        <div id="history-output"
+                            class="hidden mt-4 p-4 bg-green-900/30 border border-green-500/50 rounded-lg">
+                            <p class="text-xs text-green-300 mb-2">Your Generated History Prompt:</p>
+                            <p id="history-prompt-text" class="text-white font-semibold text-sm mb-3 p-2 bg-slate-800/50 rounded border border-green-500/20"></p>
+                            <div class="flex gap-2">
+                                <button onclick="copyToClipboard('history-prompt-text')"
+                                    class="flex-1 px-3 py-2 bg-green-700 hover:bg-green-600 rounded text-xs font-semibold transition-colors">
+                                    📋 Copy Prompt
+                                </button>
+                                <button onclick="resetHistoryBuilder()"
+                                    class="flex-1 px-3 py-2 bg-slate-600 hover:bg-slate-500 rounded text-xs font-semibold transition-colors">
+                                    🔄 Start Over
+                                </button>
                             </div>
                         </div>
                     </div>
