@@ -2668,22 +2668,29 @@ function tryAnotherChallenge() {
         // Progress bar update
         function updateProgress() {
             const sections = ['section-0', 'section-1', 'section-2', 'section-3', 'section-4', 'section-5'];
-            const currentSection = sections.findIndex(id => !document.getElementById(id).classList.contains('section-hidden'));
+            const currentSection = sections.findIndex(id => {
+                const el = document.getElementById(id);
+                return el && !el.classList.contains('section-hidden');
+            });
             const progress = ((currentSection + 1) / sections.length) * 100;
-            document.getElementById('progress-bar').style.width = progress + '%';
-            document.getElementById('progress-text').textContent = Math.round(progress) + '% completed';
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            if (progressBar) progressBar.style.width = progress + '%';
+            if (progressText) progressText.textContent = Math.round(progress) + '% completed';
         }
 
 
         // Navigation
         function goToSection(n) {
             document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
-            document.getElementById('section-' + n).classList.remove('section-hidden');
+            const targetSection = document.getElementById('section-' + n);
+            if (targetSection) targetSection.classList.remove('section-hidden');
             document.querySelectorAll('.nav-btn').forEach(b => {
                 b.classList.remove('bg-purple-600');
                 b.classList.add('bg-slate-700/50');
             });
-            document.querySelector('.nav-btn[data-section="' + n + '"]').classList.add('bg-purple-600');
+            const navBtn = document.querySelector('.nav-btn[data-section="' + n + '"]');
+            if (navBtn) navBtn.classList.add('bg-purple-600');
             updateProgress();
             window.scrollTo(0, 0);
         }
@@ -3131,9 +3138,9 @@ function tryAnotherChallenge() {
                 codeEditor.value = 'Generating code...';
 
                 // Create a more specific prompt for code generation
-                const codeGenPrompt = improvedPrompt + '\n\nIMPORTANT: Provide ONLY the complete, executable code that will produce output when run. Do not include explanations, pseudocode, or comments about what to fill in. Write actual working code with example values that demonstrates the solution.';
+                const codeGenPrompt = improvedPrompt + '\n\nIMPORTANT INSTRUCTIONS:\n1. Return ONLY executable code inside a single code block\n2. Do NOT include any text before or after the code block\n3. Do NOT include section headers like "--- Examples ---"\n4. Include actual values, not placeholders\n5. The code must run without errors and produce output';
 
-                // Call Gemini API
+                // Call Gemini API with convert_markdown: false to preserve code blocks
                 const response = await fetch(pythonURI +'/api/gemini', {
                     method: 'POST',
                     credentials: 'include',
@@ -3142,7 +3149,8 @@ function tryAnotherChallenge() {
                     },
                     body: JSON.stringify({
                         text: codeGenPrompt,
-                        prompt: ''
+                        prompt: '',
+                        convert_markdown: false
                     })
                 });
 
@@ -3151,14 +3159,22 @@ function tryAnotherChallenge() {
                 if (data.success && data.text) {
                     // Extract code from markdown code blocks if present
                     let code = data.text;
-                    const codeBlockMatch = code.match(/```(?:python|javascript)?\n([\s\S]*?)```/);
+                    // Try to match code blocks with language specifier first, then without
+                    const codeBlockMatch = code.match(/```(?:python|javascript|py|js)?\s*\n([\s\S]*?)```/) ||
+                                          code.match(/```\s*\n?([\s\S]*?)```/);
                     if (codeBlockMatch) {
                         code = codeBlockMatch[1];
+                    } else {
+                        // If no code block found, try to clean up any remaining markdown/text artifacts
+                        // Remove common non-code patterns
+                        code = code.replace(/^(Here's|Here is|The following|This|Below).*?:\s*\n/gi, '');
+                        code = code.replace(/---.*?---/g, '');
+                        code = code.replace(/\*\*.*?\*\*/g, '');
                     }
 
                     codeEditor.value = code.trim();
                 } else {
-                    codeEditor.value = '// Error: Could not generate code\n' + (data.error || 'Unknown error');
+                    codeEditor.value = '// Error: Could not generate code\n' + (data.error || data.message || 'Unknown error');
                 }
 
             } catch (error) {
