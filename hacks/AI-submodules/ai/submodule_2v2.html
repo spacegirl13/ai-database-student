@@ -1087,7 +1087,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </div>
      
-         <!-- SECTION 3: Computer Science -->
+        <!-- SECTION 3: Computer Science -->
         <div id="section-3" class="mission-section section-hidden">
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
@@ -1096,7 +1096,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <h2 class="text-sm font-bold">💻 Computer Science</h2>
                             <div class="flex items-center gap-2">
                                 <span class="text-xs text-gray-400">Activity:</span>
-                                <select id="activity-dropdown" onchange="switchActivity()" 
+                                <select id="activity-dropdown" onchange="toggleActivity(parseInt(this.value))" 
                                     class="px-3 py-1.5 text-xs rounded bg-purple-400 hover:bg-purple-300 border border-purple-500/30 text-slate-900 font-semibold cursor-pointer">
                                     <option value="">Select Activity</option>
                                     <option value="1">Activity 1</option>
@@ -1343,21 +1343,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     History</button>
             </div>
         </div>
-
-<script>
-// Add this function to handle the dropdown activity switching
-function switchActivity() {
-    const dropdown = document.getElementById('activity-dropdown');
-    const selectedValue = dropdown.value;
-    if (selectedValue) {
-        toggleActivity(parseInt(selectedValue));
-    }
-}
-</script>
-                              
-
-                    
-  
 
        <!-- SECTION 4: History -->
 <div id="section-4" class="mission-section section-hidden">
