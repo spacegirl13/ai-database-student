@@ -3163,8 +3163,6 @@ function tryAnotherChallenge() {
         }
 
         // History Prompt Builder
-        let selectedHistoryType = null;
-
         function selectHistoryType(type) {
             selectedHistoryType = type;
 
@@ -4021,9 +4019,6 @@ function tryAnotherChallenge() {
 
         // ==================== MATH SECTION FUNCTIONS ====================
 
-        // Global variable to track selected math topic
-        let selectedMathTopic = null;
-
         // Show math topic modal
         function showMathTopicModal() {
             const modal = document.getElementById('mathTopicModal');
@@ -4272,6 +4267,11 @@ function tryAnotherChallenge() {
         function toggleActivity(activityNumber) {
             const activityEl = document.getElementById('activity-' + activityNumber);
             const buttonEl = document.getElementById('activity-btn-' + activityNumber);
+
+            if (!activityEl || !buttonEl) {
+                console.error('Activity elements not found:', activityNumber);
+                return;
+            }
 
             // Toggle visibility
             if (activityEl.classList.contains('hidden')) {
@@ -4686,7 +4686,9 @@ function showLevel(level) {
     // Hide all levels first
     const beginnerDiv = document.getElementById('beginner-level');
     const intermediateDiv = document.getElementById('intermediate-level');
-    const advancedDiv = document.getElementById('advanced-level'); if (beginnerDiv) beginnerDiv.classList.add('hidden');
+    const advancedDiv = document.getElementById('advanced-level');
+    
+    if (beginnerDiv) beginnerDiv.classList.add('hidden');
     if (intermediateDiv) intermediateDiv.classList.add('hidden');
     if (advancedDiv) advancedDiv.classList.add('hidden');
     
@@ -4701,7 +4703,8 @@ function showLevel(level) {
 
     // Scroll to section
     setTimeout(() => {
-        const section5 = document.getElementById('section-5'); if (section5) {
+        const section5 = document.getElementById('section-5');
+        if (section5) {
             window.scrollTo({ 
                 top: section5.offsetTop - 100, 
                 behavior: 'smooth' 
@@ -4777,10 +4780,6 @@ function showLevel(level) {
         window.tryAnotherChallenge = tryAnotherChallenge;
         window.getHint = getHint;
         window.analyzeStudentPrompt = analyzeStudentPrompt;
-
-        // Track if the user has visited the math and science sections
-        let hasVisitedMathSection = false;
-        let hasVisitedScienceSection = false;
 
         // Load questions when the math, science, or CS section is accessed
         document.addEventListener('DOMContentLoaded', () => {
