@@ -600,6 +600,18 @@ function toggleScienceTips() {
     }
 }
 
+// Toggle advanced tips visibility
+function toggleAdvancedTips() {
+    const tipsEl = document.getElementById('advanced-tips');
+    if (tipsEl) {
+        if (tipsEl.classList.contains('hidden')) {
+            tipsEl.classList.remove('hidden');
+        } else {
+            tipsEl.classList.add('hidden');
+        }
+    }
+}
+
 // Toggle inline topic selector for science
 function toggleScienceTopicSelector() {
     const selector = document.getElementById('inline-science-topic-selector');
@@ -987,6 +999,7 @@ window.displayScienceQuestions = displayScienceQuestions;
 window.selectScienceTopicInline = selectScienceTopicInline;
 window.toggleScienceTopicSelector = toggleScienceTopicSelector;
 window.toggleScienceTips = toggleScienceTips;
+window.toggleAdvancedTips = toggleAdvancedTips;
 window.toggleSciencePrompt = toggleSciencePrompt;
 window.autofillSciencePrompt = autofillSciencePrompt;
 window.copySciencePrompt = copySciencePrompt;
@@ -2279,8 +2292,30 @@ function tryAnotherChallenge() {
                   
                     <!-- Advanced Level: Original Content -->
                     <div id="advanced-level" class="hidden">
+                        <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-2xl font-bold text-purple-300">🚀 Advanced: Write Prompts from Scratch</h3>
+                                <button onclick="toggleAdvancedTips()" class="text-2xl hover:scale-110 transition-transform"
+                                    title="Show Tips">❓</button>
+                            </div>
+                            <p class="mb-4">Master the art of writing complete, effective prompts from the ground up!</p>
 
-                    </p>
+                            <!-- Tips Section -->
+                            <div id="advanced-tips" class="hidden mb-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                                <h4 class="text-sm font-bold text-blue-300 mb-2">💡 Good vs Bad Prompts for Prompt Writing</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                                    <div class="bg-green-900/30 p-2 rounded">
+                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                        <p class="text-xs">"Create a detailed learning plan for mastering Python. Include daily goals, recommended resources, practice projects, and how to track progress. Tailor it for someone with no programming experience but strong math skills."</p>
+                                    </div>
+                                    <div class="bg-red-900/30 p-2 rounded">
+                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                        <p class="text-xs">"Help me learn Python."</p>
+                                    </div>
+                                </div>
+                                <p class="mt-2 text-xs text-blue-200">✨ <strong>Key:</strong> Include specific goals, target audience, desired format, required details, and any constraints or preferences.</p>
+                            </div>
+                        </div>
 
                     <!-- Quick Reference Table -->
                     <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
@@ -4116,8 +4151,8 @@ function tryAnotherChallenge() {
             questions.forEach((q, index) => {
                 const questionHtml = `
                     <div class="bg-slate-700/50 border border-purple-500/30 rounded-lg p-6">
-                        <h3 class="text-xl font-bold text-purple-300 mb-4">Question ${index + 1}</h3>
-                        <p class="text-lg mb-4">${q.question}</p>
+                        <h3 class="font-bold text-purple-300 mb-4" style="font-size: 15px;">Question ${index + 1}</h3>
+                        <p class="text-sm mb-4">${q.question}</p>
 
                         <button
                             onclick="togglePrompt(${q.id})"
@@ -4736,6 +4771,7 @@ function showLevel(level) {
         window.toggleScienceTopicSelector = toggleScienceTopicSelector;
         window.selectScienceTopicInline = selectScienceTopicInline;
         window.toggleScienceTips = toggleScienceTips;
+        window.toggleAdvancedTips = toggleAdvancedTips;
         window.closeScienceTopicModal = closeScienceTopicModal;
         window.selectScienceTopic = selectScienceTopic;
         window.toggleCSTips = toggleCSTips;
