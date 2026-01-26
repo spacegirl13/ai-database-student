@@ -1096,7 +1096,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <h2 class="text-sm font-bold">💻 Computer Science</h2>
                             <div class="flex items-center gap-2">
                                 <span class="text-xs text-gray-400">Activity:</span>
-                                <select id="activity-dropdown" onchange="toggleActivity(parseInt(this.value))" 
+                                <select id="activity-dropdown" 
                                     class="px-3 py-1.5 text-xs rounded bg-purple-400 hover:bg-purple-300 border border-purple-500/30 text-slate-900 font-semibold cursor-pointer">
                                     <option value="">Select Activity</option>
                                     <option value="1">Activity 1</option>
@@ -1343,6 +1343,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     History</button>
             </div>
         </div>
+
+<script>
+// Activity dropdown handler - add this after your existing toggleActivity function
+document.addEventListener('DOMContentLoaded', function() {
+    const activityDropdown = document.getElementById('activity-dropdown');
+    if (activityDropdown) {
+        activityDropdown.addEventListener('change', function() {
+            const value = this.value;
+            if (value) {
+                // Hide all activities first
+                document.getElementById('activity-1').classList.add('hidden');
+                document.getElementById('activity-2').classList.add('hidden');
+                document.getElementById('activity-3').classList.add('hidden');
+                
+                // Show selected activity
+                document.getElementById('activity-' + value).classList.remove('hidden');
+            }
+        });
+    }
+});
+</script>
 
        <!-- SECTION 4: History -->
 <div id="section-4" class="mission-section section-hidden">
