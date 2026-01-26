@@ -1092,35 +1092,47 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-lg font-bold">💻 Computer Science</h2>
-                        <button onclick="toggleCSTips()" class="text-3xl hover:scale-110 transition-transform"
+                        <div class="flex items-center gap-4">
+                            <h2 class="text-base font-bold">💻 Computer Science</h2>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-gray-400">Activity:</span>
+                                <select id="activity-dropdown" onchange="switchActivity()" 
+                                    class="px-3 py-1 text-sm rounded bg-slate-700 border border-purple-500/30 text-white">
+                                    <option value="">Select Activity</option>
+                                    <option value="1">📝 Fundamentals</option>
+                                    <option value="2">💻 Building Challenges</option>
+                                    <option value="3">🎮 Prompt Analyzer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button onclick="toggleCSTips()" class="text-2xl hover:scale-110 transition-transform"
                             title="Show Tips">❓</button>
                     </div>
 
                     <!-- Collapsible Tips Section -->
                     <div id="cs-tips" class="hidden mb-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                        <h4 class="text-lg font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for CS</h4>
-                        <div class="space-y-3 text-sm">
+                        <h4 class="text-sm font-bold text-blue-300 mb-3">💡 Good vs Bad Prompts for CS</h4>
+                        <div class="space-y-3 text-xs">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div class="bg-green-900/30 p-3 rounded">
                                     <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                    <p>"Explain how for loops work in Python with 2 simple examples. I'm a beginner."
+                                    <p class="text-xs">"Explain how for loops work in Python with 2 simple examples. I'm a beginner."
                                     </p>
                                 </div>
                                 <div class="bg-red-900/30 p-3 rounded">
                                     <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                    <p>"What are loops?"</p>
+                                    <p class="text-xs">"What are loops?"</p>
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div class="bg-green-900/30 p-3 rounded">
                                     <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                    <p>"I'm getting an 'IndexError' in this Python code. Can you identify the bug and
+                                    <p class="text-xs">"I'm getting an 'IndexError' in this Python code. Can you identify the bug and
                                         explain how to fix it? [paste code]"</p>
                                 </div>
                                 <div class="bg-red-900/30 p-3 rounded">
                                     <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                    <p>"My code doesn't work."</p>
+                                    <p class="text-xs">"My code doesn't work."</p>
                                 </div>
                             </div>
                         </div>
@@ -1130,39 +1142,39 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
 
-                    <div class="space-y-6 text-lg">
+                    <div class="space-y-6 text-sm">
 
                         <!-- Activity Selection Buttons -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <button onclick="toggleActivity(1)" id="activity-btn-1"
-                                class="bg-blue-600 hover:bg-blue-700 py-4 px-6 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
-                                <div class="text-lg">📝 Activity 1</div>
-                                <div class="text-sm opacity-90">Fundamentals</div>
+                                class="bg-blue-600 hover:bg-blue-700 py-3 px-4 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
+                                <div class="text-sm">📝 Activity 1</div>
+                                <div class="text-xs opacity-90">Fundamentals</div>
                             </button>
                             <button onclick="toggleActivity(2)" id="activity-btn-2"
-                                class="bg-purple-600 hover:bg-purple-700 py-4 px-6 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
-                                <div class="text-lg">💻 Activity 2</div>
-                                <div class="text-sm opacity-90">Building Challenges</div>
+                                class="bg-purple-600 hover:bg-purple-700 py-3 px-4 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
+                                <div class="text-sm">💻 Activity 2</div>
+                                <div class="text-xs opacity-90">Building Challenges</div>
                             </button>
                             <button onclick="toggleActivity(3)" id="activity-btn-3"
-                                class="bg-green-600 hover:bg-green-700 py-4 px-6 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
-                                <div class="text-lg">🎮 Activity 3</div>
-                                <div class="text-sm opacity-90">Prompt Analyzer</div>
+                                class="bg-green-600 hover:bg-green-700 py-3 px-4 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
+                                <div class="text-sm">🎮 Activity 3</div>
+                                <div class="text-xs opacity-90">Prompt Analyzer</div>
                             </button>
                         </div>
 
                         <!-- Activity 1: Fundamentals (Fill in the Blanks) -->
                         <div id="activity-1" class="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 border-2 border-blue-500/50 rounded-lg p-6 mt-6 hidden">
-                            <h4 class="text-xl font-bold text-blue-300 mb-4">📝 Activity 1: Fundamentals</h4>
-                            <p class="mb-4">Complete the code by selecting the correct options from the dropdowns!</p>
+                            <h4 class="text-base font-bold text-blue-300 mb-4">📝 Activity 1: Fundamentals</h4>
+                            <p class="mb-4 text-sm">Complete the code by selecting the correct options from the dropdowns!</p>
 
                             <div class="bg-slate-800/50 p-4 rounded-lg">
                                 <!-- Question Selector -->
                                 <div class="mb-4">
-                                    <label class="block text-sm font-semibold mb-2">Choose a Challenge:</label>
+                                    <label class="block text-xs font-semibold mb-2">Choose a Challenge:</label>
                                     <select id="fill-blank-selector"
                                         onchange="loadFillBlankQuestion()"
-                                        class="w-full p-3 rounded bg-slate-700 border border-blue-500/30 text-white">
+                                        class="w-full p-2 text-sm rounded bg-slate-700 border border-blue-500/30 text-white">
                                         <option value="">-- Select a Question --</option>
                                     </select>
                                 </div>
@@ -1170,47 +1182,47 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <!-- Question Description -->
                                 <div id="fill-blank-info" class="hidden mb-4">
                                     <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                                        <h5 class="font-semibold text-blue-300 mb-2" id="fill-blank-title"></h5>
-                                        <p class="text-sm" id="fill-blank-description"></p>
+                                        <h5 class="font-semibold text-blue-300 mb-2 text-sm" id="fill-blank-title"></h5>
+                                        <p class="text-xs" id="fill-blank-description"></p>
                                     </div>
                                 </div>
 
                                 <!-- Code Display with Dropdowns -->
                                 <div id="fill-blank-code-container" class="hidden mb-4">
-                                    <label class="block text-sm font-semibold mb-2">Complete the code:</label>
+                                    <label class="block text-xs font-semibold mb-2">Complete the code:</label>
                                     <div id="fill-blank-code"
-                                        class="bg-slate-900 border border-blue-500/30 rounded-lg p-4 text-white font-mono text-sm whitespace-pre-wrap"></div>
+                                        class="bg-slate-900 border border-blue-500/30 rounded-lg p-4 text-white font-mono text-xs whitespace-pre-wrap"></div>
                                 </div>
 
                                 <!-- Check Button -->
                                 <div id="fill-blank-actions" class="hidden">
                                     <div class="grid md:grid-cols-2 gap-3 mb-3">
                                         <button onclick="checkFillBlank()"
-                                            class="bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold">
+                                            class="bg-green-600 hover:bg-green-700 py-2 text-sm rounded-lg font-semibold">
                                             ✓ Check Answer
                                         </button>
                                         <button onclick="autofillFillBlank()"
-                                            class="bg-yellow-600 hover:bg-yellow-700 py-3 rounded-lg font-semibold">
+                                            class="bg-yellow-600 hover:bg-yellow-700 py-2 text-sm rounded-lg font-semibold">
                                             💡 Show Solution
                                         </button>
                                     </div>
-                                    <div id="fill-blank-feedback" class="hidden rounded-lg p-4"></div>
+                                    <div id="fill-blank-feedback" class="hidden rounded-lg p-4 text-sm"></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Activity 2: Building Based on Challenges -->
                         <div id="activity-2" class="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border-2 border-purple-500/50 rounded-lg p-6 mt-6 hidden">
-                            <h4 class="text-xl font-bold text-purple-300 mb-4">💻 Activity 2: Building Based on Challenges</h4>
-                            <p class="mb-4">Write code to solve the problem and run it to check if your output matches!</p>
+                            <h4 class="text-base font-bold text-purple-300 mb-4">💻 Activity 2: Building Based on Challenges</h4>
+                            <p class="mb-4 text-sm">Write code to solve the problem and run it to check if your output matches!</p>
 
                             <div class="bg-slate-800/50 p-4 rounded-lg">
                                 <!-- Question Selector -->
                                 <div class="mb-4">
-                                    <label class="block text-sm font-semibold mb-2">Choose a Challenge:</label>
+                                    <label class="block text-xs font-semibold mb-2">Choose a Challenge:</label>
                                     <select id="write-code-selector"
                                         onchange="loadWriteCodeQuestion()"
-                                        class="w-full p-3 rounded bg-slate-700 border border-purple-500/30 text-white">
+                                        class="w-full p-2 text-sm rounded bg-slate-700 border border-purple-500/30 text-white">
                                         <option value="">-- Select a Question --</option>
                                     </select>
                                 </div>
@@ -1218,8 +1230,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <!-- Question Description -->
                                 <div id="write-code-info" class="hidden mb-4">
                                     <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
-                                        <h5 class="font-semibold text-purple-300 mb-2" id="write-code-title"></h5>
-                                        <p class="text-sm mb-2" id="write-code-description"></p>
+                                        <h5 class="font-semibold text-purple-300 mb-2 text-sm" id="write-code-title"></h5>
+                                        <p class="text-xs mb-2" id="write-code-description"></p>
                                         <button onclick="showWriteCodeHint()"
                                             class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 rounded text-xs">
                                             💡 Show Hint
@@ -1230,11 +1242,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                 <!-- Code Editor -->
                                 <div id="write-code-editor-container" class="hidden mb-4">
-                                    <label class="block text-sm font-semibold mb-2">Write your code:</label>
+                                    <label class="block text-xs font-semibold mb-2">Write your code:</label>
                                     <textarea id="write-code-editor"
                                         rows="12"
                                         placeholder="Write your code here..."
-                                        class="w-full p-3 rounded bg-slate-900 border border-purple-500/30 text-white font-mono text-sm"
+                                        class="w-full p-3 rounded bg-slate-900 border border-purple-500/30 text-white font-mono text-xs"
                                         spellcheck="false"></textarea>
                                 </div>
 
@@ -1242,20 +1254,20 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div id="write-code-actions" class="hidden">
                                     <div class="grid md:grid-cols-2 gap-3 mb-3">
                                         <button onclick="runWriteCode()"
-                                            class="bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold">
+                                            class="bg-green-600 hover:bg-green-700 py-2 text-sm rounded-lg font-semibold">
                                             ▶️ Run Code
                                         </button>
                                         <button onclick="autofillWriteCode()"
-                                            class="bg-orange-600 hover:bg-orange-700 py-3 rounded-lg font-semibold">
+                                            class="bg-orange-600 hover:bg-orange-700 py-2 text-sm rounded-lg font-semibold">
                                             💡 Show Example Solution
                                         </button>
                                     </div>
 
                                     <!-- Output Display -->
                                     <div id="write-code-output-container" class="hidden">
-                                        <label class="block text-sm font-semibold mb-2">Output:</label>
+                                        <label class="block text-xs font-semibold mb-2">Output:</label>
                                         <pre id="write-code-output"
-                                            class="bg-slate-900 border border-green-500/30 rounded-lg p-4 text-green-400 font-mono text-sm whitespace-pre-wrap min-h-[100px]"></pre>
+                                            class="bg-slate-900 border border-green-500/30 rounded-lg p-4 text-green-400 font-mono text-xs whitespace-pre-wrap min-h-[100px]"></pre>
                                         <div id="write-code-expected" class="mt-2 text-xs text-gray-400"></div>
                                     </div>
                                 </div>
@@ -1264,21 +1276,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         <!-- Activity 3: Prompt Analyzer with Code Generation -->
                         <div id="activity-3" class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-6 mt-6 hidden">
-                            <h4 class="text-xl font-bold text-green-300 mb-4">🎮 Activity 3: Prompt Analyzer</h4>
-                            <p class="mb-4">Write a coding prompt, get feedback, and generate code using AI!</p>
+                            <h4 class="text-base font-bold text-green-300 mb-4">🎮 Activity 3: Prompt Analyzer</h4>
+                            <p class="mb-4 text-sm">Write a coding prompt, get feedback, and generate code using AI!</p>
 
                             <div class="bg-slate-800/50 p-4 rounded-lg">
-                                <label class="block text-sm font-semibold mb-2">Type your coding prompt here:</label>
+                                <label class="block text-xs font-semibold mb-2">Type your coding prompt here:</label>
                                 <textarea id="cs-prompt-input" rows="4" placeholder="Example: Write a Python function that calculates the factorial of a number"
-                                    class="w-full p-3 rounded bg-slate-700 border border-green-500/30 text-white"></textarea>
+                                    class="w-full p-3 text-sm rounded bg-slate-700 border border-green-500/30 text-white"></textarea>
 
                                 <div class="grid md:grid-cols-2 gap-3 mt-4">
                                     <button onclick="analyzeCSPrompt()"
-                                        class="bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold">
+                                        class="bg-green-600 hover:bg-green-700 py-2 text-sm rounded-lg font-semibold">
                                         🔍 Analyze Prompt
                                     </button>
                                     <button onclick="improveCSPrompt()"
-                                        class="bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold">
+                                        class="bg-blue-600 hover:bg-blue-700 py-2 text-sm rounded-lg font-semibold">
                                         ✨ Auto-Improve
                                     </button>
                                 </div>
@@ -1286,24 +1298,24 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <!-- Analysis Results -->
                                 <div id="cs-analysis" class="mt-4 hidden">
                                     <div class="bg-slate-900/50 border border-purple-500/30 rounded-lg p-4">
-                                        <p class="font-semibold text-purple-300 mb-3">📊 Analysis Results:</p>
-                                        <div id="cs-checklist" class="space-y-2 mb-4"></div>
-                                        <div id="cs-score" class="text-center p-3 rounded-lg font-bold text-xl"></div>
+                                        <p class="font-semibold text-purple-300 mb-3 text-sm">📊 Analysis Results:</p>
+                                        <div id="cs-checklist" class="space-y-2 mb-4 text-xs"></div>
+                                        <div id="cs-score" class="text-center p-3 rounded-lg font-bold text-base"></div>
                                     </div>
                                 </div>
 
                                 <!-- Improved Version -->
                                 <div id="cs-improved" class="mt-4 hidden">
                                     <div class="bg-green-900/30 border border-green-500/50 rounded-lg p-4">
-                                        <p class="font-semibold text-green-300 mb-2">✅ Improved Version:</p>
-                                        <p id="cs-improved-text" class="text-white p-3 bg-slate-800/50 rounded"></p>
+                                        <p class="font-semibold text-green-300 mb-2 text-sm">✅ Improved Version:</p>
+                                        <p id="cs-improved-text" class="text-white p-3 bg-slate-800/50 rounded text-sm"></p>
                                         <div class="grid md:grid-cols-2 gap-3 mt-3">
                                             <button onclick="copyToClipboard('cs-improved-text')"
-                                                class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                                class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-xs">
                                                 📋 Copy Improved Prompt
                                             </button>
                                             <button onclick="generateCodeFromPrompt()"
-                                                class="px-4 py-2 bg-purple-700 hover:bg-purple-600 rounded text-sm">
+                                                class="px-4 py-2 bg-purple-700 hover:bg-purple-600 rounded text-xs">
                                                 🤖 Generate Code
                                             </button>
                                         </div>
@@ -1313,21 +1325,21 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <!-- Generated Code Section -->
                                 <div id="cs-generated-code" class="mt-4 hidden">
                                     <div class="bg-purple-900/30 border border-purple-500/50 rounded-lg p-4">
-                                        <p class="font-semibold text-purple-300 mb-2">💻 Generated Code:</p>
+                                        <p class="font-semibold text-purple-300 mb-2 text-sm">💻 Generated Code:</p>
                                         <textarea id="cs-generated-code-editor"
                                             rows="12"
-                                            class="w-full p-3 rounded bg-slate-900 border border-purple-500/30 text-white font-mono text-sm"
+                                            class="w-full p-3 rounded bg-slate-900 border border-purple-500/30 text-white font-mono text-xs"
                                             spellcheck="false"></textarea>
                                         <button onclick="runGeneratedCode()"
-                                            class="mt-3 px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
+                                            class="mt-3 px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-xs">
                                             ▶️ Run Code
                                         </button>
 
                                         <!-- Output Display -->
                                         <div id="cs-generated-output-container" class="hidden mt-4">
-                                            <label class="block text-sm font-semibold mb-2">Output:</label>
+                                            <label class="block text-xs font-semibold mb-2">Output:</label>
                                             <pre id="cs-generated-output"
-                                                class="bg-slate-900 border border-green-500/30 rounded-lg p-4 text-green-400 font-mono text-sm whitespace-pre-wrap min-h-[100px]"></pre>
+                                                class="bg-slate-900 border border-green-500/30 rounded-lg p-4 text-green-400 font-mono text-xs whitespace-pre-wrap min-h-[100px]"></pre>
                                         </div>
                                     </div>
                                 </div>
@@ -1336,11 +1348,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
                 <button onclick="window.goToSection(4)"
-                    class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to
+                    class="w-full bg-purple-600 hover:bg-purple-700 py-3 text-sm rounded-lg font-semibold">Continue to
                     History</button>
             </div>
         </div>
-                               
+
+<script>
+// Add this function to handle the dropdown activity switching
+function switchActivity() {
+    const dropdown = document.getElementById('activity-dropdown');
+    const selectedValue = dropdown.value;
+    if (selectedValue) {
+        toggleActivity(parseInt(selectedValue));
+    }
+}
+</script>
             
 
        <!-- SECTION 4: History -->
