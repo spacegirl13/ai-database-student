@@ -1093,15 +1093,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
                     <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-4">
-                            <h2 class="text-base font-bold">💻 Computer Science</h2>
+                            <h2 class="text-sm font-bold">💻 Computer Science</h2>
                             <div class="flex items-center gap-2">
-                                <span class="text-sm text-gray-400">Activity:</span>
+                                <span class="text-xs text-gray-400">Activity:</span>
                                 <select id="activity-dropdown" onchange="switchActivity()" 
-                                    class="px-3 py-1 text-sm rounded bg-slate-700 border border-purple-500/30 text-white">
+                                    class="px-3 py-1.5 text-xs rounded bg-purple-400 hover:bg-purple-300 border border-purple-500/30 text-slate-900 font-semibold cursor-pointer">
                                     <option value="">Select Activity</option>
-                                    <option value="1">📝 Fundamentals</option>
-                                    <option value="2">💻 Building Challenges</option>
-                                    <option value="3">🎮 Prompt Analyzer</option>
+                                    <option value="1">Activity 1</option>
+                                    <option value="2">Activity 2</option>
+                                    <option value="3">Activity 3</option>
                                 </select>
                             </div>
                         </div>
@@ -1144,25 +1144,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     <div class="space-y-6 text-sm">
 
-                        <!-- Activity Selection Buttons -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                            <button onclick="toggleActivity(1)" id="activity-btn-1"
-                                class="bg-blue-600 hover:bg-blue-700 py-3 px-4 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
-                                <div class="text-sm">📝 Activity 1</div>
-                                <div class="text-xs opacity-90">Fundamentals</div>
-                            </button>
-                            <button onclick="toggleActivity(2)" id="activity-btn-2"
-                                class="bg-purple-600 hover:bg-purple-700 py-3 px-4 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
-                                <div class="text-sm">💻 Activity 2</div>
-                                <div class="text-xs opacity-90">Building Challenges</div>
-                            </button>
-                            <button onclick="toggleActivity(3)" id="activity-btn-3"
-                                class="bg-green-600 hover:bg-green-700 py-3 px-4 rounded-lg font-semibold text-left transition-all border-2 border-transparent">
-                                <div class="text-sm">🎮 Activity 3</div>
-                                <div class="text-xs opacity-90">Prompt Analyzer</div>
-                            </button>
-                        </div>
-
                         <!-- Activity 1: Fundamentals (Fill in the Blanks) -->
                         <div id="activity-1" class="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 border-2 border-blue-500/50 rounded-lg p-6 mt-6 hidden">
                             <h4 class="text-base font-bold text-blue-300 mb-4">📝 Activity 1: Fundamentals</h4>
@@ -1176,6 +1157,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                         onchange="loadFillBlankQuestion()"
                                         class="w-full p-2 text-sm rounded bg-slate-700 border border-blue-500/30 text-white">
                                         <option value="">-- Select a Question --</option>
+                                        <option value="0">Question 1</option>
+                                        <option value="1">Question 2</option>
+                                        <option value="2">Question 3</option>
+                                        <option value="3">Question 4</option>
+                                        <option value="4">Question 5</option>
                                     </select>
                                 </div>
 
@@ -1224,6 +1210,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                         onchange="loadWriteCodeQuestion()"
                                         class="w-full p-2 text-sm rounded bg-slate-700 border border-purple-500/30 text-white">
                                         <option value="">-- Select a Question --</option>
+                                        <option value="0">Question 1</option>
+                                        <option value="1">Question 2</option>
+                                        <option value="2">Question 3</option>
+                                        <option value="3">Question 4</option>
+                                        <option value="4">Question 5</option>
                                     </select>
                                 </div>
 
@@ -1363,7 +1354,10 @@ function switchActivity() {
     }
 }
 </script>
-            
+                              
+
+                    
+  
 
        <!-- SECTION 4: History -->
 <div id="section-4" class="mission-section section-hidden">
