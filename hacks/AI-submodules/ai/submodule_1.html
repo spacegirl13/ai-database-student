@@ -139,6 +139,59 @@ date: 2025-10-30
         cursor: pointer;
         margin: 0;
     }
+
+    /* Sensational Surveyor Popup */
+    #surveyorPopup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border: 2px solid #0066cc;
+        border-radius: 8px;
+        padding: 25px;
+        z-index: 10002;
+        display: none;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 102, 204, 0.2);
+        animation: popupSlide 0.3s ease-out;
+    }
+
+    @keyframes popupSlide {
+        from {
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0;
+        }
+        to {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+    }
+
+    #surveyorPopup.show {
+        display: block;
+    }
+
+    #surveyorPopup img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 15px;
+        object-fit: contain;
+    }
+
+    #surveyorPopup h3 {
+        margin: 0 0 10px 0;
+        font-size: 20px;
+        font-weight: bold;
+        color: #000000;
+    }
+
+    #surveyorPopup p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #000000;
+    }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -157,6 +210,14 @@ date: 2025-10-30
     <p id="badgeNotificationDescription"></p>
     <button onclick="closeBadgeNotification()">Awesome!</button>
 </div>
+
+<!-- Sensational Surveyor Popup -->
+<div id="surveyorPopup">
+    <img src="https://github.com/user-attachments/assets/5aebe49f-d1e5-4340-bba0-7e3e5b3afae2" alt="Surveyor Badge">
+    <h3> Sensational Surveyor</h3>
+    <p>badge received!</p>
+</div>
+
 <div style="max-width: 900px; margin: 40px auto;">
     <h1 style="text-align: center; margin-bottom: 30px;">AI Usage Survey</h1>
 
@@ -341,6 +402,14 @@ date: 2025-10-30
         document.getElementById('badgeNotification').classList.remove('show');
     }
 
+    function showSurveyorPopup() {
+        const popup = document.getElementById('surveyorPopup');
+        popup.classList.add('show');
+        setTimeout(() => {
+            popup.classList.remove('show');
+        }, 3000);
+    }
+
     function handleBadgeAward(responseData) {
         if (responseData.badge_awarded === true && responseData.badge) {
             const badge = responseData.badge;
@@ -427,6 +496,7 @@ date: 2025-10-30
 
             const result = await response.json();
             handleBadgeAward(result);
+            showSurveyorPopup();
             console.log('API response:', result);
 
             // Handle both {data: {...}} and direct {...} response structures
