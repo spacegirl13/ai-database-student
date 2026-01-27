@@ -1625,19 +1625,27 @@ window.resetHistoryBuilder = resetHistoryBuilder;
        <div id="section-5" class="mission-section section-hidden">
     <div class="space-y-6">
         <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-4">
-            <h2 class="text-xs font-bold mb-1">Interactive Prompt Challenge</h2>
-            <p class="text-xs mb-3">Choose your level and practice writing effective prompts!</p>
+            <h2 class="text-sm font-bold mb-2">Interactive Prompt Challenge</h2>
+            <p class="text-sm mb-4">Choose your level and practice writing effective prompts!</p>
 
-            <!-- Level Selection Dropdown -->
-            <div class="mb-4">
-                <div class="flex gap-1">
-                    <button onclick="showLevel('beginner')" id="level-beginner-btn"
-                        class="px-2 py-0.5 text-xs bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">Beginner</button>
-                    <button onclick="showLevel('intermediate')" id="level-intermediate-btn"
-                        class="px-2 py-0.5 text-xs bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">Intermediate</button>
-                    <button onclick="showLevel('advanced')" id="level-advanced-btn"
-                        class="px-2 py-0.5 text-xs bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">Advanced</button>
-                </div>
+            <!-- Level and Subject Selection -->
+            <div class="flex gap-3 mb-4 items-center">
+                <label class="text-sm font-semibold">Level:</label>
+                <select id="level-dropdown" onchange="handleLevelChange()" class="px-3 py-1 text-sm rounded bg-slate-700 hover:bg-purple-600 border border-purple-500/30 text-white cursor-pointer">
+                    <option value="">Select Level</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                </select>
+                
+                <label id="subject-label" class="text-sm font-semibold hidden">Subject:</label>
+                <select id="subject-dropdown" onchange="handleSubjectChange()" class="px-3 py-1 text-sm rounded bg-slate-700 hover:bg-purple-600 border border-purple-500/30 text-white cursor-pointer hidden">
+                    <option value="">Select Subject</option>
+                    <option value="math">Math</option>
+                    <option value="science">Science</option>
+                    <option value="cs">Computer Science</option>
+                    <option value="history">History</option>
+                </select>
             </div>
                     </div>
 
@@ -2299,123 +2307,140 @@ function tryAnotherChallenge() {
                   
                     <!-- Advanced Level: Original Content -->
                     <div id="advanced-level" class="hidden">
-                        <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-4 mb-4">
-                            <div class="flex justify-between items-center mb-1">
-                                <h3 class="text-sm font-bold text-purple-300">Advanced: Write Prompts from Scratch</h3>
-                                <button onclick="toggleAdvancedTips()" class="text-lg hover:scale-110 transition-transform"
+                        <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-lg font-bold text-purple-300">Advanced: Write Prompts from Scratch</h3>
+                                <button onclick="toggleAdvancedTips()" class="text-2xl hover:scale-110 transition-transform"
                                     title="Show Tips">?</button>
                             </div>
-                            <p class="text-xs mb-3">Master the art of writing complete, effective prompts from the ground up!</p>
+                            <p class="text-sm mb-4">Master the art of writing complete, effective prompts from the ground up!</p>
 
                             <!-- Tips Section -->
-                            <div id="advanced-tips" class="hidden mb-3 bg-blue-900/20 border border-blue-500/30 rounded-lg p-2">
-                                <h4 class="text-xs font-bold text-blue-300 mb-2">Prompt Writing Guidelines</h4>
+                            <div id="advanced-tips" class="hidden mb-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                                <h4 class="text-sm font-bold text-blue-300 mb-3">Prompt Writing Guidelines</h4>
                                 
-                                <div class="mb-2">
-                                    <p class="text-xs font-semibold text-blue-300 mb-1">Good vs Bad Example:</p>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-1 text-xs mb-2">
-                                        <div class="bg-green-900/30 p-1.5 rounded">
-                                            <p class="text-xs text-green-300 mb-0.5">Good:</p>
-                                            <p class="text-xs">"Create a detailed learning plan for mastering Python. Include daily goals, recommended resources, practice projects, and how to track progress."</p>
+                                <div class="mb-3">
+                                    <p class="text-xs font-semibold text-blue-300 mb-2">Good vs Bad Example:</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs mb-3">
+                                        <div class="bg-green-900/30 p-2 rounded">
+                                            <p class="text-xs text-green-300 mb-1">Good:</p>
+                                            <p class="text-xs">"Create a detailed learning plan for mastering Python. Include daily goals, recommended resources, practice projects, and how to track progress. Tailor it for someone with no programming experience but strong math skills."</p>
                                         </div>
-                                        <div class="bg-red-900/30 p-1.5 rounded">
-                                            <p class="text-xs text-red-300 mb-0.5">Bad:</p>
+                                        <div class="bg-red-900/30 p-2 rounded">
+                                            <p class="text-xs text-red-300 mb-1">Bad:</p>
                                             <p class="text-xs">"Help me learn Python."</p>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="bg-slate-800/50 p-2 rounded mb-2">
-                                    <p class="text-xs font-semibold text-blue-300 mb-1">What Makes a Good Prompt:</p>
-                                    <ul class="text-xs space-y-0.5 text-gray-300">
-                                        <li>Be specific about what you want</li>
-                                        <li>Include context and desired format</li>
-                                        <li>Use clear, complete sentences</li>
-                                        <li>Specify tone, length, or style if needed</li>
-                                        <li style="color:#ff6b6b;">Avoid vague requests</li>
-                                        <li style="color:#ff6b6b;">Don't use incomplete sentences</li>
-                                        <li style="color:#ff6b6b;">Avoid ambiguous language</li>
-                                    </ul>
-                                </div>
                                 
-                                <div class="border-t border-blue-500/30 pt-2">
-                                    <p class="text-xs font-semibold text-blue-300 mb-1">Examples by Subject:</p>
-                                    <div class="space-y-1 text-xs">
-                                        <div class="bg-slate-700/30 p-1 rounded">
-                                            <p class="text-blue-200 font-semibold text-xs">Math:</p>
-                                            <p class="text-gray-300 text-xs">"Solve step-by-step: 2x² + 5x - 3 = 0. Explain each step."</p>
+                                <div class="border-t border-blue-500/30 pt-3">
+                                    <p class="text-xs font-semibold text-blue-300 mb-2">Examples by Subject:</p>
+                                    <div class="space-y-2 text-xs">
+                                        <div class="bg-slate-800/50 p-2 rounded">
+                                            <p class="text-blue-200 font-semibold">Math:</p>
+                                            <p class="text-gray-300">"Solve this quadratic equation step-by-step: 2x² + 5x - 3 = 0. Explain each step."</p>
                                         </div>
-                                        <div class="bg-slate-700/30 p-1 rounded">
-                                            <p class="text-blue-200 font-semibold text-xs">Science:</p>
-                                            <p class="text-gray-300 text-xs">"Explain photosynthesis to a 10th grader using simple language and an analogy."</p>
+                                        <div class="bg-slate-800/50 p-2 rounded">
+                                            <p class="text-blue-200 font-semibold">Science:</p>
+                                            <p class="text-gray-300">"Explain photosynthesis to a 10th grader using simple language and an analogy."</p>
                                         </div>
-                                        <div class="bg-slate-700/30 p-1 rounded">
-                                            <p class="text-blue-200 font-semibold text-xs">Computer Science:</p>
-                                            <p class="text-gray-300 text-xs">"Explain how for loops work in Python with 2 simple examples."</p>
+                                        <div class="bg-slate-800/50 p-2 rounded">
+                                            <p class="text-blue-200 font-semibold">Computer Science:</p>
+                                            <p class="text-gray-300">"Explain how for loops work in Python with 2 simple examples. I'm a beginner."</p>
                                         </div>
-                                        <div class="bg-slate-700/30 p-1 rounded">
-                                            <p class="text-blue-200 font-semibold text-xs">History:</p>
-                                            <p class="text-gray-300 text-xs">"Explain the main causes of World War I in simple terms. Include 3+ causes."</p>
+                                        <div class="bg-slate-800/50 p-2 rounded">
+                                            <p class="text-blue-200 font-semibold">History:</p>
+                                            <p class="text-gray-300">"Explain the main causes of World War I in simple terms. Include at least 3 causes."</p>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <p class="mt-3 text-xs text-blue-200">Key: Include specific goals, target audience, desired format, required details, and any constraints or preferences.</p>
                             </div>
                         </div>
 
-                    <h3 class="text-xs font-bold mb-1 mt-3">Compare Prompts</h3>
-                    <p class="text-xs mb-3">See the difference between good and bad prompts! Write both versions and compare the AI responses.</p>
+                    <h3 class="text-lg font-bold mb-2 mt-6">Try It Yourself!</h3>
+                    <p class="text-sm mb-4">See the difference between good and bad prompts! Write both versions and compare the AI responses.</p>
 
-                    <!-- Bad and Good Prompts Side by Side -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
-                        <!-- Bad Prompt Section -->
-                        <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-3">
-                            <h3 class="text-xs font-bold text-red-300 mb-2">Bad Prompt</h3>
-                            <p class="mb-2 text-xs text-gray-300">Vague or poorly structured:</p>
-                            <textarea id="bad-prompt" rows="2" placeholder="Example: 'write something about dogs'"
-                                class="w-full p-2 rounded text-white bg-slate-700 border border-red-500/30 mb-2 text-xs"></textarea>
-                            <div class="flex gap-1">
-                                <button onclick="generateBadPrompt()"
-                                    class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-white text-xs font-semibold">Generate</button>
-                                <button onclick="autoFillBad()"
-                                    class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-white text-xs font-semibold">Auto-fill</button>
-                            </div>
-
-                            <div class="mt-2">
-                                <label class="block font-semibold mb-1 text-red-300 text-xs">AI Response:</label>
-                                <pre id="output-bad"
-                                    class="bg-slate-900/50 border border-red-500/20 p-2 rounded whitespace-pre-wrap text-gray-300 min-h-[80px] text-xs overflow-y-auto max-h-[150px]">(Click Generate to see response)</pre>
-                            </div>
+                    <!-- Bad Prompt Section -->
+                    <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6 mb-6">
+                        <h3 class="text-2xl font-bold text-red-300 mb-4">Bad Prompt</h3>
+                        <p class="mb-4 text-gray-300">Write a vague, incomplete, or poorly structured prompt:</p>
+                        <textarea id="bad-prompt" rows="3" placeholder="Example: 'write something about dogs'"
+                            class="w-full p-3 rounded text-white bg-slate-700 border border-red-500/30 mb-3"></textarea>
+                        <div class="flex gap-2">
+                            <button onclick="generateBadPrompt()"
+                                class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold">Generate Bad Response</button>
+                            <button onclick="autoFillBad()"
+                                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
                         </div>
 
-                        <!-- Good Prompt Section -->
-                        <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-3">
-                            <h3 class="text-xs font-bold text-green-300 mb-2">Good Prompt</h3>
-                            <p class="mb-2 text-xs text-gray-300">Clear and well-structured:</p>
-                            <textarea id="good-prompt" rows="2"
-                                placeholder="Example: 'Write a 150-word paragraph about Golden Retrievers, focusing on their temperament and why they make good family pets.'"
-                                class="w-full p-2 rounded text-white bg-slate-700 border border-green-500/30 mb-2 text-xs"></textarea>
-                            <div class="flex gap-1">
-                                <button onclick="generateGoodPrompt()"
-                                    class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-white text-xs font-semibold">Generate</button>
-                                <button onclick="autoFillGood()"
-                                    class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-white text-xs font-semibold">Auto-fill</button>
-                            </div>
+                        <div class="mt-4">
+                            <label class="block font-semibold mb-2 text-red-300">AI Response to Bad Prompt:</label>
+                            <pre id="output-bad"
+                                class="bg-slate-900/50 border border-red-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                        </div>
 
-                            <div class="mt-2">
-                                <label class="block font-semibold mb-1 text-green-300 text-xs">AI Response:</label>
-                                <pre id="output-good"
-                                    class="bg-slate-900/50 border border-green-500/20 p-2 rounded whitespace-pre-wrap text-gray-300 min-h-[80px] text-xs overflow-y-auto max-h-[150px]">(Click Generate to see response)</pre>
+                        <!-- Community Prompt Feed for Bad Prompts -->
+                        <div class="community-feed mt-6 bg-slate-800/70 border border-red-500/30 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold text-red-300 mb-4">Student-Submitted Bad Prompts</h4>
+                            <div id="bad-prompts-feed" class="space-y-4">
+                                <!-- Prompts will be loaded here dynamically -->
+                                <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Good Prompt Section -->
+                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6 mb-6">
+                        <h3 class="text-2xl font-bold text-green-300 mb-4">Good Prompt</h3>
+                        <p class="mb-4 text-gray-300">Write a clear, specific, and well-structured prompt:</p>
+                        <textarea id="good-prompt" rows="3"
+                            placeholder="Example: 'Write a 150-word informative paragraph about Golden Retrievers, focusing on their temperament and why they make good family pets.'"
+                            class="w-full p-3 rounded text-white bg-slate-700 border border-green-500/30 mb-3"></textarea>
+                        <div class="flex gap-2">
+                            <button onclick="generateGoodPrompt()"
+                                class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">Generate Good Response</button>
+                            <button onclick="autoFillGood()"
+                                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="block font-semibold mb-2 text-green-300">AI Response to Good Prompt:</label>
+                            <pre id="output-good"
+                                class="bg-slate-900/50 border border-green-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                        </div>
+
+                        <!-- Community Prompt Feed for Good Prompts -->
+                        <div class="community-feed mt-6 bg-slate-800/70 border border-green-500/30 rounded-lg p-6">
+                            <h4 class="text-lg font-semibold text-green-300 mb-4">Student-Submitted Good Prompts</h4>
+                            <div id="good-prompts-feed" class="space-y-4">
+                                <!-- Prompts will be loaded here dynamically -->
+                                <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tips Section -->
+                    <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
+                        <h4 class="text-xl font-bold text-purple-300 mb-3">What Makes a Good Prompt?</h4>
+                        <ul class="space-y-2 text-gray-300">
+                            <li>Be specific about what you want</li>
+                            <li>Include context and desired format</li>
+                            <li>Use clear, complete sentences</li>
+                            <li>Specify tone, length, or style if needed</li>
+                            <li style="color:#ff6b6b;">Avoid vague requests</li>
+                            <li style="color:#ff6b6b;">Don't use incomplete sentences</li>
+                            <li style="color:#ff6b6b;">Avoid ambiguous language</li>
+                        </ul>
+                    </div>
+
                     <!-- Complete Section -->
-                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3 text-center mt-3">
-                        <h3 class="text-xs font-bold text-blue-300 mb-1">Challenge Complete!</h3>
-                        <p class="mb-2 text-xs text-gray-300">You understand the power of good prompting!</p>
+                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 text-center">
+                        <h3 class="text-2xl font-bold text-blue-300 mb-3">Challenge Complete!</h3>
+                        <p class="mb-4 text-gray-300">Now you understand the power of good prompting!</p>
                         <button onclick="showFeedbackModal()"
-                            class="bg-purple-600 hover:bg-purple-700 px-4 py-1 rounded text-white text-xs font-semibold">
-                            Complete Module</button>
+                            class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold">Complete Module</button>
                         </div>
                         </div> <!-- Close advanced-level -->
 
@@ -2425,7 +2450,50 @@ function tryAnotherChallenge() {
         </div>
     </div>
 
-    <!-- FEEDBACK MODAL -->
+<script>
+// Handle level selection
+function handleLevelChange() {
+    const level = document.getElementById('level-dropdown').value;
+    const subjectLabel = document.getElementById('subject-label');
+    const subjectDropdown = document.getElementById('subject-dropdown');
+    
+    // Hide all levels
+    document.getElementById('beginner-level').classList.add('hidden');
+    document.getElementById('intermediate-level').classList.add('hidden');
+    document.getElementById('advanced-level').classList.add('hidden');
+    
+    if (level === 'intermediate' || level === 'beginner') {
+        // Show subject dropdown for beginner and intermediate
+        subjectLabel.classList.remove('hidden');
+        subjectDropdown.classList.remove('hidden');
+        subjectDropdown.value = ''; // Reset subject selection
+        // Show the level
+        document.getElementById(level + '-level').classList.remove('hidden');
+    } else if (level === 'advanced') {
+        // Hide subject dropdown for advanced
+        subjectLabel.classList.add('hidden');
+        subjectDropdown.classList.add('hidden');
+        // Show advanced level directly
+        document.getElementById('advanced-level').classList.remove('hidden');
+    }
+}
+
+// Handle subject selection for beginner and intermediate
+function handleSubjectChange() {
+    const level = document.getElementById('level-dropdown').value;
+    const subject = document.getElementById('subject-dropdown').value;
+    
+    if (level === 'beginner') {
+        selectMadLibSubject(subject);
+    } else if (level === 'intermediate') {
+        selectInterChallenge(subject);
+    }
+}
+
+window.handleLevelChange = handleLevelChange;
+window.handleSubjectChange = handleSubjectChange;
+</script>
+
     <div id="feedbackModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999;">
         <div class="modal" style="position: relative; z-index: 1000000;">
             <div
