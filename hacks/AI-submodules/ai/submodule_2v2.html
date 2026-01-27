@@ -1359,6 +1359,18 @@ function selectCSActivity(activityNum) {
     
     // Show selected activity
     document.getElementById('activity-' + activityNum).classList.remove('hidden');
+    
+    // Reset question selector if this is Activity 1
+    if (activityNum === '1') {
+        const selector = document.getElementById('fill-blank-selector');
+        if (selector) {
+            selector.value = '';
+            // Hide all question-related elements
+            document.getElementById('fill-blank-info').classList.add('hidden');
+            document.getElementById('fill-blank-code-container').classList.add('hidden');
+            document.getElementById('fill-blank-actions').classList.add('hidden');
+        }
+    }
 }
 
 // Expose to window for onclick handlers
@@ -1655,28 +1667,6 @@ window.resetHistoryBuilder = resetHistoryBuilder;
                             <h3 class="text-sm font-bold text-green-300 mb-1">Beginner: Prompt Mad Libs</h3>
                             <p class="text-xs mb-3">Fill in the blanks to create an effective prompt!</p>
 
-                            <!-- Subject Selection for Mad Libs -->
-                            <div class="mb-4">
-                                <div class="flex gap-1">
-                                    <button onclick="selectMadLibSubject('math')" id="madlib-math-btn"
-                                        class="madlib-subject-btn px-2 py-0.5 text-xs bg-slate-700 hover:bg-purple-600 rounded border border-slate-600 transition-all">
-                                        Math
-                                    </button>
-                                    <button onclick="selectMadLibSubject('science')" id="madlib-science-btn"
-                                        class="madlib-subject-btn px-2 py-0.5 text-xs bg-slate-700 hover:bg-purple-600 rounded border border-slate-600 transition-all">
-                                        Science
-                                    </button>
-                                    <button onclick="selectMadLibSubject('cs')" id="madlib-cs-btn"
-                                        class="madlib-subject-btn px-2 py-0.5 text-xs bg-slate-700 hover:bg-purple-600 rounded border border-slate-600 transition-all">
-                                        Comp Sci
-                                    </button>
-                                    <button onclick="selectMadLibSubject('history')" id="madlib-history-btn"
-                                        class="madlib-subject-btn px-2 py-0.5 text-xs bg-slate-700 hover:bg-purple-600 rounded border border-slate-600 transition-all">
-                                        History
-                                    </button>
-                                </div>
-                            </div>
-
                             <!-- Mad Libs Form -->
                             <div id="madlib-form" class="hidden">
                                 <div class="bg-slate-800/50 rounded-lg p-6 mb-4">
@@ -1723,28 +1713,6 @@ window.resetHistoryBuilder = resetHistoryBuilder;
     <div class="bg-orange-900/20 border border-orange-500/30 rounded-lg p-4 mb-4">
         <h3 class="text-sm font-bold text-orange-300 mb-1">Intermediate: Prompt Improvement Challenge</h3>
         <p class="text-xs mb-3">You're given a weak prompt. Rewrite it to make it better, then test it with AI to see how much you improved!</p>
-
-       <!-- Subject Selection -->
-<div class="mb-3">
-    <div class="flex gap-1">
-        <button onclick="selectInterChallenge('math')" id="inter-math-btn"
-            class="inter-subject-btn px-2 py-0.5 text-xs bg-slate-700 hover:bg-orange-600 rounded border border-slate-600 transition-all">
-            Math
-        </button>
-        <button onclick="selectInterChallenge('science')" id="inter-science-btn"
-            class="inter-subject-btn px-2 py-0.5 text-xs bg-slate-700 hover:bg-orange-600 rounded border border-slate-600 transition-all">
-            Science
-        </button>
-        <button onclick="selectInterChallenge('cs')" id="inter-cs-btn"
-            class="inter-subject-btn px-2 py-0.5 text-xs bg-slate-700 hover:bg-orange-600 rounded border border-slate-600 transition-all">
-            Comp Sci
-        </button>
-        <button onclick="selectInterChallenge('history')" id="inter-history-btn"
-            class="inter-subject-btn px-2 py-0.5 text-xs bg-slate-700 hover:bg-orange-600 rounded border border-slate-600 transition-all">
-            History
-        </button>
-    </div>
-</div>
 
         <!-- Main Challenge Area -->
         <div id="inter-challenge" class="hidden">
@@ -2301,6 +2269,39 @@ function tryAnotherChallenge() {
 }
 
 // ==================== END INTERMEDIATE LEVEL ====================
+
+// ==================== ADVANCED LEVEL FUNCTIONS ====================
+function selectPromptType(type) {
+    const badSection = document.getElementById('bad-prompt-section');
+    const goodSection = document.getElementById('good-prompt-section');
+    const badBtn = document.getElementById('prompt-type-bad-btn');
+    const goodBtn = document.getElementById('prompt-type-good-btn');
+    
+    if (type === 'bad') {
+        badSection.classList.remove('hidden');
+        goodSection.classList.add('hidden');
+        badBtn.classList.add('bg-red-700');
+        badBtn.classList.remove('bg-slate-700');
+        goodBtn.classList.remove('bg-green-700');
+        goodBtn.classList.add('bg-slate-700');
+    } else if (type === 'good') {
+        badSection.classList.add('hidden');
+        goodSection.classList.remove('hidden');
+        badBtn.classList.remove('bg-red-700');
+        badBtn.classList.add('bg-slate-700');
+        goodBtn.classList.add('bg-green-700');
+        goodBtn.classList.remove('bg-slate-700');
+    }
+}
+
+function toggleStudentPrompts() {
+    const badContainer = document.getElementById('bad-prompts-feed-container');
+    const goodContainer = document.getElementById('good-prompts-feed-container');
+    badContainer.classList.toggle('hidden');
+    goodContainer.classList.toggle('hidden');
+}
+
+// ==================== END ADVANCED LEVEL FUNCTIONS ====================
 </script>
 
                 
@@ -2309,8 +2310,11 @@ function tryAnotherChallenge() {
                     <div id="advanced-level" class="hidden">
                         <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
                             <div class="flex justify-between items-center mb-2">
-                                <h3 class="text-lg font-bold text-purple-300">Advanced: Write Prompts from Scratch</h3>
-                                <button onclick="toggleAdvancedTips()" class="text-2xl hover:scale-110 transition-transform"
+                                <button onclick="toggleStudentPrompts()" class="px-3 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">📋 Student-Submitted Prompts</button>
+                                <div>
+                                    <h3 class="text-lg font-bold text-purple-300">Advanced: Write Prompts from Scratch</h3>
+                                </div>
+                                <button onclick="toggleAdvancedTips()" class="text-3xl font-bold text-red-500 hover:text-red-400 hover:scale-110 transition-transform"
                                     title="Show Tips">?</button>
                             </div>
                             <p class="text-sm mb-4">Master the art of writing complete, effective prompts from the ground up!</p>
@@ -2359,88 +2363,80 @@ function tryAnotherChallenge() {
                             </div>
                         </div>
 
-                    <h3 class="text-lg font-bold mb-2 mt-6">Try It Yourself!</h3>
-                    <p class="text-sm mb-4">See the difference between good and bad prompts! Write both versions and compare the AI responses.</p>
+                    <h3 class="text-base font-bold mb-2 mt-4">Try It Yourself!</h3>
+                    <p class="text-xs mb-3">See the difference between good and bad prompts! Write both versions and compare the AI responses.</p>
+
+                    <!-- Good/Bad Prompt Type Selection -->
+                    <div class="mb-3 flex gap-2">
+                        <button id="prompt-type-bad-btn" onclick="selectPromptType('bad')" class="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 rounded text-white font-semibold">Bad Prompt</button>
+                        <button id="prompt-type-good-btn" onclick="selectPromptType('good')" class="px-3 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Good Prompt</button>
+                    </div>
 
                     <!-- Bad Prompt Section -->
-                    <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6 mb-6">
-                        <h3 class="text-2xl font-bold text-red-300 mb-4">Bad Prompt</h3>
-                        <p class="mb-4 text-gray-300">Write a vague, incomplete, or poorly structured prompt:</p>
-                        <textarea id="bad-prompt" rows="3" placeholder="Example: 'write something about dogs'"
-                            class="w-full p-3 rounded text-white bg-slate-700 border border-red-500/30 mb-3"></textarea>
-                        <div class="flex gap-2">
+                    <div id="bad-prompt-section" class="bg-red-900/20 border border-red-500/30 rounded-lg p-4 mb-4">
+                        <h3 class="text-base font-bold text-red-300 mb-2">Bad Prompt</h3>
+                        <p class="mb-2 text-xs text-gray-300">Write a vague, incomplete, or poorly structured prompt:</p>
+                        <textarea id="bad-prompt" rows="2" placeholder="Example: 'write something about dogs'"
+                            class="w-full p-2 rounded text-white bg-slate-700 border border-red-500/30 mb-2 text-xs"></textarea>
+                        <div class="flex gap-1">
                             <button onclick="generateBadPrompt()"
-                                class="px-6 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold">Generate Bad Response</button>
+                                class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-white text-xs font-semibold">Generate</button>
                             <button onclick="autoFillBad()"
-                                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                                class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-white text-xs font-semibold">Auto-fill</button>
                         </div>
 
-                        <div class="mt-4">
-                            <label class="block font-semibold mb-2 text-red-300">AI Response to Bad Prompt:</label>
+                        <div class="mt-2">
+                            <label class="block font-semibold mb-1 text-red-300 text-xs">AI Response:</label>
                             <pre id="output-bad"
-                                class="bg-slate-900/50 border border-red-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                                class="bg-slate-900/50 border border-red-500/20 p-2 rounded whitespace-pre-wrap text-gray-300 min-h-[80px] text-xs overflow-y-auto max-h-[150px]">(Click Generate to see response)</pre>
                         </div>
 
                         <!-- Community Prompt Feed for Bad Prompts -->
-                        <div class="community-feed mt-6 bg-slate-800/70 border border-red-500/30 rounded-lg p-6">
-                            <h4 class="text-lg font-semibold text-red-300 mb-4">Student-Submitted Bad Prompts</h4>
-                            <div id="bad-prompts-feed" class="space-y-4">
+                        <div id="bad-prompts-feed-container" class="hidden community-feed mt-3 bg-slate-800/70 border border-red-500/30 rounded-lg p-3">
+                            <h4 class="text-sm font-semibold text-red-300 mb-3">Student-Submitted Bad Prompts</h4>
+                            <div id="bad-prompts-feed" class="space-y-2">
                                 <!-- Prompts will be loaded here dynamically -->
-                                <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
+                                <p class="text-gray-400 text-xs text-center py-2">Loading prompts...</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Good Prompt Section -->
-                    <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6 mb-6">
-                        <h3 class="text-2xl font-bold text-green-300 mb-4">Good Prompt</h3>
-                        <p class="mb-4 text-gray-300">Write a clear, specific, and well-structured prompt:</p>
-                        <textarea id="good-prompt" rows="3"
-                            placeholder="Example: 'Write a 150-word informative paragraph about Golden Retrievers, focusing on their temperament and why they make good family pets.'"
-                            class="w-full p-3 rounded text-white bg-slate-700 border border-green-500/30 mb-3"></textarea>
-                        <div class="flex gap-2">
+                    <div id="good-prompt-section" class="hidden bg-green-900/20 border border-green-500/30 rounded-lg p-4 mb-4">
+                        <h3 class="text-base font-bold text-green-300 mb-2">Good Prompt</h3>
+                        <p class="mb-2 text-xs text-gray-300">Write a clear, specific, and well-structured prompt:</p>
+                        <textarea id="good-prompt" rows="2"
+                            placeholder="Example: 'Write a 150-word paragraph about Golden Retrievers, focusing on their temperament and why they make good family pets.'"
+                            class="w-full p-2 rounded text-white bg-slate-700 border border-green-500/30 mb-2 text-xs"></textarea>
+                        <div class="flex gap-1">
                             <button onclick="generateGoodPrompt()"
-                                class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">Generate Good Response</button>
+                                class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-white text-xs font-semibold">Generate</button>
                             <button onclick="autoFillGood()"
-                                class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Auto-fill</button>
+                                class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-white text-xs font-semibold">Auto-fill</button>
                         </div>
 
-                        <div class="mt-4">
-                            <label class="block font-semibold mb-2 text-green-300">AI Response to Good Prompt:</label>
+                        <div class="mt-2">
+                            <label class="block font-semibold mb-1 text-green-300 text-xs">AI Response:</label>
                             <pre id="output-good"
-                                class="bg-slate-900/50 border border-green-500/20 p-4 rounded whitespace-pre-wrap text-gray-300 min-h-[100px]">(Click Generate to see response)</pre>
+                                class="bg-slate-900/50 border border-green-500/20 p-2 rounded whitespace-pre-wrap text-gray-300 min-h-[80px] text-xs overflow-y-auto max-h-[150px]">(Click Generate to see response)</pre>
                         </div>
 
                         <!-- Community Prompt Feed for Good Prompts -->
-                        <div class="community-feed mt-6 bg-slate-800/70 border border-green-500/30 rounded-lg p-6">
-                            <h4 class="text-lg font-semibold text-green-300 mb-4">Student-Submitted Good Prompts</h4>
-                            <div id="good-prompts-feed" class="space-y-4">
+                        <div id="good-prompts-feed-container" class="hidden community-feed mt-3 bg-slate-800/70 border border-green-500/30 rounded-lg p-3">
+                            <h4 class="text-sm font-semibold text-green-300 mb-3">Student-Submitted Good Prompts</h4>
+                            <div id="good-prompts-feed" class="space-y-2">
                                 <!-- Prompts will be loaded here dynamically -->
-                                <p class="text-gray-400 text-sm text-center py-4">Loading prompts...</p>
+                                <p class="text-gray-400 text-xs text-center py-2">Loading prompts...</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tips Section -->
-                    <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
-                        <h4 class="text-xl font-bold text-purple-300 mb-3">What Makes a Good Prompt?</h4>
-                        <ul class="space-y-2 text-gray-300">
-                            <li>Be specific about what you want</li>
-                            <li>Include context and desired format</li>
-                            <li>Use clear, complete sentences</li>
-                            <li>Specify tone, length, or style if needed</li>
-                            <li style="color:#ff6b6b;">Avoid vague requests</li>
-                            <li style="color:#ff6b6b;">Don't use incomplete sentences</li>
-                            <li style="color:#ff6b6b;">Avoid ambiguous language</li>
-                        </ul>
-                    </div>
-
                     <!-- Complete Section -->
-                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-6 text-center">
-                        <h3 class="text-2xl font-bold text-blue-300 mb-3">Challenge Complete!</h3>
-                        <p class="mb-4 text-gray-300">Now you understand the power of good prompting!</p>
+                    <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3 text-center mt-4">
+                        <h3 class="text-base font-bold text-blue-300 mb-2">Challenge Complete!</h3>
+                        <p class="mb-3 text-xs text-gray-300">You understand the power of good prompting!</p>
                         <button onclick="showFeedbackModal()"
-                            class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg font-semibold">Complete Module</button>
+                            class="bg-purple-600 hover:bg-purple-700 px-4 py-1 rounded text-white text-xs font-semibold">Complete Module</button>
                         </div>
                         </div> <!-- Close advanced-level -->
 
@@ -4815,6 +4811,8 @@ function showLevel(level) {
         window.autoFillGood = autoFillGood;
         window.generateBadPrompt = generateBadPrompt;
         window.generateGoodPrompt = generateGoodPrompt;
+        window.selectPromptType = selectPromptType;
+        window.toggleStudentPrompts = toggleStudentPrompts;
         window.copyPromptToTextarea = copyPromptToTextarea;
         window.copyToClipboard = copyToClipboard;
         window.showLevel = showLevel;
