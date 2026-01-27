@@ -1154,6 +1154,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                         onchange="loadFillBlankQuestion()"
                                         class="w-full p-2 text-sm rounded bg-slate-700 border border-blue-500/30 text-white">
                                         <option value="">-- Select a Question --</option>
+                                        <option value="1">Question 1</option>
+                                        <option value="2">Question 2</option>
+                                        <option value="3">Question 3</option>
+                                        <option value="4">Question 4</option>
+                                        <option value="5">Question 5</option>
                                     </select>
                                 </div>
 
@@ -4442,6 +4447,45 @@ window.handleSubjectChange = handleSubjectChange;
                         range: {
                             correct: 'range(5)',
                             options: ['range(5)', 'range(1, 5)', '[1,2,3,4,5]', '5']
+                        }
+                    }
+                },
+                {
+                    id: 3,
+                    language: 'python',
+                    title: 'List Indexing',
+                    description: 'Complete the code to access the first element of a list',
+                    code_template: 'my_list = [10, 20, 30, 40]\nfirst = my_list{{index}}\nprint(first)',
+                    blanks: {
+                        index: {
+                            correct: '[0]',
+                            options: ['[0]', '[1]', '[-1]', '[first]']
+                        }
+                    }
+                },
+                {
+                    id: 4,
+                    language: 'python',
+                    title: 'String Methods',
+                    description: 'Complete the code to convert text to uppercase',
+                    code_template: 'text = "hello"\nresult = text{{method}}\nprint(result)',
+                    blanks: {
+                        method: {
+                            correct: '.upper()',
+                            options: ['.upper()', '.lower()', '.capitalize()', '.reverse()']
+                        }
+                    }
+                },
+                {
+                    id: 5,
+                    language: 'python',
+                    title: 'Conditional Logic',
+                    description: 'Complete the if statement to check if a number is positive',
+                    code_template: 'num = 10\nif num {{comparison}} 0:\n    print("Positive")',
+                    blanks: {
+                        comparison: {
+                            correct: '>',
+                            options: ['>', '<', '==', '!=']
                         }
                     }
                 }
