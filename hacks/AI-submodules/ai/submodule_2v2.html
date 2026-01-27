@@ -1096,9 +1096,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="flex items-center gap-3">
                                 <span class="text-xs text-gray-400">Activity:</span>
                                 <div class="flex gap-2">
-                                    <button id="activity-btn-1" onclick="selectCSActivity('1')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-slate-700 hover:bg-purple-600 border border-slate-600 transition-colors">Activity 1</button>
-                                    <button id="activity-btn-2" onclick="selectCSActivity('2')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-slate-700 hover:bg-purple-600 border border-slate-600 transition-colors">Activity 2</button>
-                                    <button id="activity-btn-3" onclick="selectCSActivity('3')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-slate-700 hover:bg-purple-600 border border-slate-600 transition-colors">Activity 3</button>
+                                    <button id="activity-btn-1" onclick="selectCSActivity('1')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-purple-600 hover:bg-purple-600 border border-slate-600 transition-colors text-black font-semibold">Activity 1</button>
+                                    <button id="activity-btn-2" onclick="selectCSActivity('2')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-slate-700 hover:bg-purple-600 border border-slate-600 transition-colors text-black font-semibold">Activity 2</button>
+                                    <button id="activity-btn-3" onclick="selectCSActivity('3')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-slate-700 hover:bg-purple-600 border border-slate-600 transition-colors text-black font-semibold">Activity 3</button>
                                 </div>
                             </div>
                         </div>
@@ -1142,7 +1142,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="space-y-6 text-sm">
 
                         <!-- Activity 1: Fundamentals (Fill in the Blanks) -->
-                        <div id="activity-1" class="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 border-2 border-blue-500/50 rounded-lg p-6 mt-6 hidden">
+                        <div id="activity-1" class="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 border-2 border-blue-500/50 rounded-lg p-6 mt-6">
                             <h4 class="text-base font-bold text-blue-300 mb-4">📝 Activity 1: Fundamentals</h4>
                             <p class="mb-4 text-sm">Complete the code by selecting the correct options from the dropdowns!</p>
 
@@ -1154,11 +1154,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                         onchange="loadFillBlankQuestion()"
                                         class="w-full p-2 text-sm rounded bg-slate-700 border border-blue-500/30 text-white">
                                         <option value="">-- Select a Question --</option>
-                                        <option value="0">Question 1</option>
-                                        <option value="1">Question 2</option>
-                                        <option value="2">Question 3</option>
-                                        <option value="3">Question 4</option>
-                                        <option value="4">Question 5</option>
                                     </select>
                                 </div>
 
