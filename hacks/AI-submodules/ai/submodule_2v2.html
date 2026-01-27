@@ -456,8 +456,7 @@ date: 2025-10-30
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/50 rounded-lg p-6">
                     <div class="flex items-center gap-3 mb-4">
-                        <span class="text-base pulse">✍️</span>
-                        <h2 class="text-sm font-bold text-purple-400">Prompt Engineering</h2>
+                        <h2 class="text-xs font-bold text-purple-400">Prompt Engineering</h2>
                     </div>
                     <div class="space-y-4 text-xs">
                         <div class="flex justify-center my-6">
@@ -471,12 +470,12 @@ date: 2025-10-30
                             <p class="mb-4 text-xs">Generative AI like ChatGPT and Claude use two key technologies:</p>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="bg-slate-800/50 p-4 rounded-lg">
-                                    <p class="text-purple-400 font-semibold mb-2 text-xs">🗣️ Natural Language Processing</p>
+                                    <p class="text-purple-400 font-semibold mb-2 text-xs">Natural Language Processing</p>
                                     <p class="text-xs">Helps AI understand and respond to human language naturally, like
                                         talking to another person.</p>
                                 </div>
                                 <div class="bg-slate-800/50 p-4 rounded-lg">
-                                    <p class="text-purple-400 font-semibold mb-2 text-xs">🧠 Machine Learning</p>
+                                    <p class="text-purple-400 font-semibold mb-2 text-xs">Machine Learning</p>
                                     <p class="text-xs">Enables AI to learn from your input and improve its responses
                                         over time.</p>
                                 </div>
@@ -495,7 +494,7 @@ date: 2025-10-30
     <div class="space-y-6">
         <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-6">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-base font-bold">🔢 Math Practice</h2>
+                <h2 class="text-xs font-bold">Math Practice</h2>
                 <div class="flex gap-2 items-center">
                     <span class="text-sm text-purple-300">Topic: <span id="current-math-topic" class="font-semibold">Trigonometry</span></span>
                     <button onclick="toggleTopicSelector()" class="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm" title="Change Topic">Change Topic</button>
@@ -1037,7 +1036,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="space-y-6">
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-base font-bold">🔬 Science Practice</h2>
+                        <h2 class="text-xs font-bold">Science Practice</h2>
                         <div class="flex gap-2 items-center">
                             <span class="text-sm text-purple-300">Topic: <span id="current-science-topic" class="font-semibold">Biology</span></span>
                             <button onclick="toggleScienceTopicSelector()" class="px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm" title="Change Topic">Change Topic</button>
@@ -1093,16 +1092,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
                     <div class="flex justify-between items-center mb-6">
                         <div class="flex items-center gap-4">
-                            <h2 class="text-sm font-bold">💻 Computer Science</h2>
+                            <h2 class="text-xs font-bold">Computer Science</h2>
                             <div class="flex items-center gap-2">
                                 <span class="text-xs text-gray-400">Activity:</span>
-                                <select id="activity-dropdown" 
-                                    class="px-3 py-1.5 text-xs rounded bg-purple-400 hover:bg-purple-300 border border-purple-500/30 text-slate-900 font-semibold cursor-pointer">
-                                    <option value="">Select Activity</option>
-                                    <option value="1">Activity 1</option>
-                                    <option value="2">Activity 2</option>
-                                    <option value="3">Activity 3</option>
-                                </select>
+                                <div class="flex gap-2">
+                                    <button id="activity-btn-1" onclick="selectCSActivity('1')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-slate-700 hover:bg-purple-600 border border-slate-600 transition-colors">Activity 1</button>
+                                    <button id="activity-btn-2" onclick="selectCSActivity('2')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-slate-700 hover:bg-purple-600 border border-slate-600 transition-colors">Activity 2</button>
+                                    <button id="activity-btn-3" onclick="selectCSActivity('3')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-slate-700 hover:bg-purple-600 border border-slate-600 transition-colors">Activity 3</button>
+                                </div>
                             </div>
                         </div>
                         <button onclick="toggleCSTips()" class="text-2xl hover:scale-110 transition-transform"
@@ -1345,24 +1342,27 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
 <script>
-// Activity dropdown handler - add this after your existing toggleActivity function
-document.addEventListener('DOMContentLoaded', function() {
-    const activityDropdown = document.getElementById('activity-dropdown');
-    if (activityDropdown) {
-        activityDropdown.addEventListener('change', function() {
-            const value = this.value;
-            if (value) {
-                // Hide all activities first
-                document.getElementById('activity-1').classList.add('hidden');
-                document.getElementById('activity-2').classList.add('hidden');
-                document.getElementById('activity-3').classList.add('hidden');
-                
-                // Show selected activity
-                document.getElementById('activity-' + value).classList.remove('hidden');
-            }
-        });
-    }
-});
+// Activity button handler for CompSci section
+function selectCSActivity(activityNum) {
+    // Update button styles
+    document.querySelectorAll('.cs-activity-btn').forEach(btn => {
+        btn.classList.remove('bg-purple-600');
+        btn.classList.add('bg-slate-700');
+    });
+    document.getElementById('activity-btn-' + activityNum).classList.add('bg-purple-600');
+    document.getElementById('activity-btn-' + activityNum).classList.remove('bg-slate-700');
+    
+    // Hide all activities first
+    document.getElementById('activity-1').classList.add('hidden');
+    document.getElementById('activity-2').classList.add('hidden');
+    document.getElementById('activity-3').classList.add('hidden');
+    
+    // Show selected activity
+    document.getElementById('activity-' + activityNum).classList.remove('hidden');
+}
+
+// Expose to window for onclick handlers
+window.selectCSActivity = selectCSActivity;
 </script>
 
        <!-- SECTION 4: History -->
@@ -1370,8 +1370,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="space-y-6">
         <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-4">
             <div class="flex items-center gap-3 mb-4">
-                <span class="text-lg pulse">📜</span>
-                <h2 class="text-sm font-bold text-purple-400">History</h2>
+                <h2 class="text-xs font-bold text-purple-400">History</h2>
                 <button onclick="toggleHistoryTips()" class="ml-auto text-2xl hover:scale-110 transition-transform"
                     title="Show Tips">❓</button>
             </div>
@@ -1413,7 +1412,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <!-- Interactive Activity: Prompt Template Builder -->
                 <div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 rounded-lg p-4 mt-3">
-                    <h4 class="text-xs font-bold text-green-300 mb-2">🎮 Interactive: History Prompt Builder!</h4>
+                    <h4 class="text-xs font-bold text-green-300 mb-2">Interactive: History Prompt Builder</h4>
                     <p class="mb-3 text-xs">Choose your prompt type and fill in the details to create an effective history prompt:</p>
 
                     <div class="bg-slate-800/50 p-3 rounded-lg space-y-3">
@@ -1423,19 +1422,19 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="grid grid-cols-2 gap-2">
                                 <button type="button" onclick="selectHistoryType('cause')" id="hist-cause-btn"
                                     class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                    <span class="text-xs">🔍 Cause & Effect</span>
+                                    <span class="text-xs">Cause & Effect</span>
                                 </button>
                                 <button type="button" onclick="selectHistoryType('compare')" id="hist-compare-btn"
                                     class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                    <span class="text-xs">⚖️ Compare Events</span>
+                                    <span class="text-xs">Compare Events</span>
                                 </button>
                                 <button type="button" onclick="selectHistoryType('analyze')" id="hist-analyze-btn"
                                     class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                    <span class="text-xs">📜 Analyze Source</span>
+                                    <span class="text-xs">Analyze Source</span>
                                 </button>
                                 <button type="button" onclick="selectHistoryType('timeline')" id="hist-timeline-btn"
                                     class="history-type-btn bg-slate-700 hover:bg-purple-600 rounded-lg border border-slate-600 transition-colors px-3 py-2">
-                                    <span class="text-xs">📅 Create Timeline</span>
+                                    <span class="text-xs">Create Timeline</span>
                                 </button>
                             </div>
                         </div>
@@ -1445,7 +1444,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div id="history-inputs"></div>
                             <button type="button" onclick="generateHistoryPrompt()"
                                 class="w-full bg-green-600 hover:bg-green-700 py-2 rounded-lg font-semibold text-xs mt-2">
-                                ✨ Generate Prompt
+                                Generate Prompt
                             </button>
                         </div>
 
@@ -1457,11 +1456,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="flex gap-2">
                                 <button type="button" onclick="copyHistoryPrompt()"
                                     class="flex-1 px-3 py-1 bg-green-700 hover:bg-green-600 rounded text-xs">
-                                    📋 Copy Prompt
+                                    Copy Prompt
                                 </button>
                                 <button type="button" onclick="resetHistoryBuilder()"
                                     class="flex-1 px-3 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs">
-                                    🔄 Start Over
+                                    Start Over
                                 </button>
                             </div>
                         </div>
