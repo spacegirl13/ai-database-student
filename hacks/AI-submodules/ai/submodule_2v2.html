@@ -1625,40 +1625,29 @@ window.resetHistoryBuilder = resetHistoryBuilder;
         <!-- SECTION 5: Interactive Challenge -->
        <div id="section-5" class="mission-section section-hidden">
     <div class="space-y-6">
-        <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-8">
-            <h2 class="text-xl font-bold mb-6">🎯 Interactive Prompt Challenge</h2>
-            <p class="text-lg mb-6">Choose your level and practice writing effective prompts!</p>
+        <div class="bg-slate-800/70 backdrop-blur border border-purple-500/30 rounded-lg p-6">
+            <h2 class="text-base font-bold mb-3">🎯 Interactive Prompt Challenge</h2>
+            <p class="text-sm mb-4">Choose your level and practice writing effective prompts!</p>
 
-            <!-- Level Selection -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <button onclick="showLevel('beginner')" id="level-beginner-btn"
-                    class="level-btn bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 py-2 px-3 rounded-lg font-semibold text-sm text-left transition-all border-2 border-transparent">
-                    <div class="text-lg mb-1">🌱</div>
-                    <div class="text-sm">Beginner Level</div>
-                    <div class="text-xs font-normal opacity-90 mt-1">Fill-in-the-blanks Mad Libs style</div>
-                </button>
-                
-                <button onclick="showLevel('intermediate')" id="level-intermediate-btn"
-                    class="level-btn bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 py-2 px-3 rounded-lg font-semibold text-sm text-left transition-all border-2 border-transparent">
-                    <div class="text-lg mb-1">⚡</div>
-                    <div class="text-sm">Intermediate Level</div>
-                    <div class="text-xs font-normal opacity-90 mt-1">Improve weak prompts</div>
-                </button>
-                
-                <button onclick="showLevel('advanced')" id="level-advanced-btn"
-                    class="level-btn bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 py-2 px-3 rounded-lg font-semibold text-sm text-left transition-all border-2 border-transparent">
-                    <div class="text-lg mb-1">🚀</div>
-                    <div class="text-sm">Advanced Level</div>
-                    <div class="text-xs font-normal opacity-90 mt-1">Write complete prompts from scratch</div>
-                </button>
+            <!-- Level Selection Dropdown -->
+            <div class="mb-6">
+                <label class="block text-sm font-semibold mb-2">Choose your level:</label>
+                <div class="flex gap-2">
+                    <button onclick="showLevel('beginner')" id="level-beginner-btn"
+                        class="px-3 py-1 text-sm bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">🌱 Beginner</button>
+                    <button onclick="showLevel('intermediate')" id="level-intermediate-btn"
+                        class="px-3 py-1 text-sm bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">⚡ Intermediate</button>
+                    <button onclick="showLevel('advanced')" id="level-advanced-btn"
+                        class="px-3 py-1 text-sm bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">🚀 Advanced</button>
+                </div>
             </div>
                     </div>
 
                     <!-- Beginner Level: Mad Libs -->
                     <div id="beginner-level" class="hidden">
                         <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-6 mb-6">
-                            <h3 class="text-2xl font-bold text-green-300 mb-4">🌱 Beginner: Prompt Mad Libs</h3>
-                            <p class="mb-4">Fill in the blanks to create an effective prompt!</p>
+                            <h3 class="text-lg font-bold text-green-300 mb-2">🌱 Beginner: Prompt Mad Libs</h3>
+                            <p class="text-sm mb-4">Fill in the blanks to create an effective prompt!</p>
 
                             <!-- Subject Selection for Mad Libs -->
                             <div class="mb-6">
@@ -1727,8 +1716,8 @@ window.resetHistoryBuilder = resetHistoryBuilder;
                  <!-- INTERMEDIATE LEVEL: Prompt Improvement Challenge -->
 <div id="intermediate-level" class="hidden">
     <div class="bg-orange-900/20 border border-orange-500/30 rounded-lg p-6 mb-6">
-        <h3 class="text-xl font-bold text-orange-300 mb-4">Intermediate: Prompt Improvement Challenge</h3>
-        <p class="mb-6">You're given a weak prompt. Rewrite it to make it better, then test it with AI to see how much you improved!</p>
+        <h3 class="text-lg font-bold text-orange-300 mb-2">Intermediate: Prompt Improvement Challenge</h3>
+        <p class="text-sm mb-4">You're given a weak prompt. Rewrite it to make it better, then test it with AI to see how much you improved!</p>
 
        <!-- Subject Selection -->
 <div class="mb-6">
@@ -2315,72 +2304,59 @@ function tryAnotherChallenge() {
                     <!-- Advanced Level: Original Content -->
                     <div id="advanced-level" class="hidden">
                         <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-2xl font-bold text-purple-300">🚀 Advanced: Write Prompts from Scratch</h3>
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-lg font-bold text-purple-300">🚀 Advanced: Write Prompts from Scratch</h3>
                                 <button onclick="toggleAdvancedTips()" class="text-2xl hover:scale-110 transition-transform"
                                     title="Show Tips">❓</button>
                             </div>
-                            <p class="mb-4">Master the art of writing complete, effective prompts from the ground up!</p>
+                            <p class="text-sm mb-4">Master the art of writing complete, effective prompts from the ground up!</p>
 
                             <!-- Tips Section -->
                             <div id="advanced-tips" class="hidden mb-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
-                                <h4 class="text-sm font-bold text-blue-300 mb-2">💡 Good vs Bad Prompts for Prompt Writing</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                                    <div class="bg-green-900/30 p-2 rounded">
-                                        <p class="text-xs text-green-300 mb-1">✅ Good:</p>
-                                        <p class="text-xs">"Create a detailed learning plan for mastering Python. Include daily goals, recommended resources, practice projects, and how to track progress. Tailor it for someone with no programming experience but strong math skills."</p>
-                                    </div>
-                                    <div class="bg-red-900/30 p-2 rounded">
-                                        <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
-                                        <p class="text-xs">"Help me learn Python."</p>
+                                <h4 class="text-sm font-bold text-blue-300 mb-3">💡 Prompt Writing Examples</h4>
+                                
+                                <div class="mb-3">
+                                    <p class="text-xs font-semibold text-blue-300 mb-2">Good vs Bad Example:</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs mb-3">
+                                        <div class="bg-green-900/30 p-2 rounded">
+                                            <p class="text-xs text-green-300 mb-1">✅ Good:</p>
+                                            <p class="text-xs">"Create a detailed learning plan for mastering Python. Include daily goals, recommended resources, practice projects, and how to track progress. Tailor it for someone with no programming experience but strong math skills."</p>
+                                        </div>
+                                        <div class="bg-red-900/30 p-2 rounded">
+                                            <p class="text-xs text-red-300 mb-1">❌ Bad:</p>
+                                            <p class="text-xs">"Help me learn Python."</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <p class="mt-2 text-xs text-blue-200">✨ <strong>Key:</strong> Include specific goals, target audience, desired format, required details, and any constraints or preferences.</p>
+                                
+                                <div class="border-t border-blue-500/30 pt-3">
+                                    <p class="text-xs font-semibold text-blue-300 mb-2">📊 Examples by Subject:</p>
+                                    <div class="space-y-2 text-xs">
+                                        <div class="bg-slate-800/50 p-2 rounded">
+                                            <p class="text-blue-200 font-semibold">🔢 Math:</p>
+                                            <p class="text-gray-300">"Solve this quadratic equation step-by-step: 2x² + 5x - 3 = 0. Explain each step."</p>
+                                        </div>
+                                        <div class="bg-slate-800/50 p-2 rounded">
+                                            <p class="text-blue-200 font-semibold">🔬 Science:</p>
+                                            <p class="text-gray-300">"Explain photosynthesis to a 10th grader using simple language and an analogy."</p>
+                                        </div>
+                                        <div class="bg-slate-800/50 p-2 rounded">
+                                            <p class="text-blue-200 font-semibold">💻 Computer Science:</p>
+                                            <p class="text-gray-300">"Explain how for loops work in Python with 2 simple examples. I'm a beginner."</p>
+                                        </div>
+                                        <div class="bg-slate-800/50 p-2 rounded">
+                                            <p class="text-blue-200 font-semibold">📜 History:</p>
+                                            <p class="text-gray-300">"Explain the main causes of World War I in simple terms. Include at least 3 causes."</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <p class="mt-3 text-xs text-blue-200">✨ <strong>Key:</strong> Include specific goals, target audience, desired format, required details, and any constraints or preferences.</p>
                             </div>
                         </div>
 
-                    <!-- Quick Reference Table -->
-                    <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
-                        <h3 class="text-2xl font-bold text-purple-300 mb-4">📊 Student Prompt Examples by Subject</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full border-collapse bg-slate-900/50 rounded-lg overflow-hidden">
-                                <thead>
-                                    <tr class="bg-purple-900/30">
-                                        <th class="border border-purple-500/30 p-4 text-left">Subject</th>
-                                        <th class="border border-purple-500/30 p-4 text-left">Effective Prompt Example
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="border border-purple-500/30 p-4"><strong>🔢 Math</strong></td>
-                                        <td class="border border-purple-500/30 p-4 text-sm">"Solve this quadratic
-                                            equation step-by-step: 2x² + 5x - 3 = 0. Explain each step."</td>
-                                    </tr>
-                                    <tr class="bg-slate-800/30">
-                                        <td class="border border-purple-500/30 p-4"><strong>🔬 Science</strong></td>
-                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain photosynthesis to a
-                                            10th grader using simple language and an analogy."</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-purple-500/30 p-4"><strong>💻 Computer Science</strong>
-                                        </td>
-                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain how for loops work
-                                            in Python with 2 simple examples. I'm a beginner."</td>
-                                    </tr>
-                                    <tr class="bg-slate-800/30">
-                                        <td class="border border-purple-500/30 p-4"><strong>📜 History</strong></td>
-                                        <td class="border border-purple-500/30 p-4 text-sm">"Explain the main causes of
-                                            World War I in simple terms. Include at least 3 causes."</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <h3 class="text-2xl font-bold mb-4 mt-8">✏️ Try It Yourself!</h3>
-                    <p class="text-lg mb-6">See the difference between good and bad prompts! Write both versions and
-                        compare the AI responses.</p>
+                    <h3 class="text-lg font-bold mb-2 mt-6">✏️ Try It Yourself!</h3>
+                    <p class="text-sm mb-4">See the difference between good and bad prompts! Write both versions and compare the AI responses.</p>
 
                     <!-- Bad Prompt Section -->
                     <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-6 mb-6">
