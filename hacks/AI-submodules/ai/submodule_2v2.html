@@ -2377,7 +2377,8 @@ async function loadPastStudentPrompts() {
         promptsList.innerHTML = topPrompts.map((prompt, index) => `
             <div style="background: #2a2a2a; border: 1px solid #8b5cf6; border-radius: 8px; padding: 12px;">
                 <p style="color: #a78bfa; font-size: 12px; margin: 0 0 4px 0; font-weight: bold;">${prompt.type} Prompt · Student ${index + 1}</p>
-                <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0;">${escapeHtml(prompt.text)}</p>
+                <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0 0 8px 0;">${escapeHtml(prompt.text)}</p>
+                <button onclick="testStudentPrompt('${escapeHtml(prompt.text).replace(/'/g, "\\'")}')" style="background: #8b5cf6; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; transition: background 0.2s;">🤖 Test with AI</button>
             </div>
         `).join('');
     } catch (error) {
@@ -2389,6 +2390,67 @@ async function loadPastStudentPrompts() {
 function escapeHtml(text) {
     const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
     return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+async function testStudentPrompt(promptText) {
+    const responseContainer = document.getElementById('student-prompts-modal');
+    
+    // Close the modal first
+    if (responseContainer) {
+        responseContainer.classList.add('hidden');
+    }
+    
+    // Create a response display
+    const responseDisplay = document.createElement('div');
+    responseDisplay.id = 'student-prompt-response-display';
+    responseDisplay.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10001; border-radius: 8px;';
+    
+    responseDisplay.innerHTML = `
+        <div style="background: #1e1e1e; border: 2px solid #8b5cf6; border-radius: 12px; padding: 20px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="color: #a78bfa; font-size: 18px; font-weight: bold; margin: 0;">AI Response to Student Prompt</h3>
+                <button onclick="document.getElementById('student-prompt-response-display').remove()" style="background: none; border: none; color: #a78bfa; font-size: 24px; cursor: pointer;">&times;</button>
+            </div>
+            <div style="background: #2a2a2a; border: 1px solid #8b5cf6; border-radius: 8px; padding: 12px; margin-bottom: 15px;">
+                <p style="color: #a78bfa; font-size: 12px; margin: 0 0 8px 0; font-weight: bold;">Student's Prompt:</p>
+                <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0;">${escapeHtml(promptText)}</p>
+            </div>
+            <div style="background: #2a2a2a; border: 1px solid #10b981; border-radius: 8px; padding: 12px;">
+                <p style="color: #10b981; font-size: 12px; margin: 0 0 8px 0; font-weight: bold;">AI Response:</p>
+                <p id="student-prompt-ai-response" style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0; white-space: pre-wrap;">Loading AI response...</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(responseDisplay);
+    
+    try {
+        const response = await fetch(pythonURI + '/api/gemini', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                prompt: promptText
+            })
+        });
+        
+        const data = await response.json();
+        const responseText = document.getElementById('student-prompt-ai-response');
+        
+        if (data.success && data.text) {
+            responseText.textContent = data.text;
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.log('MathJax error:', err));
+            }
+        } else {
+            responseText.textContent = 'Error: Could not generate response. ' + (data.message || '');
+        }
+    } catch (error) {
+        console.error('Error testing prompt:', error);
+        document.getElementById('student-prompt-ai-response').textContent = 'Error: Failed to get AI response. Please make sure you are logged in.';
+    }
 }
 
 // ==================== END ADVANCED LEVEL FUNCTIONS ====================
@@ -5010,6 +5072,7 @@ function showLevel(level) {
         window.tryAnotherChallenge = tryAnotherChallenge;
         window.getHint = getHint;
         window.analyzeStudentPrompt = analyzeStudentPrompt;
+        window.testStudentPrompt = testStudentPrompt;
 
         // Load questions when the math, science, or CS section is accessed
         document.addEventListener('DOMContentLoaded', () => {
