@@ -2374,13 +2374,17 @@ async function loadPastStudentPrompts() {
             return;
         }
         
-        promptsList.innerHTML = topPrompts.map((prompt, index) => `
-            <div style="background: #2a2a2a; border: 1px solid #8b5cf6; border-radius: 8px; padding: 12px;">
-                <p style="color: #a78bfa; font-size: 12px; margin: 0 0 4px 0; font-weight: bold;">${prompt.type} Prompt · Student ${index + 1}</p>
-                <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0 0 8px 0;">${escapeHtml(prompt.text)}</p>
-                <button onclick="testStudentPrompt('${escapeHtml(prompt.text).replace(/'/g, "\\'")}')" style="background: #8b5cf6; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; transition: background 0.2s;">🤖 Test with AI</button>
-            </div>
-        `).join('');
+        promptsList.innerHTML = topPrompts.map((prompt, index) => {
+            const promptId = 'student-prompt-' + index;
+            const encodedPrompt = encodeURIComponent(prompt.text);
+            return `
+                <div style="background: #2a2a2a; border: 1px solid #8b5cf6; border-radius: 8px; padding: 12px;">
+                    <p style="color: #a78bfa; font-size: 12px; margin: 0 0 4px 0; font-weight: bold;">${prompt.type} Prompt · Student ${index + 1}</p>
+                    <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0 0 8px 0;">${escapeHtml(prompt.text)}</p>
+                    <button onclick="testStudentPrompt('${promptId}', '${encodedPrompt}')" style="background: #8b5cf6; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; transition: background 0.2s;">Test with AI</button>
+                </div>
+            `;
+        }).join('');
     } catch (error) {
         console.error('Error loading prompts:', error);
         document.getElementById('prompts-list').innerHTML = '<p style="color: #ff6b6b;">Error loading prompts - showing sample data instead</p>';
@@ -2392,7 +2396,10 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, m => map[m]);
 }
 
-async function testStudentPrompt(promptText) {
+async function testStudentPrompt(promptId, encodedPrompt) {
+    // Decode the prompt from URL encoding
+    const promptText = decodeURIComponent(encodedPrompt);
+    
     const responseContainer = document.getElementById('student-prompts-modal');
     
     // Close the modal first
@@ -2436,6 +2443,10 @@ async function testStudentPrompt(promptText) {
             })
         });
         
+        if (!response.ok) {
+            throw new Error('API request failed with status ' + response.status);
+        }
+        
         const data = await response.json();
         const responseText = document.getElementById('student-prompt-ai-response');
         
@@ -2444,12 +2455,17 @@ async function testStudentPrompt(promptText) {
             if (window.MathJax && window.MathJax.typesetPromise) {
                 window.MathJax.typesetPromise().catch(err => console.log('MathJax error:', err));
             }
+        } else if (data.text) {
+            responseText.textContent = data.text;
         } else {
-            responseText.textContent = 'Error: Could not generate response. ' + (data.message || '');
+            responseText.textContent = 'Error: Could not generate response. ' + (data.message || 'Unknown error');
         }
     } catch (error) {
         console.error('Error testing prompt:', error);
-        document.getElementById('student-prompt-ai-response').textContent = 'Error: Failed to get AI response. Please make sure you are logged in.';
+        const responseText = document.getElementById('student-prompt-ai-response');
+        if (responseText) {
+            responseText.textContent = 'Error: ' + error.message + '. Please make sure you are logged in and try again.';
+        }
     }
 }
 
