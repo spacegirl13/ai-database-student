@@ -2006,14 +2006,6 @@ function selectInterChallenge(subject) {
     currentInterChallenge = subject;
     hintsUsed = 0;
 
-    // Update button styles
-    document.querySelectorAll('.inter-subject-btn').forEach(btn => {
-        btn.classList.remove('bg-orange-600', 'border-orange-500');
-        btn.classList.add('bg-slate-700', 'border-slate-600');
-    });
-    document.getElementById(`inter-${subject}-btn`).classList.add('bg-orange-600', 'border-orange-500');
-    document.getElementById(`inter-${subject}-btn`).classList.remove('bg-slate-700', 'border-slate-600');
-
     // Reset UI
     document.getElementById('student-improved-prompt').value = '';
     document.getElementById('hint-display').classList.add('hidden');
@@ -2025,7 +2017,9 @@ function selectInterChallenge(subject) {
     
     // Display weak prompt
     const challenge = interChallenges[currentInterChallenge];
-    document.getElementById('weak-prompt-display').textContent = challenge.weak;
+    if (challenge) {
+        document.getElementById('weak-prompt-display').textContent = challenge.weak;
+    }
     
     // Reset analysis
     resetAnalysis();
@@ -2332,34 +2326,63 @@ function createStudentPromptsModal() {
 
 async function loadPastStudentPrompts() {
     try {
-        const response = await fetch(pythonURI + '/api/prompts', {
-            credentials: 'include'
-        });
-        const data = await response.json();
-        
         const promptsList = document.getElementById('prompts-list');
-        let prompts = [];
         
-        if (data.prompts && Array.isArray(data.prompts)) {
-            prompts = data.prompts.slice(0, 3);
-        } else if (Array.isArray(data)) {
-            prompts = data.slice(0, 3);
+        // Try to load from both bad and good prompts
+        let allPrompts = [];
+        
+        try {
+            const badResponse = await fetch(pythonURI + '/api/prompts/bad');
+            const badData = await badResponse.json();
+            if (badData.success && badData.prompts && Array.isArray(badData.prompts)) {
+                allPrompts = allPrompts.concat(badData.prompts.map(p => ({
+                    text: p.prompt || p.text,
+                    type: 'Bad'
+                })));
+            }
+        } catch (e) {
+            console.log('Could not load bad prompts');
         }
         
-        if (prompts.length === 0) {
+        try {
+            const goodResponse = await fetch(pythonURI + '/api/prompts/good');
+            const goodData = await goodResponse.json();
+            if (goodData.success && goodData.prompts && Array.isArray(goodData.prompts)) {
+                allPrompts = allPrompts.concat(goodData.prompts.map(p => ({
+                    text: p.prompt || p.text,
+                    type: 'Good'
+                })));
+            }
+        } catch (e) {
+            console.log('Could not load good prompts');
+        }
+        
+        // If no prompts found, use sample data
+        if (allPrompts.length === 0) {
+            allPrompts = [
+                { text: "Explain photosynthesis step-by-step using simple language and include a real-world example.", type: 'Good' },
+                { text: "Solve this quadratic equation step-by-step: 2x² + 5x - 3 = 0. Explain each step clearly.", type: 'Good' },
+                { text: "Write a function in Python that checks if a number is prime. Include comments and test cases.", type: 'Good' }
+            ];
+        }
+        
+        // Get top 3 prompts
+        const topPrompts = allPrompts.slice(0, 3);
+        
+        if (topPrompts.length === 0) {
             promptsList.innerHTML = '<p style="color: #999; text-align: center;">No student prompts yet</p>';
             return;
         }
         
-        promptsList.innerHTML = prompts.map((prompt, index) => `
+        promptsList.innerHTML = topPrompts.map((prompt, index) => `
             <div style="background: #2a2a2a; border: 1px solid #8b5cf6; border-radius: 8px; padding: 12px;">
-                <p style="color: #a78bfa; font-size: 12px; margin: 0 0 8px 0;">Student ${index + 1}</p>
-                <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0;">${escapeHtml(prompt.text || prompt)}</p>
+                <p style="color: #a78bfa; font-size: 12px; margin: 0 0 4px 0; font-weight: bold;">${prompt.type} Prompt · Student ${index + 1}</p>
+                <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0;">${escapeHtml(prompt.text)}</p>
             </div>
         `).join('');
     } catch (error) {
         console.error('Error loading prompts:', error);
-        document.getElementById('prompts-list').innerHTML = '<p style="color: #ff6b6b;">Error loading prompts</p>';
+        document.getElementById('prompts-list').innerHTML = '<p style="color: #ff6b6b;">Error loading prompts - showing sample data instead</p>';
     }
 }
 
@@ -3997,13 +4020,10 @@ window.handleSubjectChange = handleSubjectChange;
             selectedMadLibSubject = subject;
             currentMadLibTemplate = madLibTemplates[subject];
 
-            // Update button styles
-            document.querySelectorAll('.madlib-subject-btn').forEach(btn => {
-                btn.classList.remove('bg-purple-600', 'border-purple-500');
-                btn.classList.add('bg-slate-700', 'border-slate-600');
-            });
-            document.getElementById(`madlib-${subject}-btn`).classList.add('bg-purple-600', 'border-purple-500');
-            document.getElementById(`madlib-${subject}-btn`).classList.remove('bg-slate-700', 'border-slate-600');
+            if (!currentMadLibTemplate) {
+                console.error(`No template found for subject: ${subject}`);
+                return;
+            }
 
             // Build input form
             buildMadLibForm();
