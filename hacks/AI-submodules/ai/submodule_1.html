@@ -10,7 +10,7 @@ microblog: false
 date: 2025-10-30
 ---
 
-<<style>
+<style>
     /* Hide post metadata */
     .post-meta, .post-content > .post-title, [class*="post-meta"], [class*="post-header"] {
         display: none !important;
@@ -188,14 +188,14 @@ date: 2025-10-30
         margin: 0 0 10px 0;
         font-size: 20px;
         font-weight: bold;
-        color: #000000;
+        color: #000000 !important;
     }
 
     #surveyorPopup p {
         margin: 0;
         font-size: 16px;
         font-weight: 600;
-        color: #000000;
+        color: #000000 !important;
     }
 </style>
 
@@ -431,7 +431,10 @@ date: 2025-10-30
             if (!earnedBadges.find(b => b.id === badge.id)) {
                 earnedBadges.push(badge);
                 updateBadgeDisplay();
-                showBadgeNotification(badge);
+                // If this is the Sensational Surveyor badge, the module shows a custom popup — avoid the blue notification to prevent duplication
+                if (!(badge.name && badge.name.toLowerCase().includes('surveyor'))) {
+                    showBadgeNotification(badge);
+                }
             }
         }
     }

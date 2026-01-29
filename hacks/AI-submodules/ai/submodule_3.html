@@ -1253,7 +1253,7 @@ date: 2025-10-30
 
     async function loadUserBadges() {
         try {
-            const response = await fetch('http://localhost:8402/api/badges/my-badges', {
+            const response = await fetch(`${pythonURI}/api/badges/my-badges`, {
                 credentials: 'include'
             });
             
@@ -1261,11 +1261,25 @@ date: 2025-10-30
                 const data = await response.json();
                 if (data.success && data.badges) {
                     earnedBadges = data.badges;
+                    // Cache badges locally so other modules can display them if server is unavailable
+                    try { localStorage.setItem('earnedBadges', JSON.stringify(earnedBadges)); } catch (e) {}
                     updateBadgeDisplay();
+                    return;
                 }
             }
         } catch (error) {
-            console.error('Error loading badges:', error);
+            console.error('Error loading badges from server:', error);
+        }
+
+        // Fallback to localStorage if server request fails
+        try {
+            const cached = JSON.parse(localStorage.getItem('earnedBadges') || '[]');
+            if (cached && cached.length > 0) {
+                earnedBadges = cached;
+                updateBadgeDisplay();
+            }
+        } catch (e) {
+            console.error('Error loading badges from localStorage:', e);
         }
     }
 
@@ -1305,6 +1319,8 @@ date: 2025-10-30
                 earnedBadges.push(badge);
                 updateBadgeDisplay();
                 showBadgeNotification(badge);
+                // Persist updated badge list
+                try { localStorage.setItem('earnedBadges', JSON.stringify(earnedBadges)); } catch (e) {}
             }
         }
     }
