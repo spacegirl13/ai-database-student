@@ -2295,24 +2295,44 @@ function toggleStudentPrompts() {
     goodContainer.classList.toggle('hidden');
 }
 
-function toggleStudentPromptsModal() {
+function toggleStudentPromptsModal(type) {
+    // If type not provided, infer from which prompt section is visible
+    if (!type) {
+        const badSection = document.getElementById('bad-prompt-section');
+        const goodSection = document.getElementById('good-prompt-section');
+        if (badSection && !badSection.classList.contains('hidden')) type = 'bad';
+        else if (goodSection && !goodSection.classList.contains('hidden')) type = 'good';
+        else type = 'all';
+    }
+
     const modal = document.getElementById('student-prompts-modal');
     if (!modal) {
-        createStudentPromptsModal();
+        createStudentPromptsModal(type);
     } else {
-        modal.classList.toggle('hidden');
+        // If modal exists but type changed, recreate it to show correct type
+        const current = modal.dataset && modal.dataset.promptType;
+        if (current !== type) {
+            modal.remove();
+            createStudentPromptsModal(type);
+        } else {
+            modal.classList.toggle('hidden');
+        }
     }
 }
 
-function createStudentPromptsModal() {
+function createStudentPromptsModal(type = 'all') {
     const modal = document.createElement('div');
     modal.id = 'student-prompts-modal';
+    modal.dataset.promptType = type;
     modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; border-radius: 8px;';
     
+    const titleMap = { all: 'Past Student Prompts', bad: 'Past Student Bad Prompts', good: 'Past Student Good Prompts' };
+    const displayTitle = titleMap[type] || titleMap.all;
+
     modal.innerHTML = `
         <div style="background: #1e1e1e; border: 2px solid #8b5cf6; border-radius: 12px; padding: 20px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="color: #a78bfa; font-size: 18px; font-weight: bold; margin: 0;">Past Student Prompts</h3>
+                <h3 style="color: #a78bfa; font-size: 18px; font-weight: bold; margin: 0;">${displayTitle}</h3>
                 <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #a78bfa; font-size: 24px; cursor: pointer;">&times;</button>
             </div>
             <div id="prompts-list" style="display: flex; flex-direction: column; gap: 12px;">
@@ -2321,7 +2341,7 @@ function createStudentPromptsModal() {
         </div>
     `;
     document.body.appendChild(modal);
-    loadPastStudentPrompts();
+    loadPastStudentPrompts(type);
 }
 
 async function loadPastStudentPrompts() {
@@ -2862,68 +2882,76 @@ window.handleSubjectChange = handleSubjectChange;
         };
 
         // Progress bar update
-        function updateProgress() {
-            const sections = ['section-0', 'section-1', 'section-2', 'section-3', 'section-4', 'section-5'];
-            const currentSection = sections.findIndex(id => {
-                const el = document.getElementById(id);
-                return el && !el.classList.contains('section-hidden');
-            });
-            const progress = ((currentSection + 1) / sections.length) * 100;
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            if (progressBar) progressBar.style.width = progress + '%';
-            if (progressText) progressText.textContent = Math.round(progress) + '% completed';
-        }
-
-
-        // Navigation
-        function goToSection(n) {
-            document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
-            const targetSection = document.getElementById('section-' + n);
-            if (targetSection) targetSection.classList.remove('section-hidden');
-            document.querySelectorAll('.nav-btn').forEach(b => {
-                b.classList.remove('bg-purple-600');
-                b.classList.add('bg-slate-700/50');
-            });
-            const navBtn = document.querySelector('.nav-btn[data-section="' + n + '"]');
-            if (navBtn) navBtn.classList.add('bg-purple-600');
-            updateProgress();
-            window.scrollTo(0, 0);
-        }
-
-        // Auto-fill functions
-        function autoFillBad() {
-            const textarea = document.getElementById('bad-prompt');
-            if (!textarea.value.trim()) {
-                textarea.value = "tell me about space";
-            }
-        }
-
-        function autoFillGood() {
-            const textarea = document.getElementById('good-prompt');
-            if (!textarea.value.trim()) {
-                textarea.value = "Write a 200-word informative explanation about the Solar System, including details about the eight planets, their order from the Sun, and one unique characteristic of each planet.";
-            }
-        }
-
-        // API Configuration
-        const API_BASE_URL = pythonURI + '/api/prompts';
-
-        // Load and display prompts from backend
-        async function loadPrompts(type) {
-            const feedId = type === 'bad' ? 'bad-prompts-feed' : 'good-prompts-feed';
-            const feedEl = document.getElementById(feedId);
-            const color = type === 'bad' ? 'red' : 'green';
-
+        async function loadPastStudentPrompts(type = 'all') {
             try {
-                const response = await fetch(`${API_BASE_URL}/${type}`);
-                const data = await response.json();
+                const promptsList = document.getElementById('prompts-list');
+                let allPrompts = [];
 
-                if (data.success && data.prompts.length > 0) {
-                    feedEl.innerHTML = data.prompts.map((p, index) => `
-                    <div class="prompt-card bg-slate-700/50 rounded-lg p-4 border border-slate-600/50">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-${color}-300 font-medium text-sm">@${p.user_id || 'anonymous'}</span>
+                // Helper to fetch a specific list and attach type
+                async function fetchList(t) {
+                    try {
+                        const resp = await fetch(pythonURI + `/api/prompts/${t}`);
+                        const dat = await resp.json();
+                        if (dat && dat.success && Array.isArray(dat.prompts)) {
+                            return dat.prompts.map(p => ({ text: p.prompt || p.text || '', type: t === 'bad' ? 'Bad' : 'Good' }));
+                        }
+                    } catch (e) {
+                        console.log(`Could not load ${t} prompts`, e);
+                    }
+                    return [];
+                }
+
+                if (type === 'bad') {
+                    allPrompts = await fetchList('bad');
+                } else if (type === 'good') {
+                    allPrompts = await fetchList('good');
+                } else {
+                    const bad = await fetchList('bad');
+                    const good = await fetchList('good');
+                    allPrompts = bad.concat(good);
+                }
+
+                // Fallback sample if empty
+                if (allPrompts.length === 0) {
+                    allPrompts = [
+                        { text: "Explain photosynthesis step-by-step using simple language and include a real-world example.", type: 'Good' },
+                        { text: "Solve this quadratic equation step-by-step: 2x² + 5x - 3 = 0. Explain each step clearly.", type: 'Good' },
+                        { text: "Write a function in Python that checks if a number is prime. Include comments and test cases.", type: 'Good' }
+                    ];
+                }
+
+                // Deduplicate by text while preserving order
+                const seen = new Set();
+                const unique = [];
+                for (const p of allPrompts) {
+                    const t = (p.text || '').trim();
+                    if (!t) continue;
+                    if (!seen.has(t)) {
+                        seen.add(t);
+                        unique.push(p);
+                    }
+                }
+
+                const topPrompts = unique.slice(0, 3);
+
+                if (topPrompts.length === 0) {
+                    promptsList.innerHTML = '<p style="color: #999; text-align: center;">No student prompts yet</p>';
+                    return;
+                }
+
+                promptsList.innerHTML = topPrompts.map((prompt, index) => `
+                    <div style="background: #2a2a2a; border: 1px solid #8b5cf6; border-radius: 8px; padding: 12px;">
+                        <p style="color: #a78bfa; font-size: 12px; margin: 0 0 4px 0; font-weight: bold;">${prompt.type} Prompt · Student ${index + 1}</p>
+                        <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0 0 8px 0;">${escapeHtml(prompt.text)}</p>
+                        <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: #8b5cf6; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; transition: background 0.2s;">Test with AI</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading prompts:', error);
+                const el = document.getElementById('prompts-list');
+                if (el) el.innerHTML = '<p style="color: #ff6b6b;">Error loading prompts - showing sample data instead</p>';
+            }
+        }
                             <button onclick="copyPromptToTextarea('${type}-prompt', '${p.prompt.replace(/'/g, "\\'")}')"
                                 class="px-3 py-1 bg-${color}-600 hover:bg-${color}-700 rounded text-xs text-white transition-colors">Try this prompt</button>
                         </div>
