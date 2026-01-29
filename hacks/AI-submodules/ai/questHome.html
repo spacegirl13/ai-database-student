@@ -185,6 +185,14 @@ microblog: true
 
 </div>
 
+<!-- Badges Sidebar (copied from submodule_1; sidebar only - NO popups) -->
+<div id="badgeDisplay">
+  <h3>Badges</h3>
+  <div id="badgeList">
+    <p style="font-size: 11px; color: #999;">No badges yet</p>
+  </div>
+</div>
+
 <style>
   /* Login Section Styles */
   .login-container, .user-container {
@@ -405,6 +413,48 @@ microblog: true
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+  }
+
+  /* Badge Display Box (copied from submodule_1, sidebar only - NO popups) */
+  #badgeDisplay {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+    background: #0066cc;
+    border: 2px solid #333;
+    padding: 10px;
+    z-index: 10000;
+  }
+
+  #badgeDisplay h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000000 !important;
+  }
+
+  .badge-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+  }
+
+  .badge-item img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+  }
+
+  .badge-item span {
+    font-size: 11px;
+    flex: 1;
+    color: #000000 !important;
   }
 
   .logout-btn:hover {
@@ -783,6 +833,69 @@ microblog: true
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('ai-body-bg');
+  });
+</script>
+
+<script type="module">
+  import { pythonURI } from '{{ site.baseurl }}/assets/js/api/config.js';
+
+  const API_URL = pythonURI + '/api';
+  let earnedBadges = [];
+
+  async function loadUserBadges() {
+    try {
+      const response = await fetch(`${pythonURI}/api/badges/my-badges`, {
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.badges) {
+          earnedBadges = data.badges;
+          try { localStorage.setItem('earnedBadges', JSON.stringify(earnedBadges)); } catch (e) {}
+          updateBadgeDisplay();
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('Error loading badges from server:', error);
+    }
+
+    // fallback to cached badges
+    try {
+      const cached = JSON.parse(localStorage.getItem('earnedBadges') || '[]');
+      if (cached && cached.length > 0) {
+        earnedBadges = cached;
+        updateBadgeDisplay();
+      }
+    } catch (e) {
+      console.error('Error loading badges from localStorage:', e);
+    }
+  }
+
+  function updateBadgeDisplay() {
+    const badgeList = document.getElementById('badgeList');
+    if (!badgeList) return;
+
+    if (earnedBadges.length === 0) {
+      badgeList.innerHTML = '<p style="font-size: 11px; color: #999;">No badges yet</p>';
+      return;
+    }
+
+    badgeList.innerHTML = earnedBadges.map(badge => `
+      <div class="badge-item">
+        <img src="${badge.image_url}" alt="${badge.name}">
+        <span>${badge.name}</span>
+      </div>
+    `).join('');
+  }
+
+  // Make available to global scripts if needed
+  window.loadUserBadges = loadUserBadges;
+
+  // Auto-load when the DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    loadUserBadges();
   });
 </script>
 
