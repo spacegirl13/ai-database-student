@@ -2288,6 +2288,19 @@ function selectPromptType(type) {
     }
 }
 
+// Helper: return currently selected prompt type ('good'|'bad'|'all')
+function getSelectedPromptType() {
+    const badSection = document.getElementById('bad-prompt-section');
+    const goodSection = document.getElementById('good-prompt-section');
+    if (goodSection && !goodSection.classList.contains('hidden')) return 'good';
+    if (badSection && !badSection.classList.contains('hidden')) return 'bad';
+    const goodBtn = document.getElementById('prompt-type-good-btn');
+    const badBtn = document.getElementById('prompt-type-bad-btn');
+    if (goodBtn && goodBtn.classList.contains('bg-green-700')) return 'good';
+    if (badBtn && badBtn.classList.contains('bg-red-700')) return 'bad';
+    return 'all';
+}
+
 function toggleStudentPrompts() {
     const badContainer = document.getElementById('bad-prompts-feed-container');
     const goodContainer = document.getElementById('good-prompts-feed-container');
@@ -2552,7 +2565,7 @@ async function testStudentPrompt(promptId, encodedPrompt) {
                         <h3 class="text-base font-bold flex-grow text-center">Write Prompts from Scratch</h3>
                         <div class="flex gap-2">
                             <button onclick="toggleAdvancedTips()" class="text-2xl font-bold text-red-500 hover:text-red-400 hover:scale-110 transition-transform" title="Show Tips">?</button>
-                            <button onclick="toggleStudentPromptsModal()" class="px-3 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Past student prompts</button>
+                            <button onclick="toggleStudentPromptsModal(getSelectedPromptType())" class="px-3 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Past student prompts</button>
                         </div>
                     </div>
 
