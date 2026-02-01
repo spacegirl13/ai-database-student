@@ -2094,7 +2094,7 @@ date: 2025-10-30
 
     function loadConceptsDataForModal() {
         const getConceptsURLModal = pythonURI + '/api/jokes/';
-        
+
         fetch(getConceptsURLModal, fetchOptions)
             .then(response => {
                 if (response.status !== 200) {
@@ -2103,36 +2103,44 @@ date: 2025-10-30
                 }
                 response.json().then(data => {
                     console.log(data);
-                    conceptsResultContainerModal.innerHTML = '';
+                    const container = document.getElementById("conceptsResultModal");
+                    if (!container) return;
+                    container.innerHTML = '';
 
                     for (const row of data) {
                         const tr = document.createElement("tr");
 
                         const concept = document.createElement("td");
-                        concept.innerHTML = row.id + ". " + row.joke;
+                        concept.textContent = row.id + ". " + (row.joke || '');
 
                         const gotIt = document.createElement("td");
                         const gotItBtn = document.createElement('button');
                         gotItBtn.id = 'haha' + row.id + "_modal";
-                        gotItBtn.innerHTML = row.haha;
-                        gotItBtn.onclick = function () {
+                        gotItBtn.type = 'button';
+                        gotItBtn.textContent = String(Number(row.haha) || 0);
+                        gotItBtn.dataset.count = String(Number(row.haha) || 0);
+                        gotItBtn.disabled = false;
+                        gotItBtn.addEventListener('click', function () {
                             conceptReactionModal('haha', pythonURI + '/api/jokes/like/' + row.id, gotItBtn.id);
-                        };
+                        });
                         gotIt.appendChild(gotItBtn);
 
                         const needHelp = document.createElement("td");
                         const needHelpBtn = document.createElement('button');
                         needHelpBtn.id = 'boohoo' + row.id + "_modal";
-                        needHelpBtn.innerHTML = row.boohoo;
-                        needHelpBtn.onclick = function () {
+                        needHelpBtn.type = 'button';
+                        needHelpBtn.textContent = String(Number(row.boohoo) || 0);
+                        needHelpBtn.dataset.count = String(Number(row.boohoo) || 0);
+                        needHelpBtn.disabled = false;
+                        needHelpBtn.addEventListener('click', function () {
                             conceptReactionModal('boohoo', pythonURI + '/api/jokes/jeer/' + row.id, needHelpBtn.id);
-                        };
+                        });
                         needHelp.appendChild(needHelpBtn);
 
                         tr.appendChild(concept);
                         tr.appendChild(gotIt);
                         tr.appendChild(needHelp);
-                        conceptsResultContainerModal.appendChild(tr);
+                        container.appendChild(tr);
                     }
                 })
             })
@@ -2150,9 +2158,15 @@ date: 2025-10-30
                 .then(data => {
                     for (const row of data) {
                         const gotItBtn = document.getElementById('haha' + row.id + "_modal");
-                        if (gotItBtn) gotItBtn.innerHTML = row.haha;
+                        if (gotItBtn) {
+                            gotItBtn.textContent = String(Number(row.haha) || 0);
+                            gotItBtn.dataset.count = String(Number(row.haha) || 0);
+                        }
                         const needHelpBtn = document.getElementById('boohoo' + row.id + "_modal");
-                        if (needHelpBtn) needHelpBtn.innerHTML = row.boohoo;
+                        if (needHelpBtn) {
+                            needHelpBtn.textContent = String(Number(row.boohoo) || 0);
+                            needHelpBtn.dataset.count = String(Number(row.boohoo) || 0);
+                        }
                     }
                 })
                 .catch(err => {
@@ -2167,25 +2181,37 @@ date: 2025-10-30
             ...fetchOptions,
             method: 'PUT',
         };
+        // Disable the button immediately to avoid duplicate clicks/races
+        const el = document.getElementById(elemID);
+        if (el) el.disabled = true;
 
         fetch(postURL, options)
             .then(response => {
                 if (response.status !== 200) {
                     conceptsErrorModal("Post API response failure: " + response.status);
+                    if (el) el.disabled = false;
                     return;
                 }
                 response.json().then(data => {
                     console.log(data);
                     if (type === 'haha') {
-                        document.getElementById(elemID).innerHTML = data.haha;
+                        if (el) {
+                            el.textContent = String(Number(data.haha) || 0);
+                            el.dataset.count = String(Number(data.haha) || 0);
+                        }
                     } else if (type === 'boohoo') {
-                        document.getElementById(elemID).innerHTML = data.boohoo;
+                        if (el) {
+                            el.textContent = String(Number(data.boohoo) || 0);
+                            el.dataset.count = String(Number(data.boohoo) || 0);
+                        }
                     } else {
                         conceptsErrorModal("unknown type: " + type);
                     }
+                    if (el) el.disabled = false;
                 })
             })
             .catch(err => {
+                if (el) el.disabled = false;
                 conceptsErrorModal(err + " " + postURL);
             });
     }
