@@ -1237,7 +1237,7 @@ date: 2025-10-30
             </table>
 
             <div style="text-align: center; margin-top: 30px;">
-                <a href="../index.html" style="padding:14px 28px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-decoration: none; display: inline-block;">
+                <a href="../index.html" onclick="closeCheckForUnderstanding(); window.location.href='../index.html'; return false;" style="padding:14px 28px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color:white; border:none; border-radius:10px; font-size:16px; font-weight: 700; cursor:pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-decoration: none; display: inline-block;">
                     Back to Home
                 </a>
             </div>
@@ -2073,7 +2073,18 @@ date: 2025-10-30
         document.body.style.overflow = "hidden";
 
         loadConceptsDataForModal();
+        startRefreshInterval();
     }
+
+    function closeCheckForUnderstanding() {
+        const checkModal = document.getElementById("checkForUnderstandingModal");
+        if (checkModal) {
+            checkModal.style.display = "none";
+        }
+        document.body.style.overflow = "";
+        stopRefreshInterval();
+    }
+
     async function completeSubmodule3() {
         try {
             const response = await fetch(pythonURI + '/api/prompt-game/complete', {
@@ -2174,7 +2185,19 @@ date: 2025-10-30
                 });
         }
     }
-    setInterval(refreshConceptReactionsModal, 5000);
+    // Manage refresh interval only while the modal is open to avoid race updates
+    let _checkRefreshIntervalId = null;
+
+    function startRefreshInterval() {
+        if (_checkRefreshIntervalId) return;
+        _checkRefreshIntervalId = setInterval(refreshConceptReactionsModal, 5000);
+    }
+
+    function stopRefreshInterval() {
+        if (!_checkRefreshIntervalId) return;
+        clearInterval(_checkRefreshIntervalId);
+        _checkRefreshIntervalId = null;
+    }
 
     function conceptReactionModal(type, postURL, elemID) {
         const options = {
