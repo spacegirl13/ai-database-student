@@ -2101,21 +2101,29 @@ date: 2025-10-30
             console.error('Error completing submodule:', error);
         }
     }
-    const conceptsResultContainerModal = document.getElementById("conceptsResultModal");
+    // Guard against concurrent loads
+    let _loadingConceptsModal = false;
 
     function loadConceptsDataForModal() {
+        if (_loadingConceptsModal) return;
+        _loadingConceptsModal = true;
+
         const getConceptsURLModal = pythonURI + '/api/jokes/';
 
         fetch(getConceptsURLModal, fetchOptions)
             .then(response => {
                 if (response.status !== 200) {
                     conceptsErrorModal('GET API response failure: ' + response.status);
+                    _loadingConceptsModal = false;
                     return;
                 }
                 response.json().then(data => {
                     console.log(data);
                     const container = document.getElementById("conceptsResultModal");
-                    if (!container) return;
+                    if (!container) {
+                        _loadingConceptsModal = false;
+                        return;
+                    }
                     container.innerHTML = '';
 
                     for (const row of data) {
@@ -2153,10 +2161,12 @@ date: 2025-10-30
                         tr.appendChild(needHelp);
                         container.appendChild(tr);
                     }
+                    _loadingConceptsModal = false;
                 })
             })
             .catch(err => {
                 conceptsErrorModal(err + ": " + getConceptsURLModal);
+                _loadingConceptsModal = false;
             });
     }
 
@@ -2169,12 +2179,14 @@ date: 2025-10-30
                 .then(data => {
                     for (const row of data) {
                         const gotItBtn = document.getElementById('haha' + row.id + "_modal");
-                        if (gotItBtn) {
+                        // Skip refresh if button is disabled (request in progress)
+                        if (gotItBtn && !gotItBtn.disabled) {
                             gotItBtn.textContent = String(Number(row.haha) || 0);
                             gotItBtn.dataset.count = String(Number(row.haha) || 0);
                         }
                         const needHelpBtn = document.getElementById('boohoo' + row.id + "_modal");
-                        if (needHelpBtn) {
+                        // Skip refresh if button is disabled (request in progress)
+                        if (needHelpBtn && !needHelpBtn.disabled) {
                             needHelpBtn.textContent = String(Number(row.boohoo) || 0);
                             needHelpBtn.dataset.count = String(Number(row.boohoo) || 0);
                         }
@@ -2206,35 +2218,49 @@ date: 2025-10-30
         };
         // Disable the button immediately to avoid duplicate clicks/races
         const el = document.getElementById(elemID);
-        if (el) el.disabled = true;
+        if (!el) return;
+        
+        el.disabled = true;
+
+        // Optimistic update: increment immediately
+        const currentCount = Number(el.textContent) || 0;
+        const newCount = currentCount + 1;
+        el.textContent = String(newCount);
+        el.dataset.count = String(newCount);
 
         fetch(postURL, options)
             .then(response => {
                 if (response.status !== 200) {
                     conceptsErrorModal("Post API response failure: " + response.status);
-                    if (el) el.disabled = false;
+                    // Revert on error
+                    el.textContent = String(currentCount);
+                    el.dataset.count = String(currentCount);
+                    el.disabled = false;
                     return;
                 }
                 response.json().then(data => {
-                    console.log(data);
-                    if (type === 'haha') {
-                        if (el) {
-                            el.textContent = String(Number(data.haha) || 0);
-                            el.dataset.count = String(Number(data.haha) || 0);
-                        }
-                    } else if (type === 'boohoo') {
-                        if (el) {
-                            el.textContent = String(Number(data.boohoo) || 0);
-                            el.dataset.count = String(Number(data.boohoo) || 0);
-                        }
-                    } else {
-                        conceptsErrorModal("unknown type: " + type);
+                    console.log('API response:', data);
+                    // Sync with server value if available
+                    let serverCount = null;
+                    if (type === 'haha' && typeof data.haha === 'number') {
+                        serverCount = data.haha;
+                    } else if (type === 'boohoo' && typeof data.boohoo === 'number') {
+                        serverCount = data.boohoo;
                     }
-                    if (el) el.disabled = false;
+                    
+                    if (serverCount !== null) {
+                        el.textContent = String(serverCount);
+                        el.dataset.count = String(serverCount);
+                    }
+                    el.disabled = false;
                 })
             })
             .catch(err => {
-                if (el) el.disabled = false;
+                console.error('Reaction error:', err);
+                // Revert on error
+                el.textContent = String(currentCount);
+                el.dataset.count = String(currentCount);
+                el.disabled = false;
                 conceptsErrorModal(err + " " + postURL);
             });
     }
