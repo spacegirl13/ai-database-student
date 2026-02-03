@@ -27,7 +27,7 @@ I worked on improving the frontend for both Submodule 1 and Submodule 2 based on
 - Repositioned the two FRQ questions side by side instead of stacking them vertically. This layout consumes less space and looks significantly more organized and neat.
 - Overall reduction in scrolling required, making the user experience much smoother.
 
-![Submodule 1 improvements](../../images/varadareview/submod1.png)
+<img src="{{site.baseurl}}/images/varadareview/submod1.png" alt="Submodule 1 improvements" width="500">
 
 
 **Submodule 2 - Before:**
@@ -44,11 +44,13 @@ I worked on improving the frontend for both Submodule 1 and Submodule 2 based on
 - Added a question mark button to each section that users can click to expand additional information. This keeps unnecessary text hidden unless specifically needed.
 - For the Challenge section, replaced large buttons with a dropdown for selecting difficulty levels and added another dropdown for selecting subjects, so users only see the specific Mad Lib outline or writing prompt relevant to their choice.
 
-![Math and Science section improvements](../../images/varadareview/math.png)
+<img src="{{site.baseurl}}/images/varadareview/math.png" alt="Math and Science section improvements" width="500">
 
-![Computer Science section improvements](../../images/varadareview/compsci.png)
 
-![Challenge section improvements](../../images/varadareview/challenge.png)
+<img src="{{site.baseurl}}/images/varadareview/compsci.png" alt="Computer Science section improvements" width="500">
+
+
+<img src="{{site.baseurl}}/images/varadareview/challenge.png" alt="Challenge section improvements" width="500">
 
 ### Backend Development
 
