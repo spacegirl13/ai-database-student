@@ -11,9 +11,9 @@ date: 2026-1-30
 
 # Varada Vichare - Individual Review Blog 
 
-## Pieces that I have been working on:
+### Pieces that I have been working on:
 
-### Frontend Improvements
+#### Frontend Improvements
 
 I worked on improving the frontend for both Submodule 1 and Submodule 2 based on user feedback. The main goal was to reduce unnecessary scrolling and make everything more concise and accessible.
 
@@ -69,4 +69,3 @@ Moving forward, I plan to focus on several key enhancements:
 - Making buttons clearer and more intuitive for users by improving labels and visual feedback.
 - Implementing an overall less bright color scheme to reduce eye strain and create a more professional aesthetic.
 - Adding more staged data to the survey responses table to provide a larger dataset for analysis and testing.
-.
