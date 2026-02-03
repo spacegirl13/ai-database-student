@@ -186,7 +186,7 @@ microblog: true
 </div>
 
 <!-- Badges Sidebar (copied from submodule_1; sidebar only - NO popups) -->
-<div id="badgeDisplay">
+<div id="badgeDisplay" style="display: none;">
   <h3>Badges</h3>
   <div id="badgeList">
     <p style="font-size: 11px; color: #999;">No badges yet</p>
@@ -841,8 +841,39 @@ microblog: true
 
   const API_URL = pythonURI + '/api';
   let earnedBadges = [];
+  let isUserAuthenticated = false;
+
+  // Check if user is authenticated before loading badges
+  async function checkAuthenticationForBadges() {
+    try {
+      const response = await fetch(`${API_URL}/id`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        isUserAuthenticated = true;
+        loadUserBadges();
+      } else {
+        // User not authenticated, hide badge display
+        hideBadgeDisplay();
+      }
+    } catch (error) {
+      console.error('Error checking authentication for badges:', error);
+      hideBadgeDisplay();
+    }
+  }
 
   async function loadUserBadges() {
+    // Only load badges if user is authenticated
+    if (!isUserAuthenticated) {
+      hideBadgeDisplay();
+      return;
+    }
+
     try {
       const response = await fetch(`${pythonURI}/api/badges/my-badges`, {
         credentials: 'include'
@@ -854,6 +885,7 @@ microblog: true
           earnedBadges = data.badges;
           try { localStorage.setItem('earnedBadges', JSON.stringify(earnedBadges)); } catch (e) {}
           updateBadgeDisplay();
+          showBadgeDisplay();
           return;
         }
       }
@@ -861,15 +893,12 @@ microblog: true
       console.error('Error loading badges from server:', error);
     }
 
-    // fallback to cached badges
-    try {
-      const cached = JSON.parse(localStorage.getItem('earnedBadges') || '[]');
-      if (cached && cached.length > 0) {
-        earnedBadges = cached;
-        updateBadgeDisplay();
-      }
-    } catch (e) {
-      console.error('Error loading badges from localStorage:', e);
+    // Only show badge display if we have badges to show
+    if (earnedBadges.length > 0) {
+      updateBadgeDisplay();
+      showBadgeDisplay();
+    } else {
+      hideBadgeDisplay();
     }
   }
 
@@ -890,12 +919,27 @@ microblog: true
     `).join('');
   }
 
+  function showBadgeDisplay() {
+    const badgeDisplay = document.getElementById('badgeDisplay');
+    if (badgeDisplay) {
+      badgeDisplay.style.display = 'block';
+    }
+  }
+
+  function hideBadgeDisplay() {
+    const badgeDisplay = document.getElementById('badgeDisplay');
+    if (badgeDisplay) {
+      badgeDisplay.style.display = 'none';
+    }
+  }
+
   // Make available to global scripts if needed
   window.loadUserBadges = loadUserBadges;
+  window.checkAuthenticationForBadges = checkAuthenticationForBadges;
 
-  // Auto-load when the DOM is ready
+  // Check authentication and load badges when DOM is ready
   document.addEventListener('DOMContentLoaded', () => {
-    loadUserBadges();
+    checkAuthenticationForBadges();
   });
 </script>
 
