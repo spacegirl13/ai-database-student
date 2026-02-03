@@ -27,7 +27,7 @@ I worked on improving the frontend for both Submodule 1 and Submodule 2 based on
 - Repositioned the two FRQ questions side by side instead of stacking them vertically. This layout consumes less space and looks significantly more organized and neat.
 - Overall reduction in scrolling required, making the user experience much smoother.
 
-<img src="{{site.baseurl}}/images/varadareview/submod1.png" alt="Submodule 1 improvements" width="500">
+<img src="{{site.baseurl}}/images/varadareview/submod1.png" alt="Submodule 1 improvements" width="600">
 
 
 **Submodule 2 - Before:**
@@ -69,4 +69,4 @@ Moving forward, I plan to focus on several key enhancements:
 - Making buttons clearer and more intuitive for users by improving labels and visual feedback.
 - Implementing an overall less bright color scheme to reduce eye strain and create a more professional aesthetic.
 - Adding more staged data to the survey responses table to provide a larger dataset for analysis and testing.
-- Refining the dropdown menus to include better categorization and filtering options for improved navigation.
+.
