@@ -249,10 +249,6 @@ I plan to improve by adding more analytics to enhance the metrics and data of th
 
 3. **Clean Up Results Screen**: Remove leaderboard display after quiz completion to focus on personal performance metrics
 
-4. **Badge Display Fix**: Resolve timing issue where badges don't appear immediately after being awarded
-
-5. **Error Handling**: Add loading spinners during API calls and improve error messages
-
 ---
 
 ## How I'll Improve
@@ -304,24 +300,6 @@ async function endGame() {
     await saveGameData(results);
     updateResultsDisplay(results);
     // Removed: loadLeaderboard() call
-}
-```
-
-### Better Error Messages
-```javascript
-// ❌ Before
-catch (error) {
-    alert('Error!');
-}
-
-// ✅ After
-catch (error) {
-    if (error.message.includes('network')) {
-        showErrorMessage('Unable to connect. Check your internet.');
-    } else if (error.status === 401) {
-        showErrorMessage('Please log in to continue.');
-        setTimeout(() => window.location.href = '/login', 2000);
-    }
 }
 ```
 
