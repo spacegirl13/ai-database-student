@@ -1330,6 +1330,49 @@ date: 2025-10-30
                 }
             }
         }
+
+        // Track completion of math and CS sections
+        let mathSectionCompleted = false;
+        let csSectionCompleted = false;
+
+        // Award "Delightful Data Scientist" badge when both math and CS are completed
+        async function awardDataScientistBadge() {
+            if (!mathSectionCompleted || !csSectionCompleted) {
+                return; // Both sections must be completed
+            }
+
+            try {
+                const response = await fetch('http://localhost:8402/api/badges/award', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        badge_name: 'Delightful Data Scientist'
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    handleBadgeAward(data);
+                }
+            } catch (error) {
+                console.error('Error awarding Data Scientist badge:', error);
+            }
+        }
+
+        // Mark math section as completed
+        function completeMathSection() {
+            mathSectionCompleted = true;
+            awardDataScientistBadge();
+        }
+
+        // Mark CS section as completed
+        function completeCSSection() {
+            csSectionCompleted = true;
+            awardDataScientistBadge();
+        }
         // === END BADGE SYSTEM ===
         // Progress bar update
         function updateProgress() {
@@ -1343,6 +1386,17 @@ date: 2025-10-30
 
         // Navigation
         function goToSection(n) {
+            // Track when leaving math section (section 1)
+            const currentSectionIndex = document.querySelector('.mission-section:not(.section-hidden)');
+            if (currentSectionIndex && currentSectionIndex.id === 'section-1' && n !== 1) {
+                completeMathSection();
+            }
+            
+            // Track when leaving CS section (section 3)
+            if (currentSectionIndex && currentSectionIndex.id === 'section-3' && n !== 3) {
+                completeCSSection();
+            }
+
             document.querySelectorAll('.mission-section').forEach(s => s.classList.add('section-hidden'));
             document.getElementById('section-' + n).classList.remove('section-hidden');
             document.querySelectorAll('.nav-btn').forEach(b => {
