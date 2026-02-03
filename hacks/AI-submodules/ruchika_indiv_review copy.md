@@ -9,18 +9,22 @@ microblog: true
 date: 2026-1-30
 ---
 
-# Ruchika Kench - Individual Review Blog (Badges Backend and Survey Frontend)
+# Ruchika Kench - Individual Review Blog (Badges Backend)
 
 ## How I improved :
 
 ### Badges Backend
 
+**Before:**
+- Static backend with only stored values of badge name, description, requirements, and photo. 
 
-Before: Static backend with only stored values of badge name, description, requirements, and photo
+- Badges were also not showing up accurately according to an event-based award. 
 
-After: Transactional Data!! Yay
+- No metrics of badge data tied to user (absence of Admin UI tables)
 
-Process:
+**After:** Transactional Data!! Yay
+
+#### Process:
 
 - Was a very, long interative process but I was super glad to learn about this concept!
 
@@ -47,6 +51,8 @@ Process:
 - Incorporate staged data to add more data on user_badges transactional table (only 5 users so far)
 
 - Track analytics and metrics of certain badge acheivement (frequency)
+
+- Maybe get metrics on badge acheivement vs. leaderboard position (compare tables)
 
 - Complete new math and cs submodule completion badge (Work in progress!)
 
