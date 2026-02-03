@@ -529,7 +529,7 @@ date: 2025-10-30
                     </div>
                 </div>
             </div>
-            <button onclick="window.goToSection(2)"
+            <button onclick="markMathSectionCompleted(); window.goToSection(2)"
                 class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to Science</button>
         </div>
     </div>
@@ -822,7 +822,7 @@ date: 2025-10-30
                     </div>
                 </div>
             </div>
-            <button onclick="window.goToSection(4)"
+            <button onclick="markCSSectionCompleted(); window.goToSection(4)"
                 class="w-full bg-purple-600 hover:bg-purple-700 py-3 text-sm rounded-lg font-semibold">Continue to History</button>
         </div>
     </div>
@@ -1731,6 +1731,8 @@ date: 2025-10-30
     // ==================== BADGE SYSTEM ===== ==
 
     let earnedBadges = [];
+    let mathSectionCompleted = false;
+    let csSectionCompleted = false;
 
     async function loadUserBadges() {
         try {
@@ -1788,6 +1790,62 @@ date: 2025-10-30
                 showBadgeNotification(badge);
             }
         }
+    }
+
+    async function awardDataScientistBadge() {
+        if (mathSectionCompleted && csSectionCompleted) {
+            try {
+                console.log('Attempting to award Delightful Data Scientist badge...');
+                const response = await fetch(pythonURI + '/api/badges/award', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        badge_id: 'delightful_data_scientist'
+                    })
+                });
+
+                console.log('Badge award response status:', response.status);
+                const result = await response.json();
+                console.log('Badge award response:', result);
+
+                if (result.success && result.badge) {
+                    // Handle the badge response from backend
+                    console.log('Badge awarded successfully:', result.badge);
+                    if (!earnedBadges.find(b => b.id === result.badge.id)) {
+                        earnedBadges.push(result.badge);
+                        updateBadgeDisplay();
+                        showBadgeNotification(result.badge);
+                    }
+                } else if (result.badge_awarded && result.badge) {
+                    // Alternative response format
+                    console.log('Badge awarded (alt format):', result.badge);
+                    if (!earnedBadges.find(b => b.id === result.badge.id)) {
+                        earnedBadges.push(result.badge);
+                        updateBadgeDisplay();
+                        showBadgeNotification(result.badge);
+                    }
+                } else {
+                    console.warn('Unexpected badge award response format:', result);
+                }
+            } catch (error) {
+                console.error('Error awarding data scientist badge:', error);
+            }
+        } else {
+            console.log('Cannot award badge - Math section completed:', mathSectionCompleted, 'CS section completed:', csSectionCompleted);
+        }
+    }
+
+    function markMathSectionCompleted() {
+        console.log('Math section marked as completed');
+        mathSectionCompleted = true;
+    }
+
+    function markCSSectionCompleted() {
+        console.log('CS section marked as completed');
+        csSectionCompleted = true;
+        // Award badge when CS section is completed (Math is already done)
+        awardDataScientistBadge();
     }
 
     // ==================== END BADGE SYSTEM ====================
@@ -3715,6 +3773,8 @@ date: 2025-10-30
     // Expose functions to window for onclick handlers
     window.selectCSActivity = selectCSActivity;
     window.toggleCSTips = toggleCSTips;
+    window.markMathSectionCompleted = markMathSectionCompleted;
+    window.markCSSectionCompleted = markCSSectionCompleted;
     window.loadFillBlankQuestions = loadFillBlankQuestions;
     window.loadFillBlankQuestion = loadFillBlankQuestion;
     window.checkFillBlank = checkFillBlank;
