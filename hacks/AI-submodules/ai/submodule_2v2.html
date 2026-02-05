@@ -56,6 +56,18 @@ date: 2025-10-30
         background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
         min-height: 100vh;
     }
+
+    /* All colored buttons get black text */
+    button[class*="bg-purple-"],
+    button[class*="bg-green-"],
+    button[class*="bg-blue-"],
+    button[class*="bg-red-"],
+    button[class*="bg-yellow-"],
+    button[class*="bg-orange-"],
+    button[class*="bg-indigo-"],
+    button[class*="bg-slate-"] {
+        color: black !important;
+    }
     
     /* Badge Display Box - Upper Right Corner */
     #badgeDisplay {
@@ -456,12 +468,6 @@ date: 2025-10-30
                 <div class="flex items-center gap-3 mb-4">
                     <h2 class="text-xs font-bold text-purple-400">Prompt Engineering</h2>
                 </div>
-                <div class="space-y-4 text-xs">
-                    <div class="flex justify-center my-6">
-                        <img src="{{ '/images/digital-famine/textPrompts.png' | prepend: site.baseurl }}"
-                            alt="Prompt Engineering Illustration"
-                            class="rounded-lg border border-purple-500/30 max-w-2xl w-full">
-                    </div>
 
                     <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-6 mt-6">
                         <h3 class="text-xs font-semibold text-purple-300 mb-3">How AI Responds to Prompts</h3>
@@ -3748,10 +3754,6 @@ date: 2025-10-30
         window.goToSection = function (sectionIndex) {
             originalGoToSection(sectionIndex);
             if (sectionIndex === 1) {
-                if (!hasVisitedMathSection) {
-                    hasVisitedMathSection = true;
-                    setTimeout(() => showMathTopicModal(), 300);
-                }
                 loadMathQuestions();
             } else if (sectionIndex === 2) {
                 setTimeout(() => loadScienceQuestions(), 100);
