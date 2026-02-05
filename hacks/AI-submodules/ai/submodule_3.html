@@ -37,7 +37,7 @@ date: 2025-10-30
     }
 
     .game-header h1 {
-        font-size: 2.5em;
+        font-size: 2em;
         margin-bottom: 10px;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
@@ -181,7 +181,7 @@ date: 2025-10-30
     }
 
     .game-header p {
-        font-size: 1.1em;
+        font-size: 1em;
         opacity: 0.9;
     }
 
@@ -224,7 +224,7 @@ date: 2025-10-30
     .start-screen {
         background: rgba(15, 23, 42, 0.85);
         border-radius: 20px;
-        padding: 50px;
+        padding: 40px;
         text-align: center;
         color: #e0e7ff;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -233,19 +233,24 @@ date: 2025-10-30
 
     .start-screen h2 {
         color: #60a5fa;
-        font-size: 2em;
+        font-size: 1.5em;
         margin-bottom: 20px;
     }
 
     .start-screen p {
-        font-size: 1.1em;
-        margin-bottom: 15px;
-        line-height: 1.6;
+        font-size: 0.95em;
+        margin-bottom: 10px;
+        line-height: 1.5;
         color: #cbd5e1;
     }
 
+    .start-screen strong {
+        font-size: 1em;
+    }
+
     .input-group {
-        margin: 30px 0;
+        margin: 20px 0;
+        display: none;
     }
 
     .input-group input {
@@ -268,8 +273,8 @@ date: 2025-10-30
         background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         color: white;
         border: none;
-        padding: 15px 40px;
-        font-size: 1.2em;
+        padding: 12px 35px;
+        font-size: 1.1em;
         border-radius: 10px;
         cursor: pointer;
         font-weight: 600;
@@ -285,7 +290,7 @@ date: 2025-10-30
     .question-card {
         background: rgba(15, 23, 42, 0.85);
         border-radius: 20px;
-        padding: 40px;
+        padding: 30px;
         color: #e0e7ff;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         margin-bottom: 20px;
@@ -294,11 +299,11 @@ date: 2025-10-30
 
     .subject-badge {
         display: inline-block;
-        padding: 8px 20px;
+        padding: 6px 16px;
         border-radius: 20px;
-        font-size: 0.9em;
+        font-size: 0.85em;
         font-weight: 600;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
 
     .subject-math {
@@ -322,24 +327,24 @@ date: 2025-10-30
     }
 
     .scenario {
-        font-size: 1.3em;
-        font-weight: 600;
+        font-size: 1.05em;
+        font-weight: 500;
         color: #e0e7ff;
-        margin-bottom: 30px;
-        line-height: 1.6;
+        margin-bottom: 20px;
+        line-height: 1.5;
     }
 
     .prompt-options {
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 12px;
     }
 
     .prompt-option {
         background: rgba(30, 58, 138, 0.4);
         border: 3px solid rgba(59, 130, 246, 0.3);
         border-radius: 15px;
-        padding: 20px;
+        padding: 15px;
         cursor: pointer;
         transition: all 0.3s;
         position: relative;
@@ -372,20 +377,23 @@ date: 2025-10-30
     .prompt-option-label {
         font-weight: bold;
         color: #60a5fa;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
+        font-size: 0.9em;
     }
 
     .prompt-text {
         color: #cbd5e1;
-        line-height: 1.5;
+        line-height: 1.4;
+        font-size: 0.95em;
     }
 
     .feedback {
         margin-top: 20px;
-        padding: 20px;
+        padding: 15px;
         border-radius: 10px;
         font-weight: 500;
         display: none;
+        font-size: 0.95em;
     }
 
     .feedback.show {
@@ -942,19 +950,19 @@ date: 2025-10-30
 <!-- Achievement Badge Popups -->
 <div id="prodigyPopup" class="badge-popup">
     <img src="https://github.com/user-attachments/assets/d85f749c-2380-4427-96af-20b462e65514" alt="Prodigy Badge">
-    <h3>🧠 Prodigy Problem Solver</h3>
+    <h3>Prodigy Problem Solver</h3>
     <p>badge received!</p>
 </div>
 
 <div id="geniusPopup" class="badge-popup">
     <img src="https://github.com/user-attachments/assets/6a96f46c-b926-4c44-8926-1ffbba007a05" alt="Genius Badge">
-    <h3>⭐ Super Smart Genius</h3>
+    <h3>Super Smart Genius</h3>
     <p>badge received!</p>
 </div>
 
 <div id="masterPopup" class="badge-popup">
     <img src="https://github.com/user-attachments/assets/93e2fc3f-4ab4-4eef-8369-6a4c3a18f660" alt="Master Badge">
-    <h3>🏆 Responsible AI Master</h3>
+    <h3>Responsible AI Master</h3>
     <p>badge received!</p>
 </div>
 
@@ -1039,18 +1047,18 @@ date: 2025-10-30
 
 <div class="container">
     <div class="game-header">
-        <h1>🎮 AI Prompt Challenge</h1>
+        <h1>AI Prompt Challenge</h1>
         <p>Test your prompt engineering skills across Math, Science, History, and Computer Science!</p>
     </div>
 
     <div id="startScreen" class="game-screen active">
         <div class="start-screen">
-            <h2>Welcome to the AI Prompt Challenge! 🚀</h2>
+            <h2>Welcome to the AI Prompt Challenge!</h2>
             <p><strong>How to Play:</strong></p>
-            <p>📝 You'll face 10 scenarios across different subjects</p>
-            <p>⏱️ You have 30 seconds to choose the best AI prompt for each scenario</p>
-            <p>🎯 Get points for correct answers - faster answers = more points!</p>
-            <p>🏆 Compete for the top spot on the leaderboard!</p>
+            <p>You'll face 10 scenarios across different subjects</p>
+            <p>You have 30 seconds to choose the best AI prompt for each scenario</p>
+            <p>Get points for correct answers - faster answers = more points!</p>
+            <p>Compete for the top spot on the leaderboard!</p>
 
             <div class="input-group">
                 <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
@@ -1099,12 +1107,12 @@ date: 2025-10-30
 
     <div id="resultsScreen" class="game-screen">
         <div class="results-screen">
-            <h2>🎉 Challenge Complete!</h2>
+            <h2>Challenge Complete!</h2>
             <div class="final-score" id="finalScore">0</div>
             <p style="font-size: 1.2em; color: #555;">Great job, <span id="finalPlayerName"></span>!</p>
 
             <div class="score-breakdown">
-                <h3 style="color: #667eea; margin-bottom: 20px;">📊 Your Performance</h3>
+                <h3 style="color: #667eea; margin-bottom: 20px;">Your Performance</h3>
                 <div class="score-item">
                     <span>Correct Answers</span>
                     <strong id="correctCount">0/10</strong>
@@ -1128,7 +1136,7 @@ date: 2025-10-30
             </div>
 
             <div class="leaderboard">
-                <h3>🏆 Top Players</h3>
+                <h3>Top Players</h3>
                 <div id="leaderboardList">
                     <p style="text-align: center; color: #888;">Loading leaderboard...</p>
                 </div>
@@ -1177,7 +1185,7 @@ date: 2025-10-30
             <textarea id="comments" style="width:100%; border:2px solid #d1d5db; border-radius:10px; padding:12px; min-height:100px; color:#1f2937; background: white; font-size: 16px; font-family: 'Segoe UI', Tahoma, sans-serif;"></textarea>
 
             <div style="background: #f3f4f6; border-radius: 10px; padding: 20px; margin: 20px 0; border: 2px solid #d1d5db;">
-                <h4 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; font-weight: 700;">📊 Previous Feedback Summary</h4>
+                <h4 style="color: #1f2937; margin: 0 0 15px 0; font-size: 18px; font-weight: 700;">Previous Feedback Summary</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
                     <div>
                         <p style="margin: 0 0 5px 0; color: #374151; font-weight: 600;">Average Rating:</p>
@@ -1207,7 +1215,7 @@ date: 2025-10-30
     <div style="max-width: 900px; margin: 60px auto; padding: 20px;">
         <div style="background: rgba(15, 23, 42, 0.95); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid rgba(37, 99, 235, 0.3);">
             <h2 style="color: #60a5fa; text-align: center; font-size: 2em; margin-bottom: 10px;">
-                ✅ Check for Understanding
+                Check for Understanding
             </h2>
             <p style="text-align: center; color: #cbd5e1; margin-bottom: 30px; font-size: 1.1em;">
                 Let us know which AI concepts you understand!
@@ -1624,11 +1632,7 @@ date: 2025-10-30
     }
 
     async function startGame() {
-        playerName = document.getElementById('playerName').value.trim();
-        if (!playerName) {
-            alert('Please enter your name!');
-            return;
-        }
+        playerName = document.getElementById('playerName').value.trim() || 'Guest';
 
         if (allQuestions.length === 0) {
             const loaded = await loadQuestionsFromBackend();
@@ -1887,11 +1891,7 @@ date: 2025-10-30
     }
 
     function skipToCompletion() {
-        playerName = document.getElementById('playerName').value.trim();
-        if (!playerName) {
-            alert('Please enter your name first!');
-            return;
-        }
+        playerName = document.getElementById('playerName').value.trim() || 'Guest';
 
         showScreen('resultsScreen');
         document.getElementById('finalScore').textContent = '-';
@@ -2289,4 +2289,5 @@ date: 2025-10-30
     window.closeModal = closeModal;
     window.showCheckForUnderstanding = showCheckForUnderstanding;
     window.checkDragDropAnswer = checkDragDropAnswer;
+    window.closeBadgeNotification = closeBadgeNotification;
 </script>
