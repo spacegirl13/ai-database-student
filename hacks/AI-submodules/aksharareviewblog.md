@@ -7,7 +7,6 @@ microblog: true
 date: 2026-2-2
 ---
 ## Process for Badges Front end:
-- Started by creating a Flask Blueprint (survey_api) to isolate survey logic from the rest of the app
 - Designed relational tables (SurveyResponse and AIToolPreference) to store survey submissions and per-subject AI tool choices
 - Implemented server-side aggregation using SQLAlchemy (GROUP BY, COUNT) so the frontend only receives processed data
 - Used optional authentication (@optional_token) to support both logged-in and anonymous users seamlessly
@@ -34,7 +33,8 @@ Login:
     - Its made using a cookie-based session authentication with automatic guest account creation to keep login friction low and persist user state across page reloads.
     <img width="500" height="700" alt="Image" src="https://github.com/user-attachments/assets/c20f30aa-fd10-4f66-8adf-1e5aec9d0abf" />
 - Foreign Key - 
-    - I made the foreign key which is a cascade relationship. This means when one thing is deleted from the table, the database deltes all the posts belonging to that user. 
+    - I made the foreign key which is a cascade relationship. This means when one thing is deleted from the table, the database deltes all the posts belonging to that user. I helped implement the badges as a many-to-many using an association table user_badges with DB-level foreign keys that cascade deletes.
+- Badge Popups: The popups weren't showing up because the backend connection wasn't working well so I fixed it by making it so if you click a button a popup will appear. 
 
 ## Future Goals:
 - Add badges for the completetion of the Math and CS portion - Work with Ruchika
