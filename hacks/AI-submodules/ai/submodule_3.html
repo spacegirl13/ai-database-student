@@ -1246,6 +1246,16 @@ date: 2025-10-30
 </div>
 
 <script type="module">
+<script type="module">
+    import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
+    const API_URL = pythonURI + '/api/prompt-game';
+    
+    // ADD THIS LINE HERE:
+    const _pendingRequests = new Set();
+    
+    // === BADGE SYSTEM ===
+    let earnedBadges = [];
+
     import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
     const API_URL = pythonURI + '/api/prompt-game';
     // === BADGE SYSTEM ===
@@ -2139,6 +2149,10 @@ date: 2025-10-30
                         gotItBtn.textContent = String(Number(row.haha) || 0);
                         gotItBtn.dataset.count = String(Number(row.haha) || 0);
                         gotItBtn.disabled = false;
+                        gotItBtn.disabled = false;
+                        gotItBtn.dataset.conceptId = row.id;          // ADD THIS
+                        gotItBtn.dataset.reactionType = 'haha';       // ADD THIS
+                        gotItBtn.addEventListener('click', function () {
                         gotItBtn.addEventListener('click', function () {
                             conceptReactionModal('haha', pythonURI + '/api/jokes/like/' + row.id, gotItBtn.id);
                         });
@@ -2151,6 +2165,10 @@ date: 2025-10-30
                         needHelpBtn.textContent = String(Number(row.boohoo) || 0);
                         needHelpBtn.dataset.count = String(Number(row.boohoo) || 0);
                         needHelpBtn.disabled = false;
+                        needHelpBtn.disabled = false;
+                        needHelpBtn.dataset.conceptId = row.id;       // ADD THIS
+                        needHelpBtn.dataset.reactionType = 'boohoo';  // ADD THIS
+                        needHelpBtn.addEventListener('click', function () {
                         needHelpBtn.addEventListener('click', function () {
                             conceptReactionModal('boohoo', pythonURI + '/api/jokes/jeer/' + row.id, needHelpBtn.id);
                         });
@@ -2179,14 +2197,14 @@ date: 2025-10-30
                 .then(data => {
                     for (const row of data) {
                         const gotItBtn = document.getElementById('haha' + row.id + "_modal");
-                        // Skip refresh if button is disabled (request in progress)
-                        if (gotItBtn && !gotItBtn.disabled) {
+                        // FIXED: Check both disabled state AND pending requests
+                        if (gotItBtn && !gotItBtn.disabled && !_pendingRequests.has(gotItBtn.id)) {
                             gotItBtn.textContent = String(Number(row.haha) || 0);
                             gotItBtn.dataset.count = String(Number(row.haha) || 0);
                         }
                         const needHelpBtn = document.getElementById('boohoo' + row.id + "_modal");
-                        // Skip refresh if button is disabled (request in progress)
-                        if (needHelpBtn && !needHelpBtn.disabled) {
+                        // FIXED: Check both disabled state AND pending requests
+                        if (needHelpBtn && !needHelpBtn.disabled && !_pendingRequests.has(needHelpBtn.id)) {
                             needHelpBtn.textContent = String(Number(row.boohoo) || 0);
                             needHelpBtn.dataset.count = String(Number(row.boohoo) || 0);
                         }
@@ -2202,66 +2220,82 @@ date: 2025-10-30
 
     function startRefreshInterval() {
         if (_checkRefreshIntervalId) return;
-        _checkRefreshIntervalId = setInterval(refreshConceptReactionsModal, 5000);
+        _checkRefreshIntervalId = setInterval(refreshConceptReactionsModal, 3000);
     }
 
     function stopRefreshInterval() {
         if (!_checkRefreshIntervalId) return;
         clearInterval(_checkRefreshIntervalId);
         _checkRefreshIntervalId = null;
+        // FIXED: Clear pending requests when closing modal
+        _pendingRequests.clear();
     }
 
     function conceptReactionModal(type, postURL, elemID) {
+        const el = document.getElementById(elemID);
+        if (!el) return;
+        
+        // FIXED: Prevent double-clicks and concurrent requests on same button
+        if (el.disabled || _pendingRequests.has(elemID)) {
+            console.log('Request already in progress for', elemID);
+            return;
+        }
+        
+        // Mark as pending and disable
+        _pendingRequests.add(elemID);
+        el.disabled = true;
+
+        // Store the current count before optimistic update
+        const currentCount = Number(el.dataset.count) || 0;
+        const optimisticCount = currentCount + 1;
+        
+        // Optimistic update
+        el.textContent = String(optimisticCount);
+        el.dataset.count = String(optimisticCount);
+
         const options = {
             ...fetchOptions,
             method: 'PUT',
         };
-        // Disable the button immediately to avoid duplicate clicks/races
-        const el = document.getElementById(elemID);
-        if (!el) return;
-        
-        el.disabled = true;
-
-        // Optimistic update: increment immediately
-        const currentCount = Number(el.textContent) || 0;
-        const newCount = currentCount + 1;
-        el.textContent = String(newCount);
-        el.dataset.count = String(newCount);
 
         fetch(postURL, options)
             .then(response => {
                 if (response.status !== 200) {
-                    conceptsErrorModal("Post API response failure: " + response.status);
-                    // Revert on error
-                    el.textContent = String(currentCount);
-                    el.dataset.count = String(currentCount);
-                    el.disabled = false;
-                    return;
+                    throw new Error("Post API response failure: " + response.status);
                 }
-                response.json().then(data => {
-                    console.log('API response:', data);
-                    // Sync with server value if available
-                    let serverCount = null;
-                    if (type === 'haha' && typeof data.haha === 'number') {
-                        serverCount = data.haha;
-                    } else if (type === 'boohoo' && typeof data.boohoo === 'number') {
-                        serverCount = data.boohoo;
-                    }
-                    
-                    if (serverCount !== null) {
-                        el.textContent = String(serverCount);
-                        el.dataset.count = String(serverCount);
-                    }
-                    el.disabled = false;
-                })
+                return response.json();
+            })
+            .then(data => {
+                console.log('API response:', data);
+                
+                // FIXED: Always sync with server value to ensure consistency
+                let serverCount = null;
+                if (type === 'haha' && typeof data.haha === 'number') {
+                    serverCount = data.haha;
+                } else if (type === 'boohoo' && typeof data.boohoo === 'number') {
+                    serverCount = data.boohoo;
+                }
+                
+                if (serverCount !== null) {
+                    el.textContent = String(serverCount);
+                    el.dataset.count = String(serverCount);
+                }
+                
+                // FIXED: Re-enable button and remove from pending AFTER successful update
+                el.disabled = false;
+                _pendingRequests.delete(elemID);
             })
             .catch(err => {
                 console.error('Reaction error:', err);
-                // Revert on error
+                conceptsErrorModal(err + " " + postURL);
+                
+                // FIXED: Revert to actual last known count on error
                 el.textContent = String(currentCount);
                 el.dataset.count = String(currentCount);
+                
+                // Re-enable button and remove from pending
                 el.disabled = false;
-                conceptsErrorModal(err + " " + postURL);
+                _pendingRequests.delete(elemID);
             });
     }
 
