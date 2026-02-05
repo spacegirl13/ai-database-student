@@ -504,7 +504,7 @@ date: 2025-10-30
                 </div>
 
                 <!-- Inline Topic Selector (hidden by default) -->
-                <div id="inline-topic-selector" class="hidden mb-4 bg-purple-900/20 border border-purple-500/30 rounded-lg p-3" style="display: none !important;">
+                <div id="inline-topic-selector" class="hidden mb-4 bg-purple-900/20 border border-purple-500/30 rounded-lg p-3">
                     <p class="text-sm font-semibold mb-2">Choose a topic:</p>
                     <div class="flex gap-2">
                         <button onclick="selectMathTopicInline('derivatives')" class="px-3 py-1 text-sm bg-slate-700 hover:bg-purple-600 rounded border border-purple-500/30">Derivatives</button>
@@ -681,12 +681,12 @@ date: 2025-10-30
                             <div id="fill-blank-actions" class="hidden">
                                 <div class="grid md:grid-cols-2 gap-3 mb-3">
                                     <button onclick="checkFillBlank()"
-                                        class="bg-green-600 hover:bg-green-700 py-2 text-sm rounded-lg font-semibold text-black">
-                                        Check Answer
+                                        class="bg-green-600 hover:bg-green-700 py-2 text-sm rounded-lg font-semibold">
+                                        ✓ Check Answer
                                     </button>
                                     <button onclick="autofillFillBlank()"
-                                        class="bg-yellow-600 hover:bg-yellow-700 py-2 text-sm rounded-lg font-semibold text-black">
-                                        Show Solution
+                                        class="bg-yellow-600 hover:bg-yellow-700 py-2 text-sm rounded-lg font-semibold">
+                                        💡 Show Solution
                                     </button>
                                 </div>
                                 <div id="fill-blank-feedback" class="hidden rounded-lg p-4 text-sm"></div>
@@ -908,7 +908,7 @@ date: 2025-10-30
                             <div id="history-template-form" class="hidden space-y-2">
                                 <div id="history-inputs"></div>
                                 <button type="button" onclick="generateHistoryPrompt()"
-                                    class="w-full bg-green-600 hover:bg-green-700 py-2 rounded-lg font-semibold text-xs mt-2 text-black">
+                                    class="w-full bg-green-600 hover:bg-green-700 py-2 rounded-lg font-semibold text-xs mt-2">
                                     Generate Prompt
                                 </button>
                             </div>
@@ -978,8 +978,8 @@ date: 2025-10-30
                             </div>
 
                             <button onclick="generateMadLibPrompt()"
-                                class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold mb-4 text-black">
-                                Generate My Prompt
+                                class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold mb-4">
+                                ✨ Generate My Prompt
                             </button>
 
                             <!-- Generated Prompt Display -->
@@ -989,15 +989,15 @@ date: 2025-10-30
                                     <div id="madlib-prompt-text" class="text-white text-lg font-semibold mb-4 leading-relaxed"></div>
                                     <div class="grid md:grid-cols-3 gap-3">
                                         <button onclick="copyToClipboard('madlib-prompt-text')"
-                                            class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm text-black">
+                                            class="px-4 py-2 bg-green-700 hover:bg-green-600 rounded text-sm">
                                             📋 Copy Prompt
                                         </button>
                                         <button onclick="testMadLibPrompt()"
-                                            class="px-4 py-2 bg-purple-700 hover:bg-purple-600 rounded text-sm text-black">
+                                            class="px-4 py-2 bg-purple-700 hover:bg-purple-600 rounded text-sm">
                                             🤖 Test with AI
                                         </button>
                                         <button onclick="resetMadLib()"
-                                            class="px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded text-sm text-black">
+                                            class="px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded text-sm">
                                             🔄 Try Another
                                         </button>
                                     </div>
@@ -1049,7 +1049,7 @@ date: 2025-10-30
                                         oninput="analyzeStudentPrompt()"></textarea>
 
                                     <button onclick="getHint()" 
-                                        class="w-full bg-yellow-600 hover:bg-yellow-700 py-2 rounded-lg font-semibold transition-all text-sm mb-2 text-black">
+                                        class="w-full bg-yellow-600 hover:bg-yellow-700 py-2 rounded-lg font-semibold transition-all text-sm mb-2">
                                         Get Hint
                                     </button>
                                     
@@ -1103,11 +1103,11 @@ date: 2025-10-30
                             <!-- Action Buttons -->
                             <div class="grid md:grid-cols-2 gap-3 mb-4">
                                 <button onclick="testWithAI()" 
-                                    class="bg-green-600 hover:bg-green-700 py-3 rounded-lg font-bold transition-all text-black">
+                                    class="bg-green-600 hover:bg-green-700 py-3 rounded-lg font-bold transition-all">
                                     Test with AI
                                 </button>
                                 <button onclick="showAnswer()" 
-                                    class="bg-purple-600 hover:bg-purple-700 py-3 rounded-lg font-bold transition-all text-black">
+                                    class="bg-purple-600 hover:bg-purple-700 py-3 rounded-lg font-bold transition-all">
                                     Show Improved Prompt
                                 </button>
                             </div>
@@ -3754,12 +3754,6 @@ date: 2025-10-30
         window.goToSection = function (sectionIndex) {
             originalGoToSection(sectionIndex);
             if (sectionIndex === 1) {
-<<<<<<< HEAD
-                if (!hasVisitedMathSection) {
-                    hasVisitedMathSection = true;
-                }
-=======
->>>>>>> ea4b29a1c97d6668b90968bac319291a7be2aa05
                 loadMathQuestions();
             } else if (sectionIndex === 2) {
                 setTimeout(() => loadScienceQuestions(), 100);
