@@ -29,8 +29,7 @@ Added badge-awarding logic directly in the backend to ensure rewards can’t be 
 
 
 Login: 
-    - I used the checkAuth () command so if loggen in the user card is shown if not it will show login/signup. 
-    - Its made using a cookie-based session authentication with automatic guest account creation to keep login friction low and persist user state across page reloads.
+    - I used the checkAuth() function to conditionally render the user card when a user is logged in, and show the login/signup option when they are not. I set it up so the website shows your user profile if you’re logged in, and shows the login or signup buttons if you’re not
     <img width="500" height="700" alt="Image" src="https://github.com/user-attachments/assets/c20f30aa-fd10-4f66-8adf-1e5aec9d0abf" />
 - Foreign Key - 
     - I made the foreign key which is a cascade relationship. This means when one thing is deleted from the table, the database deltes all the posts belonging to that user. I helped implement the badges as a many-to-many using an association table user_badges with DB-level foreign keys that cascade deletes.
