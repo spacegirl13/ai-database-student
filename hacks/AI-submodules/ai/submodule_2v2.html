@@ -56,6 +56,18 @@ date: 2025-10-30
         background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
         min-height: 100vh;
     }
+
+    /* All colored buttons get black text */
+    button[class*="bg-purple-"],
+    button[class*="bg-green-"],
+    button[class*="bg-blue-"],
+    button[class*="bg-red-"],
+    button[class*="bg-yellow-"],
+    button[class*="bg-orange-"],
+    button[class*="bg-indigo-"],
+    button[class*="bg-slate-"] {
+        color: black !important;
+    }
     
     /* Badge Display Box - Upper Right Corner */
     #badgeDisplay {
@@ -113,15 +125,17 @@ date: 2025-10-30
         display: none;
         text-align: center;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        flex-direction: column;
+        align-items: center;
     }
 
     #badgeNotification.show {
-        display: block;
+        display: flex;
     }
 
     #badgeNotification img {
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
         margin-bottom: 15px;
     }
 
@@ -454,12 +468,6 @@ date: 2025-10-30
                 <div class="flex items-center gap-3 mb-4">
                     <h2 class="text-xs font-bold text-purple-400">Prompt Engineering</h2>
                 </div>
-                <div class="space-y-4 text-xs">
-                    <div class="flex justify-center my-6">
-                        <img src="{{ '/images/digital-famine/textPrompts.png' | prepend: site.baseurl }}"
-                            alt="Prompt Engineering Illustration"
-                            class="rounded-lg border border-purple-500/30 max-w-2xl w-full">
-                    </div>
 
                     <div class="bg-slate-900/50 border border-purple-500/20 rounded-lg p-6 mt-6">
                         <h3 class="text-xs font-semibold text-purple-300 mb-3">How AI Responds to Prompts</h3>
@@ -529,7 +537,7 @@ date: 2025-10-30
                     </div>
                 </div>
             </div>
-            <button onclick="window.goToSection(2)"
+            <button onclick="markMathSectionCompleted(); window.goToSection(2)"
                 class="w-full bg-purple-600 hover:bg-purple-700 py-4 rounded-lg font-semibold text-lg">Continue to Science</button>
         </div>
     </div>
@@ -822,7 +830,7 @@ date: 2025-10-30
                     </div>
                 </div>
             </div>
-            <button onclick="window.goToSection(4)"
+            <button onclick="markCSSectionCompleted(); window.goToSection(4)"
                 class="w-full bg-purple-600 hover:bg-purple-700 py-3 text-sm rounded-lg font-semibold">Continue to History</button>
         </div>
     </div>
@@ -1731,6 +1739,8 @@ date: 2025-10-30
     // ==================== BADGE SYSTEM ===== ==
 
     let earnedBadges = [];
+    let mathSectionCompleted = false;
+    let csSectionCompleted = false;
 
     async function loadUserBadges() {
         try {
@@ -1788,6 +1798,62 @@ date: 2025-10-30
                 showBadgeNotification(badge);
             }
         }
+    }
+
+    async function awardDataScientistBadge() {
+        if (mathSectionCompleted && csSectionCompleted) {
+            try {
+                console.log('Attempting to award Delightful Data Scientist badge...');
+                const response = await fetch(pythonURI + '/api/badges/award', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        badge_id: 'delightful_data_scientist'
+                    })
+                });
+
+                console.log('Badge award response status:', response.status);
+                const result = await response.json();
+                console.log('Badge award response:', result);
+
+                if (result.success && result.badge) {
+                    // Handle the badge response from backend
+                    console.log('Badge awarded successfully:', result.badge);
+                    if (!earnedBadges.find(b => b.id === result.badge.id)) {
+                        earnedBadges.push(result.badge);
+                        updateBadgeDisplay();
+                        showBadgeNotification(result.badge);
+                    }
+                } else if (result.badge_awarded && result.badge) {
+                    // Alternative response format
+                    console.log('Badge awarded (alt format):', result.badge);
+                    if (!earnedBadges.find(b => b.id === result.badge.id)) {
+                        earnedBadges.push(result.badge);
+                        updateBadgeDisplay();
+                        showBadgeNotification(result.badge);
+                    }
+                } else {
+                    console.warn('Unexpected badge award response format:', result);
+                }
+            } catch (error) {
+                console.error('Error awarding data scientist badge:', error);
+            }
+        } else {
+            console.log('Cannot award badge - Math section completed:', mathSectionCompleted, 'CS section completed:', csSectionCompleted);
+        }
+    }
+
+    function markMathSectionCompleted() {
+        console.log('Math section marked as completed');
+        mathSectionCompleted = true;
+    }
+
+    function markCSSectionCompleted() {
+        console.log('CS section marked as completed');
+        csSectionCompleted = true;
+        // Award badge when CS section is completed (Math is already done)
+        awardDataScientistBadge();
     }
 
     // ==================== END BADGE SYSTEM ====================
@@ -3688,9 +3754,12 @@ date: 2025-10-30
         window.goToSection = function (sectionIndex) {
             originalGoToSection(sectionIndex);
             if (sectionIndex === 1) {
+<<<<<<< HEAD
                 if (!hasVisitedMathSection) {
                     hasVisitedMathSection = true;
                 }
+=======
+>>>>>>> ea4b29a1c97d6668b90968bac319291a7be2aa05
                 loadMathQuestions();
             } else if (sectionIndex === 2) {
                 setTimeout(() => loadScienceQuestions(), 100);
@@ -3714,6 +3783,8 @@ date: 2025-10-30
     // Expose functions to window for onclick handlers
     window.selectCSActivity = selectCSActivity;
     window.toggleCSTips = toggleCSTips;
+    window.markMathSectionCompleted = markMathSectionCompleted;
+    window.markCSSectionCompleted = markCSSectionCompleted;
     window.loadFillBlankQuestions = loadFillBlankQuestions;
     window.loadFillBlankQuestion = loadFillBlankQuestion;
     window.checkFillBlank = checkFillBlank;
