@@ -1209,7 +1209,6 @@ date: 2025-10-30
                             <h3 class="text-base font-bold flex-grow text-center">Write Prompts from Scratch</h3>
                             <div class="flex gap-2">
                                 <button onclick="toggleAdvancedTips()" class="text-2xl font-bold text-red-500 hover:text-red-400 hover:scale-110 transition-transform" title="Show Tips">?</button>
-                                <button onclick="toggleStudentPromptsModal(getSelectedPromptType())" class="px-3 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Past student prompts</button>
                             </div>
                         </div>
 
@@ -1247,10 +1246,13 @@ date: 2025-10-30
                                     class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-white text-xs font-semibold">Auto-fill</button>
                             </div>
 
-                            <div class="mt-2">
-                                <label class="block font-semibold mb-1 text-green-300 text-xs">AI Response:</label>
-                                <pre id="output-good"
-                                    class="bg-slate-900/50 border border-green-500/20 p-2 rounded whitespace-pre-wrap text-gray-300 min-h-[80px] text-xs overflow-y-auto max-h-[150px]">(Click Generate to see response)</pre>
+                            <div class="mt-2 flex justify-between items-start gap-3">
+                                <div class="flex-grow">
+                                    <label class="block font-semibold mb-1 text-green-300 text-xs">AI Response:</label>
+                                    <pre id="output-good"
+                                        class="bg-slate-900/50 border border-green-500/20 p-2 rounded whitespace-pre-wrap text-gray-300 min-h-[80px] text-xs overflow-y-auto max-h-[150px]">(Click Generate to see response)</pre>
+                                </div>
+                                <button onclick="toggleStudentPromptsModal(getSelectedPromptType())" class="text-2xl hover:scale-125 transition-transform mt-6" title="View past student prompts">👥</button>
                             </div>
                         </div>
 
@@ -3334,7 +3336,10 @@ date: 2025-10-30
                 allPrompts = [
                     { text: "Explain photosynthesis step-by-step using simple language and include a real-world example.", type: 'Good' },
                     { text: "Solve this quadratic equation step-by-step: 2x² + 5x - 3 = 0. Explain each step clearly.", type: 'Good' },
-                    { text: "Write a function in Python that checks if a number is prime. Include comments and test cases.", type: 'Good' }
+                    { text: "Write a function in Python that checks if a number is prime. Include comments and test cases.", type: 'Good' },
+                    { text: "write about history", type: 'Bad' },
+                    { text: "explain something", type: 'Bad' },
+                    { text: "help me", type: 'Bad' }
                 ];
             }
 
