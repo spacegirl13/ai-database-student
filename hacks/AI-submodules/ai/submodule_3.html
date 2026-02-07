@@ -1043,18 +1043,28 @@ date: 2025-10-30
         <p>Test your prompt engineering skills across Math, Science, History, and Computer Science!</p>
     </div>
 
-    <div id="startScreen" class="game-screen active">
-        <div class="start-screen">
-            <h2>Welcome to the AI Prompt Challenge! 🚀</h2>
+<div id="startScreen" class="game-screen active">
+        <!-- NOT LOGGED IN - Show login required message -->
+        <div id="loginRequired" class="start-screen">
+            <h2>🔐 Login Required</h2>
+            <p style="font-size: 1.3em; margin: 30px 0;">You need to be logged in to access this module.</p>
+            <p>Please go back and login to continue.</p>
+            
+            <div class="btn-group" style="margin-top: 40px;">
+                <a href="../" class="btn" style="text-decoration: none; display: inline-block;">
+                    ← Back to Login
+                </a>
+            </div>
+        </div>
+
+        <!-- LOGGED IN - Show game start -->
+        <div id="gameStart" class="start-screen" style="display: none;">
+            <h2 id="welcomeMessage">Time to test your Responsible AI skills! 🚀</h2>
             <p><strong>How to Play:</strong></p>
             <p>📝 You'll face 10 scenarios across different subjects</p>
             <p>⏱️ You have 30 seconds to choose the best AI prompt for each scenario</p>
             <p>🎯 Get points for correct answers - faster answers = more points!</p>
             <p>🏆 Compete for the top spot on the leaderboard!</p>
-
-            <div class="input-group">
-                <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
-            </div>
 
             <div class="btn-group">
                 <button class="btn" onclick="startGame()">Start Challenge</button>
@@ -1385,6 +1395,157 @@ date: 2025-10-30
     let allQuestions = [];
     let gameQuestions = [];
 
+// === AUTHENTICATION CHECK WITH DEBUG LOGGING ===
+    let authenticatedDisplayName = null;
+    
+    async function checkAuthenticationAndSetup() {
+        console.log('=== AUTHENTICATION CHECK START ===');
+        console.log('API URL:', `${pythonURI}/api/id`);
+        
+        try {
+            const response = await fetch(`${pythonURI}/api/id`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
+
+            if (response.ok) {
+                // User is logged in
+                const userData = await response.json();
+                console.log('User data received:', userData);
+                
+                authenticatedDisplayName = userData.name || userData.uid || 'Player';
+                console.log('Display name set to:', authenticatedDisplayName);
+                
+                // Set playerName to their display name
+                playerName = authenticatedDisplayName;
+                console.log('playerName variable set to:', playerName);
+                
+                // Update welcome message with their display name
+                const welcomeMessage = document.getElementById('welcomeMessage');
+                if (welcomeMessage) {
+                    welcomeMessage.innerHTML = `Time to test your Responsible AI skills, <span style="color: #fbbf24;">${authenticatedDisplayName}</span>! 🚀`;
+                    console.log('Welcome message updated successfully');
+                } else {
+                    console.error('welcomeMessage element not found!');
+                }
+                
+                // Show the game start screen
+                const loginRequired = document.getElementById('loginRequired');
+                const gameStart = document.getElementById('gameStart');
+                
+                if (loginRequired && gameStart) {
+                    loginRequired.style.display = 'none';
+                    gameStart.style.display = 'block';
+                    console.log('Switched to game start screen');
+                } else {
+                    console.error('loginRequired or gameStart element not found!');
+                }
+                
+                console.log('=== USER IS AUTHENTICATED ===');
+                
+            } else {
+                // User is NOT logged in - show login required message
+                console.log('User NOT authenticated - response not OK');
+                const loginRequired = document.getElementById('loginRequired');
+                const gameStart = document.getElementById('gameStart');
+                
+                if (loginRequired && gameStart) {
+                    loginRequired.style.display = 'block';
+                    gameStart.style.display = 'none';
+                    console.log('Showing login required screen');
+                } else {
+                    console.error('loginRequired or gameStart element not found!');
+                }
+                
+                console.log('=== USER NOT AUTHENTICATED ===');
+            }
+        } catch (error) {
+            console.error('=== AUTHENTICATION ERROR ===');
+            console.error('Error details:', error);
+            
+            // On error, show login required
+            const loginRequired = document.getElementById('loginRequired');
+            const gameStart = document.getElementById('gameStart');
+            
+            if (loginRequired && gameStart) {
+                loginRequired.style.display = 'block';
+                gameStart.style.display = 'none';
+            }
+        }
+    }
+
+    // Modified startGame function - uses authenticated display name
+    window.startGame = async function() {
+        console.log('startGame called');
+        console.log('playerName:', playerName);
+        console.log('authenticatedDisplayName:', authenticatedDisplayName);
+        
+        // PlayerName is already set from authentication
+        if (!playerName || !authenticatedDisplayName) {
+            alert('Authentication error. Please refresh and try again.');
+            return;
+        }
+
+        if (allQuestions.length === 0) {
+            const loaded = await loadQuestionsFromBackend();
+            if (!loaded) {
+                return;
+            }
+        }
+
+        gameQuestions = shuffleArray(allQuestions);
+        currentQuestionIndex = 0;
+        score = 0;
+        subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
+        subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
+
+        showScreen('gameScreen');
+        loadQuestion();
+    }
+
+    // Modified skipToCompletion - uses authenticated display name
+    window.skipToCompletion = function() {
+        console.log('skipToCompletion called');
+        console.log('playerName:', playerName);
+        
+        if (!playerName || !authenticatedDisplayName) {
+            alert('Authentication error. Please refresh and try again.');
+            return;
+        }
+
+        showScreen('resultsScreen');
+        document.getElementById('finalScore').textContent = '-';
+        document.getElementById('finalPlayerName').textContent = playerName;
+        document.getElementById('correctCount').textContent = '-';
+        document.getElementById('mathScore').textContent = '-';
+        document.getElementById('scienceScore').textContent = '-';
+        document.getElementById('historyScore').textContent = '-';
+        document.getElementById('csScore').textContent = '-';
+
+        document.querySelector('.leaderboard').style.display = 'none';
+
+        updatePersistentLeaderboard();
+    }
+
+    // === INITIALIZATION ===
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('=== DOM CONTENT LOADED ===');
+        
+        // Check authentication FIRST
+        checkAuthenticationAndSetup();
+        
+        loadUserBadges();
+
+        updatePersistentLeaderboard();
+        setInterval(updatePersistentLeaderboard, 30000);
+    });
+
     async function loadQuestionsFromBackend() {
         try {
             const response = await fetch(`${API_URL}/questions`);
@@ -1422,6 +1583,13 @@ date: 2025-10-30
                 if (data.success && data.leaderboard) {
                     console.log('Number of entries:', data.leaderboard.length);
 
+                const tbody = document.getElementById('persistentLeaderboardBody');
+                if (!tbody) {
+                    console.error('persistentLeaderboardBody not found!');
+                    return;
+                }
+
+                tbody.innerHTML = '';
 
                 for (let i = 0; i < 10; i++) {
                     const entry = data.leaderboard[i];
@@ -1628,30 +1796,6 @@ date: 2025-10-30
         return newArray;
     }
 
-    // === GAME FUNCTIONS ===
-    window.startGame = async function() {
-        playerName = document.getElementById('playerName').value.trim();
-        if (!playerName) {
-            alert('Please enter your name!');
-            return;
-        }
-
-        if (allQuestions.length === 0) {
-            const loaded = await loadQuestionsFromBackend();
-            if (!loaded) {
-                return;
-            }
-        }
-
-        gameQuestions = shuffleArray(allQuestions);
-        currentQuestionIndex = 0;
-        score = 0;
-        subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
-        subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
-
-        showScreen('gameScreen');
-        loadQuestion();
-    }
 
     function loadQuestion() {
         const question = gameQuestions[currentQuestionIndex];
@@ -1875,26 +2019,6 @@ date: 2025-10-30
         document.getElementById('playerName').value = playerName;
     }
 
-    window.skipToCompletion = function() {
-        playerName = document.getElementById('playerName').value.trim();
-        if (!playerName) {
-            alert('Please enter your name first!');
-            return;
-        }
-
-        showScreen('resultsScreen');
-        document.getElementById('finalScore').textContent = '-';
-        document.getElementById('finalPlayerName').textContent = playerName;
-        document.getElementById('correctCount').textContent = '-';
-        document.getElementById('mathScore').textContent = '-';
-        document.getElementById('scienceScore').textContent = '-';
-        document.getElementById('historyScore').textContent = '-';
-        document.getElementById('csScore').textContent = '-';
-
-        document.querySelector('.leaderboard').style.display = 'none';
-
-        updatePersistentLeaderboard();
-    }
 
     function showScreen(screenId) {
         document.querySelectorAll('.game-screen').forEach(screen => {
@@ -2264,20 +2388,5 @@ date: 2025-10-30
         td.innerHTML = err;
         tr.appendChild(td);
         container.appendChild(tr);
-    }
-
-    // === INITIALIZATION ===
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('playerName').focus();
-        loadUserBadges();
-
-        document.getElementById('playerName').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                window.startGame();
-            }
-        });
-
-        updatePersistentLeaderboard();
-        setInterval(updatePersistentLeaderboard, 30000);
-    });
+    } 
 </script>
