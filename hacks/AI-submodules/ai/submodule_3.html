@@ -1394,6 +1394,7 @@ date: 2025-10-30
     let subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
     let allQuestions = [];
     let gameQuestions = [];
+    let correctAnswersCount = 0;
 
 // === AUTHENTICATION CHECK WITH DEBUG LOGGING ===
     let authenticatedDisplayName = null;
@@ -1504,6 +1505,7 @@ date: 2025-10-30
         score = 0;
         subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
         subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
+        correctAnswersCount = 0;
 
         showScreen('gameScreen');
         loadQuestion();
@@ -1753,6 +1755,8 @@ date: 2025-10-30
             const timeBonus = Math.floor(timeLeft / 3);
             pointsEarned = 100 + timeBonus;
             score += pointsEarned;
+            // track total correct answers
+            correctAnswersCount++;
         }
 
         if (question.subject) {
@@ -1888,7 +1892,9 @@ date: 2025-10-30
             pointsEarned = 100 + timeBonus;
             score += pointsEarned;
 
+            // track subject and overall correct answers
             subjectScores[question.subject]++;
+            correctAnswersCount++;
         }
         subjectCounts[question.subject]++;
 
@@ -1940,7 +1946,7 @@ date: 2025-10-30
         document.getElementById('finalScore').textContent = score;
         document.getElementById('finalPlayerName').textContent = playerName;
 
-        const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
+        const correctCount = correctAnswersCount;
         document.getElementById('correctCount').textContent = `${correctCount}/${gameQuestions.length}`;
         document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
         document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
@@ -1976,7 +1982,6 @@ date: 2025-10-30
             console.log('Error saving score:', error);
         }
 
-        loadLeaderboard();
     }
 
     async function loadLeaderboard() {
