@@ -425,16 +425,11 @@ Object.keys(currentMadLibTemplate.fields).forEach(fieldKey => {
 - Loop goes through each one and creates input boxes for the student
 
 **Step-by-step process:**
-- **Field 1 (EVENT):**
-  - Creates label "Historical Event/Topic"
-  - Creates input box for typing
-  - Creates example buttons ("American Revolution", "World War II")
-  - Displays on page
-- **Field 2 (ASPECT):**
-  - Creates label "Focus Aspect"
-  - Creates input box and example buttons
-  - Displays on page
-- **Fields 3, 4, 5:** Repeats same process
+- Loop starts with Field 1 (EVENT): creates label "Historical Event/Topic", an input box, and example buttons like "American Revolution" and "World War II"
+- Displays Field 1 on the page
+- Loop moves to Field 2 (ASPECT): creates label "Focus Aspect", input box, and example buttons
+- Displays Field 2 on the page
+- Repeats the same process for Fields 3, 4, and 5
 
 **Why use a loop?**
 - **Without loop:** Would manually write separate code for each field
