@@ -55,11 +55,13 @@ Generated prompt: Complete prompt created from their template inputs
 ### Prompt 2a: Data Abstraction (List Usage)
 This is a list used in the intermediate section telling on what to improve to make your response better. 
 
+```javascript
 hints: [
     "Which war? What specific aspect?",
     "What's your purpose and academic level?",
     "What kind of information do you need?"
 ]
+```
 
 How the data in this list manages complexity:
 The hints list manages complexity by storing multiple related pieces of data (the 3 hint messages) in a single structure instead of creating separate variables for each hint. 
@@ -76,6 +78,7 @@ Update the logic in multiple places
 ### PROMPT 2c: Procedure and Algorithm
 The Procedure:
 
+```javascript
 function analyzeStudentPrompt() {
     const studentPrompt = document.getElementById('student-improved-prompt').value.trim();
     
@@ -143,6 +146,7 @@ function analyzeStudentPrompt() {
     
     document.getElementById('feedback-display').innerHTML = feedback.map(f => `<p>${f}</p>`).join('');
 }
+```
 
 How it contributes to overall functionality:
 This is the main scoring engine of my program. Every time a student types in the Intermediate Challenge section, this procedure runs automatically and analyzes their prompt in real-time. It checks four things: whether the prompt mentions specific topics, provides personal context, requests detailed information, and is long enough. Based on what it finds, it calculates a score from 0-100% and shows visual feedback with checkmarks and a color-coded progress bar (red for bad, yellow for okay, green for good). This instant feedback teaches students what makes a good prompt and motivates them to improve their writing.
@@ -161,13 +165,23 @@ The iteration happens in a few places. When checking for keywords, the .some() m
 ### PROMPT 2d: Testing and Debugging
 Testing Process
 I tested my program by typing different prompts to check the scoring. I tried an empty prompt (worked fine - got 0%), a perfect prompt with all elements (worked fine - got 100%), and then I tested edge cases.
+
 The Bug
 I typed a prompt that was exactly 50 characters long: "Explain causes of WWI for my history class essay" and expected it to pass the length check, but it failed. I checked my code and found:
-javascriptif (studentPrompt.length > 50)
+
+```javascript
+if (studentPrompt.length > 50)
+```
+
 The problem was I used > (greater than) instead of >= (greater than or equal to). So prompts with exactly 50 characters were being rejected even though 50 characters is a reasonable length.
+
 The Fix
 I changed it to:
-javascriptif (studentPrompt.length >= 50)
+
+```javascript
+if (studentPrompt.length >= 50)
+```
+
 Now prompts with 50 or more characters pass the length check. I tested again with my 50-character prompt and it correctly gave me the 25 points for length
 
 ### 
@@ -175,11 +189,12 @@ Procedure & Selection
 First Conditional Statement: 
 
 The first if-statement in my analyzeStudentPrompt() procedure is:
-javascriptif (!studentPrompt)
 
+```javascript
+if (!studentPrompt)
+```
 
-Boolean Expression: !studentPrompt
-
+Boolean Expression: `!studentPrompt`
 
 This expression checks whether the studentPrompt variable is empty, null, undefined, or contains only whitespace after trimming. The exclamation mark ! means "NOT", so it's asking "Is the prompt NOT filled in?" or in other words "Is the prompt empty?"
 What happens if it evaluates to false:
@@ -191,40 +206,57 @@ Parameter in My Procedure
 
 In the Intermediate Challenge section, I use this procedure:
 
-javascriptfunction selectInterChallenge(subject)
-The Parameter: subject - tells the function which subject challenge to load (like "history", "math", "science", or "cs")
+```javascript
+function selectInterChallenge(subject)
+```
+
+The Parameter: `subject` - tells the function which subject challenge to load (like "history", "math", "science", or "cs")
 
 
 How it manages complexity:
-This parameter lets one function handle all four subjects instead of writing four separate functions. When a user picks history, the program calls selectInterChallenge('history') and the function uses that parameter to grab the history challenge data with interChallenges[subject]. If they pick math, it calls selectInterChallenge('math') and gets the math data.
-Without this parameter, I'd need four functions: selectHistoryChallenge(), selectMathChallenge(), selectScienceChallenge(), and selectCSChallenge() - all doing the exact same thing but with different hard-coded data. The parameter reduces 4 functions into 1, making the code shorter and easier to maintain. Adding a fifth subject would just mean passing in a new subject name, not writing a whole new function.
+This parameter lets one function handle all four subjects instead of writing four separate functions. When a user picks history, the program calls `selectInterChallenge('history')` and the function uses that parameter to grab the history challenge data with `interChallenges[subject]`. If they pick math, it calls `selectInterChallenge('math')` and gets the math data.
+Without this parameter, I'd need four functions: `selectHistoryChallenge()`, `selectMathChallenge()`, `selectScienceChallenge()`, and `selectCSChallenge()` - all doing the exact same thing but with different hard-coded data. The parameter reduces 4 functions into 1, making the code shorter and easier to maintain. Adding a fifth subject would just mean passing in a new subject name, not writing a whole new function.
 
 ### Procedure Calls & Testing
 The function we're using:
-javascriptfunction selectInterChallenge(subject)
-What this function does: When a student picks a subject in the Intermediate Challenge, this function loads all the data for that subject (the weak prompt they need to fix, the hints, and the keywords to check for).
-New Call 1:
-javascriptselectInterChallenge('cs')
-What happens:
 
-Shows the weak prompt "code help"
-Loads computer science keywords like "python", "function", "loop"
-When the student types their improved prompt, the program checks if it contains CS words like "python" or "loop"
+```javascript
+function selectInterChallenge(subject)
+```
+
+What this function does: When a student picks a subject in the Intermediate Challenge, this function loads all the data for that subject (the weak prompt they need to fix, the hints, and the keywords to check for).
+
+New Call 1:
+
+```javascript
+selectInterChallenge('cs')
+```
+
+What happens:
+- Shows the weak prompt "code help"
+- Loads computer science keywords like "python", "function", "loop"
+- When the student types their improved prompt, the program checks if it contains CS words like "python" or "loop"
 
 New Call 2:
-javascriptselectInterChallenge('science')
-What happens:
 
-Shows the weak prompt "explain photosynthesis"
-Loads science keywords like "photosynthesis", "chloroplast", "biology"
-When the student types, the program checks if it contains science words like "photosynthesis" or "chemical"
+```javascript
+selectInterChallenge('science')
+```
+
+What happens:
+- Shows the weak prompt "explain photosynthesis"
+- Loads science keywords like "photosynthesis", "chloroplast", "biology"
+- When the student types, the program checks if it contains science words like "photosynthesis" or "chemical"
 
 ### Logic Errors
 
 Modification That Would Cause a Logic Error
-In the History Section, there's a function selectHistoryType(type) that determines which prompt template to load.
+In the History Section, there's a function `selectHistoryType(type)` that determines which prompt template to load.
+
 Current (Correct) Code:
-javascriptfunction selectHistoryType(type) {
+
+```javascript
+function selectHistoryType(type) {
     selectedHistoryType = type;
     
     if (type === 'cause') {
@@ -237,8 +269,12 @@ javascriptfunction selectHistoryType(type) {
         // load timeline template
     }
 }
+```
+
 Modified (Buggy) Code:
-javascriptfunction selectHistoryType(type) {
+
+```javascript
+function selectHistoryType(type) {
     selectedHistoryType = 'cause';  // BUG: Always sets to 'cause' instead of using parameter
     
     if (type === 'cause') {
@@ -247,6 +283,7 @@ javascriptfunction selectHistoryType(type) {
         // load compare events template
     }
 }
+```
 How this changes the output:
 If the user clicks "Compare Events", the function receives type = 'compare', but then immediately overwrites it with selectedHistoryType = 'cause'. Later when they try to generate their prompt, it uses the cause & effect template instead of the comparison template they wanted. The user thinks they're making a comparison prompt but gets a completely different format, confusing them about what they're supposed to fill in.
 
@@ -254,37 +291,45 @@ If the user clicks "Compare Events", the function receives type = 'compare', but
 ### List Utilization
 How My Code Uses a List
 In the History Section, I have this list:
-javascripthints: [
+
+```javascript
+hints: [
     "Which war? What specific aspect?",
     "What's your purpose and academic level?",
     "What kind of information do you need?"
 ]
-Adding data: The three hint messages are stored in the array when I initialize it.
-Accessing elements: When the user clicks "Get Hint", the code uses hints[hintsUsed] to grab the specific hint. If hintsUsed = 0, it gets hints[0] which is "Which war? What specific aspect?". If hintsUsed = 1, it gets hints[1] which is "What's your purpose and academic level?".
+```
 
-This manages complexity because I don't need separate variables like hint1, hint2, hint3 and multiple if-statements. The list automatically keeps track of how many hints exist, and I can access any hint using just the index number.
+Adding data: The three hint messages are stored in the array when I initialize it.
+
+Accessing elements: When the user clicks "Get Hint", the code uses `hints[hintsUsed]` to grab the specific hint. If `hintsUsed = 0`, it gets `hints[0]` which is "Which war? What specific aspect?". If `hintsUsed = 1`, it gets `hints[1]` which is "What's your purpose and academic level?".
+
+This list manages complexity because I don't need separate variables like `hint1`, `hint2`, `hint3` and multiple if-statements. The list automatically keeps track of how many hints exist, and I can access any hint using just the index number.
 
 ### Algorithm Analysis
 Algorithm Within Iteration Statement
 In the Beginner Level, when a student selects "History" for Mad Libs, the program needs to create input boxes on the screen. The buildMadLibForm() function uses a loop to do this:
-javascriptObject.keys(currentMadLibTemplate.fields).forEach(fieldKey => {
+
+```javascript
+Object.keys(currentMadLibTemplate.fields).forEach(fieldKey => {
     const field = currentMadLibTemplate.fields[fieldKey];
     // creates HTML for this field
     inputsContainer.innerHTML += fieldHTML;
 });
+```
 What the loop does:
 The history Mad Libs template has 5 fields: EVENT, ASPECT, DETAILS, FORMAT, and REQUIREMENT. The loop goes through each one and creates the input boxes the student sees on the screen.
-Step-by-step what happens:
 
-Loop starts at field 1 (EVENT)
-Creates a label "Historical Event/Topic"
-Creates an input box where student can type
-Creates example buttons like "American Revolution", "World War II"
-Puts all that on the page
-Loop moves to field 2 (ASPECT)
-Creates label "Focus Aspect"
-Creates input box and example buttons
-Puts that on the page
-Repeats for fields 3, 4, and 5
+Step-by-step what happens:
+- Loop starts at field 1 (EVENT)
+- Creates a label "Historical Event/Topic"
+- Creates an input box where student can type
+- Creates example buttons like "American Revolution", "World War II"
+- Puts all that on the page
+- Loop moves to field 2 (ASPECT)
+- Creates label "Focus Aspect"
+- Creates input box and example buttons
+- Puts that on the page
+- Repeats for fields 3, 4, and 5
 
 Why use a loop? Without the loop, I'd have to manually write the code to create the EVENT input box, then manually write code for the ASPECT input box, then DETAILS, then FORMAT, then REQUIREMENT - all separately. The loop does it automatically for however many fields exist. If I add a 6th field later, the loop handles it without me changing any code.
