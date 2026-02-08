@@ -4,53 +4,52 @@ permalink: /skillB-individual-blog/
 ---
 
 ### PROMPT 1: Program Purpose and Function
-Describe the purpose of the program
-The purpose of my program is to teach students how to write effective prompts for AI systems. Specifically, it helps users learn the difference between vague prompts (like "help with history") and detailed, specific prompts (like "Explain the causes of World War I for my AP History class, including at least 3 political factors with specific dates").
-The program does this through two main components:
+
+**Describe the purpose of the program:**
+- Teaches students how to write effective prompts for AI systems
+- Helps users learn the difference between vague and detailed prompts
+  - Vague example: "help with history"
+  - Specific example: "Explain the causes of World War I for my AP History class, including at least 3 political factors with specific dates"
+- Achieves this through two main components:
 
 Mad Libs Prompt Builder - Guides users to fill in blanks to create good prompts
 Prompt Quality Analyzer - Scores user-written prompts and gives real-time feedback
 
-Explain how the program functions
-Step-by-step:
+**Explain how the program functions:**
+- **Step-by-step process:**
+  - User selects a difficulty level (Beginner, Intermediate, or Advanced)
+  - User selects a subject (Math, Science, CS, or History)
+  - Based on their selection:
+    - **Beginner:** User fills in template blanks (Mad Libs style)
+    - **Intermediate:** User rewrites a weak prompt and gets scored
+    - **Advanced:** User writes prompts from scratch and compares bad vs. good
 
-User selects a difficulty level (Beginner, Intermediate, or Advanced)
-User selects a subject (Math, Science, CS, or History)
-Based on their selection:
+- **Program analyzes prompts for:**
+  - Specificity: Does it mention specific topics?
+  - Context: Does it explain who you are and why you need this?
+  - Detail requirements: Does it say what to include?
+  - Length: Is it detailed enough?
 
-Beginner: User fills in template blanks (Mad Libs style)
-Intermediate: User rewrites a weak prompt and gets scored
-Advanced: User writes prompts from scratch and compares bad vs. good
+- **Feedback and results:**
+  - Calculates a score (0-100%) and displays visual feedback
+  - User can test their prompt with a real AI API to see the response
 
+**Identify the inputs and outputs:**
 
-The program analyzes their prompt for:
+**INPUTS:**
+- Dropdown selection: Level (beginner/intermediate/advanced)
+- Dropdown selection: Subject (math/science/cs/history)
+- Text input: User fills in template fields (e.g., "World War I", "3 causes", "AP History class")
+- Textarea input: User writes their own prompt from scratch
+- Button clicks: "Analyze Prompt", "Generate", "Test with AI"
 
-Specificity (does it mention specific topics?)
-Context (does it explain who you are and why you need this?)
-Detail requirements (does it say what to include?)
-Length (is it detailed enough?)
-
-
-Program calculates a score (0-100%) and displays visual feedback
-User can test their prompt with a real AI API to see the response
-
-Identify the inputs and outputs
-INPUTS:
-
-Dropdown selection: Level (beginner/intermediate/advanced)
-Dropdown selection: Subject (math/science/cs/history)
-Text input: User fills in template fields (e.g., "World War I", "3 causes", "AP History class")
-Textarea input: User writes their own prompt from scratch
-Button clicks: "Analyze Prompt", "Generate", "Test with AI"
-
-OUTPUTS:
-
-Quality score: 0-100% percentage displayed
-Visual feedback: Color-coded progress bar (red/yellow/green)
-Checklist: ✅ or ❌ for each quality criterion
-Text feedback: Specific suggestions like "Add more context" or "Great job!"
-AI response: The actual AI-generated answer to their prompt
-Generated prompt: Complete prompt created from their template inputs
+**OUTPUTS:**
+- Quality score: 0-100% percentage displayed
+- Visual feedback: Color-coded progress bar (red/yellow/green)
+- Checklist: ✅ or ❌ for each quality criterion
+- Text feedback: Specific suggestions like "Add more context" or "Great job!"
+- AI response: The actual AI-generated answer to their prompt
+- Generated prompt: Complete prompt created from their template inputs
 
 ### Prompt 2a: Data Abstraction (List Usage)
 This is a list used in the intermediate section telling on what to improve to make your response better. 
@@ -63,17 +62,29 @@ hints: [
 ]
 ```
 
-How the data in this list manages complexity:
-The hints list manages complexity by storing multiple related pieces of data (the 3 hint messages) in a single structure instead of creating separate variables for each hint. 
+**How the data in this list manages complexity:**
+- Stores multiple related pieces of data (the 3 hint messages) in a single structure
+- Avoids creating separate variables for each hint
+- Single list name is easier to remember than multiple variable names 
 
 ### Prompt 2b: Managing Complexity
-First, instead of having one hints list, I would need three separate variables: hint1, hint2, and hint3. This means I have to remember three different variable names instead of just one list name.
-Second, the function that displays hints would need multiple if-statements to check which hint number the user is on. If they're on hint 0, show hint1. If they're on hint 1, show hint2. If they're on hint 2, show hint3. That's three separate checks I have to write out.
-Third, if I wanted to add more hints (like a 4th or 5th hint), I would have to:
 
-Create a new variable (hint4)
-Add another if-statement to check for it
-Update the logic in multiple places
+**Problems without using a list:**
+
+1. **Multiple variables:** Would need three separate variables: `hint1`, `hint2`, and `hint3`
+   - Hard to remember three different variable names
+   - Instead of just one list name
+
+2. **Complex conditional logic:** Display function would need multiple if-statements
+   - If user on hint 0: show hint1
+   - If user on hint 1: show hint2
+   - If user on hint 2: show hint3
+   - Three separate checks to write and maintain
+
+3. **Difficult to add features:** Adding more hints (4th, 5th, etc.) requires:
+   - Creating new variables (hint4, hint5, etc.)
+   - Adding more if-statements for each new hint
+   - Updating logic in multiple places
 
 ### PROMPT 2c: Procedure and Algorithm
 The Procedure:
@@ -148,41 +159,96 @@ function analyzeStudentPrompt() {
 }
 ```
 
-How it contributes to overall functionality:
-This is the main scoring engine of my program. Every time a student types in the Intermediate Challenge section, this procedure runs automatically and analyzes their prompt in real-time. It checks four things: whether the prompt mentions specific topics, provides personal context, requests detailed information, and is long enough. Based on what it finds, it calculates a score from 0-100% and shows visual feedback with checkmarks and a color-coded progress bar (red for bad, yellow for okay, green for good). This instant feedback teaches students what makes a good prompt and motivates them to improve their writing.
+**How it contributes to overall functionality:**
+- Main scoring engine of the program
+- Runs automatically as students type in the Intermediate Challenge section
+- Analyzes prompts in real-time by checking four criteria:
+  - Mentions specific topics
+  - Provides personal context
+  - Requests detailed information
+  - Is long enough (sufficient character count)
+- Displays visual feedback:
+  - Color-coded progress bar (red for bad, yellow for okay, green for good)
+  - Checkmarks for each passed criterion
+  - 0-100% score display
+- **Educational impact:** Instant feedback teaches students what makes a good prompt and motivates them to improve their writing
 
 
-The Algorithm - Sequence, Selection, and Iteration:
-The algorithm follows a specific order. First, it grabs whatever the student typed from the textarea and checks if it's empty - if so, it resets everything and stops. If there's actual text, it converts the prompt to lowercase so the keyword matching isn't case-sensitive. Then it initializes the score at zero and sets up four checks (specificity, context, detail, length) all marked as false initially.
+**The Algorithm - Sequence, Selection, and Iteration:**
 
-Next comes the checking phase using selection. The algorithm checks if the prompt contains any keywords from the "specific" list like "world war", "wwi", or "cause" - if it finds even one match, it marks specificity as passed and adds 25 points. It does the same thing for context keywords like "essay", "class", or "AP", and then detail keywords like "explain", "example", or "date". For the length check, it simply counts characters - if the prompt is longer than 50 characters, that's another 25 points.
-After all four checks are done, it updates the visual display. The checkmarks change from gray circles to green checkmarks for each passed criteria. The score gets displayed as a percentage, and the progress bar's width adjusts to match. Here's where another selection happens - the algorithm decides what color to make the progress bar based on the score. If it's 75% or higher, the bar turns green. If it's between 50-74%, yellow.
+**Phase 1: Input & Setup (Sequence)**
+- Grabs whatever student typed from textarea
+- Checks if it's empty:
+  - If empty: resets everything and stops
+  - If has text: continues to next phase
+- Converts prompt to lowercase for case-insensitive matching
+- Initializes score at zero and sets up four checks (all marked false initially):
+  - Specificity
+  - Context
+  - Detail
+  - Length
 
-Anything below 50% stays red.
-Finally, the algorithm builds feedback messages. For each check that failed, it adds a specific error message to a feedback array. So if the student didn't provide context, it adds "❌ Provide context about yourself". If their prompt was too short, it adds "❌ Your prompt is too short". But if they got a perfect 100%, it replaces all those messages with just "✅ Excellent! Your prompt looks great!". Then it takes all those feedback messages and converts them into HTML paragraph tags using a loop, which gets displayed on the page.
-The iteration happens in a few places. When checking for keywords, the .some() method loops through each keyword in the list and checks if it appears in the student's prompt - it stops as soon as it finds one match. At the end, the .map() method loops through each feedback message and wraps it in <p> tags so it displays properly on the page.
+**Phase 2: Keyword Checking (Selection & Iteration)**
+- **Specificity check:** Searches for keywords like "world war", "wwi", "cause"
+  - If found: marks as passed, adds 25 points
+- **Context check:** Searches for keywords like "essay", "class", "AP"
+  - If found: marks as passed, adds 25 points
+- **Detail check:** Searches for keywords like "explain", "example", "date"
+  - If found: marks as passed, adds 25 points
+- **Length check:** Counts characters
+  - If > 50 characters: marks as passed, adds 25 points
+
+**Phase 3: Visual Display Update (Selection)**
+- Updates checkmarks: gray circles → green checkmarks for passed criteria
+- Displays score as percentage
+- Progress bar adjusts width to match score
+- **Color selection based on score:**
+  - 75% or higher: green
+  - 50-74%: yellow
+  - Below 50%: red
+
+**Phase 4: Feedback Generation (Selection & Iteration)**
+- Builds feedback messages array:
+  - For each failed check: adds specific error message
+  - If context missing: adds "❌ Provide context about yourself"
+  - If too short: adds "❌ Your prompt is too short"
+  - If perfect (100%): replaces all with "✅ Excellent! Your prompt looks great!"
+- **Iteration with .map():** Converts each feedback message into HTML `<p>` tags for display
 
 ### PROMPT 2d: Testing and Debugging
-Testing Process
-I tested my program by typing different prompts to check the scoring. I tried an empty prompt (worked fine - got 0%), a perfect prompt with all elements (worked fine - got 100%), and then I tested edge cases.
 
-The Bug
-I typed a prompt that was exactly 50 characters long: "Explain causes of WWI for my history class essay" and expected it to pass the length check, but it failed. I checked my code and found:
+**Testing Process:**
+- Tested by typing different prompts to check scoring
+- Test cases:
+  - Empty prompt: worked fine - got 0%
+  - Perfect prompt with all elements: worked fine - got 100%
+  - Edge cases: tested boundary conditions
+
+**The Bug:**
+- Typed a prompt exactly 50 characters: "Explain causes of WWI for my history class essay"
+- Expected: should pass the length check
+- Actual: failed the length check
+- Root cause found in the code:
 
 ```javascript
 if (studentPrompt.length > 50)
 ```
 
-The problem was I used > (greater than) instead of >= (greater than or equal to). So prompts with exactly 50 characters were being rejected even though 50 characters is a reasonable length.
+**Problem Analysis:**
+- Used `>` (greater than) instead of `>=` (greater than or equal to)
+- Prompts with exactly 50 characters were rejected
+- 50 characters is a reasonable length and should pass
 
-The Fix
-I changed it to:
+**The Fix:**
+Changed to:
 
 ```javascript
 if (studentPrompt.length >= 50)
 ```
 
-Now prompts with 50 or more characters pass the length check. I tested again with my 50-character prompt and it correctly gave me the 25 points for length
+**Result:**
+- Prompts with 50 or more characters now pass the length check
+- Re-tested with 50-character prompt: correctly awarded 25 points for length ✅
 
 ### 
 Procedure & Selection
@@ -197,9 +263,19 @@ if (!studentPrompt)
 Boolean Expression: `!studentPrompt`
 
 This expression checks whether the studentPrompt variable is empty, null, undefined, or contains only whitespace after trimming. The exclamation mark ! means "NOT", so it's asking "Is the prompt NOT filled in?" or in other words "Is the prompt empty?"
-What happens if it evaluates to false:
-If this expression is false, that means the prompt is NOT empty - the user actually typed something. When this happens, the function skips the reset code and continues to the next line where it starts analyzing the prompt. It grabs the challenge data, converts the prompt to lowercase, initializes the score at zero, and then runs through all four quality checks (specificity, context, detail, and length). Basically, if the expression is false, the program does its main job of scoring the user's prompt instead of just resetting everything.
-If I didn't have this check and the user cleared the textarea, the program would try to analyze an empty string and might give weird results or even crash when trying to check for keywords in nothing.
+**What happens if it evaluates to false:**
+- Expression is false = prompt is NOT empty (user typed something)
+- Function skips reset code and continues to analyze
+- Steps that follow:
+  - Grabs challenge data
+  - Converts prompt to lowercase
+  - Initializes score at zero
+  - Runs through all four quality checks (specificity, context, detail, length)
+- Program does its main job of scoring instead of resetting
+
+**Why this check matters:**
+- Without it: program tries to analyze empty string
+- Could cause weird results or crash when checking keywords in nothing
 
 ### Procedural Abstraction
 Parameter in My Procedure
@@ -213,9 +289,24 @@ function selectInterChallenge(subject)
 The Parameter: `subject` - tells the function which subject challenge to load (like "history", "math", "science", or "cs")
 
 
-How it manages complexity:
-This parameter lets one function handle all four subjects instead of writing four separate functions. When a user picks history, the program calls `selectInterChallenge('history')` and the function uses that parameter to grab the history challenge data with `interChallenges[subject]`. If they pick math, it calls `selectInterChallenge('math')` and gets the math data.
-Without this parameter, I'd need four functions: `selectHistoryChallenge()`, `selectMathChallenge()`, `selectScienceChallenge()`, and `selectCSChallenge()` - all doing the exact same thing but with different hard-coded data. The parameter reduces 4 functions into 1, making the code shorter and easier to maintain. Adding a fifth subject would just mean passing in a new subject name, not writing a whole new function.
+**How it manages complexity:**
+- **With parameter:** One function handles all four subjects
+  - User picks history → calls `selectInterChallenge('history')`
+  - Function uses parameter to grab history data with `interChallenges[subject]`
+  - User picks math → calls `selectInterChallenge('math')`
+  - Gets math data automatically
+
+- **Without parameter:** Would need four separate functions:
+  - `selectHistoryChallenge()`
+  - `selectMathChallenge()`
+  - `selectScienceChallenge()`
+  - `selectCSChallenge()`
+  - All doing the exact same thing with different hard-coded data
+
+- **Benefits:**
+  - Parameter reduces 4 functions into 1
+  - Much shorter and easier to maintain
+  - Adding a 5th subject: just pass in new name, no new function needed
 
 ### Procedure Calls & Testing
 The function we're using:
@@ -284,8 +375,13 @@ function selectHistoryType(type) {
     }
 }
 ```
-How this changes the output:
-If the user clicks "Compare Events", the function receives type = 'compare', but then immediately overwrites it with selectedHistoryType = 'cause'. Later when they try to generate their prompt, it uses the cause & effect template instead of the comparison template they wanted. The user thinks they're making a comparison prompt but gets a completely different format, confusing them about what they're supposed to fill in.
+**How this changes the output:**
+- User clicks "Compare Events"
+- Function receives `type = 'compare'`
+- Code immediately overwrites it: `selectedHistoryType = 'cause'`
+- When generating prompt: uses cause & effect template instead of comparison template
+- **Result:** User thinks they're making a comparison prompt but gets wrong format
+- **Problem:** User gets confused about what they're supposed to fill in
 
 
 ### List Utilization
@@ -300,11 +396,18 @@ hints: [
 ]
 ```
 
-Adding data: The three hint messages are stored in the array when I initialize it.
+**Adding data:**
+- Three hint messages stored in array during initialization
 
-Accessing elements: When the user clicks "Get Hint", the code uses `hints[hintsUsed]` to grab the specific hint. If `hintsUsed = 0`, it gets `hints[0]` which is "Which war? What specific aspect?". If `hintsUsed = 1`, it gets `hints[1]` which is "What's your purpose and academic level?".
+**Accessing elements:**
+- When user clicks "Get Hint": code uses `hints[hintsUsed]` to grab specific hint
+- If `hintsUsed = 0`: gets `hints[0]` = "Which war? What specific aspect?"
+- If `hintsUsed = 1`: gets `hints[1]` = "What's your purpose and academic level?"
 
-This list manages complexity because I don't need separate variables like `hint1`, `hint2`, `hint3` and multiple if-statements. The list automatically keeps track of how many hints exist, and I can access any hint using just the index number.
+**Complexity management:**
+- No need for separate variables (`hint1`, `hint2`, `hint3`) and multiple if-statements
+- List automatically keeps track of how many hints exist
+- Access any hint using just the index number
 
 ### Algorithm Analysis
 Algorithm Within Iteration Statement
@@ -317,19 +420,27 @@ Object.keys(currentMadLibTemplate.fields).forEach(fieldKey => {
     inputsContainer.innerHTML += fieldHTML;
 });
 ```
-What the loop does:
-The history Mad Libs template has 5 fields: EVENT, ASPECT, DETAILS, FORMAT, and REQUIREMENT. The loop goes through each one and creates the input boxes the student sees on the screen.
+**What the loop does:**
+- History Mad Libs template has 5 fields: EVENT, ASPECT, DETAILS, FORMAT, REQUIREMENT
+- Loop goes through each one and creates input boxes for the student
 
-Step-by-step what happens:
-- Loop starts at field 1 (EVENT)
-- Creates a label "Historical Event/Topic"
-- Creates an input box where student can type
-- Creates example buttons like "American Revolution", "World War II"
-- Puts all that on the page
-- Loop moves to field 2 (ASPECT)
-- Creates label "Focus Aspect"
-- Creates input box and example buttons
-- Puts that on the page
-- Repeats for fields 3, 4, and 5
+**Step-by-step process:**
+- **Field 1 (EVENT):**
+  - Creates label "Historical Event/Topic"
+  - Creates input box for typing
+  - Creates example buttons ("American Revolution", "World War II")
+  - Displays on page
+- **Field 2 (ASPECT):**
+  - Creates label "Focus Aspect"
+  - Creates input box and example buttons
+  - Displays on page
+- **Fields 3, 4, 5:** Repeats same process
 
-Why use a loop? Without the loop, I'd have to manually write the code to create the EVENT input box, then manually write code for the ASPECT input box, then DETAILS, then FORMAT, then REQUIREMENT - all separately. The loop does it automatically for however many fields exist. If I add a 6th field later, the loop handles it without me changing any code.
+**Why use a loop?**
+- **Without loop:** Would manually write separate code for each field
+  - Create EVENT input box code
+  - Create ASPECT input box code
+  - Create DETAILS, FORMAT, REQUIREMENT codes separately
+  - Very repetitive!
+- **With loop:** Automatically handles any number of fields
+- **Scalability:** Adding a 6th field later? Loop handles it without changing any code
