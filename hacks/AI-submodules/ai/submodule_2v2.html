@@ -3303,19 +3303,19 @@ date: 2025-10-30
         const modal = document.createElement('div');
         modal.id = 'student-prompts-modal';
         modal.dataset.promptType = type;
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; border-radius: 8px;';
-        
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 10000; border-radius: 8px; padding: 18px;';
+
         const titleMap = { all: 'Past Student Prompts', bad: 'Past Student Bad Prompts', good: 'Past Student Good Prompts' };
         const displayTitle = titleMap[type] || titleMap.all;
 
         modal.innerHTML = `
-            <div style="background: #1e1e1e; border: 2px solid #8b5cf6; border-radius: 12px; padding: 20px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="color: #a78bfa; font-size: 18px; font-weight: bold; margin: 0;">${displayTitle}</h3>
-                    <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #a78bfa; font-size: 24px; cursor: pointer;">&times;</button>
+            <div style="background: #2b2d31; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 96%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap:12px;">
+                    <h3 style="color: #f3e8ff; font-size: 18px; font-weight: 700; margin: 0;">${displayTitle}</h3>
+                    <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #f3e8ff; font-size: 26px; cursor: pointer;">&times;</button>
                 </div>
                 <div id="prompts-list" style="display: flex; flex-direction: column; gap: 12px;">
-                    <p style="color: #999; text-align: center;">Loading prompts...</p>
+                    <p style="color: #c9c9c9; text-align: center;">Loading prompts...</p>
                 </div>
             </div>
         `;
@@ -3373,6 +3373,32 @@ date: 2025-10-30
                 }
             }
 
+            // Ensure we show up to 3 examples. If fewer than 3 were fetched, augment with sample prompts of the same type.
+            const goodSamples = [
+                { text: "Explain photosynthesis step-by-step using simple language and include a real-world example.", type: 'Good' },
+                { text: "Solve this quadratic equation step-by-step: 2x² + 5x - 3 = 0. Explain each step clearly.", type: 'Good' },
+                { text: "Write a function in Python that checks if a number is prime. Include comments and test cases.", type: 'Good' }
+            ];
+            const badSamples = [
+                { text: "write about history", type: 'Bad' },
+                { text: "explain something", type: 'Bad' },
+                { text: "help me", type: 'Bad' }
+            ];
+
+            // If user requested only a single type, prefer samples of that type to fill to 3
+            if (unique.length < 3) {
+                const addFrom = (type === 'good') ? goodSamples : (type === 'bad') ? badSamples : goodSamples.concat(badSamples);
+                for (const s of addFrom) {
+                    if (unique.length >= 3) break;
+                    const t = (s.text || '').trim();
+                    if (!t) continue;
+                    if (!seen.has(t)) {
+                        seen.add(t);
+                        unique.push(s);
+                    }
+                }
+            }
+
             const topPrompts = unique.slice(0, 3);
 
             if (topPrompts.length === 0) {
@@ -3381,11 +3407,11 @@ date: 2025-10-30
             }
 
             promptsList.innerHTML = topPrompts.map((prompt, index) => `
-                <div style="background: #2a2a2a; border: 1px solid #8b5cf6; border-radius: 8px; padding: 12px;">
-                    <p style="color: #a78bfa; font-size: 12px; margin: 0 0 4px 0; font-weight: bold;">${prompt.type} Prompt · Student ${index + 1}</p>
-                    <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0 0 8px 0;">${escapeHtml(prompt.text)}</p>
-                    <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: #8b5cf6; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; transition: background 0.2s;">Test with AI</button>
-                </div>
+                    <div style="background: #323436; border: 1px solid rgba(167,139,250,0.18); border-radius: 8px; padding: 12px;">
+                        <p style="color: #e9def8; font-size: 12px; margin: 0 0 6px 0; font-weight: 700;">${prompt.type} Prompt · Student ${index + 1}</p>
+                        <p style="color: #e6e6e6; font-size: 13px; line-height: 1.5; margin: 0 0 10px 0;">${escapeHtml(prompt.text)}</p>
+                        <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: #6d28d9; color: white; border: none; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">Test with AI</button>
+                    </div>
             `).join('');
         } catch (error) {
             console.error('Error loading prompts:', error);
@@ -3410,21 +3436,21 @@ date: 2025-10-30
         
         const responseDisplay = document.createElement('div');
         responseDisplay.id = 'student-prompt-response-display';
-        responseDisplay.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10001; border-radius: 8px;';
-        
+        responseDisplay.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 10001; border-radius: 8px; padding: 18px;';
+
         responseDisplay.innerHTML = `
-            <div style="background: #1e1e1e; border: 2px solid #8b5cf6; border-radius: 12px; padding: 20px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="color: #a78bfa; font-size: 18px; font-weight: bold; margin: 0;">AI Response to Student Prompt</h3>
-                    <button onclick="document.getElementById('student-prompt-response-display').remove()" style="background: none; border: none; color: #a78bfa; font-size: 24px; cursor: pointer;">&times;</button>
+            <div style="background: #2b2d31; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 94%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap:12px;">
+                    <h3 style="color: #f3e8ff; font-size: 18px; font-weight: 700; margin: 0;">AI Response to Student Prompt</h3>
+                    <button onclick="document.getElementById('student-prompt-response-display').remove()" style="background: none; border: none; color: #f3e8ff; font-size: 26px; cursor: pointer;">&times;</button>
                 </div>
-                <div style="background: #2a2a2a; border: 1px solid #8b5cf6; border-radius: 8px; padding: 12px; margin-bottom: 15px;">
-                    <p style="color: #a78bfa; font-size: 12px; margin: 0 0 8px 0; font-weight: bold;">Student's Prompt:</p>
-                    <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0;">${escapeHtml(promptText)}</p>
+                <div style="background: #323436; border: 1px solid rgba(167,139,250,0.12); border-radius: 8px; padding: 14px; margin-bottom: 14px;">
+                    <p style="color: #e9def8; font-size: 12px; margin: 0 0 8px 0; font-weight: 700;">Student's Prompt:</p>
+                    <p style="color: #e6e6e6; font-size: 13px; line-height: 1.5; margin: 0;">${escapeHtml(promptText)}</p>
                 </div>
-                <div style="background: #2a2a2a; border: 1px solid #10b981; border-radius: 8px; padding: 12px;">
-                    <p style="color: #10b981; font-size: 12px; margin: 0 0 8px 0; font-weight: bold;">AI Response:</p>
-                    <p id="student-prompt-ai-response" style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0; white-space: pre-wrap;">Loading AI response...</p>
+                <div style="background: #323436; border: 1px solid rgba(16,185,129,0.12); border-radius: 8px; padding: 14px;">
+                    <p style="color: #10b981; font-size: 12px; margin: 0 0 8px 0; font-weight: 700;">AI Response:</p>
+                    <p id="student-prompt-ai-response" style="color: #e6e6e6; font-size: 13px; line-height: 1.5; margin: 0; white-space: pre-wrap;">Loading AI response...</p>
                 </div>
             </div>
         `;
