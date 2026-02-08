@@ -1980,6 +1980,10 @@ date: 2025-10-30
     }
 
     async function loadLeaderboard() {
+        // If the results-screen leaderboard container was removed, skip loading this leaderboard
+        const resultsLeaderboardEl = document.getElementById('leaderboardList');
+        if (!resultsLeaderboardEl) return;
+
         try {
             const response = await fetch(`${API_URL}/leaderboard`);
             const data = await response.json();
