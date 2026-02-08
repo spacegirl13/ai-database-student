@@ -388,6 +388,31 @@ date: 2025-10-30
         margin: 20px auto !important;
         display: block !important;
     }
+
+    /* Student prompts button (outline for visibility) */
+    .student-prompts-btn {
+        border: 2px solid white;
+        border-radius: 9999px;
+        padding: 6px;
+        background: white;
+        color: #6d28d9 !important;
+        cursor: pointer;
+        line-height: 1;
+        box-shadow: 0 4px 14px rgba(109,40,217,0.12);
+    }
+
+    .student-prompts-btn:hover {
+        transform: scale(1.06);
+    }
+
+    /* Make the prompt sections slightly lighter for contrast with the white button */
+    #bad-prompt-section {
+        background: rgba(220,38,38,0.08) !important;
+    }
+
+    #good-prompt-section {
+        background: rgba(16,185,129,0.06) !important;
+    }
 </style>
 
 <!-- Badge Display Box -->
@@ -1157,7 +1182,21 @@ date: 2025-10-30
                     <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-6 mb-6">
                         <p class="text-sm mb-4">Master the art of writing complete, effective prompts from the ground up!</p>
 
-                        <!-- Tips Section -->
+                        <!-- advanced-tips moved below prompt-type selector so it expands downward -->
+
+                        <!-- Good/Bad Prompt Type Selection -->
+                        <div class="mb-3 flex justify-between items-center gap-3">
+                            <div class="flex gap-2">
+                                <button id="prompt-type-bad-btn" onclick="selectPromptType('bad')" class="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 rounded text-white font-semibold">Bad Prompt</button>
+                                <button id="prompt-type-good-btn" onclick="selectPromptType('good')" class="px-3 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Good Prompt</button>
+                            </div>
+                            <h3 class="text-base font-bold flex-grow text-center">Write Prompts from Scratch</h3>
+                            <div class="flex gap-2">
+                                <button onclick="toggleAdvancedTips()" class="text-2xl font-bold text-red-500 hover:text-red-400 hover:scale-110 transition-transform" title="Show Tips">?</button>
+                            </div>
+                        </div>
+
+                        <!-- Tips moved here so it expands downward -->
                         <div id="advanced-tips" class="hidden mb-4 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
                             <h4 class="text-sm font-bold text-blue-300 mb-3">Prompt Writing Guidelines</h4>
                             
@@ -1200,20 +1239,9 @@ date: 2025-10-30
                             <p class="mt-3 text-xs text-blue-200">Key: Include specific goals, target audience, desired format, required details, and any constraints or preferences.</p>
                         </div>
 
-                        <!-- Good/Bad Prompt Type Selection -->
-                        <div class="mb-3 flex justify-between items-center gap-3">
-                            <div class="flex gap-2">
-                                <button id="prompt-type-bad-btn" onclick="selectPromptType('bad')" class="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 rounded text-white font-semibold">Bad Prompt</button>
-                                <button id="prompt-type-good-btn" onclick="selectPromptType('good')" class="px-3 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded text-white font-semibold">Good Prompt</button>
-                            </div>
-                            <h3 class="text-base font-bold flex-grow text-center">Write Prompts from Scratch</h3>
-                            <div class="flex gap-2">
-                                <button onclick="toggleAdvancedTips()" class="text-2xl font-bold text-red-500 hover:text-red-400 hover:scale-110 transition-transform" title="Show Tips">?</button>
-                            </div>
-                        </div>
-
                         <!-- Bad Prompt Section -->
-                        <div id="bad-prompt-section" class="bg-red-900/20 border border-red-500/30 rounded-lg p-4 mb-4">
+                        <div id="bad-prompt-section" class="relative bg-red-900/20 border border-red-500/30 rounded-lg p-4 mb-4">
+                            <button onclick="toggleStudentPromptsModal('bad')" class="student-prompts-btn absolute top-3 right-3 text-xl" title="View past student prompts">👥</button>
                             <h3 class="text-base font-bold text-red-300 mb-2">Bad Prompt</h3>
                             <p class="mb-2 text-xs text-gray-300">Write a vague, incomplete, or poorly structured prompt:</p>
                             <textarea id="bad-prompt" rows="2" placeholder="Example: 'write something about dogs'"
@@ -1233,7 +1261,8 @@ date: 2025-10-30
                         </div>
 
                         <!-- Good Prompt Section -->
-                        <div id="good-prompt-section" class="hidden bg-green-900/20 border border-green-500/30 rounded-lg p-4 mb-4">
+                        <div id="good-prompt-section" class="hidden relative bg-green-900/20 border border-green-500/30 rounded-lg p-4 mb-4">
+                            <button onclick="toggleStudentPromptsModal('good')" class="student-prompts-btn absolute top-3 right-3 text-xl" title="View past student prompts">👥</button>
                             <h3 class="text-base font-bold text-green-300 mb-2">Good Prompt</h3>
                             <p class="mb-2 text-xs text-gray-300">Write a clear, specific, and well-structured prompt:</p>
                             <textarea id="good-prompt" rows="2"
@@ -1252,7 +1281,7 @@ date: 2025-10-30
                                     <pre id="output-good"
                                         class="bg-slate-900/50 border border-green-500/20 p-2 rounded whitespace-pre-wrap text-gray-300 min-h-[80px] text-xs overflow-y-auto max-h-[150px]">(Click Generate to see response)</pre>
                                 </div>
-                                <button onclick="toggleStudentPromptsModal(getSelectedPromptType())" class="text-2xl hover:scale-125 transition-transform mt-6" title="View past student prompts">👥</button>
+                                <!-- student prompts button moved to top-right for better visibility -->
                             </div>
                         </div>
 
@@ -3284,19 +3313,19 @@ date: 2025-10-30
         const modal = document.createElement('div');
         modal.id = 'student-prompts-modal';
         modal.dataset.promptType = type;
-        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; border-radius: 8px;';
-        
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 10000; border-radius: 8px; padding: 18px;';
+
         const titleMap = { all: 'Past Student Prompts', bad: 'Past Student Bad Prompts', good: 'Past Student Good Prompts' };
         const displayTitle = titleMap[type] || titleMap.all;
 
         modal.innerHTML = `
-            <div style="background: #1e1e1e; border: 2px solid #8b5cf6; border-radius: 12px; padding: 20px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="color: #a78bfa; font-size: 18px; font-weight: bold; margin: 0;">${displayTitle}</h3>
-                    <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #a78bfa; font-size: 24px; cursor: pointer;">&times;</button>
+            <div style="background: #2b2d31; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 96%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap:12px;">
+                    <h3 style="color: #f3e8ff; font-size: 18px; font-weight: 700; margin: 0;">${displayTitle}</h3>
+                    <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #f3e8ff; font-size: 26px; cursor: pointer;">&times;</button>
                 </div>
                 <div id="prompts-list" style="display: flex; flex-direction: column; gap: 12px;">
-                    <p style="color: #999; text-align: center;">Loading prompts...</p>
+                    <p style="color: #c9c9c9; text-align: center;">Loading prompts...</p>
                 </div>
             </div>
         `;
@@ -3354,19 +3383,52 @@ date: 2025-10-30
                 }
             }
 
-            const topPrompts = unique.slice(0, 3);
+            // Build the desired list depending on requested type (good/bad/all)
+            let desired = [];
+            if (type === 'good') desired = unique.filter(x => (x.type || '').toLowerCase() === 'good');
+            else if (type === 'bad') desired = unique.filter(x => (x.type || '').toLowerCase() === 'bad');
+            else desired = unique;
+
+            // Sample fallbacks
+            const goodSamples = [
+                { text: "Explain photosynthesis step-by-step using simple language and include a real-world example.", type: 'Good' },
+                { text: "Solve this quadratic equation step-by-step: 2x² + 5x - 3 = 0. Explain each step clearly.", type: 'Good' },
+                { text: "Write a function in Python that checks if a number is prime. Include comments and test cases.", type: 'Good' }
+            ];
+            const badSamples = [
+                { text: "write about history", type: 'Bad' },
+                { text: "explain something", type: 'Bad' },
+                { text: "help me", type: 'Bad' }
+            ];
+
+            // Fill to 3 items using samples of the requested type
+            if (desired.length < 3) {
+                const filler = (type === 'good') ? goodSamples : (type === 'bad') ? badSamples : goodSamples.concat(badSamples);
+                for (const s of filler) {
+                    if (desired.length >= 3) break;
+                    const t = (s.text || '').trim();
+                    if (!t) continue;
+                    if (!desired.find(d => (d.text || '').trim() === t)) {
+                        desired.push(s);
+                    }
+                }
+            }
+
+            // Ensure we present exactly up to 3 prompts
+            const topPrompts = desired.slice(0, 3);
 
             if (topPrompts.length === 0) {
                 promptsList.innerHTML = '<p style="color: #999; text-align: center;">No student prompts yet</p>';
                 return;
             }
 
+            // Render 3 prompt cards (guaranteed up to 3)
             promptsList.innerHTML = topPrompts.map((prompt, index) => `
-                <div style="background: #2a2a2a; border: 1px solid #8b5cf6; border-radius: 8px; padding: 12px;">
-                    <p style="color: #a78bfa; font-size: 12px; margin: 0 0 4px 0; font-weight: bold;">${prompt.type} Prompt · Student ${index + 1}</p>
-                    <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0 0 8px 0;">${escapeHtml(prompt.text)}</p>
-                    <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: #8b5cf6; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; transition: background 0.2s;">Test with AI</button>
-                </div>
+                    <div style="background: linear-gradient(135deg, rgba(109,40,217,0.08), rgba(139,92,246,0.05)); border: 1.5px solid rgba(167,139,250,0.25); border-radius: 10px; padding: 14px; transition: all 0.2s;">
+                        <p style="color: #e9def8; font-size: 11px; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${prompt.type} Prompt · Example ${index + 1}</p>
+                        <p style="color: #e6e6e6; font-size: 13px; line-height: 1.6; margin: 0 0 12px 0;">${escapeHtml(prompt.text)}</p>
+                        <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: linear-gradient(135deg, #6d28d9, #7c3aed); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(109,40,217,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(109,40,217,0.35)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 8px rgba(109,40,217,0.2)';">Test with AI</button>
+                    </div>
             `).join('');
         } catch (error) {
             console.error('Error loading prompts:', error);
@@ -3391,21 +3453,21 @@ date: 2025-10-30
         
         const responseDisplay = document.createElement('div');
         responseDisplay.id = 'student-prompt-response-display';
-        responseDisplay.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10001; border-radius: 8px;';
-        
+        responseDisplay.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 10001; border-radius: 8px; padding: 18px;';
+
         responseDisplay.innerHTML = `
-            <div style="background: #1e1e1e; border: 2px solid #8b5cf6; border-radius: 12px; padding: 20px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="color: #a78bfa; font-size: 18px; font-weight: bold; margin: 0;">AI Response to Student Prompt</h3>
-                    <button onclick="document.getElementById('student-prompt-response-display').remove()" style="background: none; border: none; color: #a78bfa; font-size: 24px; cursor: pointer;">&times;</button>
+            <div style="background: #2b2d31; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 94%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap:12px;">
+                    <h3 style="color: #f3e8ff; font-size: 18px; font-weight: 700; margin: 0;">AI Response to Student Prompt</h3>
+                    <button onclick="document.getElementById('student-prompt-response-display').remove()" style="background: none; border: none; color: #f3e8ff; font-size: 26px; cursor: pointer;">&times;</button>
                 </div>
-                <div style="background: #2a2a2a; border: 1px solid #8b5cf6; border-radius: 8px; padding: 12px; margin-bottom: 15px;">
-                    <p style="color: #a78bfa; font-size: 12px; margin: 0 0 8px 0; font-weight: bold;">Student's Prompt:</p>
-                    <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0;">${escapeHtml(promptText)}</p>
+                <div style="background: #323436; border: 1px solid rgba(167,139,250,0.12); border-radius: 8px; padding: 14px; margin-bottom: 14px;">
+                    <p style="color: #e9def8; font-size: 12px; margin: 0 0 8px 0; font-weight: 700;">Student's Prompt:</p>
+                    <p style="color: #e6e6e6; font-size: 13px; line-height: 1.5; margin: 0;">${escapeHtml(promptText)}</p>
                 </div>
-                <div style="background: #2a2a2a; border: 1px solid #10b981; border-radius: 8px; padding: 12px;">
-                    <p style="color: #10b981; font-size: 12px; margin: 0 0 8px 0; font-weight: bold;">AI Response:</p>
-                    <p id="student-prompt-ai-response" style="color: #ccc; font-size: 13px; line-height: 1.5; margin: 0; white-space: pre-wrap;">Loading AI response...</p>
+                <div style="background: #323436; border: 1px solid rgba(16,185,129,0.12); border-radius: 8px; padding: 14px;">
+                    <p style="color: #10b981; font-size: 12px; margin: 0 0 8px 0; font-weight: 700;">AI Response:</p>
+                    <p id="student-prompt-ai-response" style="color: #e6e6e6; font-size: 13px; line-height: 1.5; margin: 0; white-space: pre-wrap;">Loading AI response...</p>
                 </div>
             </div>
         `;
