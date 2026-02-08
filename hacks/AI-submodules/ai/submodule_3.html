@@ -1059,12 +1059,12 @@ date: 2025-10-30
 
         <!-- LOGGED IN - Show game start -->
         <div id="gameStart" class="start-screen" style="display: none;">
-            <h2 id="welcomeMessage">Time to test your Responsible AI skills! 🚀</h2>
+            <h2 id="welcomeMessage">Time to test your Responsible AI skills!</h2>
             <p><strong>How to Play:</strong></p>
-            <p>📝 You'll face 10 scenarios across different subjects</p>
-            <p>⏱️ You have 30 seconds to choose the best AI prompt for each scenario</p>
-            <p>🎯 Get points for correct answers - faster answers = more points!</p>
-            <p>🏆 Compete for the top spot on the leaderboard!</p>
+            <p>You'll face 10 scenarios across different subjects</p>
+            <p>You have 30 seconds to choose the best AI prompt for each scenario</p>
+            <p>Get points for correct answers - faster answers = more points!</p>
+            <p>Compete for the top spot on the leaderboard!</p>
 
             <div class="btn-group">
                 <button class="btn" onclick="startGame()">Start Challenge</button>
@@ -1429,7 +1429,7 @@ date: 2025-10-30
                 // Update welcome message with their display name
                 const welcomeMessage = document.getElementById('welcomeMessage');
                 if (welcomeMessage) {
-                    welcomeMessage.innerHTML = `Time to test your Responsible AI skills, <span style="color: #fbbf24;">${authenticatedDisplayName}</span>! 🚀`;
+                    welcomeMessage.innerHTML = `Time to test your Responsible AI skills, <span style="color: #fbbf24;">${authenticatedDisplayName}</span>!`;
                     console.log('Welcome message updated successfully');
                 } else {
                     console.error('welcomeMessage element not found!');
