@@ -3424,10 +3424,10 @@ date: 2025-10-30
 
             // Render 3 prompt cards (guaranteed up to 3)
             promptsList.innerHTML = topPrompts.map((prompt, index) => `
-                    <div style="background: #4d4d4f; border: 1px solid rgba(109,40,217,0.18); border-radius: 8px; padding: 12px;">
-                        <p style="color: #000000; font-size: 12px; margin: 0 0 6px 0; font-weight: 700;">${prompt.type} Prompt · Example ${index + 1}</p>
-                        <p style="color: #000000; font-size: 13px; line-height: 1.5; margin: 0 0 10px 0;">${escapeHtml(prompt.text)}</p>
-                        <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: #6d28d9; color: white; border: none; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">Test with AI</button>
+                    <div style="background: linear-gradient(135deg, rgba(109,40,217,0.08), rgba(139,92,246,0.05)); border: 1.5px solid rgba(167,139,250,0.25); border-radius: 10px; padding: 14px; transition: all 0.2s;">
+                        <p style="color: #e9def8; font-size: 11px; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${prompt.type} Prompt · Example ${index + 1}</p>
+                        <p style="color: #e6e6e6; font-size: 13px; line-height: 1.6; margin: 0 0 12px 0;">${escapeHtml(prompt.text)}</p>
+                        <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: linear-gradient(135deg, #6d28d9, #7c3aed); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(109,40,217,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(109,40,217,0.35)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 8px rgba(109,40,217,0.2)';">Test with AI</button>
                     </div>
             `).join('');
         } catch (error) {
