@@ -3424,9 +3424,9 @@ date: 2025-10-30
 
             // Render 3 prompt cards (guaranteed up to 3)
             promptsList.innerHTML = topPrompts.map((prompt, index) => `
-                    <div style="background: #f6f7f9; border: 1px solid rgba(109,40,217,0.12); border-radius: 8px; padding: 12px;">
-                        <p style="color: #1f2937; font-size: 12px; margin: 0 0 6px 0; font-weight: 700;">${prompt.type} Prompt · Example ${index + 1}</p>
-                        <p style="color: #111827; font-size: 13px; line-height: 1.5; margin: 0 0 10px 0;">${escapeHtml(prompt.text)}</p>
+                    <div style="background: #4d4d4f; border: 1px solid rgba(109,40,217,0.18); border-radius: 8px; padding: 12px;">
+                        <p style="color: #000000; font-size: 12px; margin: 0 0 6px 0; font-weight: 700;">${prompt.type} Prompt · Example ${index + 1}</p>
+                        <p style="color: #000000; font-size: 13px; line-height: 1.5; margin: 0 0 10px 0;">${escapeHtml(prompt.text)}</p>
                         <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: #6d28d9; color: white; border: none; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;">Test with AI</button>
                     </div>
             `).join('');
