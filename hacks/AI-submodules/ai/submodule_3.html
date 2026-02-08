@@ -1518,7 +1518,7 @@ date: 2025-10-30
 
         showScreen('resultsScreen');
         document.getElementById('finalScore').textContent = '-';
-        document.getElementById('finalPlayerName').textContent = playerName;
+        document.getElementById('finalPlayerName').textContent = authenticatedDisplayName || playerName;
         document.getElementById('correctCount').textContent = '-';
         document.getElementById('mathScore').textContent = '-';
         document.getElementById('scienceScore').textContent = '-';
