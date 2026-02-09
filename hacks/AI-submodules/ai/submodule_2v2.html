@@ -426,6 +426,24 @@ date: 2025-10-30
     #good-prompt-section {
         background: rgba(16,185,129,0.06) !important;
     }
+    /* History section: match other sections' blueish card and use black text for readability */
+    #section-4 {
+        background: rgba(30,58,138,0.12) !important; /* subtle blue wash */
+        color: #000 !important;
+        border-radius: 0.5rem !important;
+    }
+
+    /* Force inner text colors to black for better contrast inside the History box */
+    #section-4 * {
+        color: #000 !important;
+    }
+
+    /* Keep interactive buttons' backgrounds but ensure their labels are readable */
+    #section-4 button,
+    #section-4 .history-type-btn,
+    #section-4 .nav-btn {
+        color: #000 !important;
+    }
 </style>
 
 <!-- Badge Display Box -->
