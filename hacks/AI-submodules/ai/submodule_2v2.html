@@ -428,11 +428,22 @@ date: 2025-10-30
     }
     /* History section: blue background like CS section with white text */
     #section-4 {
-        background: rgba(30,58,138,0.4) !important; /* blue wash similar to CS */
+        background: rgba(30,58,138,0.7) !important; /* stronger blue like CS */
     }
 
     #section-4 * {
         color: #fff !important; /* white text */
+    }
+    
+    #section-4 .bg-slate-800\/70,
+    #section-4 .bg-slate-700,
+    #section-4 .bg-slate-800,
+    #section-4 .bg-blue-900\/20,
+    #section-4 .bg-green-900\/30,
+    #section-4 .bg-red-900\/30,
+    #section-4 .bg-green-900\/30,
+    #section-4 .bg-gradient-to-r {
+        background: rgba(30,58,138,0.6) !important; /* keep inner sections blue-toned */
     }
 
     /* Beginner section: blue background like CS */
