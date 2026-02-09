@@ -3383,7 +3383,7 @@ date: 2025-10-30
         const displayTitle = titleMap[type] || titleMap.all;
 
         modal.innerHTML = `
-            <div style="background: #2b2d31; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 96%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+            <div style="background: #7a7d85; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 96%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap:12px;">
                     <h3 style="color: #f3e8ff; font-size: 18px; font-weight: 700; margin: 0;">${displayTitle}</h3>
                     <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #f3e8ff; font-size: 26px; cursor: pointer;">&times;</button>
@@ -3520,7 +3520,7 @@ date: 2025-10-30
         responseDisplay.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 10001; border-radius: 8px; padding: 18px;';
 
         responseDisplay.innerHTML = `
-            <div style="background: #2b2d31; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 94%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+            <div style="background: #7a7d85; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 94%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap:12px;">
                     <h3 style="color: #f3e8ff; font-size: 18px; font-weight: 700; margin: 0;">AI Response to Student Prompt</h3>
                     <button onclick="document.getElementById('student-prompt-response-display').remove()" style="background: none; border: none; color: #f3e8ff; font-size: 26px; cursor: pointer;">&times;</button>
