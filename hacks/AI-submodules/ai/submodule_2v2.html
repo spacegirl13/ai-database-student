@@ -426,23 +426,45 @@ date: 2025-10-30
     #good-prompt-section {
         background: rgba(16,185,129,0.06) !important;
     }
-    /* History section: match other sections' blueish card and use black text for readability */
+    /* History section: blue background like CS section with white text */
     #section-4 {
-        background: rgba(30,58,138,0.12) !important; /* subtle blue wash */
-        color: #000 !important;
-        border-radius: 0.5rem !important;
+        background: rgba(30,58,138,0.4) !important; /* blue wash similar to CS */
     }
 
-    /* Force inner text colors to black for better contrast inside the History box */
     #section-4 * {
-        color: #000 !important;
+        color: #fff !important; /* white text */
     }
 
-    /* Keep interactive buttons' backgrounds but ensure their labels are readable */
-    #section-4 button,
-    #section-4 .history-type-btn,
-    #section-4 .nav-btn {
-        color: #000 !important;
+    /* Beginner section: blue background like CS */
+    #beginner-level .bg-green-900\/20 {
+        background: rgba(30,58,138,0.4) !important; /* blue like CS */
+    }
+
+    #beginner-level .bg-slate-800\/50 {
+        background: rgba(30,58,138,0.4) !important; /* blue instead of dark grey */
+    }
+
+    /* Baby blue buttons in beginner section */
+    #beginner-level button:not(.ml-auto) {
+        background: rgba(96,165,250,0.6) !important; /* baby blue */
+        color: #fff !important;
+    }
+
+    #beginner-level button:hover {
+        background: rgba(96,165,250,0.8) !important; /* slightly darker on hover */
+    }
+
+    /* Quality Score white text */
+    #quality-score {
+        color: #fff !important;
+    }
+
+    /* Advanced section: light grey for AI response boxes instead of dark grey */
+    #advanced-level #output-bad,
+    #advanced-level #output-good,
+    #advanced-level .bg-slate-900\/50 {
+        background: rgba(209,213,219,0.3) !important; /* light grey */
+        color: #1f2937 !important; /* dark text on light background */
     }
 </style>
 
