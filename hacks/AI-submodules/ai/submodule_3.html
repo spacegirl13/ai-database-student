@@ -712,7 +712,7 @@ date: 2025-10-30
 
     .name-cell {
         font-weight: 500;
-        color: #ffffff;
+        color: #1f2937;
         font-size: 11px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1576,49 +1576,58 @@ date: 2025-10-30
 
                 const data = await response.json();
                 console.log('Leaderboard data received:', data);
+                console.log('data.success:', data.success);
+                console.log('data.leaderboard:', data.leaderboard);
+                console.log('data.leaderboard is array:', Array.isArray(data.leaderboard));
+                console.log('data.leaderboard length:', data.leaderboard ? data.leaderboard.length : 'N/A');
                 
                 if (data.success && data.leaderboard) {
                     console.log('Number of entries:', data.leaderboard.length);
 
-                const tbody = document.getElementById('persistentLeaderboardBody');
-                if (!tbody) {
-                    console.error('persistentLeaderboardBody not found!');
-                    return;
-                }
-
-                tbody.innerHTML = '';
-
-                for (let i = 0; i < 10; i++) {
-                    const entry = data.leaderboard[i];
-                    const tr = document.createElement('tr');
-
-                    let rankHtml = '';
-                    if (i === 0) {
-                        rankHtml = `<td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>`;
-                    } else if (i === 1) {
-                        rankHtml = `<td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>`;
-                    } else if (i === 2) {
-                        rankHtml = `<td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>`;
-                    } else {
-                        rankHtml = `<td class="rank-cell">${i + 1}</td>`;
+                    const tbody = document.getElementById('persistentLeaderboardBody');
+                    if (!tbody) {
+                        console.error('persistentLeaderboardBody not found!');
+                        return;
                     }
 
-                    if (entry) {
-                        tr.innerHTML = `
-                            ${rankHtml}
-                            <td class="name-cell">${entry.playerName || '-'}</td>
-                            <td class="score-cell">${entry.score || '-'}</td>
-                        `;
-                    } else {
-                        tr.innerHTML = `
-                            ${rankHtml}
-                            <td class="name-cell">-</td>
-                            <td class="score-cell">-</td>
-                        `;
+                    console.log('Clearing tbody and populating with', data.leaderboard.length, 'entries');
+                    tbody.innerHTML = '';
+
+                    for (let i = 0; i < 10; i++) {
+                        const entry = data.leaderboard[i];
+                        const tr = document.createElement('tr');
+
+                        let rankHtml = '';
+                        if (i === 0) {
+                            rankHtml = `<td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>`;
+                        } else if (i === 1) {
+                            rankHtml = `<td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>`;
+                        } else if (i === 2) {
+                            rankHtml = `<td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>`;
+                        } else {
+                            rankHtml = `<td class="rank-cell">${i + 1}</td>`;
+                        }
+
+                        if (entry) {
+                            console.log(`Row ${i}: entry=`, entry);
+                            tr.innerHTML = `
+                                ${rankHtml}
+                                <td class="name-cell">${entry.playerName || '-'}</td>
+                                <td class="score-cell">${entry.score || '-'}</td>
+                            `;
+                        } else {
+                            tr.innerHTML = `
+                                ${rankHtml}
+                                <td class="name-cell">-</td>
+                                <td class="score-cell">-</td>
+                            `;
+                        }
+                        tbody.appendChild(tr);
                     }
-                    tbody.appendChild(tr);
+                    console.log('Leaderboard populated successfully');
+                } else {
+                    console.warn('Data success or leaderboard array missing:', {success: data.success, hasLeaderboard: !!data.leaderboard});
                 }
-            }
         } catch (error) {
             console.error('Error updating leaderboard:', error);
         }
