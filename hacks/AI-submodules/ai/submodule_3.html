@@ -1035,83 +1035,9 @@ date: 2025-10-30
             </tbody>
         </table>
     </div>
-</div>
-
-<div class="container">
-    <div class="game-header">
-        <h1>🎮 AI Prompt Challenge</h1>
-        <p>Test your prompt engineering skills across Math, Science, History, and Computer Science!</p>
-    </div>
-
-<div id="startScreen" class="game-screen active">
-        <!-- NOT LOGGED IN - Show login required message -->
-        <div id="loginRequired" class="start-screen">
-            <h2>🔐 Login Required</h2>
-            <p style="font-size: 1.3em; margin: 30px 0;">You need to be logged in to access this module.</p>
-            <p>Please go back and login to continue.</p>
-            
-            <div class="btn-group" style="margin-top: 40px;">
-                <a href="../" class="btn" style="text-decoration: none; display: inline-block;">
-                    ← Back to Login
-                </a>
-            </div>
+        <div style="padding: 10px; text-align: center; border-top: 1px solid #e9ecef;">
+            <button id="seedLeaderboardBtn" style="padding: 5px 10px; font-size: 11px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">Seed Data</button>
         </div>
-
-        <!-- LOGGED IN - Show game start -->
-        <div id="gameStart" class="start-screen" style="display: none;">
-            <h2 id="welcomeMessage">Time to test your Responsible AI skills!</h2>
-            <p><strong>How to Play:</strong></p>
-            <p>You'll face 10 scenarios across different subjects</p>
-            <p>You have 30 seconds to choose the best AI prompt for each scenario</p>
-            <p>Get points for correct answers - faster answers = more points!</p>
-            <p>Compete for the top spot on the leaderboard!</p>
-
-            <div class="btn-group">
-                <button class="btn" onclick="startGame()">Start Challenge</button>
-                <button class="btn" onclick="skipToCompletion()" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
-                    Skip to Complete Module
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="gameScreen" class="game-screen">
-        <div class="game-stats">
-            <div class="stat-item">
-                <div class="stat-label">Score</div>
-                <div class="stat-value" id="currentScore">0</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">Question</div>
-                <div class="stat-value"><span id="currentQuestion">1</span>/10</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">Time</div>
-                <div class="stat-value" id="timer">30</div>
-            </div>
-        </div>
-
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressBar" style="width: 10%"></div>
-        </div>
-
-        <div class="question-card">
-            <span class="subject-badge" id="subjectBadge">Math</span>
-            <div class="scenario" id="scenario">Loading...</div>
-            <div class="prompt-options" id="promptOptions"></div>
-            <div class="feedback" id="feedback"></div>
-        </div>
-
-        <div style="text-align: center;">
-            <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next Question →</button>
-        </div>
-    </div>
-
-    <div id="resultsScreen" class="game-screen">
-        <div class="results-screen">
-            <h2>🎉 Challenge Complete!</h2>
-            <div class="final-score" id="finalScore">0</div>
-            <p style="font-size: 1.2em; color: #555;">Great job, <span id="finalPlayerName"></span>!</p>
 
             <div class="score-breakdown">
                 <h3 style="color: #667eea; margin-bottom: 20px;">📊 Your Performance</h3>
@@ -1541,6 +1467,12 @@ date: 2025-10-30
 
         updatePersistentLeaderboard();
         setInterval(updatePersistentLeaderboard, 30000);
+
+        // Add seed button listener
+        const seedBtn = document.getElementById('seedLeaderboardBtn');
+        if (seedBtn) {
+            seedBtn.addEventListener('click', seedLeaderboard);
+        }
     });
 
     async function loadQuestionsFromBackend() {
@@ -1640,15 +1572,26 @@ date: 2025-10-30
                     tbody.appendChild(tr);
                 }
                 console.log('Leaderboard populated successfully');
+                // Hide the seed button if we have data
+                const seedBtn = document.getElementById('seedLeaderboardBtn');
+                if (seedBtn) seedBtn.style.display = 'none';
             } else {
                 console.warn('No valid leaderboard data. Showing placeholders.');
                 console.warn('data:', data);
                 displayPlaceholderRows(tbody);
+                // Show the seed button if no data
+                const seedBtn = document.getElementById('seedLeaderboardBtn');
+                if (seedBtn) {
+                    seedBtn.style.display = 'block';
+                    console.log('Showing seed button for empty leaderboard');
+                }
             }
         } catch (error) {
             console.error('Error updating leaderboard:', error);
             console.error('Error stack:', error.stack);
             displayPlaceholderRows(tbody);
+            const seedBtn = document.getElementById('seedLeaderboardBtn');
+            if (seedBtn) seedBtn.style.display = 'block';
         }
     }
 
@@ -1672,6 +1615,37 @@ date: 2025-10-30
                 <td class="score-cell">-</td>
             `;
             tbody.appendChild(tr);
+        }
+    }
+
+    async function seedLeaderboard() {
+        try {
+            console.log('Seeding leaderboard...');
+            const response = await fetch(`${API_URL}/leaderboard-seed`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+            console.log('Seed response:', data);
+
+            if (response.ok && data.success) {
+                console.log('Leaderboard seeded successfully!');
+                // Hide the button
+                const seedBtn = document.getElementById('seedLeaderboardBtn');
+                if (seedBtn) seedBtn.style.display = 'none';
+                // Refresh the leaderboard
+                await updatePersistentLeaderboard();
+            } else {
+                console.error('Seeding failed:', data);
+                alert('Failed to seed leaderboard: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error seeding leaderboard:', error);
+            alert('Error seeding leaderboard: ' + error.message);
         }
     }
 
