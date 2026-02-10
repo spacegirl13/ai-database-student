@@ -1564,72 +1564,114 @@ date: 2025-10-30
     }
 
     async function updatePersistentLeaderboard() {
-            try {
-                console.log('Fetching leaderboard from:', `${API_URL}/leaderboard`);
-                const response = await fetch(`${API_URL}/leaderboard`);
-                console.log('Response status:', response.status);
-                
-                if (!response.ok) {
-                    console.error('Response not OK:', response.status);
-                    return;
-                }
+        const tbody = document.getElementById('persistentLeaderboardBody');
+        if (!tbody) {
+            console.error('persistentLeaderboardBody element not found!');
+            return;
+        }
 
-                const data = await response.json();
-                console.log('Leaderboard data received:', data);
-                console.log('data.success:', data.success);
-                console.log('data.leaderboard:', data.leaderboard);
-                console.log('data.leaderboard is array:', Array.isArray(data.leaderboard));
-                console.log('data.leaderboard length:', data.leaderboard ? data.leaderboard.length : 'N/A');
-                
-                if (data.success && data.leaderboard) {
-                    console.log('Number of entries:', data.leaderboard.length);
+        try {
+            const endpoint = `${API_URL}/leaderboard`;
+            console.log('=== LEADERBOARD FETCH ===');
+            console.log('Fetching from:', endpoint);
+            
+            const response = await fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            });
+            
+            console.log('Response received - Status:', response.status, 'OK:', response.ok);
+            
+            if (!response.ok) {
+                console.error('Fetch failed - Response not OK:', response.status, response.statusText);
+                const errorText = await response.text();
+                console.error('Error response body:', errorText);
+                // Still show placeholder rows
+                displayPlaceholderRows(tbody);
+                return;
+            }
 
-                    const tbody = document.getElementById('persistentLeaderboardBody');
-                    if (!tbody) {
-                        console.error('persistentLeaderboardBody not found!');
-                        return;
+            const data = await response.json();
+            console.log('Parsed JSON response:', data);
+            console.log('data.success:', data.success);
+            console.log('data.leaderboard:', data.leaderboard);
+            console.log('leaderboard is array:', Array.isArray(data.leaderboard));
+            console.log('leaderboard length:', data.leaderboard ? data.leaderboard.length : 'null/undefined');
+            
+            let hasData = false;
+            
+            if (data && data.leaderboard && Array.isArray(data.leaderboard) && data.leaderboard.length > 0) {
+                console.log('Valid leaderboard data found. Populating', data.leaderboard.length, 'entries');
+                hasData = true;
+                tbody.innerHTML = '';
+
+                for (let i = 0; i < 10; i++) {
+                    const entry = data.leaderboard[i];
+                    const tr = document.createElement('tr');
+
+                    let rankHtml = '';
+                    if (i === 0) {
+                        rankHtml = `<td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>`;
+                    } else if (i === 1) {
+                        rankHtml = `<td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>`;
+                    } else if (i === 2) {
+                        rankHtml = `<td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>`;
+                    } else {
+                        rankHtml = `<td class="rank-cell">${i + 1}</td>`;
                     }
 
-                    console.log('Clearing tbody and populating with', data.leaderboard.length, 'entries');
-                    tbody.innerHTML = '';
-
-                    for (let i = 0; i < 10; i++) {
-                        const entry = data.leaderboard[i];
-                        const tr = document.createElement('tr');
-
-                        let rankHtml = '';
-                        if (i === 0) {
-                            rankHtml = `<td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>`;
-                        } else if (i === 1) {
-                            rankHtml = `<td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>`;
-                        } else if (i === 2) {
-                            rankHtml = `<td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>`;
-                        } else {
-                            rankHtml = `<td class="rank-cell">${i + 1}</td>`;
-                        }
-
-                        if (entry) {
-                            console.log(`Row ${i}: entry=`, entry);
-                            tr.innerHTML = `
-                                ${rankHtml}
-                                <td class="name-cell">${entry.playerName || '-'}</td>
-                                <td class="score-cell">${entry.score || '-'}</td>
-                            `;
-                        } else {
-                            tr.innerHTML = `
-                                ${rankHtml}
-                                <td class="name-cell">-</td>
-                                <td class="score-cell">-</td>
-                            `;
-                        }
-                        tbody.appendChild(tr);
+                    if (entry && entry.playerName && entry.score !== null && entry.score !== undefined) {
+                        console.log(`Row ${i + 1}: ${entry.playerName} - Score: ${entry.score}`);
+                        tr.innerHTML = `
+                            ${rankHtml}
+                            <td class="name-cell">${entry.playerName}</td>
+                            <td class="score-cell">${entry.score}</td>
+                        `;
+                    } else {
+                        tr.innerHTML = `
+                            ${rankHtml}
+                            <td class="name-cell">-</td>
+                            <td class="score-cell">-</td>
+                        `;
                     }
-                    console.log('Leaderboard populated successfully');
-                } else {
-                    console.warn('Data success or leaderboard array missing:', {success: data.success, hasLeaderboard: !!data.leaderboard});
+                    tbody.appendChild(tr);
                 }
+                console.log('Leaderboard populated successfully');
+            } else {
+                console.warn('No valid leaderboard data. Showing placeholders.');
+                console.warn('data:', data);
+                displayPlaceholderRows(tbody);
+            }
         } catch (error) {
             console.error('Error updating leaderboard:', error);
+            console.error('Error stack:', error.stack);
+            displayPlaceholderRows(tbody);
+        }
+    }
+
+    function displayPlaceholderRows(tbody) {
+        tbody.innerHTML = '';
+        for (let i = 1; i <= 10; i++) {
+            const tr = document.createElement('tr');
+            let rankHtml = '';
+            if (i === 1) {
+                rankHtml = `<td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>`;
+            } else if (i === 2) {
+                rankHtml = `<td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>`;
+            } else if (i === 3) {
+                rankHtml = `<td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>`;
+            } else {
+                rankHtml = `<td class="rank-cell">${i}</td>`;
+            }
+            tr.innerHTML = `
+                ${rankHtml}
+                <td class="name-cell">-</td>
+                <td class="score-cell">-</td>
+            `;
+            tbody.appendChild(tr);
         }
     }
 
