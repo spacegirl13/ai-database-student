@@ -3742,11 +3742,11 @@ date: 2025-10-30
         modal.innerHTML = `
             <div style="background: #5e6169; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 96%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap:12px;">
-                    <h3 style="color: #f3e8ff; font-size: 18px; font-weight: 700; margin: 0;">${displayTitle}</h3>
-                    <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #f3e8ff; font-size: 26px; cursor: pointer;">&times;</button>
+                    <h3 style="color: #ffffff; font-size: 18px; font-weight: 700; margin: 0;">${displayTitle}</h3>
+                    <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #ffffff; font-size: 26px; cursor: pointer;">&times;</button>
                 </div>
                 <div id="prompts-list" style="display: flex; flex-direction: column; gap: 12px;">
-                    <p style="color: #c9c9c9; text-align: center;">Loading prompts...</p>
+                    <p style="color: #ffffff; text-align: center;">Loading prompts...</p>
                 </div>
             </div>
         `;
@@ -3846,15 +3846,15 @@ date: 2025-10-30
             // Render 3 prompt cards (guaranteed up to 3)
             promptsList.innerHTML = topPrompts.map((prompt, index) => `
                     <div style="background: linear-gradient(135deg, rgba(126,58,237,0.3), rgba(147,51,234,0.2)); border: 1.5px solid rgba(167,139,250,0.5); border-radius: 10px; padding: 14px; transition: all 0.2s;">
-                        <p style="color: #e9def8; font-size: 11px; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${prompt.type} Prompt · Example ${index + 1}</p>
-                        <p style="color: #e6e6e6; font-size: 13px; line-height: 1.6; margin: 0 0 12px 0;">${escapeHtml(prompt.text)}</p>
+                        <p style="color: #ffffff; font-size: 11px; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${prompt.type} Prompt · Example ${index + 1}</p>
+                        <p style="color: #ffffff; font-size: 13px; line-height: 1.6; margin: 0 0 12px 0;">${escapeHtml(prompt.text)}</p>
                         <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: linear-gradient(135deg, #6d28d9, #7c3aed); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(109,40,217,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(109,40,217,0.35)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 8px rgba(109,40,217,0.2)';">Test with AI</button>
                     </div>
             `).join('');
         } catch (error) {
             console.error('Error loading prompts:', error);
             const el = document.getElementById('prompts-list');
-            if (el) el.innerHTML = '<p style="color: #ff6b6b;">Error loading prompts - showing sample data instead</p>';
+            if (el) el.innerHTML = '<p style="color: #ffffff;">Error loading prompts - showing sample data instead</p>';
         }
     }
 
