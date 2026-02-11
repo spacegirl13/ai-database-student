@@ -82,6 +82,12 @@ date: 2025-10-30
     a.button {
         font-weight: 700 !important;
     }
+
+    /* Navigation buttons white bold text */
+    .nav-btn span {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
     /* Badge Display Box - Upper Right Corner */
     #badgeDisplay {
         position: fixed !important;
@@ -407,32 +413,64 @@ date: 2025-10-30
         border: 2px solid white;
         border-radius: 9999px;
         padding: 6px;
-        background: white;
-        color: #6d28d9 !important;
+        background: #6366f1 !important; /* indigo blue instead of white */
+        color: #ffffff !important;
         cursor: pointer;
         line-height: 1;
-        box-shadow: 0 4px 14px rgba(109,40,217,0.12);
+        box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+        font-weight: 700 !important;
     }
 
     .student-prompts-btn:hover {
         transform: scale(1.06);
     }
 
-    /* Make the prompt sections slightly lighter for contrast with the white button */
+    /* Make the prompt sections light purple */
     #bad-prompt-section {
-        background: rgba(220,38,38,0.08) !important;
+        background: rgba(196, 181, 253, 0.15) !important; /* light purple */
     }
 
     #good-prompt-section {
-        background: rgba(16,185,129,0.06) !important;
+        background: rgba(196, 181, 253, 0.15) !important; /* light purple */
     }
-    /* History section: blue background like CS section with white text */
+
+    /* Select prompt type buttons lighter blue */
+    .history-type-btn,
+    #hist-cause-btn,
+    #hist-compare-btn,
+    #hist-analyze-btn,
+    #hist-timeline-btn {
+        background: #93c5fd !important; /* light blue */
+        color: #1f2937 !important;
+        border-color: #60a5fa !important;
+        font-weight: 700 !important;
+    }
+
+    .history-type-btn:hover,
+    #hist-cause-btn:hover,
+    #hist-compare-btn:hover,
+    #hist-analyze-btn:hover,
+    #hist-timeline-btn:hover {
+        background: #60a5fa !important; /* darker light blue */
+    }
+    /* History section: blue background with white text */
     #section-4 {
         background: rgba(30,58,138,0.7) !important; /* stronger blue like CS */
     }
 
     #section-4 * {
         color: #fff !important; /* white text */
+    }
+
+    #section-4 label,
+    #section-4 h2,
+    #section-4 h3,
+    #section-4 h4,
+    #section-4 p,
+    #section-4 span,
+    #section-4 div {
+        color: #ffffff !important;
+        font-weight: 600 !important;
     }
     
     #section-4 .bg-slate-800\/70,
@@ -446,7 +484,18 @@ date: 2025-10-30
         background: rgba(30,58,138,0.6) !important; /* keep inner sections blue-toned */
     }
 
-    /* Beginner section: blue background like CS */
+    /* History section examples in grey boxes - white text */
+    #section-4 .bg-slate-800\/50 p,
+    #section-4 .bg-slate-700 p {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Beginner section: blue background and white bold text */
+    #beginner-level {
+        color: #ffffff !important;
+    }
+
     #beginner-level .bg-green-900\/20 {
         background: rgba(30,58,138,0.4) !important; /* blue like CS */
     }
@@ -455,27 +504,82 @@ date: 2025-10-30
         background: rgba(30,58,138,0.4) !important; /* blue instead of dark grey */
     }
 
+    /* Beginner section text white and bold */
+    #beginner-level label,
+    #beginner-level h3,
+    #beginner-level h4,
+    #beginner-level p,
+    #beginner-level span {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
     /* Baby blue buttons in beginner section */
     #beginner-level button:not(.ml-auto) {
-        background: rgba(96,165,250,0.6) !important; /* baby blue */
+        background: #3b82f6 !important; /* bright blue */
         color: #fff !important;
+        font-weight: 700 !important;
     }
 
     #beginner-level button:hover {
-        background: rgba(96,165,250,0.8) !important; /* slightly darker on hover */
+        background: #2563eb !important; /* darker blue on hover */
     }
 
     /* Quality Score white text */
     #quality-score {
-        color: #fff !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
     }
 
-    /* Advanced section: light grey for AI response boxes instead of dark grey */
+    /* Intermediate section - white text for examples */
+    #intermediate-level .bg-red-900\/20 p,
+    #intermediate-level .bg-slate-800\/50 p,
+    #intermediate-level .text-gray-300,
+    #intermediate-level .text-gray-400 {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Advanced section: light purple for AI response boxes */
     #advanced-level #output-bad,
-    #advanced-level #output-good,
-    #advanced-level .bg-slate-900\/50 {
-        background: rgba(209,213,219,0.3) !important; /* light grey */
-        color: #1f2937 !important; /* dark text on light background */
+    #advanced-level #output-good {
+        background: #e9d5ff !important; /* light purple background */
+        color: #ffffff !important; /* white text */
+        font-weight: 600 !important;
+    }
+
+    /* Advanced section label text white and bold */
+    #bad-prompt-section label,
+    #good-prompt-section label,
+    #bad-prompt-section h3,
+    #good-prompt-section h3,
+    #bad-prompt-section p,
+    #good-prompt-section p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+
+    /* Advanced section background light purple */
+    #advanced-level {
+        background: rgba(196, 181, 253, 0.1) !important;
+    }
+
+    /* Ensure all text in intermediate section is white */
+    #intermediate-level h4,
+    #intermediate-level span,
+    #intermediate-level label,
+    #intermediate-level p,
+    #inter-ai-text {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Advanced section text styling for all elements */
+    #advanced-level h3,
+    #advanced-level h4,
+    #advanced-level p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
     }
 </style>
 
