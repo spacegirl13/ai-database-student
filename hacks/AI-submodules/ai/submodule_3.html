@@ -1137,7 +1137,12 @@ date: 2025-10-30
                 </div>
             </div>
 
-            <!-- Leaderboard removed from results screen per request; top-left persistent leaderboard remains unchanged -->
+            <div class="leaderboard">
+                <h3>🏆 Top Players</h3>
+                <div id="leaderboardList">
+                    <p style="text-align: center; color: #888;">Loading leaderboard...</p>
+                </div>
+            </div>
 
             <div class="btn-group">
                 <button class="btn" onclick="restartGame()">Play Again</button>
@@ -1389,7 +1394,6 @@ date: 2025-10-30
     let subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
     let allQuestions = [];
     let gameQuestions = [];
-    let correctAnswersCount = 0;
 
 // === AUTHENTICATION CHECK WITH DEBUG LOGGING ===
     let authenticatedDisplayName = null;
@@ -1500,7 +1504,6 @@ date: 2025-10-30
         score = 0;
         subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
         subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
-        correctAnswersCount = 0;
 
         showScreen('gameScreen');
         loadQuestion();
@@ -1518,7 +1521,7 @@ date: 2025-10-30
 
         showScreen('resultsScreen');
         document.getElementById('finalScore').textContent = '-';
-        document.getElementById('finalPlayerName').textContent = authenticatedDisplayName || playerName;
+        document.getElementById('finalPlayerName').textContent = playerName;
         document.getElementById('correctCount').textContent = '-';
         document.getElementById('mathScore').textContent = '-';
         document.getElementById('scienceScore').textContent = '-';
@@ -1750,8 +1753,6 @@ date: 2025-10-30
             const timeBonus = Math.floor(timeLeft / 3);
             pointsEarned = 100 + timeBonus;
             score += pointsEarned;
-            // track total correct answers
-            correctAnswersCount++;
         }
 
         if (question.subject) {
@@ -1887,9 +1888,7 @@ date: 2025-10-30
             pointsEarned = 100 + timeBonus;
             score += pointsEarned;
 
-            // track subject and overall correct answers
             subjectScores[question.subject]++;
-            correctAnswersCount++;
         }
         subjectCounts[question.subject]++;
 
@@ -1941,7 +1940,7 @@ date: 2025-10-30
         document.getElementById('finalScore').textContent = score;
         document.getElementById('finalPlayerName').textContent = playerName;
 
-        const correctCount = correctAnswersCount;
+        const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
         document.getElementById('correctCount').textContent = `${correctCount}/${gameQuestions.length}`;
         document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
         document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
@@ -1977,13 +1976,10 @@ date: 2025-10-30
             console.log('Error saving score:', error);
         }
 
+        loadLeaderboard();
     }
 
     async function loadLeaderboard() {
-        // If the results-screen leaderboard container was removed, skip loading this leaderboard
-        const resultsLeaderboardEl = document.getElementById('leaderboardList');
-        if (!resultsLeaderboardEl) return;
-
         try {
             const response = await fetch(`${API_URL}/leaderboard`);
             const data = await response.json();
