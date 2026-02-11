@@ -1043,18 +1043,28 @@ date: 2025-10-30
         <p>Test your prompt engineering skills across Math, Science, History, and Computer Science!</p>
     </div>
 
-    <div id="startScreen" class="game-screen active">
-        <div class="start-screen">
-            <h2>Welcome to the AI Prompt Challenge! 🚀</h2>
-            <p><strong>How to Play:</strong></p>
-            <p>📝 You'll face 10 scenarios across different subjects</p>
-            <p>⏱️ You have 30 seconds to choose the best AI prompt for each scenario</p>
-            <p>🎯 Get points for correct answers - faster answers = more points!</p>
-            <p>🏆 Compete for the top spot on the leaderboard!</p>
-
-            <div class="input-group">
-                <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
+<div id="startScreen" class="game-screen active">
+        <!-- NOT LOGGED IN - Show login required message -->
+        <div id="loginRequired" class="start-screen">
+            <h2>🔐 Login Required</h2>
+            <p style="font-size: 1.3em; margin: 30px 0;">You need to be logged in to access this module.</p>
+            <p>Please go back and login to continue.</p>
+            
+            <div class="btn-group" style="margin-top: 40px;">
+                <a href="../" class="btn" style="text-decoration: none; display: inline-block;">
+                    ← Back to Login
+                </a>
             </div>
+        </div>
+
+        <!-- LOGGED IN - Show game start -->
+        <div id="gameStart" class="start-screen" style="display: none;">
+            <h2 id="welcomeMessage">Time to test your Responsible AI skills!</h2>
+            <p><strong>How to Play:</strong></p>
+            <p>You'll face 10 scenarios across different subjects</p>
+            <p>You have 30 seconds to choose the best AI prompt for each scenario</p>
+            <p>Get points for correct answers - faster answers = more points!</p>
+            <p>Compete for the top spot on the leaderboard!</p>
 
             <div class="btn-group">
                 <button class="btn" onclick="startGame()">Start Challenge</button>
@@ -1246,18 +1256,12 @@ date: 2025-10-30
 </div>
 
 <script type="module">
-<script type="module">
     import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
     const API_URL = pythonURI + '/api/prompt-game';
     
-    // ADD THIS LINE HERE:
+    // Track which buttons currently have pending requests
     const _pendingRequests = new Set();
     
-    // === BADGE SYSTEM ===
-    let earnedBadges = [];
-
-    import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
-    const API_URL = pythonURI + '/api/prompt-game';
     // === BADGE SYSTEM ===
     let earnedBadges = [];
 
@@ -1271,7 +1275,6 @@ date: 2025-10-30
                 const data = await response.json();
                 if (data.success && data.badges) {
                     earnedBadges = data.badges;
-                    // Cache badges locally so other modules can display them if server is unavailable
                     try { localStorage.setItem('earnedBadges', JSON.stringify(earnedBadges)); } catch (e) {}
                     updateBadgeDisplay();
                     return;
@@ -1281,7 +1284,6 @@ date: 2025-10-30
             console.error('Error loading badges from server:', error);
         }
 
-        // Fallback to localStorage if server request fails
         try {
             const cached = JSON.parse(localStorage.getItem('earnedBadges') || '[]');
             if (cached && cached.length > 0) {
@@ -1317,7 +1319,7 @@ date: 2025-10-30
         notification.classList.add('show');
     }
 
-    function closeBadgeNotification() {
+    window.closeBadgeNotification = function() {
         document.getElementById('badgeNotification').classList.remove('show');
     }
 
@@ -1329,7 +1331,6 @@ date: 2025-10-30
                 earnedBadges.push(badge);
                 updateBadgeDisplay();
                 showBadgeNotification(badge);
-                // Persist updated badge list
                 try { localStorage.setItem('earnedBadges', JSON.stringify(earnedBadges)); } catch (e) {}
             }
         }
@@ -1344,10 +1345,8 @@ date: 2025-10-30
     }
 
     function checkAndShowAchievements() {
-        // Show Prodigy Problem Solver badge (always awarded when completing the game)
         showAchievementPopup('prodigyPopup');
 
-        // Check if player is on leaderboard (Super Smart Genius badge)
         setTimeout(() => {
             const leaderboardRows = document.querySelectorAll('#persistentLeaderboardBody tr');
             let isOnLeaderboard = false;
@@ -1366,13 +1365,11 @@ date: 2025-10-30
             }
         }, 100);
 
-        // Check if all three submodules are completed (Responsible AI Master badge)
-        // This can be determined by checking localStorage or backend data
         setTimeout(() => {
             try {
                 const submodule1Completed = localStorage.getItem('submodule1_completed') === 'true';
                 const submodule2Completed = localStorage.getItem('submodule2_completed') === 'true';
-                const submodule3Completed = true; // Current module
+                const submodule3Completed = true;
 
                 if (submodule1Completed && submodule2Completed && submodule3Completed) {
                     setTimeout(() => {
@@ -1385,7 +1382,7 @@ date: 2025-10-30
         }, 100);
     }
 
-    // === END BADGE SYSTEM ===
+    // === GAME VARIABLES ===
     let playerName = '';
     let currentQuestionIndex = 0;
     let score = 0;
@@ -1395,9 +1392,159 @@ date: 2025-10-30
     let questionStartTime = 0;
     let subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
     let subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
-
     let allQuestions = [];
     let gameQuestions = [];
+
+// === AUTHENTICATION CHECK WITH DEBUG LOGGING ===
+    let authenticatedDisplayName = null;
+    
+    async function checkAuthenticationAndSetup() {
+        console.log('=== AUTHENTICATION CHECK START ===');
+        console.log('API URL:', `${pythonURI}/api/id`);
+        
+        try {
+            const response = await fetch(`${pythonURI}/api/id`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
+
+            if (response.ok) {
+                // User is logged in
+                const userData = await response.json();
+                console.log('User data received:', userData);
+                
+                authenticatedDisplayName = userData.name || userData.uid || 'Player';
+                console.log('Display name set to:', authenticatedDisplayName);
+                
+                // Set playerName to their display name
+                playerName = authenticatedDisplayName;
+                console.log('playerName variable set to:', playerName);
+                
+                // Update welcome message with their display name
+                const welcomeMessage = document.getElementById('welcomeMessage');
+                if (welcomeMessage) {
+                    welcomeMessage.innerHTML = `Time to test your Responsible AI skills, <span style="color: #fbbf24;">${authenticatedDisplayName}</span>!`;
+                    console.log('Welcome message updated successfully');
+                } else {
+                    console.error('welcomeMessage element not found!');
+                }
+                
+                // Show the game start screen
+                const loginRequired = document.getElementById('loginRequired');
+                const gameStart = document.getElementById('gameStart');
+                
+                if (loginRequired && gameStart) {
+                    loginRequired.style.display = 'none';
+                    gameStart.style.display = 'block';
+                    console.log('Switched to game start screen');
+                } else {
+                    console.error('loginRequired or gameStart element not found!');
+                }
+                
+                console.log('=== USER IS AUTHENTICATED ===');
+                
+            } else {
+                // User is NOT logged in - show login required message
+                console.log('User NOT authenticated - response not OK');
+                const loginRequired = document.getElementById('loginRequired');
+                const gameStart = document.getElementById('gameStart');
+                
+                if (loginRequired && gameStart) {
+                    loginRequired.style.display = 'block';
+                    gameStart.style.display = 'none';
+                    console.log('Showing login required screen');
+                } else {
+                    console.error('loginRequired or gameStart element not found!');
+                }
+                
+                console.log('=== USER NOT AUTHENTICATED ===');
+            }
+        } catch (error) {
+            console.error('=== AUTHENTICATION ERROR ===');
+            console.error('Error details:', error);
+            
+            // On error, show login required
+            const loginRequired = document.getElementById('loginRequired');
+            const gameStart = document.getElementById('gameStart');
+            
+            if (loginRequired && gameStart) {
+                loginRequired.style.display = 'block';
+                gameStart.style.display = 'none';
+            }
+        }
+    }
+
+    // Modified startGame function - uses authenticated display name
+    window.startGame = async function() {
+        console.log('startGame called');
+        console.log('playerName:', playerName);
+        console.log('authenticatedDisplayName:', authenticatedDisplayName);
+        
+        // PlayerName is already set from authentication
+        if (!playerName || !authenticatedDisplayName) {
+            alert('Authentication error. Please refresh and try again.');
+            return;
+        }
+
+        if (allQuestions.length === 0) {
+            const loaded = await loadQuestionsFromBackend();
+            if (!loaded) {
+                return;
+            }
+        }
+
+        gameQuestions = shuffleArray(allQuestions);
+        currentQuestionIndex = 0;
+        score = 0;
+        subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
+        subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
+
+        showScreen('gameScreen');
+        loadQuestion();
+    }
+
+    // Modified skipToCompletion - uses authenticated display name
+    window.skipToCompletion = function() {
+        console.log('skipToCompletion called');
+        console.log('playerName:', playerName);
+        
+        if (!playerName || !authenticatedDisplayName) {
+            alert('Authentication error. Please refresh and try again.');
+            return;
+        }
+
+        showScreen('resultsScreen');
+        document.getElementById('finalScore').textContent = '-';
+        document.getElementById('finalPlayerName').textContent = playerName;
+        document.getElementById('correctCount').textContent = '-';
+        document.getElementById('mathScore').textContent = '-';
+        document.getElementById('scienceScore').textContent = '-';
+        document.getElementById('historyScore').textContent = '-';
+        document.getElementById('csScore').textContent = '-';
+
+        document.querySelector('.leaderboard').style.display = 'none';
+
+        updatePersistentLeaderboard();
+    }
+
+    // === INITIALIZATION ===
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('=== DOM CONTENT LOADED ===');
+        
+        // Check authentication FIRST
+        checkAuthenticationAndSetup();
+        
+        loadUserBadges();
+
+        updatePersistentLeaderboard();
+        setInterval(updatePersistentLeaderboard, 30000);
+    });
 
     async function loadQuestionsFromBackend() {
         try {
@@ -1420,13 +1567,28 @@ date: 2025-10-30
     }
 
     async function updatePersistentLeaderboard() {
-        try {
-            const response = await fetch(`${API_URL}/leaderboard`);
-            if (!response.ok) return;
+            try {
+                console.log('Fetching leaderboard from:', `${API_URL}/leaderboard`);
+                const response = await fetch(`${API_URL}/leaderboard`);
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    console.error('Response not OK:', response.status);
+                    return;
+                }
 
-            const data = await response.json();
-            if (data.success && data.leaderboard) {
+                const data = await response.json();
+                console.log('Leaderboard data received:', data);
+                
+                if (data.success && data.leaderboard) {
+                    console.log('Number of entries:', data.leaderboard.length);
+
                 const tbody = document.getElementById('persistentLeaderboardBody');
+                if (!tbody) {
+                    console.error('persistentLeaderboardBody not found!');
+                    return;
+                }
+
                 tbody.innerHTML = '';
 
                 for (let i = 0; i < 10; i++) {
@@ -1465,6 +1627,7 @@ date: 2025-10-30
         }
     }
 
+    // === DRAG AND DROP ===
     let draggedElement = null;
     let currentDragItems = [];
 
@@ -1568,7 +1731,7 @@ date: 2025-10-30
         return false;
     }
 
-    function checkDragDropAnswer() {
+    window.checkDragDropAnswer = function() {
         clearInterval(timerInterval);
 
         const dropZone = document.getElementById('dropZone');
@@ -1633,29 +1796,6 @@ date: 2025-10-30
         return newArray;
     }
 
-    async function startGame() {
-        playerName = document.getElementById('playerName').value.trim();
-        if (!playerName) {
-            alert('Please enter your name!');
-            return;
-        }
-
-        if (allQuestions.length === 0) {
-            const loaded = await loadQuestionsFromBackend();
-            if (!loaded) {
-                return;
-            }
-        }
-
-        gameQuestions = shuffleArray(allQuestions);
-        currentQuestionIndex = 0;
-        score = 0;
-        subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
-        subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
-
-        showScreen('gameScreen');
-        loadQuestion();
-    }
 
     function loadQuestion() {
         const question = gameQuestions[currentQuestionIndex];
@@ -1722,7 +1862,7 @@ date: 2025-10-30
         }, 1000);
     }
 
-    function selectAnswer(optionIndex) {
+    window.selectAnswer = function(optionIndex) {
         if (selectedAnswer !== null) return;
 
         selectedAnswer = optionIndex;
@@ -1784,7 +1924,7 @@ date: 2025-10-30
         document.getElementById('nextBtn').style.display = 'inline-block';
     }
 
-    function nextQuestion() {
+    window.nextQuestion = function() {
         currentQuestionIndex++;
 
         if (currentQuestionIndex >= gameQuestions.length) {
@@ -1795,65 +1935,48 @@ date: 2025-10-30
     }
 
     async function endGame() {
-    showScreen('resultsScreen');
+        showScreen('resultsScreen');
 
-    document.getElementById('finalScore').textContent = score;
-    document.getElementById('finalPlayerName').textContent = playerName;
+        document.getElementById('finalScore').textContent = score;
+        document.getElementById('finalPlayerName').textContent = playerName;
 
-    const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
-    document.getElementById('correctCount').textContent = `${correctCount}/${gameQuestions.length}`;
-    document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
-    document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
-    document.getElementById('historyScore').textContent = `${subjectScores.history}/${subjectCounts.history}`;
-    document.getElementById('csScore').textContent = `${subjectScores.cs}/${subjectCounts.cs}`;
+        const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
+        document.getElementById('correctCount').textContent = `${correctCount}/${gameQuestions.length}`;
+        document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
+        document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
+        document.getElementById('historyScore').textContent = `${subjectScores.history}/${subjectCounts.history}`;
+        document.getElementById('csScore').textContent = `${subjectScores.cs}/${subjectCounts.cs}`;
 
-    try {
-        const response = await fetch(`${API_URL}/scores`, {
-            method: 'POST',
-            credentials: 'include',  // Important for badge award
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                playerName: playerName,
-                score: score,
-                correctAnswers: correctCount,
-                subjectScores: subjectScores,
-                timestamp: new Date().toISOString()
-            })
-        });
+        try {
+            const response = await fetch(`${API_URL}/scores`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    playerName: playerName,
+                    score: score,
+                    correctAnswers: correctCount,
+                    subjectScores: subjectScores,
+                    timestamp: new Date().toISOString()
+                })
+            });
 
-        const result = await response.json();
-        handleBadgeAward(result);
+            const result = await response.json();
+            handleBadgeAward(result);
 
-        await updatePersistentLeaderboard();
-        
-        // Show achievement popups after leaderboard is updated
-        setTimeout(() => {
-            checkAndShowAchievements();
-        }, 500);
+            await updatePersistentLeaderboard();
+            
+            setTimeout(() => {
+                checkAndShowAchievements();
+            }, 500);
 
-    } catch (error) {
-        console.log('Error saving score:', error);
-    }
-
-    loadLeaderboard();
-}
-
-    async function saveScore(scoreData) {
-        const response = await fetch(`${API_URL}/scores`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(scoreData)
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to save score');
+        } catch (error) {
+            console.log('Error saving score:', error);
         }
 
-        return await response.json();
+        loadLeaderboard();
     }
 
     async function loadLeaderboard() {
@@ -1891,31 +2014,11 @@ date: 2025-10-30
         }
     }
 
-    function restartGame() {
+    window.restartGame = function() {
         showScreen('startScreen');
         document.getElementById('playerName').value = playerName;
     }
 
-    function skipToCompletion() {
-        playerName = document.getElementById('playerName').value.trim();
-        if (!playerName) {
-            alert('Please enter your name first!');
-            return;
-        }
-
-        showScreen('resultsScreen');
-        document.getElementById('finalScore').textContent = '-';
-        document.getElementById('finalPlayerName').textContent = playerName;
-        document.getElementById('correctCount').textContent = '-';
-        document.getElementById('mathScore').textContent = '-';
-        document.getElementById('scienceScore').textContent = '-';
-        document.getElementById('historyScore').textContent = '-';
-        document.getElementById('csScore').textContent = '-';
-
-        document.querySelector('.leaderboard').style.display = 'none';
-
-        updatePersistentLeaderboard();
-    }
 
     function showScreen(screenId) {
         document.querySelectorAll('.game-screen').forEach(screen => {
@@ -1924,21 +2027,7 @@ date: 2025-10-30
         document.getElementById(screenId).classList.add('active');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('playerName').focus();
-        loadUserBadges();
-
-        document.getElementById('playerName').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                startGame();
-            }
-        });
-
-        updatePersistentLeaderboard();
-
-        setInterval(updatePersistentLeaderboard, 30000);
-    });
-
+    // === FEEDBACK MODAL ===
     let selectedRating = 0;
     let selectedCategory = '';
 
@@ -1969,7 +2058,7 @@ date: 2025-10-30
         });
     });
 
-    async function submitFeedback() {
+    window.submitFeedback = async function() {
         if (!selectedRating) return alert("Please select a rating");
         if (!selectedCategory) return alert("Select a category");
 
@@ -2003,7 +2092,7 @@ date: 2025-10-30
         document.getElementById("successMessage").classList.remove("hidden");
     }
 
-    function closeModal() {
+    window.closeModal = function() {
         const modal = document.getElementById("feedbackModal");
         if (modal) {
             modal.classList.remove("modal-show");
@@ -2021,7 +2110,7 @@ date: 2025-10-30
         }
     }
 
-    async function showFeedbackModal() {
+    window.showFeedbackModal = async function() {
         const modal = document.getElementById("feedbackModal");
 
         if (!modal) {
@@ -2071,7 +2160,7 @@ date: 2025-10-30
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function showCheckForUnderstanding() {
+    window.showCheckForUnderstanding = function() {
         completeSubmodule3();
         const feedbackModal = document.getElementById("feedbackModal");
         if (feedbackModal) {
@@ -2111,7 +2200,8 @@ date: 2025-10-30
             console.error('Error completing submodule:', error);
         }
     }
-    // Guard against concurrent loads
+
+    // === CHECK FOR UNDERSTANDING MODAL ===
     let _loadingConceptsModal = false;
 
     function loadConceptsDataForModal() {
@@ -2148,11 +2238,9 @@ date: 2025-10-30
                         gotItBtn.type = 'button';
                         gotItBtn.textContent = String(Number(row.haha) || 0);
                         gotItBtn.dataset.count = String(Number(row.haha) || 0);
+                        gotItBtn.dataset.conceptId = row.id;
+                        gotItBtn.dataset.reactionType = 'haha';
                         gotItBtn.disabled = false;
-                        gotItBtn.disabled = false;
-                        gotItBtn.dataset.conceptId = row.id;          // ADD THIS
-                        gotItBtn.dataset.reactionType = 'haha';       // ADD THIS
-                        gotItBtn.addEventListener('click', function () {
                         gotItBtn.addEventListener('click', function () {
                             conceptReactionModal('haha', pythonURI + '/api/jokes/like/' + row.id, gotItBtn.id);
                         });
@@ -2164,11 +2252,9 @@ date: 2025-10-30
                         needHelpBtn.type = 'button';
                         needHelpBtn.textContent = String(Number(row.boohoo) || 0);
                         needHelpBtn.dataset.count = String(Number(row.boohoo) || 0);
+                        needHelpBtn.dataset.conceptId = row.id;
+                        needHelpBtn.dataset.reactionType = 'boohoo';
                         needHelpBtn.disabled = false;
-                        needHelpBtn.disabled = false;
-                        needHelpBtn.dataset.conceptId = row.id;       // ADD THIS
-                        needHelpBtn.dataset.reactionType = 'boohoo';  // ADD THIS
-                        needHelpBtn.addEventListener('click', function () {
                         needHelpBtn.addEventListener('click', function () {
                             conceptReactionModal('boohoo', pythonURI + '/api/jokes/jeer/' + row.id, needHelpBtn.id);
                         });
@@ -2197,13 +2283,11 @@ date: 2025-10-30
                 .then(data => {
                     for (const row of data) {
                         const gotItBtn = document.getElementById('haha' + row.id + "_modal");
-                        // FIXED: Check both disabled state AND pending requests
                         if (gotItBtn && !gotItBtn.disabled && !_pendingRequests.has(gotItBtn.id)) {
                             gotItBtn.textContent = String(Number(row.haha) || 0);
                             gotItBtn.dataset.count = String(Number(row.haha) || 0);
                         }
                         const needHelpBtn = document.getElementById('boohoo' + row.id + "_modal");
-                        // FIXED: Check both disabled state AND pending requests
                         if (needHelpBtn && !needHelpBtn.disabled && !_pendingRequests.has(needHelpBtn.id)) {
                             needHelpBtn.textContent = String(Number(row.boohoo) || 0);
                             needHelpBtn.dataset.count = String(Number(row.boohoo) || 0);
@@ -2215,7 +2299,7 @@ date: 2025-10-30
                 });
         }
     }
-    // Manage refresh interval only while the modal is open to avoid race updates
+
     let _checkRefreshIntervalId = null;
 
     function startRefreshInterval() {
@@ -2227,7 +2311,6 @@ date: 2025-10-30
         if (!_checkRefreshIntervalId) return;
         clearInterval(_checkRefreshIntervalId);
         _checkRefreshIntervalId = null;
-        // FIXED: Clear pending requests when closing modal
         _pendingRequests.clear();
     }
 
@@ -2235,21 +2318,17 @@ date: 2025-10-30
         const el = document.getElementById(elemID);
         if (!el) return;
         
-        // FIXED: Prevent double-clicks and concurrent requests on same button
         if (el.disabled || _pendingRequests.has(elemID)) {
             console.log('Request already in progress for', elemID);
             return;
         }
         
-        // Mark as pending and disable
         _pendingRequests.add(elemID);
         el.disabled = true;
 
-        // Store the current count before optimistic update
         const currentCount = Number(el.dataset.count) || 0;
         const optimisticCount = currentCount + 1;
         
-        // Optimistic update
         el.textContent = String(optimisticCount);
         el.dataset.count = String(optimisticCount);
 
@@ -2268,7 +2347,6 @@ date: 2025-10-30
             .then(data => {
                 console.log('API response:', data);
                 
-                // FIXED: Always sync with server value to ensure consistency
                 let serverCount = null;
                 if (type === 'haha' && typeof data.haha === 'number') {
                     serverCount = data.haha;
@@ -2281,7 +2359,6 @@ date: 2025-10-30
                     el.dataset.count = String(serverCount);
                 }
                 
-                // FIXED: Re-enable button and remove from pending AFTER successful update
                 el.disabled = false;
                 _pendingRequests.delete(elemID);
             })
@@ -2289,11 +2366,9 @@ date: 2025-10-30
                 console.error('Reaction error:', err);
                 conceptsErrorModal(err + " " + postURL);
                 
-                // FIXED: Revert to actual last known count on error
                 el.textContent = String(currentCount);
                 el.dataset.count = String(currentCount);
                 
-                // Re-enable button and remove from pending
                 el.disabled = false;
                 _pendingRequests.delete(elemID);
             });
@@ -2301,6 +2376,9 @@ date: 2025-10-30
 
     function conceptsErrorModal(err) {
         console.error(err);
+        const container = document.getElementById("conceptsResultModal");
+        if (!container) return;
+        
         const tr = document.createElement("tr");
         const td = document.createElement("td");
         td.colSpan = 3;
@@ -2309,18 +2387,6 @@ date: 2025-10-30
         td.style.color = "#ef4444";
         td.innerHTML = err;
         tr.appendChild(td);
-        conceptsResultContainerModal.appendChild(tr);
-    }
-
-    window.selectAnswer = selectAnswer;
-    window.checkAnswer = checkAnswer;
-    window.nextQuestion = nextQuestion;
-    window.startGame = startGame;
-    window.skipToCompletion = skipToCompletion;
-    window.restartGame = restartGame;
-    window.showFeedbackModal = showFeedbackModal;
-    window.submitFeedback = submitFeedback;
-    window.closeModal = closeModal;
-    window.showCheckForUnderstanding = showCheckForUnderstanding;
-    window.checkDragDropAnswer = checkDragDropAnswer;
+        container.appendChild(tr);
+    } 
 </script>
