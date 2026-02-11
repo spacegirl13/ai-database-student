@@ -712,7 +712,7 @@ date: 2025-10-30
 
     .name-cell {
         font-weight: 500;
-        color: #1f2937;
+        color: #ffffff;
         font-size: 11px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -1035,9 +1035,83 @@ date: 2025-10-30
             </tbody>
         </table>
     </div>
-        <div style="padding: 10px; text-align: center; border-top: 1px solid #e9ecef;">
-            <button id="seedLeaderboardBtn" style="padding: 5px 10px; font-size: 11px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">Seed Data</button>
+</div>
+
+<div class="container">
+    <div class="game-header">
+        <h1>🎮 AI Prompt Challenge</h1>
+        <p>Test your prompt engineering skills across Math, Science, History, and Computer Science!</p>
+    </div>
+
+<div id="startScreen" class="game-screen active">
+        <!-- NOT LOGGED IN - Show login required message -->
+        <div id="loginRequired" class="start-screen">
+            <h2>🔐 Login Required</h2>
+            <p style="font-size: 1.3em; margin: 30px 0;">You need to be logged in to access this module.</p>
+            <p>Please go back and login to continue.</p>
+            
+            <div class="btn-group" style="margin-top: 40px;">
+                <a href="../" class="btn" style="text-decoration: none; display: inline-block;">
+                    ← Back to Login
+                </a>
+            </div>
         </div>
+
+        <!-- LOGGED IN - Show game start -->
+        <div id="gameStart" class="start-screen" style="display: none;">
+            <h2 id="welcomeMessage">Time to test your Responsible AI skills!</h2>
+            <p><strong>How to Play:</strong></p>
+            <p>You'll face 10 scenarios across different subjects</p>
+            <p>You have 30 seconds to choose the best AI prompt for each scenario</p>
+            <p>Get points for correct answers - faster answers = more points!</p>
+            <p>Compete for the top spot on the leaderboard!</p>
+
+            <div class="btn-group">
+                <button class="btn" onclick="startGame()">Start Challenge</button>
+                <button class="btn" onclick="skipToCompletion()" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+                    Skip to Complete Module
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameScreen" class="game-screen">
+        <div class="game-stats">
+            <div class="stat-item">
+                <div class="stat-label">Score</div>
+                <div class="stat-value" id="currentScore">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Question</div>
+                <div class="stat-value"><span id="currentQuestion">1</span>/10</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Time</div>
+                <div class="stat-value" id="timer">30</div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 10%"></div>
+        </div>
+
+        <div class="question-card">
+            <span class="subject-badge" id="subjectBadge">Math</span>
+            <div class="scenario" id="scenario">Loading...</div>
+            <div class="prompt-options" id="promptOptions"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next Question →</button>
+        </div>
+    </div>
+
+    <div id="resultsScreen" class="game-screen">
+        <div class="results-screen">
+            <h2>🎉 Challenge Complete!</h2>
+            <div class="final-score" id="finalScore">0</div>
+            <p style="font-size: 1.2em; color: #555;">Great job, <span id="finalPlayerName"></span>!</p>
 
             <div class="score-breakdown">
                 <h3 style="color: #667eea; margin-bottom: 20px;">📊 Your Performance</h3>
@@ -1063,7 +1137,12 @@ date: 2025-10-30
                 </div>
             </div>
 
-            <!-- Leaderboard removed from results screen per request; top-left persistent leaderboard remains unchanged -->
+            <div class="leaderboard">
+                <h3>🏆 Top Players</h3>
+                <div id="leaderboardList">
+                    <p style="text-align: center; color: #888;">Loading leaderboard...</p>
+                </div>
+            </div>
 
             <div class="btn-group">
                 <button class="btn" onclick="restartGame()">Play Again</button>
@@ -1315,7 +1394,6 @@ date: 2025-10-30
     let subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
     let allQuestions = [];
     let gameQuestions = [];
-    let correctAnswersCount = 0;
 
 // === AUTHENTICATION CHECK WITH DEBUG LOGGING ===
     let authenticatedDisplayName = null;
@@ -1426,7 +1504,6 @@ date: 2025-10-30
         score = 0;
         subjectScores = { math: 0, science: 0, history: 0, cs: 0 };
         subjectCounts = { math: 0, science: 0, history: 0, cs: 0 };
-        correctAnswersCount = 0;
 
         showScreen('gameScreen');
         loadQuestion();
@@ -1444,7 +1521,7 @@ date: 2025-10-30
 
         showScreen('resultsScreen');
         document.getElementById('finalScore').textContent = '-';
-        document.getElementById('finalPlayerName').textContent = authenticatedDisplayName || playerName;
+        document.getElementById('finalPlayerName').textContent = playerName;
         document.getElementById('correctCount').textContent = '-';
         document.getElementById('mathScore').textContent = '-';
         document.getElementById('scienceScore').textContent = '-';
@@ -1467,12 +1544,6 @@ date: 2025-10-30
 
         updatePersistentLeaderboard();
         setInterval(updatePersistentLeaderboard, 30000);
-
-        // Add seed button listener
-        const seedBtn = document.getElementById('seedLeaderboardBtn');
-        if (seedBtn) {
-            seedBtn.addEventListener('click', seedLeaderboard);
-        }
     });
 
     async function loadQuestionsFromBackend() {
@@ -1496,48 +1567,28 @@ date: 2025-10-30
     }
 
     async function updatePersistentLeaderboard() {
-        const tbody = document.getElementById('persistentLeaderboardBody');
-        if (!tbody) {
-            console.error('persistentLeaderboardBody element not found!');
-            return;
-        }
+            try {
+                console.log('Fetching leaderboard from:', `${API_URL}/leaderboard`);
+                const response = await fetch(`${API_URL}/leaderboard`);
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    console.error('Response not OK:', response.status);
+                    return;
+                }
 
-        try {
-            const endpoint = `${API_URL}/leaderboard`;
-            console.log('=== LEADERBOARD FETCH ===');
-            console.log('Fetching from:', endpoint);
-            
-            const response = await fetch(endpoint, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include'
-            });
-            
-            console.log('Response received - Status:', response.status, 'OK:', response.ok);
-            
-            if (!response.ok) {
-                console.error('Fetch failed - Response not OK:', response.status, response.statusText);
-                const errorText = await response.text();
-                console.error('Error response body:', errorText);
-                // Still show placeholder rows
-                displayPlaceholderRows(tbody);
-                return;
-            }
+                const data = await response.json();
+                console.log('Leaderboard data received:', data);
+                
+                if (data.success && data.leaderboard) {
+                    console.log('Number of entries:', data.leaderboard.length);
 
-            const data = await response.json();
-            console.log('Parsed JSON response:', data);
-            console.log('data.success:', data.success);
-            console.log('data.leaderboard:', data.leaderboard);
-            console.log('leaderboard is array:', Array.isArray(data.leaderboard));
-            console.log('leaderboard length:', data.leaderboard ? data.leaderboard.length : 'null/undefined');
-            
-            let hasData = false;
-            
-            if (data && data.leaderboard && Array.isArray(data.leaderboard) && data.leaderboard.length > 0) {
-                console.log('Valid leaderboard data found. Populating', data.leaderboard.length, 'entries');
-                hasData = true;
+                const tbody = document.getElementById('persistentLeaderboardBody');
+                if (!tbody) {
+                    console.error('persistentLeaderboardBody not found!');
+                    return;
+                }
+
                 tbody.innerHTML = '';
 
                 for (let i = 0; i < 10; i++) {
@@ -1555,12 +1606,11 @@ date: 2025-10-30
                         rankHtml = `<td class="rank-cell">${i + 1}</td>`;
                     }
 
-                    if (entry && entry.playerName && entry.score !== null && entry.score !== undefined) {
-                        console.log(`Row ${i + 1}: ${entry.playerName} - Score: ${entry.score}`);
+                    if (entry) {
                         tr.innerHTML = `
                             ${rankHtml}
-                            <td class="name-cell">${entry.playerName}</td>
-                            <td class="score-cell">${entry.score}</td>
+                            <td class="name-cell">${entry.playerName || '-'}</td>
+                            <td class="score-cell">${entry.score || '-'}</td>
                         `;
                     } else {
                         tr.innerHTML = `
@@ -1571,81 +1621,9 @@ date: 2025-10-30
                     }
                     tbody.appendChild(tr);
                 }
-                console.log('Leaderboard populated successfully');
-                // Hide the seed button if we have data
-                const seedBtn = document.getElementById('seedLeaderboardBtn');
-                if (seedBtn) seedBtn.style.display = 'none';
-            } else {
-                console.warn('No valid leaderboard data. Showing placeholders.');
-                console.warn('data:', data);
-                displayPlaceholderRows(tbody);
-                // Show the seed button if no data
-                const seedBtn = document.getElementById('seedLeaderboardBtn');
-                if (seedBtn) {
-                    seedBtn.style.display = 'block';
-                    console.log('Showing seed button for empty leaderboard');
-                }
             }
         } catch (error) {
             console.error('Error updating leaderboard:', error);
-            console.error('Error stack:', error.stack);
-            displayPlaceholderRows(tbody);
-            const seedBtn = document.getElementById('seedLeaderboardBtn');
-            if (seedBtn) seedBtn.style.display = 'block';
-        }
-    }
-
-    function displayPlaceholderRows(tbody) {
-        tbody.innerHTML = '';
-        for (let i = 1; i <= 10; i++) {
-            const tr = document.createElement('tr');
-            let rankHtml = '';
-            if (i === 1) {
-                rankHtml = `<td class="rank-cell rank-1"><span class="medal">🥇</span> 1</td>`;
-            } else if (i === 2) {
-                rankHtml = `<td class="rank-cell rank-2"><span class="medal">🥈</span> 2</td>`;
-            } else if (i === 3) {
-                rankHtml = `<td class="rank-cell rank-3"><span class="medal">🥉</span> 3</td>`;
-            } else {
-                rankHtml = `<td class="rank-cell">${i}</td>`;
-            }
-            tr.innerHTML = `
-                ${rankHtml}
-                <td class="name-cell">-</td>
-                <td class="score-cell">-</td>
-            `;
-            tbody.appendChild(tr);
-        }
-    }
-
-    async function seedLeaderboard() {
-        try {
-            console.log('Seeding leaderboard...');
-            const response = await fetch(`${API_URL}/leaderboard-seed`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include'
-            });
-
-            const data = await response.json();
-            console.log('Seed response:', data);
-
-            if (response.ok && data.success) {
-                console.log('Leaderboard seeded successfully!');
-                // Hide the button
-                const seedBtn = document.getElementById('seedLeaderboardBtn');
-                if (seedBtn) seedBtn.style.display = 'none';
-                // Refresh the leaderboard
-                await updatePersistentLeaderboard();
-            } else {
-                console.error('Seeding failed:', data);
-                alert('Failed to seed leaderboard: ' + (data.error || 'Unknown error'));
-            }
-        } catch (error) {
-            console.error('Error seeding leaderboard:', error);
-            alert('Error seeding leaderboard: ' + error.message);
         }
     }
 
@@ -1775,8 +1753,6 @@ date: 2025-10-30
             const timeBonus = Math.floor(timeLeft / 3);
             pointsEarned = 100 + timeBonus;
             score += pointsEarned;
-            // track total correct answers
-            correctAnswersCount++;
         }
 
         if (question.subject) {
@@ -1912,9 +1888,7 @@ date: 2025-10-30
             pointsEarned = 100 + timeBonus;
             score += pointsEarned;
 
-            // track subject and overall correct answers
             subjectScores[question.subject]++;
-            correctAnswersCount++;
         }
         subjectCounts[question.subject]++;
 
@@ -1966,7 +1940,7 @@ date: 2025-10-30
         document.getElementById('finalScore').textContent = score;
         document.getElementById('finalPlayerName').textContent = playerName;
 
-        const correctCount = correctAnswersCount;
+        const correctCount = subjectScores.math + subjectScores.science + subjectScores.history + subjectScores.cs;
         document.getElementById('correctCount').textContent = `${correctCount}/${gameQuestions.length}`;
         document.getElementById('mathScore').textContent = `${subjectScores.math}/${subjectCounts.math}`;
         document.getElementById('scienceScore').textContent = `${subjectScores.science}/${subjectCounts.science}`;
@@ -2002,13 +1976,10 @@ date: 2025-10-30
             console.log('Error saving score:', error);
         }
 
+        loadLeaderboard();
     }
 
     async function loadLeaderboard() {
-        // If the results-screen leaderboard container was removed, skip loading this leaderboard
-        const resultsLeaderboardEl = document.getElementById('leaderboardList');
-        if (!resultsLeaderboardEl) return;
-
         try {
             const response = await fetch(`${API_URL}/leaderboard`);
             const data = await response.json();
