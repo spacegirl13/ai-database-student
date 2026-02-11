@@ -762,6 +762,31 @@ date: 2025-10-30
                         <h4 class="text-base font-bold text-green-300 mb-4">🎮 Activity 3: Prompt Analyzer</h4>
                         <p class="mb-4 text-sm">Write a coding prompt, get feedback, and generate code using AI!</p>
 
+                        <!-- Past Student CS Prompts Table -->
+                        <div class="bg-slate-900/50 border border-green-500/30 rounded-lg p-4 mb-4">
+                            <div class="flex justify-between items-center mb-3">
+                                <h5 class="text-sm font-semibold text-green-300">📝 Past Student CS Prompts</h5>
+                                <button onclick="loadCSPrompts()" class="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs">Refresh</button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs">
+                                    <thead>
+                                        <tr class="border-b border-green-500/30">
+                                            <th class="text-left py-2 px-2 text-green-300 font-semibold w-20">User</th>
+                                            <th class="text-left py-2 px-2 text-green-300 font-semibold">Prompt</th>
+                                            <th class="text-left py-2 px-2 text-green-300 font-semibold w-16">Type</th>
+                                            <th class="text-center py-2 px-2 text-green-300 font-semibold w-32">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cs-prompts-table-body">
+                                        <tr>
+                                            <td colspan="4" class="py-4 text-center text-gray-400">Loading prompts...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                         <div class="bg-slate-800/50 p-4 rounded-lg">
                             <label class="block text-xs font-semibold mb-2">Type your coding prompt here:</label>
                             <textarea id="cs-prompt-input" rows="4" placeholder="Example: Write a Python function that calculates the factorial of a number"
@@ -2288,6 +2313,118 @@ date: 2025-10-30
         }
     }
 
+    // ==================== CS PROMPTS TABLE ====================
+
+    // Sample CS prompts for display (fallback when API unavailable) - Top 3 only
+    const sampleCSPrompts = [
+        { prompt: "Write a Python function that calculates the factorial of a number using recursion.", type: "Good", username: "student1" },
+        { prompt: "Create a JavaScript function to validate email addresses using regex.", type: "Good", username: "student2" },
+        { prompt: "make code", type: "Bad", username: "student3" }
+    ];
+
+    async function loadCSPrompts() {
+        const tableBody = document.getElementById('cs-prompts-table-body');
+        if (!tableBody) return;
+
+        tableBody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-gray-400">Loading prompts...</td></tr>';
+
+        try {
+            // First try to load from API
+            const response = await fetch(pythonURI + '/api/cs-prompts/', {
+                ...fetchOptions,
+                method: 'GET'
+            });
+            console.log('Load prompts response status:', response.status);
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Loaded prompts:', data);
+                if (data.success && data.prompts && data.prompts.length > 0) {
+                    displayCSPrompts(data.prompts);
+                    return;
+                }
+            }
+        } catch (error) {
+            console.log('Could not load prompts from API, using sample data:', error);
+        }
+
+        // Fall back to sample prompts
+        displayCSPrompts(sampleCSPrompts);
+    }
+
+    function displayCSPrompts(prompts) {
+        const tableBody = document.getElementById('cs-prompts-table-body');
+        if (!tableBody) return;
+
+        if (prompts.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-gray-400">No prompts available</td></tr>';
+            return;
+        }
+
+        tableBody.innerHTML = prompts.map((p, index) => {
+            const typeColor = p.type === 'Good' ? 'text-green-400' : 'text-red-400';
+            const typeBg = p.type === 'Good' ? 'bg-green-900/30' : 'bg-red-900/30';
+            const promptText = p.prompt.length > 60 ? p.prompt.substring(0, 60) + '...' : p.prompt;
+            const encodedPrompt = encodeURIComponent(p.prompt);
+            const username = p.username || p.user_name || 'Anonymous';
+
+            return `
+                <tr class="border-b border-slate-700/50 hover:bg-slate-800/30">
+                    <td class="py-2 px-2 text-purple-300 font-semibold">${escapeHtml(username)}</td>
+                    <td class="py-2 px-2 text-gray-300" title="${escapeHtml(p.prompt)}">${escapeHtml(promptText)}</td>
+                    <td class="py-2 px-2"><span class="${typeColor} ${typeBg} px-2 py-0.5 rounded text-xs">${p.type}</span></td>
+                    <td class="py-2 px-2 text-center">
+                        <div class="flex gap-1 justify-center">
+                            <button onclick="copyCSPrompt('${encodedPrompt}')"
+                                class="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs" title="Copy to clipboard">
+                                📋
+                            </button>
+                            <button onclick="autofillCSPrompt('${encodedPrompt}')"
+                                class="px-2 py-1 bg-green-700 hover:bg-green-600 rounded text-xs" title="Autofill">
+                                ✏️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function copyCSPrompt(encodedPrompt) {
+        const prompt = decodeURIComponent(encodedPrompt);
+        navigator.clipboard.writeText(prompt).then(() => {
+            // Show brief feedback
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✓';
+            setTimeout(() => btn.textContent = originalText, 1000);
+        }).catch(err => {
+            console.error('Failed to copy:', err);
+            alert('Failed to copy to clipboard');
+        });
+    }
+
+    function autofillCSPrompt(encodedPrompt) {
+        const prompt = decodeURIComponent(encodedPrompt);
+        const textarea = document.getElementById('cs-prompt-input');
+        if (textarea) {
+            textarea.value = prompt;
+            textarea.focus();
+            // Scroll to textarea
+            textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // Load CS prompts when Activity 3 is selected
+    const originalSelectCSActivity = selectCSActivity;
+    selectCSActivity = function(activityNum) {
+        originalSelectCSActivity(activityNum);
+        if (activityNum === '3') {
+            loadCSPrompts();
+        }
+    };
+
+    // ==================== END CS PROMPTS TABLE ====================
+
     async function analyzeCSPrompt() {
         const prompt = document.getElementById('cs-prompt-input').value.trim();
 
@@ -2327,9 +2464,37 @@ date: 2025-10-30
 
             document.getElementById('cs-analysis').classList.remove('hidden');
 
+            // Save the prompt to the database and refresh the table
+            const promptType = score >= 75 ? 'Good' : 'Bad';
+            await saveCSPrompt(prompt, promptType, score);
+            await loadCSPrompts();
+
         } catch (error) {
             console.error('Error:', error);
             alert('Error: Could not connect to server. Make sure the backend is running.');
+        }
+    }
+
+    async function saveCSPrompt(prompt, type, score) {
+        try {
+            const response = await fetch(pythonURI + '/api/cs-prompts/create', {
+                ...fetchOptions,
+                method: 'POST',
+                body: JSON.stringify({
+                    prompt: prompt,
+                    type: type,
+                    score: score
+                })
+            });
+
+            const data = await response.json();
+            console.log('Save prompt response:', data);
+
+            if (!response.ok) {
+                console.log('Could not save prompt - user may not be logged in');
+            }
+        } catch (error) {
+            console.log('Error saving prompt:', error);
         }
     }
 
@@ -3789,6 +3954,10 @@ date: 2025-10-30
     window.autofillWriteCode = autofillWriteCode;
     window.analyzeCSPrompt = analyzeCSPrompt;
     window.improveCSPrompt = improveCSPrompt;
+    window.loadCSPrompts = loadCSPrompts;
+    window.copyCSPrompt = copyCSPrompt;
+    window.autofillCSPrompt = autofillCSPrompt;
+    window.saveCSPrompt = saveCSPrompt;
     window.generateCodeFromPrompt = generateCodeFromPrompt;
     window.runGeneratedCode = runGeneratedCode;
     window.copyToClipboard = copyToClipboard;
