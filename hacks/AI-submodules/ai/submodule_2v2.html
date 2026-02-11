@@ -540,12 +540,11 @@ date: 2025-10-30
         font-weight: 600 !important;
     }
 
-    /* Advanced section: light purple for AI response boxes */
-    #advanced-level #output-bad,
-    #advanced-level #output-good {
-        background: #e9d5ff !important; /* light purple background */
-        color: #ffffff !important; /* white text */
-        font-weight: 600 !important;
+    /* Advanced section output boxes - light purple matching section background */
+    #output-bad,
+    #output-good {
+        background: rgba(196, 181, 253, 0.15) !important;
+        border-color: rgba(196, 181, 253, 0.4) !important;
     }
 
     /* Advanced section label text white and bold */
@@ -1538,7 +1537,7 @@ date: 2025-10-30
                             <div class="mt-2">
                                 <label class="block font-semibold mb-1 text-red-300 text-xs text-white">AI Response:</label>
                                 <pre id="output-bad"
-                                    class="bg-purple-700 border border-purple-600 p-2 rounded whitespace-pre-wrap text-white min-h-[80px] text-xs overflow-y-auto max-h-[150px] font-semibold">(Click Generate to see response)</pre>
+                                    class="bg-purple-400/20 border border-purple-400/40 p-2 rounded whitespace-pre-wrap text-white min-h-[80px] text-xs overflow-y-auto max-h-[150px] font-semibold">(Click Generate to see response)</pre>
                             </div>
                         </div>
 
@@ -1561,7 +1560,7 @@ date: 2025-10-30
                                 <div class="flex-grow">
                                     <label class="block font-semibold mb-1 text-green-300 text-xs text-white">AI Response:</label>
                                     <pre id="output-good"
-                                        class="bg-purple-700 border border-purple-600 p-2 rounded whitespace-pre-wrap text-white min-h-[80px] text-xs overflow-y-auto max-h-[150px] font-semibold">(Click Generate to see response)</pre>
+                                        class="bg-purple-400/20 border border-purple-400/40 p-2 rounded whitespace-pre-wrap text-white min-h-[80px] text-xs overflow-y-auto max-h-[150px] font-semibold">(Click Generate to see response)</pre>
                                 </div>
                                 <!-- student prompts button moved to top-right for better visibility -->
                             </div>
@@ -3741,7 +3740,7 @@ date: 2025-10-30
         const displayTitle = titleMap[type] || titleMap.all;
 
         modal.innerHTML = `
-            <div style="background: #7a7d85; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 96%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+            <div style="background: #9333ea; border: 2px solid #7c3aed; border-radius: 12px; padding: 18px; max-width: 700px; width: 96%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap:12px;">
                     <h3 style="color: #f3e8ff; font-size: 18px; font-weight: 700; margin: 0;">${displayTitle}</h3>
                     <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #f3e8ff; font-size: 26px; cursor: pointer;">&times;</button>
@@ -3846,7 +3845,7 @@ date: 2025-10-30
 
             // Render 3 prompt cards (guaranteed up to 3)
             promptsList.innerHTML = topPrompts.map((prompt, index) => `
-                    <div style="background: linear-gradient(135deg, rgba(109,40,217,0.08), rgba(139,92,246,0.05)); border: 1.5px solid rgba(167,139,250,0.25); border-radius: 10px; padding: 14px; transition: all 0.2s;">
+                    <div style="background: linear-gradient(135deg, rgba(126,58,237,0.3), rgba(147,51,234,0.2)); border: 1.5px solid rgba(167,139,250,0.5); border-radius: 10px; padding: 14px; transition: all 0.2s;">
                         <p style="color: #e9def8; font-size: 11px; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${prompt.type} Prompt · Example ${index + 1}</p>
                         <p style="color: #e6e6e6; font-size: 13px; line-height: 1.6; margin: 0 0 12px 0;">${escapeHtml(prompt.text)}</p>
                         <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: linear-gradient(135deg, #6d28d9, #7c3aed); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(109,40,217,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(109,40,217,0.35)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 8px rgba(109,40,217,0.2)';">Test with AI</button>
