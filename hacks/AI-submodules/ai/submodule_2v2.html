@@ -82,6 +82,12 @@ date: 2025-10-30
     a.button {
         font-weight: 700 !important;
     }
+
+    /* Navigation buttons white bold text */
+    .nav-btn span {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
     /* Badge Display Box - Upper Right Corner */
     #badgeDisplay {
         position: fixed !important;
@@ -407,32 +413,64 @@ date: 2025-10-30
         border: 2px solid white;
         border-radius: 9999px;
         padding: 6px;
-        background: white;
-        color: #6d28d9 !important;
+        background: #6366f1 !important; /* indigo blue instead of white */
+        color: #ffffff !important;
         cursor: pointer;
         line-height: 1;
-        box-shadow: 0 4px 14px rgba(109,40,217,0.12);
+        box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+        font-weight: 700 !important;
     }
 
     .student-prompts-btn:hover {
         transform: scale(1.06);
     }
 
-    /* Make the prompt sections slightly lighter for contrast with the white button */
+    /* Make the prompt sections light purple */
     #bad-prompt-section {
-        background: rgba(220,38,38,0.08) !important;
+        background: rgba(196, 181, 253, 0.15) !important; /* light purple */
     }
 
     #good-prompt-section {
-        background: rgba(16,185,129,0.06) !important;
+        background: rgba(196, 181, 253, 0.15) !important; /* light purple */
     }
-    /* History section: blue background like CS section with white text */
+
+    /* Select prompt type buttons lighter blue */
+    .history-type-btn,
+    #hist-cause-btn,
+    #hist-compare-btn,
+    #hist-analyze-btn,
+    #hist-timeline-btn {
+        background: #93c5fd !important; /* light blue */
+        color: #1f2937 !important;
+        border-color: #60a5fa !important;
+        font-weight: 700 !important;
+    }
+
+    .history-type-btn:hover,
+    #hist-cause-btn:hover,
+    #hist-compare-btn:hover,
+    #hist-analyze-btn:hover,
+    #hist-timeline-btn:hover {
+        background: #60a5fa !important; /* darker light blue */
+    }
+    /* History section: blue background with white text */
     #section-4 {
         background: rgba(30,58,138,0.7) !important; /* stronger blue like CS */
     }
 
     #section-4 * {
         color: #fff !important; /* white text */
+    }
+
+    #section-4 label,
+    #section-4 h2,
+    #section-4 h3,
+    #section-4 h4,
+    #section-4 p,
+    #section-4 span,
+    #section-4 div {
+        color: #ffffff !important;
+        font-weight: 600 !important;
     }
     
     #section-4 .bg-slate-800\/70,
@@ -446,7 +484,18 @@ date: 2025-10-30
         background: rgba(30,58,138,0.6) !important; /* keep inner sections blue-toned */
     }
 
-    /* Beginner section: blue background like CS */
+    /* History section examples in grey boxes - white text */
+    #section-4 .bg-slate-800\/50 p,
+    #section-4 .bg-slate-700 p {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Beginner section: blue background and white bold text */
+    #beginner-level {
+        color: #ffffff !important;
+    }
+
     #beginner-level .bg-green-900\/20 {
         background: rgba(30,58,138,0.4) !important; /* blue like CS */
     }
@@ -455,27 +504,171 @@ date: 2025-10-30
         background: rgba(30,58,138,0.4) !important; /* blue instead of dark grey */
     }
 
+    /* Beginner section text white and bold */
+    #beginner-level label,
+    #beginner-level h3,
+    #beginner-level h4,
+    #beginner-level p,
+    #beginner-level span {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
     /* Baby blue buttons in beginner section */
     #beginner-level button:not(.ml-auto) {
-        background: rgba(96,165,250,0.6) !important; /* baby blue */
+        background: #3b82f6 !important; /* bright blue */
         color: #fff !important;
+        font-weight: 700 !important;
     }
 
     #beginner-level button:hover {
-        background: rgba(96,165,250,0.8) !important; /* slightly darker on hover */
+        background: #2563eb !important; /* darker blue on hover */
     }
 
     /* Quality Score white text */
     #quality-score {
-        color: #fff !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
     }
 
-    /* Advanced section: light grey for AI response boxes instead of dark grey */
+    /* Intermediate section - white text for examples */
+    #intermediate-level .bg-red-900\/20 p,
+    #intermediate-level .bg-slate-800\/50 p,
+    #intermediate-level .text-gray-300,
+    #intermediate-level .text-gray-400 {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Advanced section: light purple for AI response boxes */
     #advanced-level #output-bad,
-    #advanced-level #output-good,
-    #advanced-level .bg-slate-900\/50 {
-        background: rgba(209,213,219,0.3) !important; /* light grey */
-        color: #1f2937 !important; /* dark text on light background */
+    #advanced-level #output-good {
+        background: #e9d5ff !important; /* light purple background */
+        color: #ffffff !important; /* white text */
+        font-weight: 600 !important;
+    }
+
+    /* Advanced section label text white and bold */
+    #bad-prompt-section label,
+    #good-prompt-section label,
+    #bad-prompt-section h3,
+    #good-prompt-section h3,
+    #bad-prompt-section p,
+    #good-prompt-section p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+
+    /* Bad prompt textarea - mid purple */
+    #bad-prompt {
+        background: #a78bfa !important; /* mid purple */
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    #bad-prompt::placeholder {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    /* Good prompt textarea - mid purple */
+    #good-prompt {
+        background: #a78bfa !important; /* mid purple */
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    #good-prompt::placeholder {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    /* Bad prompt output - darker purple */
+    #output-bad {
+        background: #7c3aed !important; /* darker purple */
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+
+    /* Good prompt output - darker purple */
+    #output-good {
+        background: #7c3aed !important; /* darker purple */
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+
+    /* Advanced section background light purple */
+    #advanced-level {
+        background: rgba(196, 181, 253, 0.1) !important;
+    }
+
+    /* All text in advanced section white */
+    #advanced-level h3,
+    #advanced-level h4,
+    #advanced-level p,
+    #advanced-level span,
+    #advanced-level label,
+    #advanced-level div,
+    #advanced-level pre {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Advanced tips examples white text */
+    #advanced-level .bg-slate-800\/50 p,
+    #advanced-level .bg-slate-800\/50,
+    #advanced-level .bg-green-900\/30 p,
+    #advanced-level .bg-red-900\/30 p,
+    #advanced-level .text-gray-300,
+    #advanced-level .text-gray-400,
+    #advanced-level .text-blue-200,
+    #advanced-level .text-blue-300 {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Advanced good/bad section text styling */
+    #bad-prompt-section p,
+    #good-prompt-section p,
+    #bad-prompt-section span,
+    #good-prompt-section span,
+    #bad-prompt-section label,
+    #good-prompt-section label {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Advanced good/bad input styling */
+    #bad-prompt,
+    #good-prompt {
+        color: #ffffff !important;
+    }
+
+    /* Test with AI button in intermediate section - lighter purple with black text */
+    #inter-challenge button[onclick="testWithAI()"] {
+        background: #c4b5fd !important; /* lighter purple */
+        color: #1f2937 !important; /* black text */
+        font-weight: 700 !important;
+    }
+
+    #inter-challenge button[onclick="testWithAI()"]:hover {
+        background: #a78bfa !important;
+    }
+
+    /* Ensure all text in intermediate section is white */
+    #intermediate-level h4,
+    #intermediate-level span,
+    #intermediate-level label,
+    #intermediate-level p,
+    #inter-ai-text {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Advanced section text styling for all elements */
+    #advanced-level h3,
+    #advanced-level h4,
+    #advanced-level p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
     }
 </style>
 
@@ -1036,16 +1229,16 @@ date: 2025-10-30
 
                 <!-- Level and Subject Selection -->
                 <div class="flex gap-3 mb-4 items-center">
-                    <label class="text-sm font-semibold">Level:</label>
-                    <select id="level-dropdown" onchange="handleLevelChange()" class="px-3 py-1 text-sm rounded bg-slate-700 hover:bg-purple-600 border border-purple-500/30 text-white cursor-pointer">
+                    <label class="text-sm font-semibold text-white">Level:</label>
+                    <select id="level-dropdown" onchange="handleLevelChange()" class="px-3 py-1 text-sm rounded bg-blue-500 hover:bg-blue-600 border border-blue-400 text-white cursor-pointer font-semibold">
                         <option value="">Select Level</option>
                         <option value="beginner">Beginner</option>
                         <option value="intermediate">Intermediate</option>
                         <option value="advanced">Advanced</option>
                     </select>
                     
-                    <label id="subject-label" class="text-sm font-semibold hidden">Subject:</label>
-                    <select id="subject-dropdown" onchange="handleSubjectChange()" class="px-3 py-1 text-sm rounded bg-slate-700 hover:bg-purple-600 border border-purple-500/30 text-white cursor-pointer hidden">
+                    <label id="subject-label" class="text-sm font-semibold hidden text-white">Subject:</label>
+                    <select id="subject-dropdown" onchange="handleSubjectChange()" class="px-3 py-1 text-sm rounded bg-blue-500 hover:bg-blue-600 border border-blue-400 text-white cursor-pointer font-semibold hidden">
                         <option value="">Select Subject</option>
                         <option value="math">Math</option>
                         <option value="science">Science</option>
@@ -1192,7 +1385,7 @@ date: 2025-10-30
                             <!-- Action Buttons -->
                             <div class="grid md:grid-cols-2 gap-3 mb-4">
                                 <button onclick="testWithAI()" 
-                                    class="bg-green-600 hover:bg-green-700 py-3 rounded-lg font-bold transition-all">
+                                    class="bg-purple-300 hover:bg-purple-400 py-3 rounded-lg font-bold transition-all text-black">
                                     Test with AI
                                 </button>
                                 <button onclick="showAnswer()" 
@@ -1304,12 +1497,12 @@ date: 2025-10-30
                         </div>
 
                         <!-- Bad Prompt Section -->
-                        <div id="bad-prompt-section" class="relative bg-red-900/20 border border-red-500/30 rounded-lg p-4 mb-4">
+                        <div id="bad-prompt-section" class="relative bg-purple-400/20 border border-purple-400/40 rounded-lg p-4 mb-4">
                             <button onclick="toggleStudentPromptsModal('bad')" class="student-prompts-btn absolute top-3 right-3 text-xl" title="View past student prompts">👥</button>
-                            <h3 class="text-base font-bold text-red-300 mb-2">Bad Prompt</h3>
-                            <p class="mb-2 text-xs text-gray-300">Write a vague, incomplete, or poorly structured prompt:</p>
+                            <h3 class="text-base font-bold text-white mb-2">Bad Prompt</h3>
+                            <p class="mb-2 text-xs text-white font-semibold">Write a vague, incomplete, or poorly structured prompt:</p>
                             <textarea id="bad-prompt" rows="2" placeholder="Example: 'write something about dogs'"
-                                class="w-full p-2 rounded text-white bg-slate-700 border border-red-500/30 mb-2 text-xs"></textarea>
+                                class="w-full p-2 rounded text-white bg-purple-600 border border-purple-500/30 mb-2 text-xs"></textarea>
                             <div class="flex gap-1">
                                 <button onclick="generateBadPrompt()"
                                     class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-white text-xs font-semibold">Generate</button>
@@ -1318,20 +1511,20 @@ date: 2025-10-30
                             </div>
 
                             <div class="mt-2">
-                                <label class="block font-semibold mb-1 text-red-300 text-xs">AI Response:</label>
+                                <label class="block font-semibold mb-1 text-red-300 text-xs text-white">AI Response:</label>
                                 <pre id="output-bad"
-                                    class="bg-slate-900/50 border border-red-500/20 p-2 rounded whitespace-pre-wrap text-gray-300 min-h-[80px] text-xs overflow-y-auto max-h-[150px]">(Click Generate to see response)</pre>
+                                    class="bg-purple-700 border border-purple-600 p-2 rounded whitespace-pre-wrap text-white min-h-[80px] text-xs overflow-y-auto max-h-[150px] font-semibold">(Click Generate to see response)</pre>
                             </div>
                         </div>
 
                         <!-- Good Prompt Section -->
-                        <div id="good-prompt-section" class="hidden relative bg-green-900/20 border border-green-500/30 rounded-lg p-4 mb-4">
+                        <div id="good-prompt-section" class="hidden relative bg-purple-400/20 border border-purple-400/40 rounded-lg p-4 mb-4">
                             <button onclick="toggleStudentPromptsModal('good')" class="student-prompts-btn absolute top-3 right-3 text-xl" title="View past student prompts">👥</button>
-                            <h3 class="text-base font-bold text-green-300 mb-2">Good Prompt</h3>
-                            <p class="mb-2 text-xs text-gray-300">Write a clear, specific, and well-structured prompt:</p>
+                            <h3 class="text-base font-bold text-white mb-2">Good Prompt</h3>
+                            <p class="mb-2 text-xs text-white font-semibold">Write a clear, specific, and well-structured prompt:</p>
                             <textarea id="good-prompt" rows="2"
                                 placeholder="Example: 'Write a 150-word paragraph about Golden Retrievers, focusing on their temperament and why they make good family pets.'"
-                                class="w-full p-2 rounded text-white bg-slate-700 border border-green-500/30 mb-2 text-xs"></textarea>
+                                class="w-full p-2 rounded text-white bg-purple-600 border border-purple-500/30 mb-2 text-xs"></textarea>
                             <div class="flex gap-1">
                                 <button onclick="generateGoodPrompt()"
                                     class="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-white text-xs font-semibold">Generate</button>
@@ -1341,9 +1534,9 @@ date: 2025-10-30
 
                             <div class="mt-2 flex justify-between items-start gap-3">
                                 <div class="flex-grow">
-                                    <label class="block font-semibold mb-1 text-green-300 text-xs">AI Response:</label>
+                                    <label class="block font-semibold mb-1 text-green-300 text-xs text-white">AI Response:</label>
                                     <pre id="output-good"
-                                        class="bg-slate-900/50 border border-green-500/20 p-2 rounded whitespace-pre-wrap text-gray-300 min-h-[80px] text-xs overflow-y-auto max-h-[150px]">(Click Generate to see response)</pre>
+                                        class="bg-purple-700 border border-purple-600 p-2 rounded whitespace-pre-wrap text-white min-h-[80px] text-xs overflow-y-auto max-h-[150px] font-semibold">(Click Generate to see response)</pre>
                                 </div>
                                 <!-- student prompts button moved to top-right for better visibility -->
                             </div>
