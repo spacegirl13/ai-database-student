@@ -18,7 +18,7 @@ date: 2025-10-30
     
     .table-container {
         overflow-x: auto;
-        margin-bottom: 25px;
+        margin-bottom: 4px; /* reduced to tighten space below the table */
         width: 100%;
     }
     #badgeDisplay {
@@ -126,8 +126,9 @@ date: 2025-10-30
         border-radius: 0 !important;
     }
 
+    /* reduce td vertical padding so table sits closer to surrounding box */
     .default-table td {
-        padding: 12px;
+        padding: 8px;
         border-bottom: 1px solid #e0e0e0;
         text-align: left;
         border-radius: 0 !important;
@@ -278,7 +279,7 @@ date: 2025-10-30
     </div>
 
     <div id="aiPollForm">
-        <div class="table-box" style="margin-bottom: 12px; padding: 12px 20px 8px 20px; border-left: 4px solid #0066cc;">
+        <div class="table-box" style="margin-bottom: 8px; padding: 12px 20px 4px 20px; border-left: 4px solid #0066cc;">
                 <h3 id="ai-source-question" style="text-align: center; margin-bottom: 12px; font-size: 14px;"><strong>What AI source do you find most useful for each subject?</strong></h3>
             <div class="table-container">
                 <table class="default-table" style="font-size: 12px;">
