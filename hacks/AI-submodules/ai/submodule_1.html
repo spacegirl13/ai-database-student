@@ -534,7 +534,7 @@ if (typeof window.toggleRecentThoughts !== 'function') {
     function displayRecentFRQs(frqs, containerId) {
         const container = document.getElementById(containerId);
         if (!frqs || frqs.length === 0) {
-            container.innerHTML = '';
+            container.innerHTML = '<div style="padding:12px; color:#666; font-size:13px;">No recent student thoughts available.</div>';
             return;
         }
         // Prepend the FRQ prompt if present so the recent list 'captures' the question on top
@@ -560,6 +560,10 @@ if (typeof window.toggleRecentThoughts !== 'function') {
         const container = document.getElementById('recentFRQs');
         if (!button) button = document.querySelector('button[onclick*="toggleRecentThoughts"]');
         if (container.style.display === 'none' || container.style.display === '') {
+            // If the container is empty, try loading survey data first
+            if ((!container.innerHTML || container.innerHTML.trim() === '') && typeof loadSurveyData === 'function') {
+                loadSurveyData();
+            }
             container.style.display = 'block';
             if (button) button.textContent = '▲ Recent Student Thoughts (click to collapse)';
         } else {
@@ -569,6 +573,10 @@ if (typeof window.toggleRecentThoughts !== 'function') {
     }
 
     window.toggleRecentThoughts = toggleRecentThoughts;
+
+    // Expose these functions so non-module scripts or interactive handlers can call them
+    window.loadSurveyData = loadSurveyData;
+    window.displayRecentFRQs = displayRecentFRQs;
 
     function autofillQuestion7() {
         const sampleResponse = "I believe AI policies need to strike a balance between preventing academic dishonesty and allowing students to learn how to use AI as a tool. Rather than banning AI completely, I think we should learn how to use it ethically and responsibly. I would want to use AI as a learning aid—for example, to help me understand difficult concepts, brainstorm ideas, or check my work for errors—but I would still write my own original responses and do my own critical thinking. AI should enhance my learning, not replace it. I think it's important to cite when I've used AI and be transparent about how I've incorporated it into my work.";
