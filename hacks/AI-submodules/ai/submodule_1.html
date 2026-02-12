@@ -239,6 +239,11 @@ date: 2025-10-30
         transform: scale(1.05);
         box-shadow: 0 0 0 6px rgba(0,102,204,0.08);
     }
+    /* Force the AI source question to be black and bold (override theme) */
+    #ai-source-question {
+        color: #000000 !important;
+        font-weight: 900 !important;
+    }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -274,7 +279,7 @@ date: 2025-10-30
 
     <div id="aiPollForm">
         <div class="table-box" style="margin-bottom: 12px; padding: 12px 20px 8px 20px; border-left: 4px solid #0066cc;">
-                <h3 style="text-align: center; margin-bottom: 12px; font-size: 14px; color: #000000 !important; font-weight: 900;"><strong style="color: #000000 !important;">What AI source do you find most useful for each subject?</strong></h3>
+                <h3 id="ai-source-question" style="text-align: center; margin-bottom: 12px; font-size: 14px;"><strong>What AI source do you find most useful for each subject?</strong></h3>
             <div class="table-container">
                 <table class="default-table" style="font-size: 12px;">
                     <thead>
@@ -406,6 +411,33 @@ date: 2025-10-30
     </div>
 </div>
 
+<script>
+// Lightweight non-module fallback for critical UI handlers (autofill + toggle) so buttons work
+if (typeof window.autofillQuestion7 !== 'function') {
+    window.autofillQuestion7 = function() {
+        const sampleResponse = "I believe AI policies need to strike a balance between preventing academic dishonesty and allowing students to learn how to use AI as a tool. Rather than banning AI completely, I think we should learn how to use it ethically and responsibly. I would want to use AI as a learning aid—for example, to help me understand difficult concepts, brainstorm ideas, or check my work for errors—but I would still write my own original responses and do my own critical thinking. AI should enhance my learning, not replace it. I think it's important to cite when I've used AI and be transparent about how I've incorporated it into my work.";
+        const ta = document.getElementById('frq-textarea');
+        if (ta) ta.value = sampleResponse;
+    };
+}
+
+if (typeof window.toggleRecentThoughts !== 'function') {
+    window.toggleRecentThoughts = function(button) {
+        const container = document.getElementById('recentFRQs');
+        if (!button) button = document.querySelector('button[onclick*="toggleRecentThoughts"]');
+        if (!container) return;
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'block';
+            if (button) button.textContent = '▲ Recent Student Thoughts (click to collapse)';
+        } else {
+            container.style.display = 'none';
+            if (button) button.textContent = '▼ Recent Student Thoughts (click to expand)';
+        }
+    };
+}
+
+// Now load the module script (if supported) to run the rest of the page logic
+</script>
 <script type="module">
     import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
     const API_URL = pythonURI + '/api';
