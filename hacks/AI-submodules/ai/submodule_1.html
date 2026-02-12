@@ -344,9 +344,9 @@ date: 2025-10-30
 
         <div style="display: grid; grid-template-columns: 1fr 3fr; gap: 16px; margin-bottom: 8px; align-items:stretch;">
             <!-- Left column: AI usage question -->
-            <div class="survey-box" style="padding: 4px 8px; border-left: 4px solid #0066cc; display:flex; flex-direction:column; justify-content:center; align-items:center; box-sizing:border-box;">
-                <h4 style="margin-bottom: 6px; font-size: 14px; line-height: 1.2; color: #000000 !important;">Do you use AI for schoolwork?</h4>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-top:4px; width:100%; align-items:center; justify-content:center;">
+            <div class="survey-box" style="padding: 4px 8px; border-left: 4px solid #0066cc; display:flex; flex-direction:column; justify-content:flex-start; align-items:flex-start; box-sizing:border-box;">
+            <h4 style="margin-top: 0px; margin-bottom: 8px; font-size: 14px; line-height: 1.2; color: #000000 !important;">Do you use AI for schoolwork?</h4>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top:0px; width:100%; align-items:flex-start; justify-content:flex-start;">
                     <label style="display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-size: 14px; color: #000000; width:100%;">
                         <input type="radio" name="useAI" value="Yes" required>
                         <span>Yes</span>
@@ -360,9 +360,7 @@ date: 2025-10-30
 
             <!-- Right column: FRQ question -->
             <div class="survey-box" style="padding: 6px 8px 8px 8px; border-left: 4px solid #0066cc; display:flex; flex-direction:column; justify-content:flex-start; box-sizing:border-box;">
-                <h4 id="frq-prompt" style="margin-bottom: 4px; font-size: 13px; line-height: 1.2; color: #000000 !important;">Most classes do not want students to use AI. What do you feel about these policies? How would you want to use AI without having it do everything for you and it being considered cheating?</h4>
-                <textarea id="frq-textarea" name="frq" placeholder="Share your thoughts here..." style="width: 100%; max-width: 100%; box-sizing: border-box; min-height: 200px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; font-size: 14px; resize: vertical; margin-top:4px;" required></textarea>
-                <button type="button" onclick="autofillQuestion7()" style="margin-top: 8px; padding: 8px 16px; background-color: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                    <h4 id="frq-prompt" style="margin-top: 0px; margin-bottom: 2px; font-size: 13px; line-height: 1.2; color: #000000 !important;">Most classes do not want students to use AI. What do you feel about these policies? How would you want to use AI without having it do everything for you and it being considered cheating?</h4>                    <textarea id="frq-textarea" name="frq" placeholder="Share your thoughts here..." style="width: 100%; max-width: 100%; box-sizing: border-box; min-height: 170px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; font-size: 14px; resize: vertical; margin-top:0px;" required></textarea>                <button type="button" onclick="autofillQuestion7()" style="margin-top: 8px; padding: 8px 16px; background-color: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">
                     ✨ Autofill Sample Response
                 </button>
             </div>
