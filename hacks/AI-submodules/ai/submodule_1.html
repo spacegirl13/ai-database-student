@@ -19,6 +19,7 @@ date: 2025-10-30
     .table-container {
         overflow-x: auto;
         margin-bottom: 25px;
+        width: 100%;
     }
     #badgeDisplay {
         position: fixed;
@@ -99,8 +100,8 @@ date: 2025-10-30
     .default-table {
         width: 100%;
         border-collapse: collapse;
-        background-color: white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: transparent; /* let container show beige */
+        box-shadow: none;
         border-radius: 0 !important;
     }
 
@@ -206,10 +207,13 @@ date: 2025-10-30
 
     /* Beige boxed styles for table and FRQ */
     .table-box {
-        background: #f5efe6; /* beige */
+        background: #f5efe6; /* beige rectangle */
         border: 1px solid #d6cbb8;
-        padding: 12px;
+        padding: 14px;
         border-radius: 8px;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .survey-box {
