@@ -540,12 +540,11 @@ date: 2025-10-30
         font-weight: 600 !important;
     }
 
-    /* Advanced section: light purple for AI response boxes */
-    #advanced-level #output-bad,
-    #advanced-level #output-good {
-        background: #e9d5ff !important; /* light purple background */
-        color: #ffffff !important; /* white text */
-        font-weight: 600 !important;
+    /* Advanced section output boxes - light purple matching section background */
+    #output-bad,
+    #output-good {
+        background: rgba(196, 181, 253, 0.15) !important;
+        border-color: rgba(196, 181, 253, 0.4) !important;
     }
 
     /* Advanced section label text white and bold */
@@ -885,7 +884,7 @@ date: 2025-10-30
                     <div>
                         <h2 class="text-sm font-bold mb-3">Computer Science</h2>
                         <div class="flex items-center gap-3">
-                            <span class="text-xs text-gray-400">Activity:</span>
+                            <span class="text-xs text-white font-semibold">Activity:</span>
                             <div class="flex gap-2">
                                 <button id="activity-btn-1" onclick="selectCSActivity('1')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-purple-600 hover:bg-purple-600 border border-slate-600 transition-colors text-black font-semibold">Activity 1</button>
                                 <button id="activity-btn-2" onclick="selectCSActivity('2')" class="cs-activity-btn px-2 py-0.5 text-xs rounded bg-slate-700 hover:bg-purple-600 border border-slate-600 transition-colors text-black font-semibold">Activity 2</button>
@@ -1033,7 +1032,7 @@ date: 2025-10-30
                                     <label class="block text-xs font-semibold mb-2">Output:</label>
                                     <pre id="write-code-output"
                                         class="bg-slate-900 border border-green-500/30 rounded-lg p-4 text-green-400 font-mono text-xs whitespace-pre-wrap min-h-[100px]"></pre>
-                                    <div id="write-code-expected" class="mt-2 text-xs text-gray-400"></div>
+                                    <div id="write-code-expected" class="mt-2 text-xs text-white font-semibold"></div>
                                 </div>
                             </div>
                         </div>
@@ -1331,10 +1330,10 @@ date: 2025-10-30
                             <!-- Weak Prompt Display -->
                             <div class="bg-red-900/20 border-2 border-red-500/40 rounded-lg p-4 mb-4">
                                 <div class="flex items-center gap-2 mb-2">
-                                    <h4 class="text-base font-bold text-red-300">Weak Prompt (Given)</h4>
+                                    <h4 class="text-base font-bold text-white">Weak Prompt (Given)</h4>
                                 </div>
                                 <div class="bg-slate-800/50 rounded-lg p-3">
-                                    <p id="weak-prompt-display" class="text-gray-300 text-sm leading-relaxed font-medium"></p>
+                                    <p id="weak-prompt-display" class="text-white text-sm leading-relaxed font-medium"></p>
                                 </div>
                                 <div class="mt-2 text-xs text-red-400 flex gap-4">
                                     <span>Too vague</span>
@@ -1373,7 +1372,7 @@ date: 2025-10-30
                                     <div class="mb-3 p-3 bg-slate-800/70 rounded-lg border border-blue-500/30">
                                         <div class="flex justify-between items-center mb-2">
                                             <span class="text-xs font-semibold">Quality Score:</span>
-                                            <span id="quality-score" class="text-2xl font-bold text-gray-400">--</span>
+                                            <span id="quality-score" class="text-2xl font-bold text-white">--</span>
                                         </div>
                                         <div class="w-full bg-slate-700 rounded-full h-3">
                                             <div id="quality-bar" class="bg-gray-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -1382,26 +1381,26 @@ date: 2025-10-30
 
                                     <!-- Improvement Checklist -->
                                     <div class="space-y-1 text-xs mb-3">
-                                        <div id="check-specificity" class="flex items-center gap-2 text-gray-400">
+                                        <div id="check-specificity" class="flex items-center gap-2 text-white font-semibold">
                                             <span>⚪</span>
                                             <span>Specificity</span>
                                         </div>
-                                        <div id="check-context" class="flex items-center gap-2 text-gray-400">
+                                        <div id="check-context" class="flex items-center gap-2 text-white font-semibold">
                                             <span>⚪</span>
                                             <span>Context provided</span>
                                         </div>
-                                        <div id="check-detail" class="flex items-center gap-2 text-gray-400">
+                                        <div id="check-detail" class="flex items-center gap-2 text-white font-semibold">
                                             <span>⚪</span>
                                             <span>Detail level</span>
                                         </div>
-                                        <div id="check-length" class="flex items-center gap-2 text-gray-400">
+                                        <div id="check-length" class="flex items-center gap-2 text-white font-semibold">
                                             <span>⚪</span>
                                             <span>Sufficient length</span>
                                         </div>
                                     </div>
 
                                     <!-- Feedback -->
-                                    <div id="feedback-display" class="p-2 bg-slate-800/50 rounded-lg text-xs text-gray-400 min-h-[40px]">
+                                    <div id="feedback-display" class="p-2 bg-slate-800/50 rounded-lg text-xs text-white font-semibold min-h-[40px]">
                                         <p>Start typing to see feedback...</p>
                                     </div>
                                 </div>
@@ -1431,7 +1430,7 @@ date: 2025-10-30
                                     <!-- Response Analysis -->
                                     <div id="response-analysis" class="mt-3 p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
                                         <p class="font-semibold text-blue-300 mb-1 text-sm">Response Quality:</p>
-                                        <p id="response-feedback" class="text-xs text-gray-300"></p>
+                                        <p id="response-feedback" class="text-xs text-white font-semibold"></p>
                                     </div>
                                 </div>
                             </div>
@@ -1446,7 +1445,7 @@ date: 2025-10-30
                                     
                                     <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-3">
                                         <p class="font-semibold text-green-300 mb-2 text-sm">Why this is better:</p>
-                                        <div id="example-explanation" class="text-xs text-gray-300 space-y-1"></div>
+                                        <div id="example-explanation" class="text-xs text-white font-semibold space-y-1"></div>
                                     </div>
 
                                     <button onclick="tryAnotherChallenge()" 
@@ -1501,19 +1500,19 @@ date: 2025-10-30
                                 <div class="space-y-2 text-xs">
                                     <div class="bg-slate-800/50 p-2 rounded">
                                         <p class="text-blue-200 font-semibold">Math:</p>
-                                        <p class="text-gray-300">"Solve this quadratic equation step-by-step: 2x² + 5x - 3 = 0. Explain each step."</p>
+                                        <p class="text-white font-semibold text-xs">"Solve this quadratic equation step-by-step: 2x² + 5x - 3 = 0. Explain each step."</p>
                                     </div>
                                     <div class="bg-slate-800/50 p-2 rounded">
                                         <p class="text-blue-200 font-semibold">Science:</p>
-                                        <p class="text-gray-300">"Explain photosynthesis to a 10th grader using simple language and an analogy."</p>
+                                        <p class="text-white font-semibold text-xs">"Explain photosynthesis to a 10th grader using simple language and an analogy."</p>
                                     </div>
                                     <div class="bg-slate-800/50 p-2 rounded">
                                         <p class="text-blue-200 font-semibold">Computer Science:</p>
-                                        <p class="text-gray-300">"Explain how for loops work in Python with 2 simple examples. I'm a beginner."</p>
+                                        <p class="text-white font-semibold text-xs">"Explain how for loops work in Python with 2 simple examples. I'm a beginner."</p>
                                     </div>
                                     <div class="bg-slate-800/50 p-2 rounded">
                                         <p class="text-blue-200 font-semibold">History:</p>
-                                        <p class="text-gray-300">"Explain the main causes of World War I in simple terms. Include at least 3 causes."</p>
+                                        <p class="text-white font-semibold text-xs">"Explain the main causes of World War I in simple terms. Include at least 3 causes."</p>
                                     </div>
                                 </div>
                             </div>
@@ -1538,7 +1537,7 @@ date: 2025-10-30
                             <div class="mt-2">
                                 <label class="block font-semibold mb-1 text-red-300 text-xs text-white">AI Response:</label>
                                 <pre id="output-bad"
-                                    class="bg-purple-700 border border-purple-600 p-2 rounded whitespace-pre-wrap text-white min-h-[80px] text-xs overflow-y-auto max-h-[150px] font-semibold">(Click Generate to see response)</pre>
+                                    class="bg-purple-400/20 border border-purple-400/40 p-2 rounded whitespace-pre-wrap text-white min-h-[80px] text-xs overflow-y-auto max-h-[150px] font-semibold">(Click Generate to see response)</pre>
                             </div>
                         </div>
 
@@ -1561,7 +1560,7 @@ date: 2025-10-30
                                 <div class="flex-grow">
                                     <label class="block font-semibold mb-1 text-green-300 text-xs text-white">AI Response:</label>
                                     <pre id="output-good"
-                                        class="bg-purple-700 border border-purple-600 p-2 rounded whitespace-pre-wrap text-white min-h-[80px] text-xs overflow-y-auto max-h-[150px] font-semibold">(Click Generate to see response)</pre>
+                                        class="bg-purple-400/20 border border-purple-400/40 p-2 rounded whitespace-pre-wrap text-white min-h-[80px] text-xs overflow-y-auto max-h-[150px] font-semibold">(Click Generate to see response)</pre>
                                 </div>
                                 <!-- student prompts button moved to top-right for better visibility -->
                             </div>
@@ -1570,7 +1569,7 @@ date: 2025-10-30
                         <!-- Complete Section -->
                         <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3 text-center mt-4">
                             <h3 class="text-base font-bold text-blue-300 mb-2">Challenge Complete!</h3>
-                            <p class="mb-3 text-xs text-gray-300">You understand the power of good prompting!</p>
+                            <p class="mb-3 text-xs text-white font-semibold">You understand the power of good prompting!</p>
                             <button onclick="showFeedbackModal()"
                                 class="bg-purple-600 hover:bg-purple-700 px-4 py-1 rounded text-white text-xs font-semibold">Complete Module</button>
                         </div>
@@ -2317,7 +2316,7 @@ date: 2025-10-30
                         <div id="gemini-output-${q.id}" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
                             <p class="text-sm text-green-300 mb-2">AI Response:</p>
                             <div id="gemini-result-${q.id}" class="text-white text-sm whitespace-pre-wrap"></div>
-                            <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
+                            <p class="text-xs text-white font-semibold mt-2">Expected: ${q.answer}</p>
                         </div>
                     </div>
                 </div>
@@ -2482,7 +2481,7 @@ date: 2025-10-30
                         <div id="science-gemini-output-${q.id}" class="hidden mt-4 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
                             <p class="text-sm text-green-300 mb-2">AI Response:</p>
                             <div id="science-gemini-result-${q.id}" class="text-white text-sm whitespace-pre-wrap"></div>
-                            <p class="text-xs text-gray-400 mt-2">Expected: ${q.answer}</p>
+                            <p class="text-xs text-white font-semibold mt-2">Expected: ${q.answer}</p>
                         </div>
                     </div>
                 </div>
@@ -3741,13 +3740,13 @@ date: 2025-10-30
         const displayTitle = titleMap[type] || titleMap.all;
 
         modal.innerHTML = `
-            <div style="background: #7a7d85; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 96%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+            <div style="background: #5e6169; border: 2px solid #a78bfa; border-radius: 12px; padding: 18px; max-width: 700px; width: 96%; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap:12px;">
-                    <h3 style="color: #f3e8ff; font-size: 18px; font-weight: 700; margin: 0;">${displayTitle}</h3>
-                    <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #f3e8ff; font-size: 26px; cursor: pointer;">&times;</button>
+                    <h3 style="color: #ffffff; font-size: 18px; font-weight: 700; margin: 0;">${displayTitle}</h3>
+                    <button onclick="document.getElementById('student-prompts-modal').classList.add('hidden')" style="background: none; border: none; color: #ffffff; font-size: 26px; cursor: pointer;">&times;</button>
                 </div>
                 <div id="prompts-list" style="display: flex; flex-direction: column; gap: 12px;">
-                    <p style="color: #c9c9c9; text-align: center;">Loading prompts...</p>
+                    <p style="color: #ffffff; text-align: center;">Loading prompts...</p>
                 </div>
             </div>
         `;
@@ -3846,16 +3845,16 @@ date: 2025-10-30
 
             // Render 3 prompt cards (guaranteed up to 3)
             promptsList.innerHTML = topPrompts.map((prompt, index) => `
-                    <div style="background: linear-gradient(135deg, rgba(109,40,217,0.08), rgba(139,92,246,0.05)); border: 1.5px solid rgba(167,139,250,0.25); border-radius: 10px; padding: 14px; transition: all 0.2s;">
-                        <p style="color: #e9def8; font-size: 11px; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${prompt.type} Prompt · Example ${index + 1}</p>
-                        <p style="color: #e6e6e6; font-size: 13px; line-height: 1.6; margin: 0 0 12px 0;">${escapeHtml(prompt.text)}</p>
+                    <div style="background: linear-gradient(135deg, rgba(126,58,237,0.3), rgba(147,51,234,0.2)); border: 1.5px solid rgba(167,139,250,0.5); border-radius: 10px; padding: 14px; transition: all 0.2s;">
+                        <p style="color: #ffffff; font-size: 11px; margin: 0 0 8px 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${prompt.type} Prompt · Example ${index + 1}</p>
+                        <p style="color: #ffffff; font-size: 13px; line-height: 1.6; margin: 0 0 12px 0;">${escapeHtml(prompt.text)}</p>
                         <button onclick="testStudentPrompt('student-prompt-${index}', '${encodeURIComponent(prompt.text)}')" style="background: linear-gradient(135deg, #6d28d9, #7c3aed); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(109,40,217,0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(109,40,217,0.35)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 8px rgba(109,40,217,0.2)';">Test with AI</button>
                     </div>
             `).join('');
         } catch (error) {
             console.error('Error loading prompts:', error);
             const el = document.getElementById('prompts-list');
-            if (el) el.innerHTML = '<p style="color: #ff6b6b;">Error loading prompts - showing sample data instead</p>';
+            if (el) el.innerHTML = '<p style="color: #ffffff;">Error loading prompts - showing sample data instead</p>';
         }
     }
 

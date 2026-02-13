@@ -18,23 +18,30 @@ date: 2025-10-30
     
     .table-container {
         overflow-x: auto;
-        margin-bottom: 25px;
+        margin-bottom: 0px; /* tightened to remove extra bottom white space */
+        width: 100%;
     }
     #badgeDisplay {
         position: fixed;
         top: 20px;
         right: 20px;
         width: 200px;
-        background: #0066cc;;
-        border: 2px solid #333;
-        padding: 10px;
+        background: #1a1a2e;
+        border: 2px solid #0066cc;
+        border-radius: 10px;
+        padding: 12px;
         z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
     #badgeDisplay h3 {
         margin: 0 0 10px 0;
         font-size: 14px;
         font-weight: bold;
+        color: #ffffff;
+        text-align: center;
+        border-bottom: 1px solid #0066cc;
+        padding-bottom: 8px;
     }
 
     .badge-item {
@@ -42,8 +49,10 @@ date: 2025-10-30
         align-items: center;
         gap: 8px;
         margin-bottom: 8px;
-        padding: 5px;
-        border: 1px solid #ddd;
+        padding: 8px;
+        border: 1px solid #0066cc;
+        border-radius: 6px;
+        background: rgba(0, 102, 204, 0.15);
     }
 
     .badge-item img {
@@ -55,6 +64,8 @@ date: 2025-10-30
     .badge-item span {
         font-size: 11px;
         flex: 1;
+        color: #ffffff;
+        font-weight: 600;
     }
 
     /* Badge Notification Popup */
@@ -63,8 +74,9 @@ date: 2025-10-30
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: #0066cc;;
+        background: #1a1a2e;
         border: 3px solid gold;
+        border-radius: 12px;
         padding: 30px;
         z-index: 10001;
         display: none;
@@ -93,14 +105,16 @@ date: 2025-10-30
         background: #0066cc;
         color: white;
         border: none;
+        border-radius: 6px;
         cursor: pointer;
+        font-weight: 600;
     }
 
     .default-table {
         width: 100%;
         border-collapse: collapse;
-        background-color: white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: transparent; /* let container show beige */
+        box-shadow: none;
         border-radius: 0 !important;
     }
 
@@ -125,15 +139,28 @@ date: 2025-10-30
         border-radius: 0 !important;
     }
 
+    /* reduce td vertical padding so table sits closer to surrounding box */
     .default-table td {
-        padding: 12px;
+        padding: 6px 8px;
         border-bottom: 1px solid #e0e0e0;
         text-align: left;
         border-radius: 0 !important;
     }
 
+    /* Make the subject column text white on black background */
+    .default-table tbody td:first-child {
+        color: #ffffff !important;
+        font-weight: 700;
+        background-color: #000000;
+    }
+
+    /* Other table cells should be dark for visibility on beige */
+    .default-table tbody td {
+        color: #1a1a2e !important;
+    }
+
     .default-table tbody tr:hover {
-        background-color: #f5f5f5;
+        background-color: #e8e0d5;
     }
 
     .default-table tbody tr:last-child td {
@@ -197,6 +224,100 @@ date: 2025-10-30
         font-weight: 600;
         color: #000000 !important;
     }
+
+    /* Page background to match Submodule 2 */
+    body {
+        background: linear-gradient(to bottom right, #0f172a, #2563eb, #0f172a);
+        min-height: 100vh;
+    }
+
+    /* Beige boxed styles for table and FRQ */
+    .table-box {
+        background: #f5efe6; /* beige rectangle */
+        border: 2px solid #d6cbb8;
+        padding: 14px;
+        border-radius: 0;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .survey-box {
+        background: #f5efe6; /* beige */
+        border: 2px solid #d6cbb8;
+        border-radius: 0;
+    }
+    /* Make labels inside survey-box black to ensure visibility */
+    .survey-box label {
+        color: #000000 !important;
+    }
+
+    /* Make table text bolder and tidy spacing */
+    .default-table th, .default-table td {
+        font-weight: 700;
+    }
+
+    /* Blue radio when checked (modern browsers) */
+    .default-table input[type="radio"] {
+        cursor: pointer;
+        margin: 0;
+        accent-color: #0066cc;
+        transition: box-shadow 150ms ease, transform 120ms ease;
+    }
+
+    .default-table input[type="radio"]:checked {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 6px rgba(0,102,204,0.08);
+    }
+    /* Force the AI source question to be black and bold (override theme) */
+    #ai-source-question {
+        color: #000000 !important;
+        font-weight: 900 !important;
+    }
+
+    /* Results container styling */
+    #resultsContainer {
+        background: #f5efe6;
+        border-radius: 12px;
+        padding: 30px;
+        border: 2px solid #d6cbb8;
+    }
+
+    #resultsContainer h2 {
+        color: #1a1a2e !important;
+        font-weight: 800;
+        margin-bottom: 30px;
+    }
+
+    /* Individual chart section styling */
+    .chart-section {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 24px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .chart-section h3 {
+        color: #1a1a2e !important;
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 15px;
+        text-align: center;
+        border-bottom: 2px solid #0066cc;
+        padding-bottom: 10px;
+    }
+
+    .chart-section canvas {
+        max-height: 250px;
+    }
+
+    /* Success message styling */
+    #successMessage {
+        border: 2px solid #1e7e34;
+        font-weight: 600;
+    }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -223,16 +344,16 @@ date: 2025-10-30
     <p>badge received!</p>
 </div>
 
-<div style="max-width: 900px; margin: 40px auto;">
-    <h2 style="text-align: center; margin-bottom: 20px; font-size: 18px;">AI Student Insights Poll</h2>
+    <div style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+    <h2 style="text-align: center; margin-bottom: 22px; font-size: 26px; font-weight: 800; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">AI Student Insights Poll</h2>
 
-    <div id="successMessage" style="background-color: #28a745; color: white; padding: 15px; border-radius: 6px; text-align: center; margin-bottom: 20px; display: none;">
+    <div id="successMessage" style="background-color: #28a745; color: white; padding: 15px; border-radius: 0; text-align: center; margin-bottom: 20px; display: none;">
         ✓ Thank you! Your response has been submitted. Scroll down to see the results!
     </div>
 
     <div id="aiPollForm">
-        <div style="margin-bottom: 25px; padding: 20px; border-left: 4px solid #0066cc;">
-            <h3 style="text-align: center; margin-bottom: 12px; font-size: 14px;">What AI source do you find most useful for each subject?</h3>
+        <div class="table-box" style="margin-bottom: 6px; padding: 12px 20px 2px 20px; border-left: 4px solid #0066cc;">
+                <h3 id="ai-source-question" style="text-align: center; margin-bottom: 12px; font-size: 14px;"><strong>What AI source do you find most useful for each subject?</strong></h3>
             <div class="table-container">
                 <table class="default-table" style="font-size: 12px;">
                     <thead>
@@ -285,85 +406,112 @@ date: 2025-10-30
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-bottom: 25px;">
+        <div style="display: grid; grid-template-columns: 1fr 3fr; gap: 16px; margin-bottom: 8px; align-items:stretch;">
             <!-- Left column: AI usage question -->
-            <div style="padding: 15px; border-left: 4px solid #0066cc; background: #f9f9f9; border-radius: 4px; display: flex; flex-direction: column;">
-                <h4 style="margin: 0 0 10px 0; padding: 0; font-size: 12px; line-height: 1.3; color: #000000 !important;">Do you use AI for schoolwork?</h4>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px;">
+            <div class="survey-box" style="padding: 4px 8px; border-left: 4px solid #0066cc; display:flex; flex-direction:column; justify-content:center; align-items:center; box-sizing:border-box; text-align:center;">
+                <h4 style="margin-bottom: 6px; font-size: 14px; line-height: 1.2; color: #000000 !important; text-align:center;">Do you use AI for schoolwork?</h4>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top:4px; width:100%; align-items:center; justify-content:center;">
+                    <label style="display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-size: 14px; color: #000000; width:100%;">
                         <input type="radio" name="useAI" value="Yes" required>
-                        Yes
+                        <span>Yes</span>
                     </label>
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 12px;">
+                    <label style="display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-size: 14px; color: #000000; width:100%;">
                         <input type="radio" name="useAI" value="No">
-                        No
+                        <span>No</span>
                     </label>
                 </div>
             </div>
 
             <!-- Right column: FRQ question -->
-            <div style="padding: 15px; border-left: 4px solid #0066cc; background: #000000; border-radius: 4px; display: flex; flex-direction: column;">
-                <h4 style="margin: 0 0 8px 0; padding: 0; font-size: 13px; line-height: 1.4; color: #ffffff !important;">Most classes do not want students to use AI. What do you feel about these policies? How would you want to use AI without having it do everything for you and it being considered cheating?</h4>
-                <textarea id="frq-textarea" name="frq" placeholder="Share your thoughts here..." style="width: 100%; box-sizing: border-box; height: 102px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; font-size: 13px; resize: vertical; margin-bottom: 8px;" required></textarea>
-                <button type="button" onclick="autofillQuestion7()" style="padding: 8px 16px; background-color: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">
-                    ✨ Autofill Sample Response
+            <div class="survey-box" style="padding: 6px 8px 8px 8px; border-left: 4px solid #0066cc; display:flex; flex-direction:column; justify-content:flex-start; box-sizing:border-box;">
+                <h4 id="frq-prompt" style="margin-bottom: 4px; font-size: 13px; line-height: 1.2; color: #000000 !important;">Most classes do not want students to use AI. What do you feel about these policies? How would you want to use AI without having it do everything for you and it being considered cheating?</h4>
+                <textarea id="frq-textarea" name="frq" placeholder="Share your thoughts here..." style="width: 100%; max-width: 100%; box-sizing: border-box; min-height: 200px; padding: 12px; border: 2px solid #ccc; border-radius: 0; font-family: inherit; font-size: 14px; resize: vertical; margin-top:4px;" required></textarea>
+                <button type="button" onclick="autofillQuestion7()" style="margin-top: 8px; padding: 8px 16px; background-color: #0066cc; color: white; border: none; border-radius: 0; cursor: pointer; font-size: 12px;">
+                    Autofill Sample Response
                 </button>
             </div>
         </div>
 
         <div style="margin-bottom: 15px;">
-            <button type="button" onclick="toggleRecentThoughts()" style="display: block; width: 100%; padding: 10px 20px; background-color: #f0f0f0; color: #333; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; text-align: left;">
+            <button type="button" onclick="toggleRecentThoughts(this)" style="display: block; width: 100%; padding: 12px 20px; background-color: #1a1a2e; color: #ffffff; border: 2px solid #0066cc; border-radius: 0; cursor: pointer; font-size: 14px; font-weight: 600; text-align: left;">
                 ▼ Recent Student Thoughts (click to expand)
             </button>
-            <div id="recentFRQs" style="display: none; margin-top: 10px;"></div>
+            <div id="recentFRQs" class="survey-box" style="display: none; margin-top: 10px; padding: 12px;"></div>
         </div>
 
-        <button type="button" onclick="submitSurvey()" style="display: block; margin: 20px auto 0; padding: 12px 40px; background-color: #0066cc; color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer;">
+        <button type="button" onclick="submitSurvey()" style="display: block; margin: 20px auto 0; padding: 12px 40px; background-color: #0066cc; color: white; border: none; border-radius: 0; font-size: 15px; font-weight: 600; cursor: pointer;">
             Submit Survey
         </button>
     </div>
 
     <div id="resultsContainer" style="display: none; margin-top: 30px;">
-        <h2 style="text-align: center; margin-bottom: 30px;">Survey Results</h2>
+        <h2 style="text-align: center;">Survey Results</h2>
 
-        <div style="margin-bottom: 30px;">
-            <h3 style="text-align: center; margin-bottom: 15px;">English</h3>
+        <div class="chart-section">
+            <h3>English - Preferred AI Tool</h3>
             <canvas id="englishChart"></canvas>
         </div>
 
-        <div style="margin-bottom: 30px;">
-            <h3 style="text-align: center; margin-bottom: 15px;">Math</h3>
+        <div class="chart-section">
+            <h3>Math - Preferred AI Tool</h3>
             <canvas id="mathChart"></canvas>
         </div>
 
-        <div style="margin-bottom: 30px;">
-            <h3 style="text-align: center; margin-bottom: 15px;">Science</h3>
+        <div class="chart-section">
+            <h3>Science - Preferred AI Tool</h3>
             <canvas id="scienceChart"></canvas>
         </div>
 
-        <div style="margin-bottom: 30px;">
-            <h3 style="text-align: center; margin-bottom: 15px;">Computer Science</h3>
+        <div class="chart-section">
+            <h3>Computer Science - Preferred AI Tool</h3>
             <canvas id="csChart"></canvas>
         </div>
 
-        <div style="margin-bottom: 30px;">
-            <h3 style="text-align: center; margin-bottom: 15px;">History</h3>
+        <div class="chart-section">
+            <h3>History - Preferred AI Tool</h3>
             <canvas id="historyChart"></canvas>
         </div>
 
-        <div style="margin-bottom: 30px;">
-            <h3 style="text-align: center; margin-bottom: 15px;">Do Students Use AI for Schoolwork?</h3>
+        <div class="chart-section">
+            <h3>Do Students Use AI for Schoolwork?</h3>
             <canvas id="useAIChart"></canvas>
         </div>
     </div>
 
     <div style="text-align: center; margin: 40px 0; padding-bottom: 40px;">
-        <a href="../index.html" style="display: inline-block; background-color: #0066cc; color: white; padding: 15px 40px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 16px;">
-            ← Back to Home
+        <a href="../index.html" style="display: inline-block; background-color: #1a1a2e; color: white; padding: 15px 40px; border-radius: 0; text-decoration: none; font-weight: 600; font-size: 16px; border: 2px solid #ffffff;">
+            Back to Home
         </a>
     </div>
 </div>
 
+<script>
+// Lightweight non-module fallback for critical UI handlers (autofill + toggle) so buttons work
+if (typeof window.autofillQuestion7 !== 'function') {
+    window.autofillQuestion7 = function() {
+        const sampleResponse = "I believe AI policies need to strike a balance between preventing academic dishonesty and allowing students to learn how to use AI as a tool. Rather than banning AI completely, I think we should learn how to use it ethically and responsibly. I would want to use AI as a learning aid—for example, to help me understand difficult concepts, brainstorm ideas, or check my work for errors—but I would still write my own original responses and do my own critical thinking. AI should enhance my learning, not replace it. I think it's important to cite when I've used AI and be transparent about how I've incorporated it into my work.";
+        const ta = document.getElementById('frq-textarea');
+        if (ta) ta.value = sampleResponse;
+    };
+}
+
+if (typeof window.toggleRecentThoughts !== 'function') {
+    window.toggleRecentThoughts = function(button) {
+        const container = document.getElementById('recentFRQs');
+        if (!button) button = document.querySelector('button[onclick*="toggleRecentThoughts"]');
+        if (!container) return;
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'block';
+            if (button) button.textContent = '▲ Recent Student Thoughts (click to collapse)';
+        } else {
+            container.style.display = 'none';
+            if (button) button.textContent = '▼ Recent Student Thoughts (click to expand)';
+        }
+    };
+}
+
+// Now load the module script (if supported) to run the rest of the page logic
+</script>
 <script type="module">
     import { pythonURI, fetchOptions } from '{{ site.baseurl }}/assets/js/api/config.js';
     const API_URL = pythonURI + '/api';
@@ -459,11 +607,14 @@ date: 2025-10-30
     function displayRecentFRQs(frqs, containerId) {
         const container = document.getElementById(containerId);
         if (!frqs || frqs.length === 0) {
-            container.innerHTML = '';
+            container.innerHTML = '<div style="padding:12px; color:#666; font-size:13px;">No recent student thoughts available.</div>';
             return;
         }
+        // Prepend the FRQ prompt if present so the recent list 'captures' the question on top
+        const promptEl = document.getElementById('frq-prompt');
+        const promptHTML = promptEl ? `<div style="font-weight:700; font-size:13px; margin-bottom:8px;">${promptEl.textContent}</div>` : '';
 
-        let html = '<div style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; background: #fafafa;"><div style="display: flex; flex-direction: column; gap: 10px;">';
+        let html = '<div style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; background: #fafafa;"><div style="display: flex; flex-direction: column; gap: 10px;">' + promptHTML;
         frqs.forEach(frq => {
             const date = new Date(frq.timestamp).toLocaleString();
             const userId = frq.user_id || 'anonymous';
@@ -478,19 +629,27 @@ date: 2025-10-30
         container.innerHTML = html;
     }
 
-    function toggleRecentThoughts() {
+    function toggleRecentThoughts(button) {
         const container = document.getElementById('recentFRQs');
-        const button = event.target;
-        if (container.style.display === 'none') {
+        if (!button) button = document.querySelector('button[onclick*="toggleRecentThoughts"]');
+        if (container.style.display === 'none' || container.style.display === '') {
+            // If the container is empty, try loading survey data first
+            if ((!container.innerHTML || container.innerHTML.trim() === '') && typeof loadSurveyData === 'function') {
+                loadSurveyData();
+            }
             container.style.display = 'block';
-            button.textContent = '▲ Recent Student Thoughts (click to collapse)';
+            if (button) button.textContent = '▲ Recent Student Thoughts (click to collapse)';
         } else {
             container.style.display = 'none';
-            button.textContent = '▼ Recent Student Thoughts (click to expand)';
+            if (button) button.textContent = '▼ Recent Student Thoughts (click to expand)';
         }
     }
 
     window.toggleRecentThoughts = toggleRecentThoughts;
+
+    // Expose these functions so non-module scripts or interactive handlers can call them
+    window.loadSurveyData = loadSurveyData;
+    window.displayRecentFRQs = displayRecentFRQs;
 
     function autofillQuestion7() {
         const sampleResponse = "I believe AI policies need to strike a balance between preventing academic dishonesty and allowing students to learn how to use AI as a tool. Rather than banning AI completely, I think we should learn how to use it ethically and responsibly. I would want to use AI as a learning aid—for example, to help me understand difficult concepts, brainstorm ideas, or check my work for errors—but I would still write my own original responses and do my own critical thinking. AI should enhance my learning, not replace it. I think it's important to cite when I've used AI and be transparent about how I've incorporated it into my work.";
@@ -570,6 +729,10 @@ date: 2025-10-30
             charts[canvasId].destroy();
         }
 
+        // Bright, contrasting colors for each bar
+        const barColors = ['#2563eb', '#16a34a', '#dc2626', '#9333ea'];
+        const borderColors = ['#1d4ed8', '#15803d', '#b91c1c', '#7e22ce'];
+
         charts[canvasId] = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -577,9 +740,10 @@ date: 2025-10-30
                 datasets: [{
                     label: 'Votes',
                     data: Object.values(data),
-                    backgroundColor: '#0066cc',
-                    borderColor: '#0052a3',
-                    borderWidth: 1
+                    backgroundColor: barColors,
+                    borderColor: borderColors,
+                    borderWidth: 2,
+                    borderRadius: 6
                 }]
             },
             options: {
@@ -589,7 +753,27 @@ date: 2025-10-30
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            stepSize: 5
+                            stepSize: 1,
+                            color: '#1a1a2e',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            color: '#e5e7eb'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#1a1a2e',
+                            font: {
+                                size: 13,
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            display: false
                         }
                     }
                 },
@@ -598,8 +782,7 @@ date: 2025-10-30
                         display: false
                     },
                     title: {
-                        display: true,
-                        text: label
+                        display: false
                     }
                 }
             }
