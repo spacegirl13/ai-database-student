@@ -81,7 +81,7 @@ The loop accesses each element in the list one at a time. For each feedback entr
 Testing
 - Submitted feedback with 5 stars → saved correctly.
 - Submitted anonymous feedback → showed “Anonymous”.
-- Tested category buttons (Bug, Feature Request, General).
+- Tested category buttons.
 - Checked that previous feedback displays
 Bug Found
 Sometimes feedback did not save due to a database error.
