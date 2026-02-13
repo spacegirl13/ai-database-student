@@ -113,7 +113,7 @@ Call 1 :
 ```
 Feedback("Great module", "Very helpful", "General", 2).create()
 ```
-Call 2L
+Call 2 :
 Feedback("Bug found", "Stars not working", "Bug").create()
 Different calls store different feedback.
 ## Logic Error Example
