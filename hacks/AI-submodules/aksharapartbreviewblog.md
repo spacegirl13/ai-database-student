@@ -135,3 +135,26 @@ Steps:
 2. Create a Feedback object.
 3. Add it to the database.
 4. Repeat for all entries.
+## Steps for Feedback Survey Backend
+1. Class Feedback(db.Model)
+- This creates a table in the database called feedback
+- Each row is one feedback and the columns are different questions.
+2. id = db.Column (db.integer, primary_key = True)
+- Unique ID for each feedback entry
+- unique number for each user
+3. user_id = db.Column(db.integer, db.foreignKey ('user.id')))
+- Links user id to number, stores which user submitted what
+- anonymous feedback allowed
+- Foregin key allows duplicates (primary doesn't)
+3. title = db.Comlumn (db.string(255), nullable = False)
+- Nullable = false means it can't be empty
+type = db.Column (db.String(64), default = "other")
+- categories of feedback 
+- stored in Database
+4. def create(self)
+- adds feedback to database
+- permanently saves
+5. def read(self)
+- processes feedback to be sent to front end
+ db.create_all()
+creates table
