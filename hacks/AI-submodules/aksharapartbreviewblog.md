@@ -34,7 +34,7 @@ JSON data with rating, category, comment, username, and timestamp
 ```
 sample_feedback = [
     {"title": "Great platform", "body": "Loved it", "type": "General"},
-    {"title": "Bug report", "body": "Survey froze", "type": "Bug"}
+    {"title": "content quality", "difficulty level": "clarity", "pacing": "other"}
 ]
 ```
 
