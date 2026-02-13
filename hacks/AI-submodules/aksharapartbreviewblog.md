@@ -61,6 +61,7 @@ Makes feedback permanent.
 ## Procedure Call
 ``` feedback = Feedback("Nice lesson", "Loved the quizzes", "General", user_id=5)
 feedback.create() ```
+- (putting the feedback in the container named feedback)
 ## Algorithm (Sequence, Selection, Iteration)
 Sequence
 User clicks stars and category button.
