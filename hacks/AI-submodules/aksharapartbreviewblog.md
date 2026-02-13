@@ -38,7 +38,7 @@ sample_feedback = [
 ]
 ```
 
-he program uses a list to store feedback entries. 
+The program uses a list to store feedback entries. 
 ## How the list manages complexity
 - Stores many feedback records in one structure.
 - A loop processes all feedback automatically.
@@ -50,10 +50,10 @@ Without the list
 - Using a list makes the program shorter and easier to update.
 ## PROMPT 2c: Procedure and Algorithm
 The procedure is the create() method: 
-def create(self):
+''' def create(self):
     db.session.add(self)
     db.session.commit()
-    return self
+    return self '''
 ## How it helps the program
 Saves feedback to the database.
 Runs every time a user submits the survey.
