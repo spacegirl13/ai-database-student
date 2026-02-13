@@ -132,6 +132,7 @@ Reduces repeated code.
 ## Algorithm Analysis (Iteration)
 In the loop:
 for fb_data in sample_feedback:
+
 Steps:
 1. Take one feedback entry from the list.
 2. Create a Feedback object.
