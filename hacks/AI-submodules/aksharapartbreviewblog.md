@@ -71,6 +71,7 @@ Feedback is stored in the database.
 Previous feedback is displayed.
 ## Selection (if statement)
 if self.user_id:
+- The code if self.user_id: is asking: "Does this feedback belong to a specific person who is logged in?
 - If user is logged in → show username
 - If not → show “Anonymous”
 ## Iteration (loop)
