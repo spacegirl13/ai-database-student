@@ -63,7 +63,7 @@ Makes feedback permanent.
 feedback.create() ```
 - (putting the feedback in the container named feedback)
 ## Algorithm (Sequence, Selection, Iteration)
-Sequence
+## Sequence
 User clicks stars and category button.
 User types optional comments.
 Program creates a Feedback object.
