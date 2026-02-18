@@ -48,7 +48,7 @@ I worked on the badges backend (transactional data) and helped Akshara on the ba
 ### Improved badges BE -> FE connection
 
 #### FE
-```
+```js
 async function awardBadge() {
   // Send a request to the backend to award a badge
   const res = await fetch('/api/badges/award', {
@@ -64,11 +64,9 @@ async function awardBadge() {
   // Only update the screen if the backend confirmed success
   if (res.ok) updateBadgeDisplay(data.badge);
 }
-
 ```
 #### BE
-
-```
+```py
 @badge_api.route('/award', methods=['POST'])
 def award_badge():
     try:
