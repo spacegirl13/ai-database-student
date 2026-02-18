@@ -13,6 +13,98 @@ date: 2026-02-13
 
 ## Ruchika
 
+**Individual Contribution**
+
+I worked on the badges backend (transactional data) and helped Akshara on the badges FE -> BE connection.
+
+### Feature 1: badges Transactional Table
+
+<img width="1849" height="513" alt="Image" src="https://github.com/user-attachments/assets/c58a8f82-d1e6-4110-a3d1-8e8451f27973" />
+
+### Badge Definitions (badges Table – Metadata Transactions)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/badges/definitions | Retrieve all badge definitions (read-only) |
+| POST | /api/badges/definitions | Create a new badge definition |
+| DELETE | /api/badges/definitions/:badge_id | Delete a badge definition (cascades to user_badges) |
+
+### Feature 2: user_badges Transactional Table
+
+<img width="1856" height="566" alt="Image" src="https://github.com/user-attachments/assets/24f9addf-f104-429e-8daa-0f56685dc38f" />
+
+### User Badge Ledger (user_badges Table – Award Transactions)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/badges/my-badges | Retrieve current user's earned badges |
+| GET | /api/badges/user/:uid | Retrieve earned badges for a specific user (admin/self) |
+| POST | /api/badges/award | Award a badge to user (atomic event insert) |
+| DELETE | /api/badges/revoke | Revoke a badge from user (atomic delete) |
+| GET | /api/badges/check-progress | Check earned vs unearned badges |
+| GET | /api/badges/leaderboard | Get top users ranked by badge count |
+
+
+### Improved badges BE -> FE connection
+
+#### FE
+```
+async function awardBadge() {
+  // Send a request to the backend to award a badge
+  const res = await fetch('/api/badges/award', {
+    method: 'POST',  // We are changing data (not just reading it)
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ 
+      badge_id: 'delightful_data_scientist'  // Badge we want to award
+    })
+  });
+
+  // Convert backend response into readable data
+  const data = await res.json();
+  // Only update the screen if the backend confirmed success
+  if (res.ok) updateBadgeDisplay(data.badge);
+}
+
+```
+#### BE
+
+```
+@badge_api.route('/award', methods=['POST'])
+def award_badge():
+    try:
+        # Create a new badge record for this user (not saved yet)
+        db.session.add(UserBadge(
+            user_id=g.user.id,
+            badge_id=request.json['badge_id']
+        ))
+        # Actually save it to the database (start + finish transaction)
+        db.session.commit()
+        # Tell frontend it worked
+        return {"success": True}, 201
+
+    except:
+        # If something failed, undo everything
+        db.session.rollback()
+        # Tell frontend it failed
+        return {"success": False}, 400
+```
+
+### Debugs:
+ 
+- Badges not awarding correctly, made CompleteSubmodule_() functions for each submodule (connected to BE)
+
+### Happy moments!!
+
+- When the transactional data tables created and worked with all Postman tests
+
+- Badges and User_Badges admin table showing up on /admin/tables
+
+### Superpower
+
+- Rewarding students for progressing through the responsible AI journey
+
+- Makes users feel motivated and encouraged to learn more about how to use AI in a beneficial way
+
 ## Akshara
 
 ## Anishka
