@@ -8,156 +8,203 @@ author: Akshara Shankar
 microblog: true
 ---
 <img width="800" height="696" alt="Image" src="https://github.com/user-attachments/assets/749c23e4-4c21-4fe3-b0c3-d1014b36b763" />
-## Overall Purpose: 
-The purpose of AI study buddy is to help students use AI responsibly and in a way to help create prompts to improve their learning and study strategies. 
-### PROMPT 1: Program Purpose and Function
-The purpose of my program is to collect feedback from users at the end of a learning submodule.
-Users can rate the submodule and write comments, which are stored in a database.
-## Explain how the Program Functions 
-When a user finishes a submodule, a feedback popup appears.
-The user:
-- Clicks a star rating (1–5 stars)
-- Clicks a category button (Bug, Feature Request, General, Other)
-Types optional comments
-The backend stores the feedback in a database.
-The program displays previous feedback so users can see what others said.
-## Inputs:
-Star rating (1–5 stars)
-Category button 
-Optional comment text
-User ID (if logged in)
-## Outputs:
-Stored feedback entry in the database
-Feedback list shown on the screen (past feedback)
-JSON data with rating, category, comment, username, and timestamp
-## List Initialization 
-```
-sample_feedback = [
-    {"title": "Great platform", "body": "Loved it", "type": "General"},
-    {"title": "content quality", "difficulty level": "clarity", "pacing": "other"}
-]
-```
+# Akshara Shankar – Feedback Survey Backend PPR
 
-The program uses a list to store feedback entries. 
-## How the list manages complexity
-- Stores many feedback records in one structure.
-- A loop processes all feedback automatically.
-- Prevents writing separate variables for each feedback entry.
-Without the list
-## Would need many variables like fb1, fb2, fb3.
-- Would need repeated database insert code.
-- Adding new feedback would require rewriting the program.
-- Using a list makes the program shorter and easier to update.
-## PROMPT 2c: Procedure and Algorithm
-The procedure is the create() method: 
-''' def create(self):
-    db.session.add(self)
-    db.session.commit()
-    return self '''
-## How it helps the program
-Saves feedback to the database.
-Runs every time a user submits the survey.
-Makes feedback permanent.
-## Procedure Call
-``` feedback = Feedback("Nice lesson", "Loved the quizzes", "General", user_id=5)
-feedback.create() ```
-- (putting the feedback in the container named feedback)
-## Algorithm (Sequence, Selection, Iteration)
-## Sequence
-User clicks stars and category button.
-User types optional comments.
-Program creates a Feedback object.
-Feedback is stored in the database.
-Previous feedback is displayed.
-## Selection (if statement)
-if self.user_id:
-- The code if self.user_id: is asking: "Does this feedback belong to a specific person who is logged in?
-- If user is logged in → show username
-- If not → show “Anonymous”
-## Iteration (loop)
-for fb_data in sample_feedback:
-The loop accesses each element in the list one at a time. For each feedback entry, the program creates a Feedback object and saves it to the database. This repeats until all feedback entries are processed.
-## Testing and Debugging
-Testing
-- Submitted feedback with 5 stars → saved correctly.
-- Submitted anonymous feedback → showed “Anonymous”.
-- Tested category buttons.
-- Checked that previous feedback displays
-Bug Found
-Sometimes feedback did not save due to a database error.
-Fix
-Added rollback:
-except IntegrityError:
-    db.session.rollback()
-Now the program does not crash.
-## REQUIRED PPR QUESTIONS SECTION
-Procedure & Selection
-First if-statement: 
-if self.user_id:
-What happens if false:
-If the condition is false, the program assigns the username as "Anonymous" and continues storing the feedback.
-Why it matters:
-This prevents errors when users are not logged in and still allows anonymous feedback.
-## Procedural Abstraction (Parameters)
-Constructor:
-``` 
-def __init__(self, title, body, type="Other", user_id=None):
+## PROGRAM PURPOSE AND FUNCTION
+
+**Purpose**  
+Collect and store student feedback from submodules, allowing logged-in and anonymous users to submit ratings, categories, and optional comments.
+
+**Function**  
+- Display a feedback popup after completing a submodule.  
+- User clicks stars (1–5), selects category (Bug, Feature Request, General, Other), types optional comments.  
+- Feedback saved in the database via the `Feedback` class.  
+- Previous feedback displayed on frontend.  
+
+**Inputs**  
+- `title` (string)  
+- `body` (string)  
+- `type` (Bug, Feature Request, General, Other)  
+- `user_id` (optional, if logged in)  
+
+**Outputs**  
+- Stored feedback object in the database  
+- JSON from `Feedback.read()` with id, user_id, username, title, body, type, timestamp, GitHub issue URL  
+- Display list of previous feedback  
+
+---
+
+## LIST INITIALIZATION & USAGE
+
+**List Initialization (`initFeedback()` function)**  
+
+```python
+sample_feedback = [
+    {
+        "title": "Great learning platform!",
+        "body": "I really enjoyed using AI Study Buddy. The prompts and challenges helped me understand AI concepts better.",
+        "type": "General",
+    },
+    {
+        "title": "Feature request: Dark mode",
+        "body": "It would be great to have a dark mode option for studying at night.",
+        "type": "Feature Request",
+    },
+    {
+        "title": "Bug: Survey not loading",
+        "body": "Sometimes the survey page takes a long time to load. Could you optimize it?",
+        "type": "Bug",
+    },
+    {
+        "title": "Love the badge system",
+        "body": "The badges motivate me to complete all the submodules. Great gamification!",
+        "type": "General",
+    },
+    {
+        "title": "Suggestion for more subjects",
+        "body": "Could you add more subjects like economics or social studies to the question bank?",
+        "type": "Feature Request",
+    }
+]
+## Purpose of List
+- Stores multiple feedback records in one structure.
+- Allows iteration to create Feedback objects and save them to the database.
+- Reduces repeated code for each feedback entry.
+- Makes adding new feedback easy without rewriting program logic.
+## Using the List in initFeedback()
 ```
-Parameters:
-title, body, type, user_id
-How they manage complexity:
-Same procedure works for all feedback types and users.
-No separate functions for bugs, features, or comments.
-## Procedure Calls and Testing 
-Call 1 : 
+for i, fb_data in enumerate(sample_feedback):
+    user_id = users[i].id if i < len(users) else None
+    feedback = Feedback(
+        title=fb_data["title"],
+        body=fb_data["body"],
+        type=fb_data["type"],
+        user_id=user_id
+    )
+    db.session.add(feedback)
+db.session.commit() 
+```
+## Usage Explanation
+- Loops through each dictionary in sample_feedback.
+- Creates a Feedback object from each entry.
+- Adds the object to the database session.
+- Commits all entries at once.
+## Managing Complexity
+With List:
+- One structure + loop to handle multiple feedback entries
+- Easy to add new feedback
+- Minimal repeated code
+
+Without List:
+- Would require multiple variables (fb1, fb2, fb3…)
+- Repeated db.session.add() calls
+- Hard to scale or update
+## PROCEDURE & ALGORITHM
+## Feedback Class Constructor (__init__)
+```
+def __init__(self, title, body, type="Other", user_id=None):
+    self.title = title
+    self.body = body
+    self.type = type
+    self.user_id = user_id
+```
+## Create Procedure (Feedback.create())
+```
+def create(self):
+    try:
+        db.session.add(self)
+        db.session.commit()
+        return self
+    except IntegrityError:
+        db.session.rollback()
+        return None
+```
+## Read Procedure (Feedback.read())
+```
+def read(self):
+    return {
+        "id": self.id,
+        "user_id": self.user_id,
+        "username": self.username,
+        "title": self.title,
+        "body": self.body,
+        "type": self.type,
+        "created_at": self.created_at.isoformat() if self.created_at else None,
+        "github_issue_url": self.github_issue_url
+    }
+    ```
+## Delete Procedure (Feedback.delete())
+```
+def delete(self):
+    db.session.delete(self)
+    db.session.commit()
+    return None
+```
+## Username Selection (Feedback.username property)
+```
+@property
+def username(self):
+    from model.user import User
+    if self.user_id:
+        user = User.query.get(self.user_id)
+        if user:
+            return user.uid
+    return "Anonymous"
+ ```
+ ## Sequence, Selection, Iteration in Feedback Submission
+```
+Sequence:
+1. User enters title, body, type, optionally user_id.
+2. Feedback object is created.
+3. create() stores object in database.
+4. read() retrieves feedback for display.
+
+Selection (if statement):
+- If self.user_id exists, fetch username from User table.
+- If not, return "Anonymous".
+
+Iteration:
+- for fb_data in sample_feedback loop creates and saves all sample feedback entries.
+```
+## TESTING & DEBUGGING
+```
+Testing:
+- 5-star feedback stored correctly
+- Anonymous feedback shows "Anonymous"
+- Category buttons recorded
+- Previous feedback displayed
+
+Bug Found:
+- Database IntegrityError prevented saving feedback
+
+Fix:
+- Added db.session.rollback() in except block to prevent crash
+```
+## PPR QUESTIONS
+## Q1: Selection Statement
+Procedure: Feedback.username
+- Conditional: if self.user_id
+- False path: return "Anonymous"
+- Importance: Handles anonymous users safely
+## Q2: Parameters / Procedural Abstraction
+Procedure: Feedback.__init__(title, body, type="Other", user_id=None)
+- Parameters: title, body, type, user_id
+- Manages complexity: Single constructor handles all types of feedback
+## Q3: Different Calls
 ```
 Feedback("Great module", "Very helpful", "General", 2).create()
-```
-Call 2 :
 Feedback("Bug found", "Stars not working", "Bug").create()
-Different calls store different feedback.
-## Logic Error Example
-Wrong Code: 
-``` 
-self.user_id = 1
 ```
-Effect: 
-- All feedback shows user 1, even anonymous users.
-- Incorrect usernames displayed.
-## List Utilization
-The feedback list:
-Stores multiple feedback records.
-Loop accesses each entry and saves it.
-Reduces repeated code.
-## Algorithm Analysis (Iteration)
-In the loop:
-for fb_data in sample_feedback:
+## Q4: Logic Error Example
+Wrong: self.user_id = 1  → all feedback shows user 1
+Effect: Anonymous feedback incorrectly attributed to user 1
+## Q5: List Usage
+- Accessing: Loop through sample_feedback → create Feedback objects
+- Updating: db.session.add() + db.session.commit() once → efficient
+## Q6: Algorithm (Iteration Example)
+1. Take entry from sample_feedback
+2. Create Feedback object
+3. Add to database
+4. Repeat for all entries
 
-Steps:
-1. Take one feedback entry from the list.
-2. Create a Feedback object.
-3. Add it to the database.
-4. Repeat for all entries.
-## Steps for Feedback Survey Backend
-1. Class Feedback(db.Model)
-- This creates a table in the database called feedback
-- Each row is one feedback and the columns are different questions.
-2. id = db.Column (db.integer, primary_key = True)
-- Unique ID for each feedback entry
-- unique number for each user
-3. user_id = db.Column(db.integer, db.foreignKey ('user.id')))
-- Links user id to number, stores which user submitted what
-- anonymous feedback allowed
-- Foregin key allows duplicates (primary doesn't)
-3. title = db.Comlumn (db.string(255), nullable = False)
-- Nullable = false means it can't be empty
-type = db.Column (db.String(64), default = "other")
-- categories of feedback 
-- stored in Database
-4. def create(self)
-- adds feedback to database
-- permanently saves
-5. def read(self)
-- processes feedback to be sent to front end
- db.create_all()
-creates table
+
