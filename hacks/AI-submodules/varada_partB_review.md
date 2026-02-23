@@ -32,7 +32,7 @@ Prompt Quality Analyzer - Scores user-written prompts and gives real-time feedba
 
 - **Feedback and results:**
   - Calculates a score (0-100%) and displays visual feedback
-  - User can test their prompt with a real AI API to see the response
+  
 
 **Identify the inputs and outputs:**
 
