@@ -15,12 +15,12 @@ date: 2026-02-03
 ## Program Purpose and Function
 
 ### Overview
-The AI Learning Platform teaches computer science fundamentals through three progressive activities that integrate AI prompting skills with hands-on coding practice. Students learn to write better AI prompts while strengthening their programming abilities through increasingly complex challenges.
+The AI Learning Platform teaches computer science fundamentals through three progressive activities that integrate AI prompting skills with hands-on coding practice. The Computer Science section walks students through a structured learning path — from filling in code blanks, to writing full solutions, to generating and running AI-produced code — building confidence and skill at each step.
 
 ### Core Functionality
-- **Activity 1 (Fundamentals)**: Fill-in-blank exercises teaching basic syntax with dropdown selections
-- **Activity 2 (Building)**: Write complete code solutions, execute them, and validate output
-- **Activity 3 (Analysis)**: Craft coding prompts, analyze quality, auto-improve them, generate code with Gemini API, and execute
+- **Activity 1 (Fundamentals)**: Fill-in-blank exercises with dropdown selections
+- **Activity 2 (Building)**: Write complete code solutions and execute them against expected output
+- **Activity 3 (Analysis)**: Analyze prompts, generate code with Gemini API, and run it
 
 ### Inputs and Outputs
 
@@ -31,12 +31,70 @@ The AI Learning Platform teaches computer science fundamentals through three pro
 - Code for execution via code runner (Activities 2 & 3)
 
 **Outputs:**
-- Real-time validation feedback with color-coded indicators (Activity 1)
+- Real-time feedback on blank selections with color-coded indicators (Activity 1)
 - Code execution results comparing expected vs. actual output (Activity 2)
-- Prompt quality scores with 4-point checklist (Activity 3)
+- Prompt quality scores with checklist analysis (Activity 3)
 - Auto-improved prompt suggestions (Activity 3)
 - AI-generated code from Gemini API (Activity 3)
-- Execution output with error handling (Activities 2 & 3)
+
+### Activity 2: Input and Output In Depth
+
+**Specific Input:**
+A student selects the challenge "PYTHON: Print Even Numbers" and writes the following code in the editor:
+
+```python
+for i in range(1, 11):
+    if i % 2 == 0:
+        print(i)
+```
+
+This code is extracted from the textarea element and sent as a JSON payload to the backend:
+
+```javascript
+// Frontend sends code to backend
+const code = document.getElementById('write-code-editor').value;
+
+const response = await fetch(pythonURI + '/run/python', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: code })  // Input: student's code string
+});
+```
+
+**Corresponding Output:**
+The backend executes the code, returns the printed values, and the frontend compares against the expected output:
+
+```javascript
+const data = await response.json();
+const output = data.output || 'No output';
+
+// Display actual output
+outputEl.textContent = output;
+// Display expected output below
+expectedEl.textContent = 'Expected output: ' + currentWriteCode.expected_output;
+
+// Compare and give feedback
+if (output.trim() === currentWriteCode.expected_output.trim()) {
+    outputEl.classList.add('text-green-400');
+    outputEl.textContent = output + '\n\n✅ Correct! Your output matches!';
+} else {
+    outputEl.classList.add('text-red-400');
+}
+```
+
+**Result displayed to student:**
+```
+2
+4
+6
+8
+10
+
+✅ Correct! Your output matches!
+Expected output: 2\n4\n6\n8\n10
+```
+
+This single input-output cycle teaches students to write correct code, run it, and verify their solution — all within one seamless interface.
 
 ---
 
@@ -44,107 +102,86 @@ The AI Learning Platform teaches computer science fundamentals through three pro
 
 ### List Implementation
 
-The `analysis.checklist` list manages prompt quality metrics in Activity 3:
+The `writeCodeQuestions` list stores all available coding challenges loaded from the backend:
 
-```python
-def perform_prompt_analysis(prompt):
-    """Analyze coding prompt quality"""
-    checklist = []  # List initialization
-    score = 0
+```javascript
+let writeCodeQuestions = [];  // List initialization
+let currentWriteCode = null;
 
-    # Check for programming language
-    languages = ['python', 'javascript', 'java', 'c++', 'c#', 'ruby']
-    has_language = any(lang in prompt.lower() for lang in languages)
-    checklist.append({
-        'item': 'Specifies programming language',
-        'passed': has_language
-    })
-    if has_language:
-        score += 25
+async function loadWriteCodeQuestions() {
+    const response = await fetch(pythonURI + '/api/coding/write-code');
+    const data = await response.json();
 
-    # Check for specific action verb
-    actions = ['explain', 'debug', 'create', 'write', 'help', 'show', 'fix']
-    has_action = any(action in prompt.lower() for action in actions)
-    checklist.append({
-        'item': 'Uses clear action verb',
-        'passed': has_action
-    })
-    if has_action:
-        score += 25
+    if (data.success && data.questions) {
+        writeCodeQuestions = data.questions;  // Populate list from API
 
-    # Check for sufficient detail
-    has_details = len(prompt) > 20
-    checklist.append({
-        'item': 'Includes sufficient detail',
-        'passed': has_details
-    })
-    if has_details:
-        score += 25
+        const selector = document.getElementById('write-code-selector');
 
-    # Check for context
-    context_words = ['beginner', 'simple', 'step-by-step', 'example', 'comments']
-    has_context = any(word in prompt.lower() for word in context_words)
-    checklist.append({
-        'item': 'Provides context or level',
-        'passed': has_context
-    })
-    if has_context:
-        score += 25
-
-    return {
-        'checklist': checklist,
-        'score': score,
-        'total': 100
+        // Traverse list to build dropdown
+        data.questions.forEach(question => {
+            const option = document.createElement('option');
+            option.value = question.id;
+            option.textContent = `${question.language.toUpperCase()}: ${question.title}`;
+            selector.appendChild(option);
+        });
     }
+}
+```
+
+Each item in the list contains:
+```javascript
+// Structure of each question object in the list
+{
+    id: 1,
+    title: "Print Even Numbers",
+    description: "Write a loop that prints all even numbers from 1 to 10",
+    language: "python",
+    hint: "Use the modulo operator %",
+    solution: "for i in range(1,11):\n    if i%2==0:\n        print(i)",
+    expected_output: "2\n4\n6\n8\n10"
+}
 ```
 
 ### How the List Manages Complexity
 
 **Benefits:**
-- **Structured Storage**: Each criterion stored as dictionary with item name and pass/fail status
-- **Scalable Validation**: Add new quality checks by appending to list
-- **Frontend Rendering**: Frontend iterates through checklist to display visual indicators
-- **Score Calculation**: Each item contributes to total score calculation
-- **Flexibility**: Can reorder, add, or remove criteria without rewriting logic
+- **Dynamic Loading**: Challenges fetched from database, not hardcoded in frontend
+- **Single Source of Truth**: One list holds all challenge data used across the activity
+- **Traversable**: Loop through to populate dropdown with no repeated code
+- **Searchable**: Find a specific challenge instantly using `.find()`
+- **Scalable**: New challenges added to database appear automatically
 
 ### Without the List
 
 **Would require:**
-```python
-# Individual variables for each check (rigid)
-language_check = { 'item': '...', 'passed': True }
-action_check = { 'item': '...', 'passed': False }
-detail_check = { 'item': '...', 'passed': True }
-context_check = { 'item': '...', 'passed': True }
+```javascript
+// Hardcoded variables — completely unscalable
+let challenge1 = { id: 1, title: "Print Even Numbers", solution: "...", expected: "..." };
+let challenge2 = { id: 2, title: "Reverse a String", solution: "...", expected: "..." };
+// Dozens more...
 
-# Manual response building
-return {
-    'check1': language_check,
-    'check2': action_check,
-    'check3': detail_check,
-    'check4': context_check
+// Manually match selection to variable
+if (selectedId === 1) {
+    currentWriteCode = challenge1;
+} else if (selectedId === 2) {
+    currentWriteCode = challenge2;
 }
-
-# Frontend cannot iterate - must hardcode each check
-// Would need:
-if (data.check1.passed) { /* show green */ }
-if (data.check2.passed) { /* show green */ }
-// ... repeat for each check
-
-// Cannot add new checks without updating frontend code
+// Cannot build dropdown dynamically
+// Cannot add challenges without changing code
+// Cannot store expected output and solution together cleanly
 ```
 
 ---
 
 ## Procedure and Algorithm
 
-### Core Procedure: `runWriteCode()` (Activity 2)
+### Core Procedure: `runWriteCode()`
 
-This procedure executes student code and validates output:
+This procedure takes student-written code, executes it, and validates the output:
 
 ```javascript
 async function runWriteCode() {
-    // SEQUENCE: Validation
+    // SEQUENCE Step 1: Validate a question is loaded
     if (!currentWriteCode) {
         alert('Please select a question first!');
         return;
@@ -153,20 +190,19 @@ async function runWriteCode() {
     const code = document.getElementById('write-code-editor').value;
     const language = currentWriteCode.language;
 
-    const outputContainer = document.getElementById('write-code-output-container');
     const outputEl = document.getElementById('write-code-output');
     const expectedEl = document.getElementById('write-code-expected');
 
-    outputContainer.classList.remove('hidden');
+    document.getElementById('write-code-output-container').classList.remove('hidden');
     outputEl.textContent = 'Running code...';
 
     try {
-        // SELECTION: Choose endpoint based on language
+        // SELECTION Step 2: Pick endpoint based on language
         const endpoint = language === 'python'
             ? pythonURI + '/run/python'
             : pythonURI + '/run/javascript';
 
-        // SEQUENCE: Make API request
+        // SEQUENCE Step 3: Send code to backend for execution
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -175,12 +211,12 @@ async function runWriteCode() {
 
         const data = await response.json();
         const output = data.output || 'No output';
-        
-        // SEQUENCE: Display results
+
+        // SEQUENCE Step 4: Display output and expected
         outputEl.textContent = output;
         expectedEl.textContent = 'Expected output: ' + currentWriteCode.expected_output;
 
-        // SELECTION: Validate correctness
+        // SELECTION Step 5: Compare output to expected
         if (output.trim() === currentWriteCode.expected_output.trim()) {
             outputEl.classList.add('text-green-400');
             outputEl.textContent = output + '\n\n✅ Correct! Your output matches!';
@@ -189,7 +225,6 @@ async function runWriteCode() {
         }
 
     } catch (error) {
-        console.error('Error running code:', error);
         outputEl.textContent = 'Error: Could not run code.\n' + error.message;
         outputEl.classList.add('text-red-400');
     }
@@ -198,16 +233,14 @@ async function runWriteCode() {
 
 ### Algorithm Breakdown
 
-**SEQUENCE Steps:**
-1. Validate question is selected
-2. Extract code and language from UI
-3. Display loading message
-4. Determine correct API endpoint
-5. Send code execution request
-6. Receive execution results
-7. Display output to student
-8. Compare with expected output
-9. Show success or error feedback
+**SEQUENCE:**
+1. Check that a question is selected
+2. Extract student code from the editor
+3. Determine the correct execution endpoint
+4. POST code to the backend
+5. Receive and display execution output
+6. Show expected output for comparison
+7. Apply styling based on correctness
 
 **SELECTION (Endpoint Choice):**
 ```javascript
@@ -216,166 +249,117 @@ const endpoint = language === 'python'
     : pythonURI + '/run/javascript';
 ```
 - **Boolean Expression**: `language === 'python'`
-- **True Path**: Use Python execution endpoint
-- **False Path**: Use JavaScript execution endpoint
+- **True Path**: Routes to Python execution endpoint
+- **False Path**: Routes to JavaScript execution endpoint
 
 **SELECTION (Output Validation):**
 ```javascript
 if (output.trim() === currentWriteCode.expected_output.trim()) {
-    // Mark correct with green styling
+    // Show green success message
 } else {
-    // Mark incorrect with red styling
+    // Show red, student must revise
 }
 ```
 - **Boolean Expression**: `output.trim() === currentWriteCode.expected_output.trim()`
-- **True Path**: Add green styling, show success message
-- **False Path**: Add red styling, student must revise code
+- **True Path**: Green styling, success message shown
+- **False Path**: Red styling, student revises and resubmits
 
-**ITERATION (in `perform_prompt_analysis`):**
-```python
-# Backend procedure iterates through word lists
-languages = ['python', 'javascript', 'java', 'c++']
-has_language = any(lang in prompt.lower() for lang in languages)
+**ITERATION (in `loadWriteCodeQuestions`):**
+```javascript
+data.questions.forEach(question => {
+    const option = document.createElement('option');
+    option.value = question.id;
+    option.textContent = `${question.language.toUpperCase()}: ${question.title}`;
+    selector.appendChild(option);
+});
 ```
-- Loops through language keywords
-- Checks if prompt contains programming language
-- Returns True on first match found
+- Loops through every question in `writeCodeQuestions`
+- Creates a dropdown option element for each
+- Builds the entire selector UI in one pass
 
 ### Contribution to Functionality
 
-**Activity 2 Procedure:**
-- **Code Execution**: Runs student solutions in safe environment
-- **Instant Feedback**: Shows output immediately
-- **Validation**: Compares actual vs. expected results
-- **Error Handling**: Catches runtime errors gracefully
-
-**Activity 3 Procedures:**
-- **Quality Analysis**: Scores prompts on 4 criteria
-- **Auto-Improvement**: Generates better prompts
-- **Code Generation**: Calls Gemini API with improved prompts
-- **Execution**: Tests AI-generated code
+- **Code Execution**: Safely runs student code on the backend
+- **Instant Validation**: Compares actual vs. expected output immediately
+- **Multi-language Support**: Handles Python and JavaScript with one function
+- **Error Resilience**: Catches runtime errors and displays them cleanly
 
 ---
 
 ## Testing and Debugging
 
-### Error: Gemini API Code Generation Failure
+### Error: Code Execution Endpoint Failure
 
 **Problem Identified:**
-Activity 3's code generation endpoint would crash when Gemini API was not configured, preventing students from testing AI-generated code.
+Activity 2's code runner returned 500 errors when students submitted code, preventing any execution from working.
 
 **Error Manifestation:**
-```python
-# Original problematic code
-def generate_simulated_response(prompt, prompt_type):
-    api_key = app.config.get('GEMINI_API_KEY')
-    server = app.config.get('GEMINI_SERVER')
-    
-    # Would crash here if None
-    endpoint = f"{server}?key={api_key}"  
-    response = requests.post(endpoint, ...)
+```
+POST /run/python
+Status: 500 Internal Server Error
+Response: "KeyError: 'code'"
 ```
 
 ### Debugging Process
 
-**Step 1: Error Detection**
-- Students submitted prompts in Activity 3
-- Clicked "Generate Code" button
-- Received `TypeError: unsupported operand type(s)` error
-- Backend logs showed string concatenation with `None`
+**Step 1: Reproduce the Error**
+- Opened Activity 2, selected a Python challenge
+- Wrote valid code and clicked "Run Code"
+- Backend crashed and returned 500 with no useful message
 
-**Step 2: Root Cause Analysis**
+**Step 2: Analyze Root Cause**
 ```python
-# Problem: config.get() returns None if key missing
-api_key = app.config.get('GEMINI_API_KEY')  # Could be None
-server = app.config.get('GEMINI_SERVER')     # Could be None
-
-# Crash occurs here:
-endpoint = f"{server}?key={api_key}"  # TypeError if None
+# Original broken endpoint
+@app.route('/run/python', methods=['POST'])
+def run_python():
+    data = request.json
+    code = data['code']  # Crashes with KeyError if 'code' key is missing
 ```
-- Configuration not validated before use
-- No fallback or error message
-- Application crashed entirely
+- Used direct dictionary access (`data['code']`) instead of `.get()`
+- No check for empty or missing payload
+- No try-except to catch failures
 
-**Step 3: Implement Solution**
+**Step 3: Implement Fix**
 ```python
-def generate_simulated_response(prompt, prompt_type):
-    from __init__ import app
-
-    api_key = app.config.get('GEMINI_API_KEY')
-    server = app.config.get('GEMINI_SERVER')
-
-    # VALIDATION: Check configuration before proceeding
-    if not api_key or not server:
-        return "Error: Gemini API not configured. Please contact your administrator."
-
+# Fixed endpoint with defensive programming
+@app.route('/run/python', methods=['POST'])
+def run_python():
     try:
-        endpoint = f"{server}?key={api_key}"
-        payload = {
-            "contents": [{
-                "parts": [{"text": prompt}]
-            }]
-        }
+        data = request.json or {}
+        code = data.get('code', '').strip()  # Safe access with default
 
-        response = requests.post(
-            endpoint,
-            headers={'Content-Type': 'application/json'},
-            json=payload,
-            timeout=30
-        )
+        if not code:
+            return jsonify({'error': 'Code is required'}), 400
 
-        if response.status_code == 200:
-            result = response.json()
-            generated_text = result['candidates'][0]['content']['parts'][0]['text']
-            return generated_text
-        else:
-            error_details = response.text
-            current_app.logger.error(f"Gemini API error {response.status_code}")
-            return f"Error: Gemini API returned status {response.status_code}"
+        result = execute_code_safely(code, language='python')
+        return jsonify({'output': result}), 200
 
     except Exception as e:
-        current_app.logger.error(f"Error calling Gemini API: {e}")
-        return f"Error: Could not generate response. {str(e)}"
+        current_app.logger.error(f"Code execution error: {e}")
+        return jsonify({'error': str(e)}), 500
 ```
 
-**Step 4: Validation Enhancement**
-- Added configuration validation check
-- Implemented try-except for API calls
-- Provided user-friendly error messages
-- Added logging for debugging
-- Set timeout to prevent hanging
-
-### Testing Results
-
-**Before Fix:**
-- Application crashed on code generation attempts
-- No feedback to students
-- Required server restart
-- Lost student progress
-
-**After Fix:**
-- Graceful error message displayed
-- Application remains stable
-- Clear guidance for administrators
-- Students can continue other activities
-
-**Test Cases:**
+**Step 4: Validated with Test Cases**
 ```python
-# Test 1: Valid configuration
-api_key = "valid_key", server = "https://api.com"
-# Result: Successfully generates code
+# Test 1: Valid code submission
+{ "code": "print('Hello')" }
+# → Output: "Hello", status 200 ✅
 
-# Test 2: Missing API key
-api_key = None, server = "https://api.com"
-# Result: Returns error message, no crash
+# Test 2: Empty code field
+{ "code": "" }
+# → Error: "Code is required", status 400 ✅
 
-# Test 3: Missing server
-api_key = "valid_key", server = None
-# Result: Returns error message, no crash
+# Test 3: Missing 'code' key entirely
+{}
+# → Error: "Code is required", status 400 (no crash) ✅
 
-# Test 4: API timeout
-# Result: Exception caught, error message returned
+# Test 4: Runtime error in student code
+{ "code": "print(1/0)" }
+# → Error captured, returned cleanly, status 200 ✅
 ```
+
+**Before Fix:** Server crashed, required restart, no student feedback
+**After Fix:** Handles all edge cases, returns meaningful errors, remains stable
 
 ---
 
@@ -384,233 +368,200 @@ api_key = "valid_key", server = None
 ### 1. Procedure & Selection
 
 **First Conditional in `runWriteCode()`:**
-
 ```javascript
 if (!currentWriteCode) {
     alert('Please select a question first!');
     return;
 }
 ```
+**Boolean Expression:** `!currentWriteCode` — checks if a challenge is loaded
 
-**Boolean Expression:** `!currentWriteCode` checks if a question is loaded
-
-**If False:** The procedure continues to extract code, determine the endpoint, execute the code, and validate output. The check prevents executing code when no challenge is selected, which would cause undefined reference errors.
+**If False:** The procedure continues: it reads the student's code, determines the endpoint, sends the execution request, and displays results. Without this guard, accessing `currentWriteCode.language` would throw a `TypeError` on a null object.
 
 ---
 
 ### 2. Procedural Abstraction: Parameters
 
-**Parameter in `perform_prompt_analysis(prompt)`:**
+**Parameter in `loadWriteCodeQuestion(select)`:**
+```javascript
+function loadWriteCodeQuestion(select) {
+    const selector = document.getElementById('write-code-selector');
 
-```python
-def perform_prompt_analysis(prompt):
-    checklist = []
-    score = 0
-    
-    languages = ['python', 'javascript', 'java']
-    has_language = any(lang in prompt.lower() for lang in languages)
-    # Uses prompt parameter throughout
+    // If select parameter is passed, set the selector value first
+    if (select !== undefined) {
+        selector.value = select;
+    }
+
+    const questionId = parseInt(selector.value);
+
+    if (!questionId) {
+        document.getElementById('write-code-info').classList.add('hidden');
+        document.getElementById('write-code-editor-container').classList.add('hidden');
+        document.getElementById('write-code-actions').classList.add('hidden');
+        currentWriteCode = null;
+        return null;
+    }
+
+    const writeCodeQuest = writeCodeQuestions.find(question => question.id === questionId);
+    currentWriteCode = writeCodeQuest;
+
+    if (currentWriteCode) {
+        document.getElementById('write-code-title').textContent = currentWriteCode.title;
+        document.getElementById('write-code-description').textContent = currentWriteCode.description;
+        document.getElementById('write-code-hint').textContent = currentWriteCode.hint;
+        document.getElementById('write-code-hint').classList.add('hidden');
+        document.getElementById('write-code-info').classList.remove('hidden');
+        document.getElementById('write-code-editor').value = '';
+        document.getElementById('write-code-editor-container').classList.remove('hidden');
+        document.getElementById('write-code-actions').classList.remove('hidden');
+        document.getElementById('write-code-output-container').classList.add('hidden');
+    }
+
+    return writeCodeQuest;
+}
 ```
-
-**How It Manages Complexity:**
-- **Single Function**: One procedure analyzes any prompt regardless of content
-- **Reusable**: Works for all Activity 3 prompt submissions
-- **Testable**: Can pass different prompts to verify scoring logic
-- **Flexible**: Same algorithm evaluates beginner and advanced prompts
-
-**Without the parameter:**
-```python
-# Would need separate functions for each prompt
-def analyze_python_prompt():
-    # Hardcoded checks for Python prompts only
-    
-def analyze_javascript_prompt():
-    # Duplicate logic for JavaScript prompts
-    
-# Cannot handle user-submitted prompts dynamically
-```
+**`select` manages complexity by:**
+- Allowing the function to be called programmatically (auto-load) or manually (dropdown change) with one unified function
+- When `select` is `""`, it clears/resets the current question view
+- When `select` is a question ID, it directly loads that challenge without user interaction
+- Eliminating the need for separate reset and load functions
+- Making the function reusable for any number of database-stored challenges
 
 ---
 
 ### 3. Procedure Calls & Testing
 
-**Call 1: Python Code Execution**
+**Call 1: Reset/clear the question view**
 ```javascript
-// Student writes Python code in Activity 2
-currentWriteCode = { language: 'python', expected_output: '10' }
-runWriteCode()
-// Executes: endpoint = pythonURI + '/run/python'
-// Returns: Validates output against expected_output
+// Called after questions load to start in a clean state
+loadWriteCodeQuestion("");
+// select = ""
+// questionId = NaN → falsy
+// Hides all UI panels, sets currentWriteCode = null
+// Returns null
 ```
 
-**Call 2: JavaScript Code Execution**
+**Call 2: Auto-load the first question**
 ```javascript
-// Student writes JavaScript code in Activity 2
-currentWriteCode = { language: 'javascript', expected_output: 'Hello World' }
-runWriteCode()
-// Executes: endpoint = pythonURI + '/run/javascript'
-// Returns: Validates output against different expected_output
+// Called immediately after to pre-load the first challenge
+loadWriteCodeQuestion(writeCodeQuestions[0].id);
+// select = 1 (first question's ID)
+// writeCodeQuest = { language: 'python', expected_output: '2\n4\n6\n8\n10', ... }
+// currentWriteCode set, UI panels shown
+// Returns the question object
 ```
 
-**Different Execution Paths:**
-- Different API endpoints selected based on language
-- Different expected outputs compared
-- Different syntax highlighting applied
-- Same validation algorithm for both languages
+**Different paths executed:**
+- Call 1 hits the early-return branch (`!questionId`), hiding the UI and nulling state
+- Call 2 passes the guard, performs the `.find()` lookup, populates the editor, and returns the question
+- Same `loadWriteCodeQuestion()` function handles both reset and load behavior
 
 ---
 
 ### 4. Logic Errors: Procedure Modification
 
-**Problematic Modification to `runWriteCode()`:**
+**Problematic Modification:**
 ```javascript
-async function runWriteCode() {
-    if (!currentWriteCode) {
-        alert('Please select a question first!');
-        return;
-    }
-
-    const code = document.getElementById('write-code-editor').value;
-    const language = currentWriteCode.language;
-
-    // WRONG: Always use Python endpoint regardless of language
-    const endpoint = pythonURI + '/run/python';  // Logic error here
-
-    const response = await fetch(endpoint, {
-        method: 'POST',
-        body: JSON.stringify({ code: code })
-    });
-
-    // Rest of code unchanged...
+// WRONG: Remove the trim() from comparison
+if (output === currentWriteCode.expected_output) {
+    outputEl.textContent = output + '\n\n✅ Correct!';
+} else {
+    outputEl.classList.add('text-red-400');
 }
 ```
-
 **Logic Error Impact:**
-- JavaScript code sent to Python interpreter
-- Python endpoint cannot parse JavaScript syntax
-- Execution fails with syntax errors
-- Students writing JavaScript get "invalid syntax" errors
-- Cannot distinguish between student mistakes and endpoint errors
-- Activity 2 JavaScript challenges become unusable
+- Python's `print()` adds a trailing newline (`\n`) to output
+- Without `.trim()`, `"2\n4\n6\n8\n10\n"` never equals `"2\n4\n6\n8\n10"`
+- Every correct solution is marked wrong
+- Students believe their code is broken when it isn't
+- They waste time debugging correct code
 
 **Output Comparison:**
-- **Intended**: JavaScript code → JavaScript endpoint → correct execution
-- **With Error**: JavaScript code → Python endpoint → syntax errors
-- Students cannot complete JavaScript challenges successfully
+- **Intended**: `"2\n4\n6\n8\n10\n".trim()` === `"2\n4\n6\n8\n10"` → ✅ Correct
+- **With Error**: `"2\n4\n6\n8\n10\n"` !== `"2\n4\n6\n8\n10"` → ❌ Always wrong
 
 ---
 
 ### 5. List Utilization
 
-**Adding Data to Checklist:**
-```python
-checklist.append({
-    'item': 'Specifies programming language',
-    'passed': has_language
-})
+**Adding Data (backend populates, frontend receives):**
+```javascript
+writeCodeQuestions = data.questions;  // Entire list assigned at once
 ```
-- Adds quality criteria without manual indexing
-- Order preserved for consistent display
+- All challenges stored in one structure
+- No manual tracking of how many exist
 
 **Accessing Elements:**
 ```javascript
-// Frontend displays checklist results
-const checklistDiv = document.getElementById('cs-checklist');
-checklistDiv.innerHTML = checklist.map(item =>
-    `<div class="flex items-center gap-2">
-        <span class="text-${item.passed ? 'green' : 'red'}-400">
-            ${item.passed ? '✅' : '❌'}
-        </span>
-        <span>${item.item}</span>
-    </div>`
-).join('');
+const writeCodeQuest = writeCodeQuestions.find(question => question.id === questionId);
 ```
-- `.map()` transforms each item into HTML
-- Dynamically generates UI from list
+- Retrieves one specific challenge by ID using the descriptive `question` loop variable
+- No index tracking needed
 
-**Traversal with Calculations:**
-```python
-# Backend calculates total score
-for item in checklist:
-    if item['passed']:
-        score += 25
-        
-return {
-    'checklist': checklist,
-    'score': score,
-    'total': 100
-}
+**Traversal for UI Building:**
+```javascript
+data.questions.forEach(question => {
+    const option = document.createElement('option');
+    option.value = question.id;
+    option.textContent = `${question.language.toUpperCase()}: ${question.title}`;
+    selector.appendChild(option);
+});
 ```
-- Single loop aggregates score
-- Percentage calculated from list length
-- Easy to add more criteria
+- One loop builds the entire challenge selector dropdown
+- Scales to any number of questions automatically
 
 **Complexity Managed:**
-- No hardcoded HTML for each criterion
-- Adding new quality checks requires only appending to list
-- Frontend automatically displays new checks
-- Score calculation scales with list size
+- No hardcoded challenge variables
+- Dropdown built dynamically from list
+- Supports multiple languages in one unified list
+- Easy to extend with new challenge types
 
 ---
 
 ### 6. Algorithm Analysis: Iteration Processing
 
-**Iteration in `perform_prompt_analysis()`:**
-
-```python
-languages = ['python', 'javascript', 'java', 'c++', 'c#', 'ruby']
-has_language = any(lang in prompt.lower() for lang in languages)
+**Iteration in `loadWriteCodeQuestions()`:**
+```javascript
+data.questions.forEach(question => {
+    const option = document.createElement('option');
+    option.value = question.id;
+    option.textContent = `${question.language.toUpperCase()}: ${question.title}`;
+    selector.appendChild(option);
+});
 ```
 
 **Algorithm Steps:**
-
-1. **Initialize**: Create list of programming language keywords
-2. **Convert**: Transform user prompt to lowercase for comparison
-3. **Iterate**: Loop begins with first language ('python')
-4. **Check**: Evaluate if current language appears in prompt
-5. **Short-circuit**: If match found, return True immediately
-6. **Continue**: If no match, advance to next language
-7. **Repeat**: Check 'javascript', 'java', etc. sequentially
-8. **Terminate**: Stop when match found OR all languages checked
-9. **Store Result**: Append pass/fail to checklist
-10. **Update Score**: Add 25 points if language found
+1. **Initialize**: Start at first question in `data.questions`
+2. **Access**: Retrieve current question object as `question`
+3. **Create**: Build a new `<option>` HTML element
+4. **Assign ID**: Set `option.value` to `question.id` for lookup later
+5. **Format Label**: Combine language and title into readable string
+6. **Append**: Add option to the dropdown selector
+7. **Advance**: Move to next question in list
+8. **Repeat**: Until all questions processed
+9. **Terminate**: Dropdown fully populated, ready for student use
 
 **Per-Element Processing:**
-```python
-# For each language keyword:
-# 1. Extract keyword: lang = 'python'
-# 2. Check presence: 'python' in prompt.lower()
-# 3. Boolean evaluation: True/False
-# 4. Early exit if True (short-circuit)
-# 5. Continue to next if False
+```javascript
+// For each question object:
+// 1. question.id        → option.value (used by loadWriteCodeQuestion)
+// 2. question.language  → formatted label prefix (e.g., "PYTHON:")
+// 3. question.title     → readable challenge name (e.g., "Print Even Numbers")
+// 4. Combined           → option.textContent shown to student
 ```
 
-**Similar Iterations for Other Criteria:**
-```python
-actions = ['explain', 'debug', 'create', 'write']
-has_action = any(action in prompt.lower() for action in actions)
-
-context_words = ['beginner', 'simple', 'step-by-step', 'example']
-has_context = any(word in prompt.lower() for word in context_words)
-```
-
-Each quality check uses the same iteration pattern but with different keyword lists, demonstrating algorithmic reusability.
+Each question undergoes the same transformation from raw data to a UI element, demonstrating how iteration removes the need for repetitive manual code.
 
 ---
 
 ## Conclusion
 
-The AI Learning Platform Computer Science Module demonstrates comprehensive programming concepts across three integrated activities:
+Activity 2 of the AI Learning Platform CS module demonstrates core programming principles through a practical write-and-run coding experience:
 
-**Activity 1** teaches syntax fundamentals through interactive fill-in-blank exercises
-**Activity 2** builds coding skills with write-and-execute challenges  
-**Activity 3** integrates AI by teaching prompt engineering, quality analysis, and code generation
+- **Data Abstraction**: `writeCodeQuestions` list manages all challenges dynamically
+- **Procedural Abstraction**: `runWriteCode()` handles any language and challenge with one function
+- **Algorithm Design**: Sequence, selection, and iteration combine for execution and validation
+- **Error Handling**: Defensive programming prevents crashes from bad code submissions
+- **Real Feedback Loop**: Students write code, run it, see output, and correct mistakes immediately
 
-Key Technical Achievements:
-- **Data Abstraction**: Checklist list manages quality metrics efficiently
-- **Procedural Abstraction**: `runWriteCode()` executes any language with parameters
-- **Algorithm Design**: Selection, sequence, and iteration combine for validation
-- **Error Handling**: Defensive programming prevents API configuration crashes
-- **Progressive Learning**: Activities scaffold from basics to AI-powered development
-
-Students master both computer science fundamentals and AI prompting through an integrated curriculum that prepares them for modern software development practices.
+The activity bridges the gap between understanding code concepts and writing working solutions, preparing students for the AI-powered code generation in Activity 3.
