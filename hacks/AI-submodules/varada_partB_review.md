@@ -32,7 +32,7 @@ Prompt Quality Analyzer - Scores user-written prompts and gives real-time feedba
 
 - **Feedback and results:**
   - Calculates a score (0-100%) and displays visual feedback
-  - User can test their prompt with a real AI API to see the response
+  
 
 **Identify the inputs and outputs:**
 
@@ -65,7 +65,6 @@ hints: [
 **How the data in this list manages complexity:**
 - Stores multiple related pieces of data (the 3 hint messages) in a single structure
 - Avoids creating separate variables for each hint
-- Single list name is easier to remember than multiple variable names 
 
 ### Prompt 2b: Managing Complexity
 
@@ -79,7 +78,7 @@ hints: [
    - If user on hint 0: show hint1
    - If user on hint 1: show hint2
    - If user on hint 2: show hint3
-   - Three separate checks to write and maintain
+ 
 
 3. **Difficult to add features:** Adding more hints (4th, 5th, etc.) requires:
    - Creating new variables (hint4, hint5, etc.)
@@ -90,18 +89,29 @@ hints: [
 The Procedure:
 
 ```javascript
+// ==================== PROCEDURE START: analyzeStudentPrompt ====================
 function analyzeStudentPrompt() {
+
+    // --- STEP 1: Get the student's input ---
+    // Grab the text from the input box and remove leading/trailing spaces
     const studentPrompt = document.getElementById('student-improved-prompt').value.trim();
     
+    // If the box is empty, reset the analysis and stop the function early
     if (!studentPrompt) {
         resetAnalysis();
         return;
     }
     
+    // --- STEP 2: Set up data we need for checking ---
+    // Get the current challenge object (contains the keywords to check against)
     const challenge = interChallenges[currentInterChallenge];
+    // Make a lowercase version of the prompt so keyword checks aren't case-sensitive
     const lowerPrompt = studentPrompt.toLowerCase();
     
+    // --- STEP 3: Initialise the score and checklist ---
+    // Score starts at 0, each passed check adds 25 points (max 100)
     let score = 0;
+    // All four criteria start as false (not yet passed)
     let checks = {
         specificity: false,
         context: false,
@@ -109,58 +119,76 @@ function analyzeStudentPrompt() {
         length: false
     };
     
+    // --- STEP 4: Run the four keyword/length checks ---
+
+    // Check 1 - Specificity: does the prompt include any "specific" keywords?
     if (challenge.keywords.specific.some(kw => lowerPrompt.includes(kw))) {
-        checks.specificity = true;
-        score += 25;
+        checks.specificity = true; // mark as passed
+        score += 25;              // award 25 points
     }
     
+    // Check 2 - Context: does the prompt include any "context" keywords?
     if (challenge.keywords.context.some(kw => lowerPrompt.includes(kw))) {
         checks.context = true;
         score += 25;
     }
     
+    // Check 3 - Detail: does the prompt include any "detail" keywords?
     if (challenge.keywords.detail.some(kw => lowerPrompt.includes(kw))) {
         checks.detail = true;
         score += 25;
     }
     
+    // Check 4 - Length: is the prompt longer than 50 characters?
     if (studentPrompt.length > 50) {
         checks.length = true;
         score += 25;
     }
     
+    // --- STEP 5: Update the visual checkmarks on the page ---
+    // Each call shows a tick or cross next to the matching criterion
     updateCheck('check-specificity', checks.specificity);
     updateCheck('check-context', checks.context);
     updateCheck('check-detail', checks.detail);
     updateCheck('check-length', checks.length);
     
+    // --- STEP 6: Display the score and update the progress bar ---
+    // Show the score as a percentage (e.g. "75%")
     document.getElementById('quality-score').textContent = score + '%';
+    // Set the width of the progress bar to match the score
     document.getElementById('quality-bar').style.width = score + '%';
     
+    // --- STEP 7: Colour the progress bar based on how well they scored ---
     if (score >= 75) {
-        document.getElementById('quality-bar').className = 'bg-green-500';
+        document.getElementById('quality-bar').className = 'bg-green-500'; // good score = green
     } else if (score >= 50) {
-        document.getElementById('quality-bar').className = 'bg-yellow-500';
+        document.getElementById('quality-bar').className = 'bg-yellow-500'; // okay score = yellow
     } else {
-        document.getElementById('quality-bar').className = 'bg-red-500';
+        document.getElementById('quality-bar').className = 'bg-red-500'; // low score = red
     }
     
+    // --- STEP 8: Build the feedback messages ---
     let feedback = [];
+    // For each failed check, add a helpful error message
     if (!checks.specificity) feedback.push("❌ Add more specific details");
     if (!checks.context) feedback.push("❌ Provide context about yourself");
     if (!checks.detail) feedback.push("❌ Specify what details you want");
     if (!checks.length) feedback.push("❌ Your prompt is too short");
     
+    // If they got a perfect score, replace all error messages with a congratulations
     if (score === 100) {
         feedback = ["✅ Excellent! Your prompt looks great!"];
     }
     
+    // --- STEP 9: Render the feedback onto the page ---
+    // Wrap each message in a <p> tag and display them all in the feedback box
     document.getElementById('feedback-display').innerHTML = feedback.map(f => `<p>${f}</p>`).join('');
 }
+// ==================== PROCEDURE END: analyzeStudentPrompt ====================
 ```
 
 **How it contributes to overall functionality:**
-- Main scoring engine of the program
+- Scores the Intermediate level 
 - Runs automatically as students type in the Intermediate Challenge section
 - Analyzes prompts in real-time by checking four criteria:
   - Mentions specific topics
@@ -274,8 +302,8 @@ This expression checks whether the studentPrompt variable is empty, null, undefi
 - Program does its main job of scoring instead of resetting
 
 **Why this check matters:**
-- Without it: program tries to analyze empty string
-- Could cause weird results or crash when checking keywords in nothing
+- Without it: program tries to analyze the empty typing box 
+-
 
 ### Procedural Abstraction
 Parameter in My Procedure
@@ -301,12 +329,12 @@ The Parameter: `subject` - tells the function which subject challenge to load (l
   - `selectMathChallenge()`
   - `selectScienceChallenge()`
   - `selectCSChallenge()`
-  - All doing the exact same thing with different hard-coded data
+ 
 
 - **Benefits:**
   - Parameter reduces 4 functions into 1
   - Much shorter and easier to maintain
-  - Adding a 5th subject: just pass in new name, no new function needed
+  
 
 ### Procedure Calls & Testing
 The function we're using:
@@ -325,7 +353,7 @@ selectInterChallenge('cs')
 
 What happens:
 - Shows the weak prompt "code help"
-- Loads computer science keywords like "python", "function", "loop"
+
 - When the student types their improved prompt, the program checks if it contains CS words like "python" or "loop"
 
 New Call 2:
