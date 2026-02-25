@@ -153,6 +153,8 @@ def username(self):
             return user.uid
     return "Anonymous"
 ```
+user_id exists:	Show username
+user_id missing:	Show "Anonymous"
 ## Sequence, Selection, Iteration in Feedback Submission
 ```
 Sequence:
