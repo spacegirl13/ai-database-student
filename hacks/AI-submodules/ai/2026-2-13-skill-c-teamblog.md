@@ -106,13 +106,13 @@ def award_badge():
 ## Akshara
 
 ## Process for Badges Front end:
-- Designed relational tables (SurveyResponse and AIToolPreference) to store survey submissions and per-subject AI tool choices
-- Implemented server-side aggregation using SQLAlchemy (GROUP BY, COUNT) so the frontend only receives processed data
-- Used optional authentication (@optional_token) to support both logged-in and anonymous users seamlessly
-- - Generated anonymous usernames dynamically when no session exists, avoiding blocked submissions
-Added badge-awarding logic directly in the backend to ensure rewards can’t be spoofed from the frontend
-- Returned updated aggregated results + badge status in the same response to enable instant frontend updates
-- Wrapped all database writes in commit/rollback logic to keep data consistent and safe
+- Set up tables to save survey answers and each person’s AI tool choices.
+- Added code to summarize survey results on the server so the website gets ready-to-use data.
+- Allowed both signed-in and anonymous users to submit surveys smoothly.
+- Created automatic anonymous usernames when someone isn’t logged in, so submissions don’t get blocked.
+- Made sure badges are awarded on the server, so people can’t cheat and give themselves rewards.
+- Sent updated survey results and badge info together so the website updates instantly.
+- Made all data-saving steps safe, so if something goes wrong it won’t mess up the database.
 
 <img width="329" height="372" alt="Image" src="https://github.com/user-attachments/assets/3d4ae174-8e32-4001-8841-ce81d85073a3" />
 ## What I Worked On/Implemented:
