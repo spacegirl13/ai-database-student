@@ -42,12 +42,12 @@ Collect and store student feedback from submodules, allowing logged-in and anony
 sample_feedback = [
     {
         "title": "Great learning platform!",
-        "body": "I really enjoyed using AI Study Buddy. The prompts and challenges helped me understand AI concepts better.",
+        "body": "I really enjoyed using AI Study Buddy. The prompts and challenges helped me understand how to make better prompts.",
         "type": "Content Quality",
     },
     {
-        "title": "Feature request: Dark mode",
-        "body": "It would be great to have a dark mode option for studying at night.",
+        "title": "Feature request: selecting more than 1 on submod one survey",
+        "body": "It would be great to select more than one ai in the first survey.",
         "type": "Other",
     },
     {
@@ -196,6 +196,8 @@ Procedure: Feedback.username
 Procedure: Feedback.__init__(title, body, type="Other", user_id=None)
 - Parameters: title, body, type, user_id
 - Manages complexity: Single constructor handles all types of feedback
+
+The Feedback constructor is a procedure that takes parameters such as title, body, type, and user_id. These parameters allow the procedure to create different feedback objects without rewriting code. This manages complexity by using one reusable procedure to handle all feedback submissions instead of writing separate code for each feedback entry.
 ## Q3: Different Calls
 ```
 Feedback("Great module", "Very helpful", "General", 2).create()
