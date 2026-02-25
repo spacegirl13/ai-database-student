@@ -183,6 +183,8 @@ Bug Found:
  
 Fix:
 - Added db.session.rollback() in except block to prevent crash
+
+The rollback statement prevents the database from remaining in a failed state by undoing the unsuccessful transaction, allowing future feedback submissions to work correctly.
 ```
 ## PPR QUESTIONS
 ## Q1: Selection Statement
